@@ -26,6 +26,23 @@ cross-checked where possible). Indexing / APC / scope from primary journal pages
 > above were independently double-verified (gov.pl PDF + OMEGA-PSIR bases at Poznań
 > Tech / PW / UŁ / AMU + MOST Wiedzy).
 
+## Free-to-author options (no APC)
+
+"Open access" ≠ free: ComSIS charges €400, AMCS €1320, SoftwareX ~$1560. The genuinely
+zero-cost routes:
+
+**Diamond OA (free to publish AND open), all ~40 pts:**
+- e-Informatica SEJ (40) — SE, CC-BY, prior venue.
+- Computer Science, AGH (40) — broad CS, CC-BY 4.0, non-profit, Scopus. ISSN 2300-7036.
+- Foundations of Computing and Decision Sciences (40) — Sciendo/Poznań, no APC, Scopus. ISSN 0867-6356.
+
+**Subscription = free for the author (paywalled; self-archive a preprint for green OA):**
+- Information & Software Technology (**140**), Empirical Software Engineering (**140**),
+  Journal of Systems and Software (**100**), Software: Practice & Experience (70), Computing (70).
+
+Best free + points: **IST (140)** or **JSS (100)** via subscription + arXiv preprint.
+Free + open + continuity: e-Informatica or Computer Science AGH (40).
+
 ## Topical precedent (Crossref-verified)
 
 - **Future Internet** 2024 — Salunke & Ouda, *A Performance Benchmark for the
