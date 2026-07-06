@@ -87,12 +87,13 @@ export default async function createAdapter({ engine, config }) {
       // MikroORM's SQL drivers expose the underlying knex; fall back to raw exec.
       const rows = await em.getConnection().execute(
         `SELECT a.id AS author_id,
-                COUNT(DISTINCT p.id) AS posts,
+                COUNT(p.id) AS posts,
                 COALESCE(SUM(p.views),0) AS views,
-                COUNT(c.id) AS comments
+                COALESCE(SUM(cc.cnt),0) AS comments
            FROM authors a
            LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN comments c ON c.post_id = p.id
+           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
+                  ON cc.post_id = p.id
           WHERE a.id = ?
           GROUP BY a.id`, [id]);
       void knex;
@@ -108,6 +109,6 @@ export default async function createAdapter({ engine, config }) {
       return { id: num(post.id) };
     },
 
-    async close() { await orm.close(true); },
+    async close() { try { await orm.close(true); } catch { /* teardown races on pooled conns */ } },
   };
 }

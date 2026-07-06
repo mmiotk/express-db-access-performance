@@ -13,7 +13,7 @@
 //
 // Example (quick sanity): ADAPTERS=pg,knex ENGINES=postgres DURATION=3 REPEATS=1 node bench/runner.mjs
 
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -73,7 +73,15 @@ function runAutocannon(opts, { duration }) {
   });
 }
 
+// Prisma's client is generated per provider; regenerate before a prisma cell so
+// the full matrix runs in one command.
+function ensurePrismaClient(engine) {
+  const schema = join(here, '..', 'prisma', `schema.${engine}.prisma`);
+  execFileSync('npx', ['prisma', 'generate', `--schema=${schema}`], { stdio: 'ignore' });
+}
+
 async function benchCell(adapter, engine, port) {
+  if (adapter === 'prisma') ensurePrismaClient(engine);
   const base = `http://127.0.0.1:${port}`;
   const child = spawn(process.execPath, [join(here, '..', 'src', 'server.mjs')], {
     env: { ...process.env, ADAPTER: adapter, ENGINE: engine, PORT: String(port) },

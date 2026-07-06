@@ -2,26 +2,32 @@
 
 Ordered roughly by priority. `[ ]` open, `[x]` done.
 
-## 0. Validate the harness against live databases (BLOCKER)
+## 0. Validate the harness against live databases — DONE (2026-07-06)
 
-The adapters are written to each layer's idiomatic API but have **not** run against
-a real PostgreSQL/MySQL yet (this env had no Docker/DB). Before any measurements:
+- [x] User-space PostgreSQL 18.4 + MySQL 9.7.1 via conda (`scripts/db-local.sh`),
+      migrated + seeded both engines.
+- [x] **Correctness cross-check** (`bench/verify.mjs`): all 8 adapters per engine
+      return identical normalized JSON to the native baseline. It caught two real
+      bugs, now fixed: (a) a `SUM(views)` **fan-out** inflation in the aggregation
+      of every join-based adapter (objection's subquery form was the correct one);
+      (b) Drizzle's `db.execute` result-shape parsing for mysql2.
+- [x] First full matrix run: 9 layers × 2 engines × 5 patterns = 80 rows →
+      `results/{raw.json,summary.csv}` + 10 LaTeX tables, wired into the paper (9pp).
 
-- [ ] `npm run db:up && npm run migrate && npm run seed` on both engines.
-- [ ] Boot each adapter (`ADAPTER=… ENGINE=… npm start`) and hit all 5 endpoints;
-      fix driver-specific quirks (BigInt serialization, `db.execute` result shape
-      for Drizzle, MikroORM `populate` ordering, Prisma raw-SQL param placeholder).
-- [ ] **Correctness cross-check**: assert every adapter returns the *same* JSON for
-      the same id (a script that diffs `/posts/1/thread` etc. across adapters) — this
-      is what proves no adapter is cheating via N+1 or a wrong query. Add as a test.
-- [ ] `npm run bench:quick` end-to-end; then the full matrix.
+## 1. Measurement design (next)
 
-## 1. Measurement design
-
-- [ ] Decide same-host vs two-machine (see METHODOLOGY open questions).
-- [ ] Add a concurrency sweep (1/10/50/100/200) — locate saturation per layer.
-- [ ] Add per-cell CPU/RSS sampling for a resource table.
+- [ ] **Fix range-scan confound**: current `ORDER BY created_at DESC` sorts over
+      near-identical seed timestamps with large random OFFSET → dominates MySQL and
+      is not an access-layer signal. Switch to keyset pagination and/or spread
+      `created_at` in the seed; re-run.
+- [ ] Scale up: default seed (1k/20k/200k), DURATION≥10, REPEATS≥5, then report
+      medians + CV (harness already computes these).
+- [ ] Concurrency sweep (1/10/50/100/200) — locate saturation per layer.
+- [ ] Per-cell CPU/RSS sampling for a resource table.
+- [ ] Investigate MikroORM's flat slowness (per-request `em.fork()` overhead?) —
+      confirm it's idiomatic and not a harness artifact.
 - [ ] Optional: k6 constant-arrival cross-run to bound coordinated omission.
+- [ ] Decide same-host vs two-machine (see METHODOLOGY open questions).
 
 ## 2. Secondary studies (differentiators vs prior art)
 

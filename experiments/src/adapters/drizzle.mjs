@@ -93,15 +93,17 @@ export default async function createAdapter({ engine, config }) {
       // aggregation kept as raw SQL for parity with the native baseline
       const res = await db.execute(sql`
         SELECT a.id AS author_id,
-               COUNT(DISTINCT p.id) AS posts,
+               COUNT(p.id) AS posts,
                COALESCE(SUM(p.views),0) AS views,
-               COUNT(c.id) AS comments
+               COALESCE(SUM(cc.cnt),0) AS comments
           FROM authors a
           LEFT JOIN posts p ON p.author_id = a.id
-          LEFT JOIN comments c ON c.post_id = p.id
+          LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
+                 ON cc.post_id = p.id
          WHERE a.id = ${id}
          GROUP BY a.id`);
-      const r = Array.isArray(res) ? res[0] : (res.rows ? res.rows[0] : res[0]?.[0]);
+      // node-postgres returns { rows }; mysql2 returns [rows, fields].
+      const r = engine === 'postgres' ? res.rows?.[0] : res[0]?.[0];
       if (!r) return null;
       return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
     },

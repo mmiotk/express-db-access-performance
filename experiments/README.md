@@ -21,7 +21,12 @@ five workload endpoints that map onto the canonical access patterns:
 ## Requirements
 
 - Node ≥ 20 (tested on 24), npm
-- Docker + Docker Compose (for the DB engines) — or a local PostgreSQL 16 / MySQL 8
+- DB engines, either:
+  - **Docker** (`docker compose up -d`) — PostgreSQL 16 / MySQL 8.4, or
+  - **No Docker / no root**: conda user-space engines via
+    `scripts/db-local.sh` (`conda create -n dbbench -c conda-forge postgresql
+    mysql-server`, then `./scripts/db-local.sh init`). The reference run used this
+    path with PostgreSQL 18.4 / MySQL 9.7.1.
 
 ## Setup
 

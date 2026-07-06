@@ -76,17 +76,20 @@ export default async function createAdapter({ engine, config }) {
     },
 
     async authorSummary(id) {
-      const r = await ds.createQueryBuilder()
-        .select('a.id', 'author_id')
-        .addSelect('COUNT(DISTINCT p.id)', 'posts')
-        .addSelect('COALESCE(SUM(p.views),0)', 'views')
-        .addSelect('COUNT(c.id)', 'comments')
-        .from('authors', 'a')
-        .leftJoin('posts', 'p', 'p.author_id = a.id')
-        .leftJoin('comments', 'c', 'c.post_id = p.id')
-        .where('a.id = :id', { id })
-        .groupBy('a.id')
-        .getRawOne();
+      // Pre-aggregated comments subquery avoids the fan-out inflating SUM(views).
+      const ph = engine === 'postgres' ? '$1' : '?';
+      const rows = await ds.query(
+        `SELECT a.id AS author_id,
+                COUNT(p.id) AS posts,
+                COALESCE(SUM(p.views),0) AS views,
+                COALESCE(SUM(cc.cnt),0) AS comments
+           FROM authors a
+           LEFT JOIN posts p ON p.author_id = a.id
+           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
+                  ON cc.post_id = p.id
+          WHERE a.id = ${ph}
+          GROUP BY a.id`, [id]);
+      const r = rows[0];
       if (!r) return null;
       return { author_id: num(r.author_id), posts: num(r.posts), comments: num(r.comments), views: num(r.views || 0) };
     },

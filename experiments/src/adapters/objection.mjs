@@ -57,6 +57,7 @@ export default async function createAdapter({ engine, config }) {
     },
 
     async authorSummary(id) {
+      // Correlated subqueries — no fan-out, so SUM(views) is not inflated.
       const r = await Author.query()
         .findById(id)
         .select(

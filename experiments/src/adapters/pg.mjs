@@ -49,14 +49,18 @@ export default async function createAdapter({ config }) {
     },
 
     async authorSummary(id) {
+      // Pre-aggregate comments per post so the posts↔comments fan-out does not
+      // inflate SUM(views). (Joining comments directly multiplies each post's
+      // views by its comment count — a classic aggregation bug.)
       const { rows } = await pool.query(
         `SELECT a.id AS author_id,
-                COUNT(DISTINCT p.id)                    AS posts,
-                COALESCE(SUM(p.views), 0)               AS views,
-                COUNT(c.id)                             AS comments
+                COUNT(p.id)                 AS posts,
+                COALESCE(SUM(p.views), 0)   AS views,
+                COALESCE(SUM(cc.cnt), 0)    AS comments
            FROM authors a
-           LEFT JOIN posts p    ON p.author_id = a.id
-           LEFT JOIN comments c ON c.post_id  = p.id
+           LEFT JOIN posts p ON p.author_id = a.id
+           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
+                  ON cc.post_id = p.id
           WHERE a.id = $1
           GROUP BY a.id`, [id]);
       if (!rows[0]) return null;

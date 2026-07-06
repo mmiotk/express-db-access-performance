@@ -44,18 +44,21 @@ export default async function createAdapter({ engine, config }) {
     },
 
     async authorSummary(id) {
+      // Pre-aggregate comments (subquery join) so the fan-out does not inflate
+      // SUM(views); expressed via the query builder end to end.
+      const cc = knex('comments').select('post_id').count('* as cnt').groupBy('post_id').as('cc');
       const r = await knex('authors as a')
         .leftJoin('posts as p', 'p.author_id', 'a.id')
-        .leftJoin('comments as c', 'c.post_id', 'p.id')
+        .leftJoin(cc, 'cc.post_id', 'p.id')
         .where('a.id', id)
         .groupBy('a.id')
         .select('a.id as author_id')
-        .countDistinct('p.id as posts')
-        .count('c.id as comments')
+        .count('p.id as posts')
         .sum('p.views as views')
+        .sum('cc.cnt as comments')
         .first();
       if (!r) return null;
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
+      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments || 0), views: Number(r.views || 0) };
     },
 
     async createPost({ authorId, title, body }) {
