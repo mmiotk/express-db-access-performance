@@ -20,6 +20,12 @@ cross-checked where possible). Indexing / APC / scope from primary journal pages
 | Future Internet (MDPI) | **40** | Scopus+WoS (ESCI), IF 4.6 | CHF 1,800 | ★ **best topical precedent** | High/fast; MDPI caveat |
 | Array (Elsevier) | **40** | Scopus+WoS (ESCI), IF ~5.3 | $2,250 | SE + technical notes | Medium |
 
+> ⚠️ **e-Informatica = 40, not 200.** Some tools show 200 — that is the **withdrawn
+> July 2023 (Czarnek) list**; the binding 5 Jan 2024 wykaz reverted it to 40. There
+> is no separate "2025" list (the 2024 komunikat covers 2024–2025). All 13 values
+> above were independently double-verified (gov.pl PDF + OMEGA-PSIR bases at Poznań
+> Tech / PW / UŁ / AMU + MOST Wiedzy).
+
 ## Topical precedent (Crossref-verified)
 
 - **Future Internet** 2024 — Salunke & Ouda, *A Performance Benchmark for the
