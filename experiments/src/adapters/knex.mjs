@@ -17,8 +17,8 @@ export default async function createAdapter({ engine, config }) {
       return (await knex('posts').where({ id }).first()) || null;
     },
 
-    async listPosts({ limit, offset }) {
-      return knex('posts').orderBy([{ column: 'created_at', order: 'desc' }, { column: 'id', order: 'desc' }]).limit(limit).offset(offset);
+    async listPosts({ limit, before }) {
+      return knex('posts').where('id', '<', before).orderBy('id', 'desc').limit(limit);
     },
 
     async getThread(id) {
@@ -44,21 +44,18 @@ export default async function createAdapter({ engine, config }) {
     },
 
     async authorSummary(id) {
-      // Pre-aggregate comments (subquery join) so the fan-out does not inflate
-      // SUM(views); expressed via the query builder end to end.
-      const cc = knex('comments').select('post_id').count('* as cnt').groupBy('post_id').as('cc');
-      const r = await knex('authors as a')
-        .leftJoin('posts as p', 'p.author_id', 'a.id')
-        .leftJoin(cc, 'cc.post_id', 'p.id')
-        .where('a.id', id)
-        .groupBy('a.id')
-        .select('a.id as author_id')
-        .count('p.id as posts')
-        .sum('p.views as views')
-        .sum('cc.cnt as comments')
-        .first();
+      // Aggregation via the raw escape hatch (documented in METHODOLOGY): correlated
+      // subqueries touch only this author's rows — no fan-out, no full-table scan.
+      const res = await knex.raw(
+        `SELECT a.id AS author_id,
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
+           FROM authors a WHERE a.id = ?`, [id]);
+      const r = (res.rows ? res.rows : res[0])[0]; // pg: {rows}; mysql2: [rows,fields]
       if (!r) return null;
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments || 0), views: Number(r.views || 0) };
+      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
     },
 
     async createPost({ authorId, title, body }) {

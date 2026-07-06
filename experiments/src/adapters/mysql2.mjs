@@ -18,10 +18,10 @@ export default async function createAdapter({ config }) {
       return rows[0] || null;
     },
 
-    async listPosts({ limit, offset }) {
+    async listPosts({ limit, before }) {
       const [rows] = await pool.query(
-        'SELECT * FROM posts ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?',
-        [limit, offset]);
+        'SELECT * FROM posts WHERE id < ? ORDER BY id DESC LIMIT ?',
+        [before, limit]);
       return rows;
     },
 
@@ -51,18 +51,16 @@ export default async function createAdapter({ config }) {
     },
 
     async authorSummary(id) {
-      // Pre-aggregate comments per post to avoid the fan-out inflating SUM(views).
+      // Correlated subqueries: touch only this author's rows (no fan-out, no
+      // full-table GROUP BY per request).
       const [rows] = await pool.query(
         `SELECT a.id AS author_id,
-                COUNT(p.id)               AS posts,
-                COALESCE(SUM(p.views), 0) AS views,
-                COALESCE(SUM(cc.cnt), 0)  AS comments
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
            FROM authors a
-           LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                  ON cc.post_id = p.id
-          WHERE a.id = ?
-          GROUP BY a.id`, [id]);
+          WHERE a.id = ?`, [id]);
       if (!rows[0]) return null;
       const r = rows[0];
       return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views) };

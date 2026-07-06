@@ -1,6 +1,6 @@
 // ORM — Sequelize. Models + `include` eager loading (single query with joins)
 // for the deep fetch. Aggregation via a raw SELECT to keep it comparable.
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import { Sequelize, DataTypes, Model, Op } from 'sequelize';
 
 export default async function createAdapter({ engine, config }) {
   const c = engine === 'postgres' ? config.postgres : config.mysql;
@@ -36,8 +36,8 @@ export default async function createAdapter({ engine, config }) {
       return p || null;
     },
 
-    async listPosts({ limit, offset }) {
-      return Post.findAll({ order: [['created_at', 'DESC'], ['id', 'DESC']], limit, offset, raw: true });
+    async listPosts({ limit, before }) {
+      return Post.findAll({ where: { id: { [Op.lt]: before } }, order: [['id', 'DESC']], limit, raw: true });
     },
 
     async getThread(id) {
@@ -60,15 +60,12 @@ export default async function createAdapter({ engine, config }) {
     async authorSummary(id) {
       const [rows] = await sequelize.query(
         `SELECT a.id AS author_id,
-                COUNT(p.id) AS posts,
-                COALESCE(SUM(p.views),0) AS views,
-                COALESCE(SUM(cc.cnt),0) AS comments
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
            FROM authors a
-           LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                  ON cc.post_id = p.id
-          WHERE a.id = ${engine === 'postgres' ? '$1' : '?'}
-          GROUP BY a.id`,
+          WHERE a.id = ${engine === 'postgres' ? '$1' : '?'}`,
         { bind: engine === 'postgres' ? [id] : undefined, replacements: engine === 'postgres' ? undefined : [id] });
       const r = rows[0];
       if (!r) return null;

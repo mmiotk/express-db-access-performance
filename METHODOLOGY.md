@@ -11,7 +11,7 @@ against. Grounded in the prior-art review (`notes/prior-art.md`), especially
 |---|---|
 | Access layer | pg, mysql2, knex, drizzle, prisma, sequelize, typeorm, objection, mikroorm |
 | Engine | PostgreSQL 16, MySQL 8.4 |
-| Access pattern (endpoint) | point read, range scan, deep/nested fetch, aggregation, insert |
+| Access pattern (endpoint) | point read, range scan (keyset), deep/nested fetch, aggregation, insert |
 
 `pg` runs on PostgreSQL only, `mysql2` on MySQL only; every other layer runs on both.
 
@@ -46,6 +46,8 @@ against. Grounded in the prior-art review (`notes/prior-art.md`), especially
 | **Coordinated omission** (load tester stalls, hiding tail) | autocannon issues requests continuously at fixed concurrency; per-request latency histogram; document `CONNECTIONS`. Cross-checking with a fixed-rate tool (k6 constant-arrival) is a planned robustness check. |
 | **Disk-sync noise** dominating over layer cost | Engines configured with durability off and working set in RAM (`docker-compose.yml`); benchmark targets access-layer CPU/allocation, not storage. |
 | **Plan-cache / prepared-statement warmth differences** | Warm-up runs the exact endpoint mix first; seed is `ANALYZE`d after load. |
+| **Write endpoint mutating the dataset** | The insert workload grows `posts` unboundedly and differently per engine, contaminating later read/aggregation cells and breaking reproducibility. The runner deletes benchmark inserts (`id > SEED_POSTS`) at the start of every cell, so each begins from the identical seeded table. |
+| **Query formulation confound in aggregation** | A pre-aggregated-comments join re-scans the whole comments table per request (full `GROUP BY`), so it measured SQL shape, not the access layer, and collapsed at scale. All adapters use the same correlated-subquery form (touching only the target author's rows); the endpoint then measures layer overhead on an identical, efficient plan. |
 | **Environment drift** | `bench/environment.mjs` records Node version, CPU, RAM, OS into `results/environment.txt`, cited in the paper's setup table. |
 
 ## Reproducibility

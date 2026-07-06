@@ -1,7 +1,7 @@
 // ORM — TypeORM via EntitySchema (decorator-free, so it runs in plain JS ESM).
 // Deep fetch uses `relations` eager loading; aggregation via QueryBuilder.
 import 'reflect-metadata';
-import { DataSource, EntitySchema } from 'typeorm';
+import { DataSource, EntitySchema, LessThan } from 'typeorm';
 
 const Author = new EntitySchema({
   name: 'Author', tableName: 'authors',
@@ -57,8 +57,8 @@ export default async function createAdapter({ engine, config }) {
       return (await posts.findOne({ where: { id } })) || null;
     },
 
-    async listPosts({ limit, offset }) {
-      return posts.find({ order: { created_at: 'DESC', id: 'DESC' }, take: limit, skip: offset });
+    async listPosts({ limit, before }) {
+      return posts.find({ where: { id: LessThan(before) }, order: { id: 'DESC' }, take: limit });
     },
 
     async getThread(id) {
@@ -76,19 +76,16 @@ export default async function createAdapter({ engine, config }) {
     },
 
     async authorSummary(id) {
-      // Pre-aggregated comments subquery avoids the fan-out inflating SUM(views).
+      // Correlated subqueries — touch only this author's rows (no fan-out, no scan).
       const ph = engine === 'postgres' ? '$1' : '?';
       const rows = await ds.query(
         `SELECT a.id AS author_id,
-                COUNT(p.id) AS posts,
-                COALESCE(SUM(p.views),0) AS views,
-                COALESCE(SUM(cc.cnt),0) AS comments
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
            FROM authors a
-           LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                  ON cc.post_id = p.id
-          WHERE a.id = ${ph}
-          GROUP BY a.id`, [id]);
+          WHERE a.id = ${ph}`, [id]);
       const r = rows[0];
       if (!r) return null;
       return { author_id: num(r.author_id), posts: num(r.posts), comments: num(r.comments), views: num(r.views || 0) };

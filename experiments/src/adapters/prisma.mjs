@@ -21,9 +21,9 @@ export default async function createAdapter({ engine, config }) {
       return post(await prisma.post.findUnique({ where: { id: BigInt(id) } }));
     },
 
-    async listPosts({ limit, offset }) {
+    async listPosts({ limit, before }) {
       const rows = await prisma.post.findMany({
-        orderBy: [{ created_at: 'desc' }, { id: 'desc' }], take: limit, skip: offset,
+        where: { id: { lt: BigInt(before) } }, orderBy: { id: 'desc' }, take: limit,
       });
       return rows.map(post);
     },
@@ -47,15 +47,12 @@ export default async function createAdapter({ engine, config }) {
     async authorSummary(id) {
       const rows = await prisma.$queryRawUnsafe(
         `SELECT a.id AS author_id,
-                COUNT(p.id) AS posts,
-                COALESCE(SUM(p.views),0) AS views,
-                COALESCE(SUM(cc.cnt),0) AS comments
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
            FROM authors a
-           LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                  ON cc.post_id = p.id
-          WHERE a.id = ${engine === 'postgres' ? '$1' : '?'}
-          GROUP BY a.id`, id);
+          WHERE a.id = ${engine === 'postgres' ? '$1' : '?'}`, id);
       const r = rows[0];
       if (!r) return null;
       return { author_id: n(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };

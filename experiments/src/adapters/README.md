@@ -14,8 +14,8 @@ export default async function createAdapter({ engine, config }) {
     // 1. POINT READ — fetch one post by primary key
     async getPost(id) { /* -> post | null */ },
 
-    // 2. RANGE SCAN — newest-first page of posts
-    async listPosts({ limit, offset }) { /* -> post[] */ },
+    // 2. RANGE SCAN — keyset pagination: newest-first page of posts with id < before
+    async listPosts({ limit, before }) { /* -> post[] (id DESC, id < before) */ },
 
     // 3. DEEP / NESTED FETCH (N+1-sensitive) — post + its author +
     //    all comments, each with its comment-author

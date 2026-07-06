@@ -18,6 +18,8 @@ import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import autocannon from 'autocannon';
+import pg from 'pg';
+import mysql from 'mysql2/promise';
 import { ADAPTERS, config as cfg } from '../src/config.mjs';
 import { median, toCsv, texTable } from './stats.mjs';
 
@@ -42,7 +44,7 @@ const rnd = (n) => 1 + Math.floor(Math.random() * n);
 function endpoints(base) {
   return [
     { key: 'point_read', title: 'Point read', opts: { url: base, requests: [{ setupRequest: (r) => ({ ...r, method: 'GET', path: `/posts/${rnd(SEED_POSTS)}` }) }] } },
-    { key: 'range_scan', title: 'Range scan', opts: { url: base, requests: [{ setupRequest: (r) => ({ ...r, method: 'GET', path: `/posts?limit=20&offset=${rnd(SEED_POSTS - 20)}` }) }] } },
+    { key: 'range_scan', title: 'Range scan', opts: { url: base, requests: [{ setupRequest: (r) => ({ ...r, method: 'GET', path: `/posts?limit=20&before=${20 + rnd(SEED_POSTS)}` }) }] } },
     { key: 'deep_fetch', title: 'Deep fetch', opts: { url: base, requests: [{ setupRequest: (r) => ({ ...r, method: 'GET', path: `/posts/${rnd(SEED_POSTS)}/thread` }) }] } },
     { key: 'aggregation', title: 'Aggregation', opts: { url: base, requests: [{ setupRequest: (r) => ({ ...r, method: 'GET', path: `/authors/${rnd(SEED_AUTHORS)}/summary` }) }] } },
     { key: 'write', title: 'Insert', opts: { url: base, requests: [{ method: 'POST', path: '/posts', headers: { 'content-type': 'application/json' }, setupRequest: (r) => ({ ...r, body: JSON.stringify({ authorId: rnd(SEED_AUTHORS), title: 'bench', body: 'x' }) }) }] } },
@@ -80,6 +82,20 @@ function ensurePrismaClient(engine) {
   execFileSync('npx', ['prisma', 'generate', `--schema=${schema}`], { stdio: 'ignore' });
 }
 
+// The write endpoint inserts rows; delete them so every cell starts from the
+// identical seeded table (reproducibility + isolation between adapters/engines).
+// Seeded posts have id <= SEED_POSTS; benchmark inserts have id > SEED_POSTS and
+// carry no comments, so this is FK-safe.
+async function resetWrites(engine) {
+  if (engine === 'postgres') {
+    const c = new pg.Client(cfg.postgres); await c.connect();
+    await c.query('DELETE FROM posts WHERE id > $1', [SEED_POSTS]); await c.end();
+  } else {
+    const c = await mysql.createConnection(cfg.mysql);
+    await c.query('DELETE FROM posts WHERE id > ?', [SEED_POSTS]); await c.end();
+  }
+}
+
 async function benchCell(adapter, engine, port) {
   if (adapter === 'prisma') ensurePrismaClient(engine);
   const base = `http://127.0.0.1:${port}`;
@@ -91,6 +107,7 @@ async function benchCell(adapter, engine, port) {
   const rows = [];
   try {
     await waitForHealth(base);
+    await resetWrites(engine); // start every cell from the identical seeded table
     for (const ep of endpoints(base)) {
       // warm-up (JIT + pool fill + plan cache) — measurements discarded
       if (WARMUP > 0) await runAutocannon(ep.opts, { duration: WARMUP });

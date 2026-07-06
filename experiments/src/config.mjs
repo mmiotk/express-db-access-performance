@@ -46,11 +46,11 @@ export const config = {
     database: process.env.MYSQLDATABASE || 'bench',
   },
 
-  // Seed sizing (rows). Kept modest so the working set fits in shared_buffers /
-  // buffer pool — the benchmark targets access-layer overhead, not disk I/O.
+  // Seed sizing (rows). Kept so the working set fits in shared_buffers / buffer
+  // pool — the benchmark targets access-layer overhead, not disk I/O.
   seed: {
-    authors: int(process.env.SEED_AUTHORS, 1000),
-    posts: int(process.env.SEED_POSTS, 20000),
+    authors: int(process.env.SEED_AUTHORS, 2000),
+    posts: int(process.env.SEED_POSTS, 100000),
     commentsPerPost: int(process.env.SEED_COMMENTS_PER_POST, 10),
   },
 };

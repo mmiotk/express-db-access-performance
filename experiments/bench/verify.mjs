@@ -35,12 +35,15 @@ async function probe(name) {
   const db = await create({ engine, config });
   try {
     const getPost = await db.getPost(POST_ID);
-    const list = await db.listPosts({ limit: 20, offset: 0 });
+    // keyset page just below id=1000 → deterministic across adapters
+    const list = await db.listPosts({ limit: 20, before: 1000 });
     const thread = await db.getThread(POST_ID);
     const summary = await db.authorSummary(AUTHOR_ID);
     return {
       getPost: { id: Number(getPost.id), title: getPost.title },
       listCount: list.length,
+      listFirstId: Number(list[0].id),
+      listLastId: Number(list[list.length - 1].id),
       thread: {
         postId: Number(thread.post.id),
         authorId: Number(thread.author.id),

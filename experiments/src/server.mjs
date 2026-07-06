@@ -38,11 +38,12 @@ app.get('/posts/:id/thread', h(async (req, res) => {
   res.json(thread);
 }));
 
-// 2. range scan / pagination
+// 2. range scan — keyset pagination by primary key (WHERE id < before). Uses the
+//    PK index and is O(limit) regardless of depth, unlike large-OFFSET scans.
 app.get('/posts', h(async (req, res) => {
   const limit = Math.min(Number(req.query.limit) || 20, 100);
-  const offset = Number(req.query.offset) || 0;
-  res.json(await db.listPosts({ limit, offset }));
+  const before = req.query.before ? Number(req.query.before) : Number.MAX_SAFE_INTEGER;
+  res.json(await db.listPosts({ limit, before }));
 }));
 
 // 4. aggregation

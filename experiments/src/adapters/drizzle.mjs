@@ -1,7 +1,7 @@
 // ORM (lightweight) — Drizzle. Schema is defined per-dialect; queries use the
 // typed query builder with explicit joins (2-query deep fetch, no N+1). This is
 // Drizzle's idiomatic style and mirrors the native-driver query plan closely.
-import { eq, desc, sql } from 'drizzle-orm';
+import { eq, lt, desc, sql } from 'drizzle-orm';
 
 export default async function createAdapter({ engine, config }) {
   let db, tables, close;
@@ -63,8 +63,8 @@ export default async function createAdapter({ engine, config }) {
       return rows[0] || null;
     },
 
-    async listPosts({ limit, offset }) {
-      return db.select().from(posts).orderBy(desc(posts.created_at), desc(posts.id)).limit(limit).offset(offset);
+    async listPosts({ limit, before }) {
+      return db.select().from(posts).where(lt(posts.id, before)).orderBy(desc(posts.id)).limit(limit);
     },
 
     async getThread(id) {
@@ -93,15 +93,12 @@ export default async function createAdapter({ engine, config }) {
       // aggregation kept as raw SQL for parity with the native baseline
       const res = await db.execute(sql`
         SELECT a.id AS author_id,
-               COUNT(p.id) AS posts,
-               COALESCE(SUM(p.views),0) AS views,
-               COALESCE(SUM(cc.cnt),0) AS comments
+               (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+               (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+               (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                  WHERE p.author_id = a.id) AS comments
           FROM authors a
-          LEFT JOIN posts p ON p.author_id = a.id
-          LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                 ON cc.post_id = p.id
-         WHERE a.id = ${id}
-         GROUP BY a.id`);
+         WHERE a.id = ${id}`);
       // node-postgres returns { rows }; mysql2 returns [rows, fields].
       const r = engine === 'postgres' ? res.rows?.[0] : res[0]?.[0];
       if (!r) return null;

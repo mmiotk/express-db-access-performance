@@ -15,10 +15,10 @@ export default async function createAdapter({ config }) {
       return rows[0] || null;
     },
 
-    async listPosts({ limit, offset }) {
+    async listPosts({ limit, before }) {
       const { rows } = await pool.query(
-        'SELECT * FROM posts ORDER BY created_at DESC, id DESC LIMIT $1 OFFSET $2',
-        [limit, offset],
+        'SELECT * FROM posts WHERE id < $1 ORDER BY id DESC LIMIT $2',
+        [before, limit],
       );
       return rows;
     },
@@ -49,20 +49,18 @@ export default async function createAdapter({ config }) {
     },
 
     async authorSummary(id) {
-      // Pre-aggregate comments per post so the posts↔comments fan-out does not
-      // inflate SUM(views). (Joining comments directly multiplies each post's
-      // views by its comment count — a classic aggregation bug.)
+      // Correlated subqueries: each touches only THIS author's rows (no fan-out
+      // inflating SUM(views), and no full-table GROUP BY). A pre-aggregated
+      // comments join would re-scan all comments per request — orders of
+      // magnitude slower at scale.
       const { rows } = await pool.query(
         `SELECT a.id AS author_id,
-                COUNT(p.id)                 AS posts,
-                COALESCE(SUM(p.views), 0)   AS views,
-                COALESCE(SUM(cc.cnt), 0)    AS comments
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
            FROM authors a
-           LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                  ON cc.post_id = p.id
-          WHERE a.id = $1
-          GROUP BY a.id`, [id]);
+          WHERE a.id = $1`, [id]);
       if (!rows[0]) return null;
       const r = rows[0];
       return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views) };

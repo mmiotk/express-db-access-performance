@@ -58,9 +58,9 @@ export default async function createAdapter({ engine, config }) {
       return (await em.findOne(Post, { id })) || null;
     },
 
-    async listPosts({ limit, offset }) {
+    async listPosts({ limit, before }) {
       const em = orm.em.fork();
-      return em.find(Post, {}, { orderBy: { created_at: 'DESC', id: 'DESC' }, limit, offset });
+      return em.find(Post, { id: { $lt: before } }, { orderBy: { id: 'DESC' }, limit });
     },
 
     async getThread(id) {
@@ -87,15 +87,12 @@ export default async function createAdapter({ engine, config }) {
       // MikroORM's SQL drivers expose the underlying knex; fall back to raw exec.
       const rows = await em.getConnection().execute(
         `SELECT a.id AS author_id,
-                COUNT(p.id) AS posts,
-                COALESCE(SUM(p.views),0) AS views,
-                COALESCE(SUM(cc.cnt),0) AS comments
+                (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
+                (SELECT COALESCE(SUM(p.views),0) FROM posts p WHERE p.author_id = a.id) AS views,
+                (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
+                   WHERE p.author_id = a.id) AS comments
            FROM authors a
-           LEFT JOIN posts p ON p.author_id = a.id
-           LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) cc
-                  ON cc.post_id = p.id
-          WHERE a.id = ?
-          GROUP BY a.id`, [id]);
+          WHERE a.id = ?`, [id]);
       void knex;
       const r = rows[0];
       if (!r) return null;

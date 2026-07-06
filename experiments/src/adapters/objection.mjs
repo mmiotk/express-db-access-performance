@@ -40,8 +40,8 @@ export default async function createAdapter({ engine, config }) {
       return (await Post.query().findById(id)) || null;
     },
 
-    async listPosts({ limit, offset }) {
-      return Post.query().orderBy('created_at', 'desc').orderBy('id', 'desc').limit(limit).offset(offset);
+    async listPosts({ limit, before }) {
+      return Post.query().where('id', '<', before).orderBy('id', 'desc').limit(limit);
     },
 
     async getThread(id) {
