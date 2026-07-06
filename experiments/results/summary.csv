@@ -14,11 +14,6 @@ drizzle,postgres,orm-lightweight,range_scan,2764,17,18.5,19.5,21,100,252,50,4,10
 drizzle,postgres,orm-lightweight,deep_fetch,2098,23,25,26,28,100,251,50,4,10
 drizzle,postgres,orm-lightweight,aggregation,6696,7,7.5,9.5,10.5,100,250,50,4,10
 drizzle,postgres,orm-lightweight,write,4795,10,10.5,12,12.5,100,252,50,4,10
-prisma,postgres,orm,point_read,6005,8,8,9.5,11.5,274,246,50,4,10
-prisma,postgres,orm,range_scan,3697,13,15,19.5,21.5,315,257,50,4,10
-prisma,postgres,orm,deep_fetch,3569,13,15,19.5,21,485,267,50,4,10
-prisma,postgres,orm,aggregation,8181,5,6,8,9,189,268,50,4,10
-prisma,postgres,orm,write,5652,8,8,11,11.5,290,263,50,4,10
 sequelize,postgres,orm,point_read,3671,13,14,15,17,100,203,50,4,10
 sequelize,postgres,orm,range_scan,2899,16,17.5,18.5,20.5,100,210,50,4,10
 sequelize,postgres,orm,deep_fetch,1066,45,49,53.5,58.5,100,258,50,4,10
@@ -54,11 +49,6 @@ drizzle,mysql,orm-lightweight,range_scan,2186,21,25,27.5,31,105,298,50,4,10
 drizzle,mysql,orm-lightweight,deep_fetch,1440,33,36.5,41.5,45,105,297,50,4,10
 drizzle,mysql,orm-lightweight,aggregation,4277,10.5,13,15,16,105,298,50,4,10
 drizzle,mysql,orm-lightweight,write,919,52,54,59.5,75,30,299,50,4,10
-prisma,mysql,orm,point_read,5877,8,8,10,11,279,229,50,4,10
-prisma,mysql,orm,range_scan,3659,13,14,18,21,315,248,50,4,10
-prisma,mysql,orm,deep_fetch,3450,13,16,20,22,468,258,50,4,10
-prisma,mysql,orm,aggregation,7697,6,8,9,10,175,259,50,4,10
-prisma,mysql,orm,write,981,49,53.5,66,87,80,252,50,4,10
 sequelize,mysql,orm,point_read,2887,16,18,19.5,21,100,218,50,4,10
 sequelize,mysql,orm,range_scan,2481,19,21,21,21.5,100,230,50,4,10
 sequelize,mysql,orm,deep_fetch,969,50,53.5,58.5,79.5,100,262,50,4,10
@@ -79,3 +69,13 @@ mikroorm,mysql,orm,range_scan,627,77,79,87.5,323,100,280,50,4,10
 mikroorm,mysql,orm,deep_fetch,516,93,99,107,475.5,100,287,50,4,10
 mikroorm,mysql,orm,aggregation,3811,12,14,14.5,16,100,285,50,4,10
 mikroorm,mysql,orm,write,747,64,71.5,85,120,70,366,50,4,10
+prisma,postgres,orm,point_read,5930,8,8.5,10,10.5,275,225,50,4,10
+prisma,postgres,orm,range_scan,3316,14,15,17,18.5,300,248,50,4,10
+prisma,postgres,orm,deep_fetch,3521,13,15,17.5,19,469,259,50,4,10
+prisma,postgres,orm,aggregation,8076,6,6,8,8,199,260,50,4,10
+prisma,postgres,orm,write,5431,9,9,11.5,13,285,256,50,4,10
+prisma,mysql,orm,point_read,5872,8,9,10,11,279,225,50,4,10
+prisma,mysql,orm,range_scan,3678,13,14,16,17.5,315,242,50,4,10
+prisma,mysql,orm,deep_fetch,3514,13,15,18,19,475,255,50,4,10
+prisma,mysql,orm,aggregation,7693,6,7,8,9,195,255,50,4,10
+prisma,mysql,orm,write,799,59,69,82.5,107,75,248,50,4,10

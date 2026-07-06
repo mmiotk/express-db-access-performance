@@ -74,7 +74,7 @@ tail rather than the mean determines user-perceived latency once a request
 fans out over many components, as an Express request serving a deep/nested
 fetch does. Neither paper studies access layers, but together they motivate
 a design choice absent from every benchmark surveyed above: report
-throughput \emph{and} tail latency (p50/p90/p99) for the same run, rather
+throughput \emph{and} tail latency (p99) for the same run, rather
 than a single metric chosen after the fact.
 
 \paragraph{Positioning.}
@@ -88,7 +88,7 @@ as~\cite{salunke2024pgmysql}; (2)~it is neutral---the author has no
 commercial stake in any compared product---and covers the full taxonomy,
 native drivers, a query builder, and six ORMs, in one design, rather than
 the two or three libraries typical of peer-reviewed work; (3)~it reports
-throughput and tail latency (p50/p90/p99) jointly for every cell, rather
+throughput and tail latency (p99) jointly for every cell, rather
 than the single metric family each vendor benchmark selects; and (4)~it
 measures through the Express HTTP layer, i.e.\ the request roundtrip a real
 service experiences, rather than in-process query timing alone.
@@ -117,7 +117,7 @@ service experiences, rather than in-process query timing alone.
     Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & No (vendor) \\
     IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & No (vendor) \\
     \midrule
-    \textbf{This study} & \textbf{9 (full taxonomy)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + tail (p50/p90/p99)} & \textbf{Yes} \\
+    \textbf{This study} & \textbf{9 (full taxonomy)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + tail (p99)} & \textbf{Yes} \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

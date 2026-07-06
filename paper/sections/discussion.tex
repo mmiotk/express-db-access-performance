@@ -22,19 +22,20 @@ aggregation spreads just $1.8\times$/$1.4\times$ once every adapter, native
 drivers included, is forced onto the same raw correlated-subquery plan---once
 the SQL shape is fixed, the layer is nearly incidental. Prisma is the clearest
 evidence that ``ORM'' need not mean ``slow'': its compiled query engine stays
-within a few percent of native throughput on the deep fetch (3{,}569
+within a few percent of native throughput on the deep fetch (3{,}521
 vs.\ 3{,}616~req/s) and matches or exceeds native on aggregation on both
-engines (8{,}181 vs.\ 7{,}210~req/s on PostgreSQL). That parity is not free,
-however: Prisma's process draws roughly five times the CPU of the other layers
-on the deep fetch (Section~\ref{sec:results}), trading cores for latency---a cost
-a throughput-only benchmark would miss. Knex and Drizzle sit in a
+engines (8{,}076 vs.\ 7{,}210~req/s on PostgreSQL). That parity is not free,
+however: at the \emph{same} ten-connection pool, Prisma's process draws roughly
+five times the application-side CPU of the other layers on the deep fetch
+($469\%$; Section~\ref{sec:results}), trading cores for latency---a cost a
+throughput-only benchmark would miss. Knex and Drizzle sit in a
 consistent middle ground on every pattern---never fastest, never among the
 data-mapper laggards---which is what a query builder and a non-data-mapper,
 lightweight ORM should deliver.
 
 \paragraph{The engine, not the layer, governs writes.}
 RQ2 has an unusually clean answer on inserts. MySQL write throughput is low
-and flat across all nine layers (\char`~750--930~req/s, a $1.2\times$ spread;
+and flat across all eight layers (\char`~750--930~req/s, a $1.2\times$ spread;
 Table~\ref{tab:write_rps}), while the identical comparison on PostgreSQL
 spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
@@ -49,10 +50,14 @@ dual-engine design used here makes the InnoDB-commit-path explanation visible
 instead of confounded with layer choice.
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking.}
-Reaching the figures above required an automated correctness cross-check that
-compares every adapter's output on every endpoint against a reference, and
-that check earned its cost: it caught four confounds that would otherwise have
-silently corrupted the comparison.
+Reaching the figures above meant confronting four confounds that would otherwise
+have silently corrupted the comparison. Their provenance differs, and the
+distinction is instructive. One---the aggregation fan-out---is a \emph{correctness}
+bug that our automated cross-check caught (the same check, which compares each
+adapter's output against a native-driver reference on four of the five endpoints,
+also caught a driver result-shape mismatch). The other three return \emph{correct}
+results and were therefore invisible to any equality check; they were found only by
+performance analysis. We regard the resulting checklist as reusable:
 \begin{itemize}[leftmargin=*,noitemsep,topsep=2pt]
   \item \textbf{Aggregation fan-out.} A naive join between \texttt{posts} and
         \texttt{comments} evaluated before the \texttt{SUM} multiplies each
@@ -84,8 +89,9 @@ of the genre, extending the general database-benchmarking pitfalls catalogued
 by Fritz et al.~\cite{fritz2021tail} to the access-layer-comparison sub-genre
 specifically. We regard the checklist as a contribution in its own right,
 reusable by anyone comparing drivers, query builders, or ORMs: each confound
-is easy to introduce by accident and hard to detect without an automated
-cross-check, and at least one such confound plausibly explains part of the
+is easy to introduce by accident and hard to detect---the correctness ones without
+an automated cross-check, the performance ones without profiling every cell---and at
+least one such confound plausibly explains part of the
 spread between vendor-reported and independently verified figures, including
 the unverified raw-SQL speedups claimed against Prisma~\cite{prisma_rawsql_2025}
 ---though we did not re-run that study to confirm it.

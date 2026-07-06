@@ -195,9 +195,22 @@ async function main() {
     }
   }
 
-  await writeFile(join(resultsDir, 'raw.json'), JSON.stringify(all, null, 2));
+  // MERGE=1: update only the cells just measured, keeping all other existing rows
+  // (so a targeted re-run of one adapter doesn't discard the rest of the matrix).
+  let merged = all;
+  if (process.env.MERGE === '1') {
+    try {
+      const prev = JSON.parse(readFileSync(join(resultsDir, 'raw.json'), 'utf8'));
+      const key = (r) => `${r.adapter}|${r.engine}|${r.endpoint}`;
+      const fresh = new Set(all.map(key));
+      merged = prev.filter((r) => !fresh.has(key(r))).concat(all);
+      console.log(`[merge] replaced ${all.length} rows, kept ${merged.length - all.length} existing`);
+    } catch { console.warn('[merge] no existing raw.json; writing fresh'); }
+  }
+
+  await writeFile(join(resultsDir, 'raw.json'), JSON.stringify(merged, null, 2));
   // CSV omits the per-run sample arrays (scalar columns only).
-  const flat = all.map(({ rps_samples, p99_samples, ...r }) => r); // eslint-disable-line no-unused-vars
+  const flat = merged.map(({ rps_samples, p99_samples, ...r }) => r); // eslint-disable-line no-unused-vars
   await writeFile(join(resultsDir, 'summary.csv'), toCsv(flat));
 
   const tablesDir = join(resultsDir, 'tables');
@@ -210,11 +223,11 @@ async function main() {
   ];
   for (const [key, caption] of eps) {
     await writeFile(join(tablesDir, `${key}_rps.tex`),
-      texTable({ rows: all, endpoint: key, metric: 'rps', caption, label: `tab:${key}_rps`, unit: 'req/s, higher is better' }));
+      texTable({ rows: merged, endpoint: key, metric: 'rps', caption, label: `tab:${key}_rps`, unit: 'req/s, higher is better' }));
     await writeFile(join(tablesDir, `${key}_p99.tex`),
-      texTable({ rows: all, endpoint: key, metric: 'p99', caption: caption.replace('throughput', 'tail latency (p99)'), label: `tab:${key}_p99`, unit: 'ms, lower is better' }));
+      texTable({ rows: merged, endpoint: key, metric: 'p99', caption: caption.replace('throughput', 'tail latency (p99)'), label: `tab:${key}_p99`, unit: 'ms, lower is better' }));
   }
-  console.log(`\nWrote ${all.length} rows → results/raw.json, summary.csv, ${eps.length * 2} tables.`);
+  console.log(`\nWrote ${merged.length} rows → results/raw.json, summary.csv, ${eps.length * 2} tables.`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

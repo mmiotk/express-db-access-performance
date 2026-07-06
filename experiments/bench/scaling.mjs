@@ -7,6 +7,7 @@
 //      DURATION (4), REPEATS (2), WARMUP (1), PORT (3200).
 import { spawn, execFileSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import autocannon from 'autocannon';
@@ -110,6 +111,16 @@ for (const engine of wantEngines) {
     catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
   }
 }
-await writeFile(join(here, '..', 'results', 'scaling.json'), JSON.stringify(all, null, 2));
-await writeFile(join(here, '..', 'results', 'tables', 'fig_scaling.tex'), figure(all, 'postgres'));
-console.log(`\nWrote ${all.length} points → results/scaling.json + tables/fig_scaling.tex`);
+let merged = all;
+if (process.env.MERGE === '1') {
+  try {
+    const prev = JSON.parse(readFileSync(join(here, '..', 'results', 'scaling.json'), 'utf8'));
+    const key = (r) => `${r.adapter}|${r.engine}|${r.connections}`;
+    const fresh = new Set(all.map(key));
+    merged = prev.filter((r) => !fresh.has(key(r))).concat(all);
+    console.log(`[merge] replaced ${all.length} points, kept ${merged.length - all.length} existing`);
+  } catch { console.warn('[merge] no existing scaling.json; writing fresh'); }
+}
+await writeFile(join(here, '..', 'results', 'scaling.json'), JSON.stringify(merged, null, 2));
+await writeFile(join(here, '..', 'results', 'tables', 'fig_scaling.tex'), figure(merged, 'postgres'));
+console.log(`\nWrote ${merged.length} points → results/scaling.json + tables/fig_scaling.tex`);

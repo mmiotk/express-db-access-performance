@@ -58,7 +58,7 @@ and an insert. Seven of the nine access layers---every one except the two
 engine-specific native drivers---run against \emph{both} PostgreSQL and MySQL
 under an identical schema, dataset, and connection-pool size, and for every
 (layer, engine, pattern) combination we report throughput (requests per
-second) and tail latency (p50/p90/p99) together, rather than either in
+second) and tail latency (p99) together, rather than either in
 isolation. The full harness---adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
 that all nine layers return identical results---is released as an open
@@ -92,9 +92,9 @@ This paper makes four contributions:
         dominates).
   \item A set of \textbf{methodological pitfalls specific to access-layer
         benchmarking}---aggregation fan-out, OFFSET vs keyset pagination,
-        write-workload contamination, and query-formulation
-        confounds---surfaced by the correctness cross-check; a reusable
-        checklist for this genre.
+        write-workload contamination, and query-formulation confounds---surfaced
+        during development, one caught by the correctness cross-check and the rest
+        by performance analysis; a reusable checklist for this genre.
 \end{itemize}
 
 The remainder of the paper surveys related work in more detail

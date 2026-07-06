@@ -51,13 +51,12 @@ access pattern.
 layers (the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM)
 over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
-generator. We report throughput and tail latency (p50/p90/p99) jointly, hold the
+generator. We report throughput and tail latency (p99) jointly, hold the
 connection pool constant, and verify that every layer returns identical results
 through an automated cross-check.
 \textbf{Results.} Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads up to $6.2\times$ between the native
-driver and the heaviest data-mapper ORM, whereas point reads and raw-SQL
-aggregation are near layer-agnostic. The relative ordering of layers is stable
+driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is near layer-agnostic and point reads only mildly affected. The relative ordering of layers is stable
 across engines, while insert throughput is governed by the engine (MySQL's InnoDB
 commit path) rather than the layer.
 \textbf{Conclusion.} The choice of access layer matters most where the layer must

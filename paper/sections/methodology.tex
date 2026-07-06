@@ -5,10 +5,11 @@ Our goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
 database access layer of an Express.js service \emph{for the purpose of}
 quantifying its performance cost \emph{with respect to} throughput and tail
 latency \emph{from the point of view of} an application developer choosing a layer
-\emph{in the context of} PostgreSQL and MySQL back ends. The design is a full
-factorial benchmark; the complete rationale, including the pitfalls each control
-guards against, is distributed with the replication package
-(\texttt{METHODOLOGY.md}).
+\emph{in the context of} PostgreSQL and MySQL back ends. The design crosses the
+seven portable access layers with both engines and all five access patterns, plus
+the two engine-specific native-driver baselines; the complete rationale, including
+the pitfalls each control guards against, is distributed with the replication
+package (\texttt{METHODOLOGY.md}).
 
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has nine levels spanning the
@@ -72,7 +73,9 @@ driver result-shape mismatch; see Section~\ref{sec:discussion}).
 \subsection{Controls}
 Four controls isolate the access layer as the only variable. \emph{(i)~Pool size}
 is fixed at ten connections for every adapter, so the comparison measures
-access-layer overhead rather than pool tuning. \emph{(ii)~Identical query
+access-layer overhead rather than pool tuning; for Prisma, whose default pool is
+otherwise derived from the core count, this is pinned explicitly through the
+\texttt{connection\_limit} URL parameter. \emph{(ii)~Identical query
 semantics}: each endpoint issues the same logical query across layers; the
 aggregation, in particular, uses a single correlated-subquery formulation
 everywhere (the documented raw-SQL escape hatch), so that endpoint measures layer
@@ -86,10 +89,11 @@ generator runs in a process separate from the server.
 Load is generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
 latency histogram. For each of the 80 configurations we open 50 concurrent
-connections, run a warm-up pass whose measurements are discarded (absorbing JIT
-compilation, connection-pool fill, and query-plan caching), then take ten
-measured runs and report the median. Each run yields throughput (requests per
-second) and latency percentiles p50, p90, p97.5 and p99. During the measured runs
+connections, run a two-second warm-up pass whose measurements are discarded
+(absorbing JIT compilation, connection-pool fill, and query-plan caching), then
+take ten measured four-second runs and report the median. autocannon is a
+closed-loop (constant-concurrency) generator. Each run yields throughput (requests
+per second) and latency percentiles p50, p90 and p99. During the measured runs
 we additionally sample the \emph{server} process's CPU utilization and peak
 resident memory from \texttt{/proc}; because the load generator runs in a separate
 process, this isolates the access layer's own footprint from the load tool and the
@@ -102,8 +106,11 @@ counts from 1 to 256 for every layer and engine.
 
 \subsection{Analysis}
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
-differences across layers within an engine. We report medians over the ten runs and
-the coefficient of variation (CV) across runs as a stability signal
+differences across layers within an engine. We quantify a pattern's sensitivity to
+the access layer by its \emph{spread}: the ratio of the native driver's median
+throughput to that of the slowest layer on that pattern; where an ORM exceeds the
+native driver we also report the full max/min range. We report medians over the ten
+runs and the coefficient of variation (CV) across runs as a stability signal
 (Section~\ref{sec:results}). To test whether adjacently ranked layers are
 distinguishable rather than an artifact of measurement noise, we compare each
 adjacent pair on the deep/nested fetch with the Mann--Whitney $U$ test (two-sided)
@@ -111,6 +118,32 @@ and report Cliff's~$\delta$ as a nonparametric effect size, the latter being rob
 to the small number of runs and to non-normal throughput distributions. We do not
 apply significance testing to widely separated layers, where the effect is obvious;
 the tests target the close pairs where a ranking could plausibly be noise.
+
+\subsection{Experimental setup}
+All measurements were taken on a single host (Intel Xeon Gold~6140, 16~cores,
+126~GB RAM; Linux~6.17; Node.js~24.16.0) with the database engines running locally
+under relaxed durability. Because access-layer performance is version-sensitive, we
+pin every dependency (Table~\ref{tab:versions}); these are the versions the reported
+numbers characterize, and re-running the harness on newer releases is a one-command
+operation.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Pinned versions of the evaluated access layers and tooling.}
+  \label{tab:versions}
+  \begin{tabular}{l l l l}
+    \toprule
+    Layer / tool & Version & Layer / tool & Version \\
+    \midrule
+    \texttt{pg}         & 8.22.0  & \texttt{sequelize}      & 6.37.8 \\
+    \texttt{mysql2}     & 3.22.5  & \texttt{typeorm}        & 0.3.30 \\
+    \texttt{knex}       & 3.3.0   & \texttt{objection}      & 3.1.5  \\
+    \texttt{drizzle-orm}& 0.36.4  & \texttt{@mikro-orm/core}& 6.6.15 \\
+    \texttt{@prisma/client} & 5.22.0 & \texttt{express}     & 4.22.2 \\
+    \texttt{autocannon} & 7.15.0  & PostgreSQL / MySQL      & 18.4 / 9.7.1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Replication package}
 The harness---the Express application, the adapter contract and all nine adapters,

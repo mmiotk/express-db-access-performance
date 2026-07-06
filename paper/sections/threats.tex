@@ -3,7 +3,7 @@
 
 \paragraph{Construct validity.}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
-(p50/p90/p99) measured at the Express endpoint, not query-execution time at the
+(p99) measured at the Express endpoint, not query-execution time at the
 driver or database boundary. This is deliberate---it captures the full request
 round trip a deployed service incurs, including Express routing and JSON
 serialization---but it means the overhead we attribute to the \emph{access layer}
@@ -20,8 +20,9 @@ A naively configured ORM can trigger N+1 queries and appear artificially slow fo
 reasons unrelated to its inherent cost; every adapter is required to use its
 layer's documented, idiomatic eager-loading strategy on the deep-fetch endpoint
 (Section~\ref{sec:methodology}). An automated correctness cross-check asserts that
-all nine adapters return identical, normalized results for every access pattern
-before any timing run is trusted; this is not a formality---it caught two defects
+all nine adapters return identical, normalized results---compared as a projection of
+key fields on four of the five access patterns---before any timing run is trusted;
+this is not a formality---it caught two defects
 during development: a fan-out bug that inflated the \texttt{SUM(views)} aggregate
 for every join-based adapter, and a result-shape parsing defect in one driver
 binding, both fixed before the measurements reported here. Explicit warm-up phases
@@ -62,11 +63,10 @@ $6.2\times$ on the deep/nested fetch (Table~\ref{tab:deep_fetch_rps}), are an or
 of magnitude larger than the run-to-run CV, and the ranking is preserved across the
 full 1--256 connection sweep (Figure~\ref{fig:scaling}). Claims about very closely
 ranked adjacent layers, where the effect size is small, remain appropriately
-cautious.
-
-\paragraph{Data availability.}
-The complete harness, deterministic seed, and raw per-cell results behind every
-number in this paper are released as an open replication package (full details in
-the accompanying data availability declaration).
-% TODO(author): insert the permanent archive DOI (Zenodo) here once the
-% replication package is deposited.
+cautious. One caveat on the design: the ten runs of a cell share a single server
+process lifetime (the server is booted once per layer/engine cell), so they are
+repeated measures rather than fully independent replicates; the tests are best read
+as within-process stability checks. This is unlikely to affect the conclusions,
+since the between-layer gaps are roughly an order of magnitude larger than the
+within-cell CV, but a design that reboots the server per replicate would be
+stronger.

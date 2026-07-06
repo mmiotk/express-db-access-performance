@@ -10,7 +10,7 @@ against. Grounded in the prior-art review (`notes/prior-art.md`), especially
 | Factor | Levels |
 |---|---|
 | Access layer | pg, mysql2, knex, drizzle, prisma, sequelize, typeorm, objection, mikroorm |
-| Engine | PostgreSQL 16, MySQL 8.4 |
+| Engine | PostgreSQL 18.4, MySQL 9.7.1 |
 | Access pattern (endpoint) | point read, range scan (keyset), deep/nested fetch, aggregation, insert |
 
 `pg` runs on PostgreSQL only, `mysql2` on MySQL only; every other layer runs on both.
@@ -44,7 +44,7 @@ against. Grounded in the prior-art review (`notes/prior-art.md`), especially
 | **Cold start / JIT / pool fill** contaminating early samples | Explicit warm-up phase per endpoint (`WARMUP`s), measurements discarded; then `REPEATS` measured runs, median reported. |
 | **Tail latency neglect** | p99 reported alongside throughput for every cell. |
 | **Coordinated omission** (load tester stalls, hiding tail) | autocannon issues requests continuously at fixed concurrency; per-request latency histogram; document `CONNECTIONS`. Cross-checking with a fixed-rate tool (k6 constant-arrival) is a planned robustness check. |
-| **Disk-sync noise** dominating over layer cost | Engines configured with durability off and working set in RAM (`docker-compose.yml`); benchmark targets access-layer CPU/allocation, not storage. |
+| **Disk-sync noise** dominating over layer cost | Engines configured with durability off and working set in RAM (`docker-compose.yml`, or `scripts/db-local.sh` for the conda/no-Docker path used in the published run); benchmark targets access-layer CPU/allocation, not storage. |
 | **Plan-cache / prepared-statement warmth differences** | Warm-up runs the exact endpoint mix first; seed is `ANALYZE`d after load. |
 | **Write endpoint mutating the dataset** | The insert workload grows `posts` unboundedly and differently per engine, contaminating later read/aggregation cells and breaking reproducibility. The runner deletes benchmark inserts (`id > SEED_POSTS`) at the start of every cell, so each begins from the identical seeded table. |
 | **Query formulation confound in aggregation** | A pre-aggregated-comments join re-scans the whole comments table per request (full `GROUP BY`), so it measured SQL shape, not the access layer, and collapsed at scale. All adapters use the same correlated-subquery form (touching only the target author's rows); the endpoint then measures layer overhead on an identical, efficient plan. |

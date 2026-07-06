@@ -18,11 +18,11 @@ object graph on the application side. The relative ordering of layers is stable
 across the two engines, and a competitively fast modern ORM (Prisma) shows that
 ``ORM'' need not imply large overhead. Writes are the exception: MySQL's commit
 path makes insert throughput nearly layer-independent, a caution against
-generalizing single-engine write results. Beyond these findings, the correctness
-cross-check that underpins the harness surfaced a reusable checklist of
-benchmarking pitfalls---aggregation fan-out, \texttt{OFFSET}-versus-keyset
-pagination, write-workload contamination, and query-formulation confounds---that
-silently distort naive access-layer benchmarks.
+generalizing single-engine write results. Beyond these findings, development
+surfaced a reusable checklist of benchmarking pitfalls---aggregation fan-out,
+\texttt{OFFSET}-versus-keyset pagination, write-workload contamination, and
+query-formulation confounds---that silently distort naive access-layer benchmarks;
+one was caught by our correctness cross-check, the rest by performance analysis.
 
 Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
 connections and confirmed the ordering is load-robust, sampled per-layer CPU and

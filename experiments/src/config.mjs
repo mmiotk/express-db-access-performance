@@ -55,12 +55,15 @@ export const config = {
   },
 };
 
-// Prisma consumes a single URL. Build it from the same parts so all layers agree.
+// Prisma consumes a single URL. Build it from the same parts so all layers agree,
+// and pin Prisma's pool to the same size as every other adapter (`connection_limit`);
+// without this, Prisma defaults to num_cpus*2+1, silently giving it a larger pool.
 export function connectionUrl(engine = config.engine) {
+  const q = `?connection_limit=${config.pool.max}`;
   if (engine === 'postgres') {
     const c = config.postgres;
-    return `postgresql://${c.user}:${c.password}@${c.host}:${c.port}/${c.database}`;
+    return `postgresql://${c.user}:${c.password}@${c.host}:${c.port}/${c.database}${q}`;
   }
   const c = config.mysql;
-  return `mysql://${c.user}:${c.password}@${c.host}:${c.port}/${c.database}`;
+  return `mysql://${c.user}:${c.password}@${c.host}:${c.port}/${c.database}${q}`;
 }
