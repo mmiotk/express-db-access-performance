@@ -52,18 +52,17 @@ variance as a confound, but it can understate network-bound effects. A
 two-machine cross-run over a dedicated link is planned to bound this.
 
 \paragraph{Conclusion validity.}
-We report medians of three measured runs per cell and use the coefficient of
-variation (CV) across runs as a stability signal rather than a formal test
-(Section~\ref{sec:methodology}). A Mann--Whitney~U test with Cliff's~delta effect
-size between adjacent layers is planned for the camera-ready version. This absence
-is a genuine limitation: a large \emph{aggregate} spread across all nine layers on
-a pattern does not by itself establish that every \emph{adjacent} pair in the
-ranking is statistically distinguishable from noise. What bounds this risk is
-magnitude: the widest spreads we observe, such as $6.4\times$ on the deep/nested
-fetch (Table~\ref{tab:deep_fetch_rps}), are an order of magnitude larger than the
-run-to-run CV, so the coarse ranking is unlikely to be a measurement
-artifact---though claims about closely ranked, adjacent layers remain provisional
-until the pairwise tests are run.
+We report medians of ten measured runs per cell and use the coefficient of
+variation (CV) across runs as a stability signal (Table~\ref{tab:cv}). To guard
+against reading noise as a ranking, we test each adjacently ranked pair on the
+deep/nested fetch with a two-sided Mann--Whitney~$U$ test and report Cliff's~$\delta$
+as the effect size (Table~\ref{tab:significance}); the coarse ordering is supported
+with large effect sizes. Two bounds reinforce this: the widest spreads, such as
+$6.2\times$ on the deep/nested fetch (Table~\ref{tab:deep_fetch_rps}), are an order
+of magnitude larger than the run-to-run CV, and the ranking is preserved across the
+full 1--256 connection sweep (Figure~\ref{fig:scaling}). Claims about very closely
+ranked adjacent layers, where the effect size is small, remain appropriately
+cautious.
 
 \paragraph{Data availability.}
 The complete harness, deterministic seed, and raw per-cell results behind every

@@ -41,6 +41,7 @@ function cvTable(engine) {
   \\centering
   \\caption{Coefficient of variation (\\%) of throughput across the ${reps} measured runs, per access layer and pattern on ${engine}. Low values indicate stable measurements.}
   \\label{tab:cv}
+  \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l ${PATTERNS.map(() => 'r').join(' ')}}
     \\toprule
     ${head}
@@ -48,6 +49,7 @@ function cvTable(engine) {
     ${body.join('\n    ')}
     \\bottomrule
   \\end{tabular}
+  \\end{adjustbox}
 \\end{table}
 `;
 }
@@ -71,6 +73,7 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
   \\centering
   \\caption{Pairwise comparison of adjacently ranked access layers on the deep/nested fetch (${engine}), by median throughput (req/s), Cliff's~$\\delta$ effect size, and Mann--Whitney~$U$ two-sided $p$.}
   \\label{tab:significance}
+  \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l r r l r}
     \\toprule
     Comparison (A $>$ B) & med.\\ A & med.\\ B & Cliff's $\\delta$ & MWU $p$ \\\\
@@ -78,6 +81,7 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
     ${lines.join('\n    ')}
     \\bottomrule
   \\end{tabular}
+  \\end{adjustbox}
 \\end{table}
 `;
 }

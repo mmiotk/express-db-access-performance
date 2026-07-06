@@ -86,9 +86,10 @@ function figure(all, engine) {
 \\begin{figure}[htbp]
   \\centering
   \\begin{tikzpicture}
-  \\begin{axis}[width=\\linewidth,height=6cm,xlabel={Concurrent connections},
-      ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=outer north east,
-      legend cell align=left,grid=both,title={Deep/nested fetch scaling on ${engine}}]
+  \\begin{axis}[width=\\linewidth,height=6.5cm,xlabel={Concurrent connections},
+      ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
+      legend columns=2,legend cell align=left,font=\\small,grid=both,
+      title={Deep/nested fetch scaling on ${engine}}]
 ${plots}
   \\end{axis}
   \\end{tikzpicture}

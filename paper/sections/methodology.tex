@@ -87,22 +87,30 @@ Load is generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
 latency histogram. For each of the 80 configurations we open 50 concurrent
 connections, run a warm-up pass whose measurements are discarded (absorbing JIT
-compilation, connection-pool fill, and query-plan caching), then take three
+compilation, connection-pool fill, and query-plan caching), then take ten
 measured runs and report the median. Each run yields throughput (requests per
-second) and latency percentiles p50, p90, p97.5 and p99. Both engines run with the
-working set resident in memory and durability relaxed, so results reflect
-access-layer CPU and allocation cost rather than disk synchronization. The hardware
-and software environment is captured automatically into the replication package.
+second) and latency percentiles p50, p90, p97.5 and p99. During the measured runs
+we additionally sample the \emph{server} process's CPU utilization and peak
+resident memory from \texttt{/proc}; because the load generator runs in a separate
+process, this isolates the access layer's own footprint from the load tool and the
+database. Both engines run with the working set resident in memory and durability
+relaxed, so results reflect access-layer CPU and allocation cost rather than disk
+synchronization. The hardware and software environment is captured automatically
+into the replication package. To characterize behavior under load, we additionally
+sweep the deep/nested fetch---the most layer-sensitive pattern---across connection
+counts from 1 to 256 for every layer and engine.
 
 \subsection{Analysis}
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
-differences across layers within an engine. We report medians over the three runs
-and use the coefficient of variation across runs as a stability signal; the
-observed between-layer spreads (up to $6.4\times$) are large relative to
-run-to-run variation. Formal pairwise comparison with the Mann--Whitney $U$ test
-and Cliff's~$\delta$ effect size is planned for the camera-ready version.
-% TODO(author): add the CV table and the significance/effect-size analysis once
-% the extended run (more repeats + concurrency sweep) is complete.
+differences across layers within an engine. We report medians over the ten runs and
+the coefficient of variation (CV) across runs as a stability signal
+(Section~\ref{sec:results}). To test whether adjacently ranked layers are
+distinguishable rather than an artifact of measurement noise, we compare each
+adjacent pair on the deep/nested fetch with the Mann--Whitney $U$ test (two-sided)
+and report Cliff's~$\delta$ as a nonparametric effect size, the latter being robust
+to the small number of runs and to non-normal throughput distributions. We do not
+apply significance testing to widely separated layers, where the effect is obvious;
+the tests target the close pairs where a ranking could plausibly be noise.
 
 \subsection{Replication package}
 The harness---the Express application, the adapter contract and all nine adapters,

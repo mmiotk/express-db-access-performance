@@ -6,7 +6,7 @@ The tables below are generated directly by the harness and report throughput
 is better) per access layer and engine, one table per access pattern. All numbers
 come from the run described in Section~\ref{sec:methodology} (seed of 2{,}000
 authors, 100{,}000 posts and 1{,}000{,}000 comments; 50 concurrent connections;
-median of three measured runs after a warm-up pass; connection pool fixed at ten).
+median of ten measured runs after a warm-up pass; connection pool fixed at ten).
 Absolute throughput is hardware-specific; the comparison of interest is
 \emph{relative} across layers within an engine.
 
@@ -29,41 +29,41 @@ The native \texttt{pg} driver leads on every PostgreSQL pattern, but the cost of
 abstraction is strongly \emph{pattern-dependent} (Tables~\ref{tab:point_read_rps},
 \ref{tab:deep_fetch_rps}, \ref{tab:aggregation_rps}). On the \textbf{deep/nested
 fetch}---the pattern that assembles a post, its author, and all comments with their
-authors---Prisma reaches 3{,}538~req/s against native's 3{,}653, a gap of only a
-few percent, and Knex (2{,}469) and the lightweight ORM Drizzle (2{,}084) remain
-competitive; in contrast the data-mapper ORMs fall away sharply---Sequelize 1{,}093,
-TypeORM 1{,}255, Objection 988, and MikroORM just 575, i.e.\ $6.4\times$ below
-native. \textbf{Point reads} show a milder $3.5\times$ spread (native 6{,}900 down
-to MikroORM 1{,}995). \textbf{Aggregation} is nearly layer-agnostic: because every
+authors---Prisma reaches 3{,}569~req/s against native's 3{,}616, a gap of only a
+few percent, and Knex (2{,}454) and the lightweight ORM Drizzle (2{,}098) remain
+competitive; in contrast the data-mapper ORMs fall away sharply---TypeORM 1{,}259,
+Sequelize 1{,}066, Objection 1{,}009, and MikroORM just 579, i.e.\ $6.2\times$ below
+native. \textbf{Point reads} show a milder $3.2\times$ spread (native 6{,}902 down
+to MikroORM 2{,}141). \textbf{Aggregation} is nearly layer-agnostic: because every
 layer issues the same correlated-subquery plan through its raw-SQL path, throughput
-ranges only $2.0\times$ (native 7{,}197; Prisma is fastest at 8{,}158; Objection
-slowest at 3{,}688). The picture is that abstraction is cheap when the layer merely
-forwards a query and expensive when it must materialise a nested object graph.
+ranges only $1.8\times$ (native 7{,}210; Prisma is fastest at 8{,}181; Objection
+slowest at 4{,}047). The picture is that abstraction is cheap when the layer merely
+forwards a query and expensive when it must materialize a nested object graph.
 
 \subsection{RQ2: engine dependence of the ranking}
 The \emph{relative} ordering of access layers is largely stable across PostgreSQL
 and MySQL: native drivers and Prisma lead, query builders and the lightweight ORM
 form a middle band, and the data-mapper ORMs trail, on both engines (the
-deep-fetch ordering, for instance, is preserved, with a $4.1\times$ spread on
-MySQL versus $6.4\times$ on PostgreSQL). The clearest engine-specific effect is on
+deep-fetch ordering, for instance, is preserved, with a $4.5\times$ spread on
+MySQL versus $6.2\times$ on PostgreSQL). The clearest engine-specific effect is on
 \textbf{inserts} (Table~\ref{tab:write_rps}): on MySQL, throughput is uniformly low
-across \emph{all} layers---roughly 750--970~req/s, a spread of only $1.2\times$---so
+across \emph{all} layers---roughly 750--930~req/s, a spread of only $1.2\times$---so
 the InnoDB commit path dominates and masks access-layer differences, whereas on
-PostgreSQL the same pattern spreads $4.6\times$ (native 7{,}120 down to MikroORM
-1{,}544). Thus for writes the engine, not the access layer, is the primary
+PostgreSQL the same pattern spreads $4.0\times$ (native 6{,}375 down to MikroORM
+1{,}575). Thus for writes the engine, not the access layer, is the primary
 determinant of throughput. The keyset range scan is healthy on both engines
-(Table~\ref{tab:range_scan_rps}; native \texttt{mysql2} 3{,}047, \texttt{pg}
-3{,}564), confirming that the earlier collapse we observed under \texttt{OFFSET}
+(Table~\ref{tab:range_scan_rps}; native \texttt{mysql2} 2{,}901, \texttt{pg}
+3{,}620), confirming that the earlier collapse we observed under \texttt{OFFSET}
 pagination was a workload artefact rather than an engine or layer property
 (Section~\ref{sec:discussion}).
 
 \subsection{RQ3: which patterns matter most}
 Ranking the patterns by how much the layer choice moves throughput yields a clear
-order. The deep/nested fetch is the most consequential ($6.4\times$ on PostgreSQL,
-$4.1\times$ on MySQL), followed by inserts on PostgreSQL ($4.6\times$; but only
-$1.2\times$ on MySQL, where the engine dominates) and point reads ($3.5\times$ /
-$2.5\times$). Aggregation is the least consequential once every layer uses the
-raw-SQL escape hatch ($2.0\times$ / $1.4\times$). In short, the more of the result
+order. The deep/nested fetch is the most consequential ($6.2\times$ on PostgreSQL,
+$4.5\times$ on MySQL), followed by inserts on PostgreSQL ($4.0\times$; but only
+$1.2\times$ on MySQL, where the engine dominates) and point reads ($3.2\times$ /
+$2.4\times$). Aggregation is the least consequential once every layer uses the
+raw-SQL escape hatch ($1.8\times$ / $1.4\times$). In short, the more of the result
 graph the access layer must assemble on the application side, the more the choice
 of layer costs.
 
@@ -75,3 +75,43 @@ throughput with the highest p99, so the penalty a heavyweight ORM imposes on a
 nested-fetch hot path is visible not only in mean capacity but in the tail that
 governs user-perceived latency at scale---precisely the quantity that
 single-metric, throughput-only vendor benchmarks omit.
+
+\subsection{Measurement stability and significance}
+The rankings above rest on stable measurements. Across all 80 cells the coefficient
+of variation of throughput over the ten runs is at most 10.7\%
+(Table~\ref{tab:cv}), an order of magnitude below the between-layer spreads
+(up to $6.2\times$). To confirm that neighbouring ranks are not measurement
+artifacts, we compare each adjacently ranked pair on the deep/nested fetch
+(Table~\ref{tab:significance}): \emph{every} adjacent pair separates with a large
+Cliff's~$\delta$ effect size ($\delta \geq 0.66$) and a Mann--Whitney~$U$
+$p \leq 0.014$, including the closest pairs (e.g.\ Sequelize $>$ Objection,
+1{,}066 vs.\ 1{,}009~req/s, $\delta = 0.78$, $p = 0.004$). The full ordering---%
+native, Prisma, the query builder and lightweight ORM, then the data-mapper
+ORMs---is therefore statistically supported at every step, not merely in aggregate.
+
+\subsection{Scaling with concurrency}
+Figure~\ref{fig:scaling} sweeps the deep/nested fetch from 1 to 256 concurrent
+connections. Two observations hold across the load range: the relative ordering of
+layers is preserved at every concurrency level (the curves do not cross), and the
+lightweight layers saturate at a higher throughput ceiling than the data-mapper
+ORMs. This shows the RQ1 finding is not an artifact of the single 50-connection
+operating point but a property of the layers across load.
+
+\input{\tabledir fig_scaling}
+
+\subsection{Resource footprint}
+Throughput is not the only cost (Table~\ref{tab:resources}). The most striking
+observation is that Prisma's near-native throughput on the deep/nested fetch is
+bought with roughly \textbf{five times the CPU}: its Node.js process draws
+$485\%$---close to five saturated cores---against the $\approx100\%$ (one core)
+of every other layer, because Prisma delegates query execution to a separate
+engine and worker threads. What reads as ``ORM parity with native'' in throughput
+is thus a trade of cores for latency, invisible to a throughput-only benchmark.
+Memory tells a gentler story: the native driver, Knex, and Objection are lightest
+(204--213~MB peak RSS), while the remaining ORMs sit higher (251--278~MB). Resource
+cost, like throughput, is therefore pattern- and layer-specific, and matters when
+sizing horizontally scaled deployments.
+
+\input{\tabledir cv_all}
+\input{\tabledir significance_deep_fetch}
+\input{\tabledir resources}

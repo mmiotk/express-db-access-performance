@@ -12,7 +12,7 @@ latency, and the omission of the Express HTTP layer.
 
 The empirical answer is that the cost of abstraction is concentrated, not uniform.
 It is negligible for point reads and for aggregation issued through a raw-SQL path,
-but it grows sharply---up to $6.4\times$ between the native driver and the heaviest
+but it grows sharply---up to $6.2\times$ between the native driver and the heaviest
 data-mapper ORM---for the deep/nested fetch, where the layer must assemble a nested
 object graph on the application side. The relative ordering of layers is stable
 across the two engines, and a competitively fast modern ORM (Prisma) shows that
@@ -24,13 +24,14 @@ benchmarking pitfalls---aggregation fan-out, \texttt{OFFSET}-versus-keyset
 pagination, write-workload contamination, and query-formulation confounds---that
 silently distort naive access-layer benchmarks.
 
-Several extensions would strengthen the evidence. A concurrency sweep would locate
-the saturation point of each layer and separate latency-bound from throughput-bound
-regimes; per-cell CPU and memory sampling would add a resource dimension; and a
+Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
+connections and confirmed the ordering is load-robust, sampled per-layer CPU and
+memory footprint, and tested adjacent layers with Cliff's~$\delta$ and the
+Mann--Whitney~$U$ test. Further extensions would still strengthen the evidence: a
 fixed-rate, two-machine cross-run would bound coordinated-omission and
-observer-interference effects. On the analysis side, we plan pairwise significance
-testing with effect sizes, and on the coverage side, additional engines and a
-dedicated study of the N+1 penalty (naive versus eager loading per ORM) and of
-cold-start latency. The complete replication package---harness, seed, adapters,
-and analysis---is released under open licenses so that these extensions, and
-independent re-runs on current library versions, are straightforward.
+observer-interference effects; additional engines and dataset sizes would widen
+external validity; and a dedicated study of the N+1 penalty (naive versus eager
+loading per ORM) and of cold-start latency would deepen the practical guidance. The
+complete replication package---harness, seed, adapters, and analysis---is released
+under open licenses so that these extensions, and independent re-runs on current
+library versions, are straightforward.

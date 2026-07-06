@@ -11,6 +11,8 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{adjustbox}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage[protrusion=true,expansion=false]{microtype}
 \setlength{\emergencystretch}{3em}
 \usepackage{url}
@@ -48,7 +50,7 @@ builder (Knex), and six ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection,
 MikroORM)---served through an identical Express application over five access
 patterns, on both PostgreSQL and MySQL, reporting throughput and tail latency
 (p50/p90/p99) together. Abstraction cost concentrates in relation-materializing
-patterns: the deep/nested fetch spreads up to $6.4\times$ between the native driver
+patterns: the deep/nested fetch spreads up to $6.2\times$ between the native driver
 and the heaviest data-mapper ORM, while point reads and raw-SQL aggregation are
 near layer-agnostic; the ordering is stable across engines and writes are
 engine-bound.

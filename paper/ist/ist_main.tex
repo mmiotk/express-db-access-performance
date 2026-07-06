@@ -13,6 +13,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[protrusion=true,expansion=false]{microtype}
 \setlength{\emergencystretch}{3em}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
 % Shared sections resolve result tables through \tabledir; from paper/ist/ the
 % tables live one level up.
@@ -52,8 +54,8 @@ over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
 generator. We report throughput and tail latency (p50/p90/p99) jointly, hold the
 connection pool constant, and verify that every layer returns identical results
 through an automated cross-check.
-\textbf{Results.} Abstraction cost concentrates in relation-materialising
-patterns: the deep/nested fetch spreads up to $6.4\times$ between the native
+\textbf{Results.} Abstraction cost concentrates in relation-materializing
+patterns: the deep/nested fetch spreads up to $6.2\times$ between the native
 driver and the heaviest data-mapper ORM, whereas point reads and raw-SQL
 aggregation are near layer-agnostic. The relative ordering of layers is stable
 across engines, while insert throughput is governed by the engine (MySQL's InnoDB
