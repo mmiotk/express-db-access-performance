@@ -10,10 +10,16 @@ help: ## Show this help
 		| sed -E 's/^([a-zA-Z_-]+):.*## (.*)/  \1\t\2/' \
 		| expand -t 14
 
-pdf: ## Build the paper PDF (paper/_build/express_db_access.pdf)
+pdf: ## Build the generic paper PDF (paper/_build/express_db_access.pdf)
 	$(MAKE) -C paper
 
-view: ## Build and open the paper PDF
+ist: ## Build the IST/Elsevier submission PDF (paper/ist/ist_main.pdf)
+	$(MAKE) -C paper/ist
+
+ist-package: ## Assemble the self-contained IST submission folder + zip
+	$(MAKE) -C paper/ist package
+
+view: ## Build and open the generic paper PDF
 	$(MAKE) -C paper view
 
 setup: ## Start DBs, migrate + seed, install harness deps

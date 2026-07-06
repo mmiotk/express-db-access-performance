@@ -2,25 +2,72 @@
 \label{sec:threats}
 
 \paragraph{Construct validity.}
-The benchmark measures HTTP-level throughput and latency, folding in JSON
-serialization and Express routing. This is deliberate---it reflects a real
-service---but means numbers are not pure query-execution times. We mitigate
-cross-layer unfairness by returning an identical result shape from every adapter.
+Our dependent variables are HTTP-level throughput (req/s) and tail latency
+(p50/p90/p99) measured at the Express endpoint, not query-execution time at the
+driver or database boundary. This is deliberate---it captures the full request
+round trip a deployed service incurs, including Express routing and JSON
+serialization---but it means the overhead we attribute to the \emph{access layer}
+may partly reflect these surrounding costs instead. We control for this by holding
+those costs constant across conditions: every adapter satisfies a documented
+\emph{adapter contract} (Section~\ref{sec:methodology}) that guarantees an
+identical result shape to Express, so the JSON payload---and its serialization
+cost---is the same regardless of which layer produced it. Observed differences
+between layers are therefore attributable to how each layer reaches that shape,
+not to what is returned.
 
 \paragraph{Internal validity.}
-An ORM configured naively could trigger N+1 queries and look artificially slow; we
-force each adapter to use its recommended eager-loading strategy and add a
-correctness cross-check asserting identical results across adapters. Warm-up runs
-absorb JIT, pool-fill, and plan-cache effects. Coordinated omission in the load
-tool is a residual risk~\cite{fritz2021tail}, addressed by a planned fixed-rate
-cross-run.
+A naively configured ORM can trigger N+1 queries and appear artificially slow for
+reasons unrelated to its inherent cost; every adapter is required to use its
+layer's documented, idiomatic eager-loading strategy on the deep-fetch endpoint
+(Section~\ref{sec:methodology}). An automated correctness cross-check asserts that
+all nine adapters return identical, normalized results for every access pattern
+before any timing run is trusted; this is not a formality---it caught two defects
+during development: a fan-out bug that inflated the \texttt{SUM(views)} aggregate
+for every join-based adapter, and a result-shape parsing defect in one driver
+binding, both fixed before the measurements reported here. Explicit warm-up phases
+per (layer, engine, endpoint) cell absorb JIT, pool-fill, and plan-cache effects
+before timing begins. Because the insert endpoint mutates the dataset,
+benchmark-inserted rows are deleted before every cell, so every read and
+aggregation measurement starts from an identical seeded table. The aggregation
+endpoint forces all adapters onto the same correlated-subquery plan rather than
+each adapter's first-instinct formulation, so it measures access-layer overhead,
+not incidental differences in SQL shape. A residual risk is coordinated omission in
+the load generator, which can under-report tail latency at
+saturation~\cite{fritz2021tail}; a fixed-rate, constant-arrival cross-run is
+planned to bound it.
 
 \paragraph{External validity.}
-A single schema, dataset size, hardware configuration, and pool size limit
-generalization; library versions age quickly. We pin versions, publish the seed and
-environment capture, and release the harness so the matrix can be re-run.
+All measurements come from a single schema, a single dataset size, one hardware
+configuration, and a connection pool fixed at ten, against specific engine and
+library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology});
+results may not transfer to larger working sets, other pool sizes, or other engine
+versions, and library performance ages quickly. We do not claim the absolute req/s
+figures generalize beyond our hardware; only the \emph{relative} ordering within an
+engine is intended to travel. We mitigate this by pinning every dependency
+version, publishing the deterministic seed and an automated environment capture,
+and releasing the full harness so the matrix can be re-run on other hardware or
+against newer releases. A further limitation is that the load generator and server
+under test share a host---common practice in this genre, and it removes network
+variance as a confound, but it can understate network-bound effects. A
+two-machine cross-run over a dedicated link is planned to bound this.
 
 \paragraph{Conclusion validity.}
-We report medians over repeated runs and the coefficient of variation as a
-stability signal; formal pairwise significance testing (e.g.\ Mann--Whitney~U with
-Cliff's~delta) is planned for the camera-ready.
+We report medians of three measured runs per cell and use the coefficient of
+variation (CV) across runs as a stability signal rather than a formal test
+(Section~\ref{sec:methodology}). A Mann--Whitney~U test with Cliff's~delta effect
+size between adjacent layers is planned for the camera-ready version. This absence
+is a genuine limitation: a large \emph{aggregate} spread across all nine layers on
+a pattern does not by itself establish that every \emph{adjacent} pair in the
+ranking is statistically distinguishable from noise. What bounds this risk is
+magnitude: the widest spreads we observe, such as $6.4\times$ on the deep/nested
+fetch (Table~\ref{tab:deep_fetch_rps}), are an order of magnitude larger than the
+run-to-run CV, so the coarse ranking is unlikely to be a measurement
+artifact---though claims about closely ranked, adjacent layers remain provisional
+until the pairwise tests are run.
+
+\paragraph{Data availability.}
+The complete harness, deterministic seed, and raw per-cell results behind every
+number in this paper are released as an open replication package (full details in
+the accompanying data availability declaration).
+% TODO(author): insert the permanent archive DOI (Zenodo) here once the
+% replication package is deposited.

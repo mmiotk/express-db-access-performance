@@ -13,6 +13,21 @@ paper/*.run.xml
 paper/*.synctex.gz
 paper/express_db_access.pdf
 
+# --- IST (Elsevier) submission build (paper/ist/, built in place) ---
+paper/ist/*.aux
+paper/ist/*.bbl
+paper/ist/*.blg
+paper/ist/*.log
+paper/ist/*.out
+paper/ist/*.fls
+paper/ist/*.fdb_latexmk
+paper/ist/*.spl
+paper/ist/*.synctex.gz
+paper/ist/ist_main.pdf
+paper/ist/highlights.pdf
+paper/ist/_package/
+paper/ist/ist-submission.zip
+
 # --- Node / harness ---
 experiments/node_modules/
 experiments/.env

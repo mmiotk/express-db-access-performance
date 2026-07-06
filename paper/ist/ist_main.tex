@@ -1,0 +1,108 @@
+%% Information and Software Technology (Elsevier) submission version.
+%% Class: elsarticle, citation style elsarticle-num (per the IST guide for authors).
+%% Build: latexmk -pdf ist_main.tex   (bibtex; inputs ../sections and ../tables).
+%% `review` gives single-column, double-spaced, line-numbered output for reviewers.
+\documentclass[review]{elsarticle}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{adjustbox}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\setlength{\emergencystretch}{3em}
+
+% Shared sections resolve result tables through \tabledir; from paper/ist/ the
+% tables live one level up.
+\newcommand{\tabledir}{../tables/}
+
+\journal{Information and Software Technology}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Comparative Analysis of Relational Database Access-Layer
+  Performance in Express.js across PostgreSQL and MySQL}
+
+\author[ug]{Mateusz Miotk}
+\ead{mateusz.miotk@ug.edu.pl}
+\affiliation[ug]{organization={Faculty of Mathematics, Physics and Informatics,
+    University of Gda\'nsk},
+  addressline={Wita Stwosza 57},
+  postcode={80-308},
+  city={Gda\'nsk},
+  country={Poland}}
+
+\begin{abstract}
+\textbf{Context.} Node.js/Express services reach relational databases through a
+spectrum of access layers---native drivers, query builders, and object-relational
+mappers (ORMs)---yet practitioners choose between them largely on the basis of
+vendor benchmarks that are fragmented, PostgreSQL-only, and report either
+throughput or latency but seldom both.
+\textbf{Objective.} We quantify, neutrally and reproducibly, the performance cost
+of the access layer as a function of the layer, the database engine, and the
+access pattern.
+\textbf{Method.} An identical Express application is served through nine access
+layers (the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
+Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM)
+over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
+generator. We report throughput and tail latency (p50/p90/p99) jointly, hold the
+connection pool constant, and verify that every layer returns identical results
+through an automated cross-check.
+\textbf{Results.} Abstraction cost concentrates in relation-materialising
+patterns: the deep/nested fetch spreads up to $6.4\times$ between the native
+driver and the heaviest data-mapper ORM, whereas point reads and raw-SQL
+aggregation are near layer-agnostic. The relative ordering of layers is stable
+across engines, while insert throughput is governed by the engine (MySQL's InnoDB
+commit path) rather than the layer.
+\textbf{Conclusion.} The choice of access layer matters most where the layer must
+assemble a nested object graph; a reproducible harness and a checklist of
+benchmarking pitfalls specific to this genre are released as a replication package.
+\end{abstract}
+
+\begin{keyword}
+database access layer \sep object-relational mapping \sep Node.js \sep Express.js
+\sep performance benchmarking \sep tail latency \sep empirical software engineering
+\end{keyword}
+
+\end{frontmatter}
+
+%% ------------------------------------------------------------------
+\input{../sections/introduction}
+\input{../sections/related_work}
+\input{../sections/methodology}
+\input{../sections/results}
+\input{../sections/discussion}
+\input{../sections/threats}
+\input{../sections/conclusion}
+
+%% ------------------------------------------------------------------
+\section*{CRediT authorship contribution statement}
+\textbf{Mateusz Miotk:} Conceptualization, Methodology, Software, Investigation,
+Data curation, Formal analysis, Visualization, Writing -- original draft,
+Writing -- review \& editing.
+
+\section*{Declaration of competing interest}
+The author declares that he has no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper.
+The author is not affiliated with, nor funded by, any of the database libraries or
+vendors evaluated in this study.
+
+\section*{Data availability}
+The complete replication package---benchmark harness, database schema and
+deterministic seed, all nine adapter implementations, the correctness cross-check,
+raw per-cell measurements, and the scripts that generate every table---is publicly
+available.
+% TODO(author): insert the archived Zenodo DOI and the GitHub URL before submission.
+
+\section*{Funding}
+This research received no external funding.
+
+%% ------------------------------------------------------------------
+\bibliographystyle{elsarticle-num}
+\bibliography{../references}
+
+\end{document}

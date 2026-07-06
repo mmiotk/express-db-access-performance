@@ -1,41 +1,105 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Express.js remains one of the most widely used server frameworks for Node.js, and
-almost every non-trivial Express service talks to a relational database. The way it
-does so, however, is far from uniform. Developers choose among a spectrum of
-\emph{access layers}: thin native drivers such as \texttt{pg} and \texttt{mysql2},
-query builders such as Knex, and full object-relational mappers (ORMs) such as
-Prisma, Sequelize, TypeORM, Objection, MikroORM, and the lighter-weight Drizzle.
-Each layer trades raw performance for ergonomics, type safety, and protection from
-foot-guns such as the N+1 query problem.
+Express.js remains the most widely used web framework for Node.js, and almost
+every non-trivial service built on it eventually reaches a relational database
+through some \emph{access layer}. That choice is not settled by the language
+or the framework: access layers span three categories that trade raw
+performance for ergonomics, compile-time type safety, and protection from
+foot-guns such as the N+1 query problem, in which a naively written nested
+fetch silently issues one query per parent row instead of one query for the
+whole result graph. At one end sit native drivers that expose the wire
+protocol directly (\texttt{pg} for PostgreSQL, \texttt{mysql2} for MySQL); in
+the middle sit query builders that assemble SQL programmatically (Knex); at
+the other end sit object-relational mappers (ORMs) that map rows to objects
+and manage relationships automatically (Drizzle---a lightweight ORM---Prisma,
+Sequelize, TypeORM, Objection, and MikroORM). Node.js backend performance
+under load is itself a recognized empirical topic~\cite{chaniotis2015nodejs,
+kuffel2025nodejs,carmo2024backend}, but that literature treats the runtime and
+the web framework as the unit of comparison; it does not vary the database
+access layer.
 
-Practitioners typically justify this choice with \emph{vendor benchmarks}. As our
-survey of prior art shows (Section~\ref{sec:related}), these are fragmented,
-almost exclusively target PostgreSQL, and---critically---report either throughput
-\emph{or} latency, seldom both, and rarely the tail (p95/p99) that dominates
-user-perceived performance at scale~\cite{dean2013tail,fritz2021tail}. The
-peer-reviewed literature is thinner still and covers at most two or three
-libraries; the one cross-language academic study of ORM overhead deliberately
-excludes JavaScript altogether~\cite{colley2018orm}.
+In practice, the choice among access layers is made largely on the strength
+of \emph{vendor benchmarks}. These are plentiful but narrow: each is
+published by the maintainers of one of the products under comparison, each
+targets PostgreSQL almost exclusively, and each settles on a single metric
+family rather than reporting throughput and the tail together---Prisma's
+official suite reports median query latency with neither throughput nor any
+percentile~\cite{prisma_benchmarks}, while Drizzle's and IMDBench's report
+throughput with, at best, a single P95 point~\cite{drizzle_benchmarks,
+imdbench}. None reports the p99 behavior that dominates perceived performance
+under load~\cite{dean2013tail,fritz2021tail}. The peer-reviewed literature is
+thinner still and no less fragmented. Colley et al.\ measured ORM overhead
+across eight frameworks, but in Java, C\#, Python, and PHP, deliberately
+excluding JavaScript~\cite{colley2018orm}; two 2025 studies begin to close
+that gap for Node.js/TypeScript, yet each is limited to PostgreSQL and to at
+most three ORMs~\cite{prisma_rawsql_2025,orm_compare_jcct_2025}. A further
+line of work benchmarks PostgreSQL against MySQL directly, but holds the
+access layer fixed rather than varying it~\cite{salunke2024pgmysql}.
 
-This paper addresses that gap with a neutral, reproducible benchmark. We serve an
-\emph{identical} Express application through nine access layers, over five
-canonical access patterns, against \emph{both} PostgreSQL and MySQL, and we report
-throughput and tail latency together.
+Taken together, this leaves a gap along four axes: (1)~no access-layer
+comparison includes MySQL, and no PostgreSQL/MySQL benchmark varies the
+access layer; (2)~no neutral, full-taxonomy study exists outside vendor
+marketing, since academic work covers at most two or three libraries;
+(3)~throughput and tail latency are never reported jointly, each source
+picking whichever metric flatters its own product; and (4)~none of the above
+measures through the Express/HTTP layer, i.e.\ the request roundtrip a
+deployed service actually experiences, rather than an isolated query timing.
 
-\paragraph{Research questions.}
+This paper closes that gap with a single, neutral benchmark. We serve an
+\emph{identical} Express application through all nine access layers---the two
+native drivers, the Knex query builder, and six ORMs (Drizzle, Prisma,
+Sequelize, TypeORM, Objection, MikroORM)---over five access patterns
+representative of everyday CRUD workloads: a point read by primary key, a
+keyset range scan over the most recent rows, a deep/nested fetch that
+materializes a post together with its author and every comment (each with its
+own comment-author), a per-author aggregation of post counts and view sums,
+and an insert. Seven of the nine access layers---every one except the two
+engine-specific native drivers---run against \emph{both} PostgreSQL and MySQL
+under an identical schema, dataset, and connection-pool size, and for every
+(layer, engine, pattern) combination we report throughput (requests per
+second) and tail latency (p50/p90/p99) together, rather than either in
+isolation. The full harness---adapters, seed data, an
+autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
+that all nine layers return identical results---is released as an open
+replication package.
+
+We structure the study around three research questions:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
-  \item How much throughput and tail-latency overhead does each access layer add
-        relative to the native-driver baseline, per access pattern?
-  \item Does the ranking of access layers hold across PostgreSQL and MySQL, or is
-        it engine-dependent?
-  \item For which access patterns (point read, range scan, deep/nested fetch,
-        aggregation, insert) is the layer choice most consequential?
+  \item How large is the throughput and tail-latency overhead of each access
+        layer relative to the native-driver baseline, and how does it vary
+        across the five access patterns?
+  \item Is the relative ordering of access layers consistent across
+        PostgreSQL and MySQL, or is it engine-dependent?
+  \item For which access patterns is the choice of access layer most
+        consequential?
 \end{enumerate}
 
-\paragraph{Contributions.}
-(i)~A full-taxonomy, dual-engine, Express-specific benchmark harness released as an
-open replication package; (ii)~a joint throughput/tail-latency comparison that
-existing benchmarks omit; (iii)~the first inclusion of MySQL alongside PostgreSQL in
-this comparison genre.
+This paper makes four contributions:
+\begin{itemize}[leftmargin=*]
+  \item A \textbf{neutral, full-taxonomy} (native driver $\to$ query builder
+        $\to$ six ORMs), \textbf{dual-engine} (PostgreSQL and MySQL),
+        \textbf{Express-level} benchmark that reports throughput and tail
+        latency \textbf{jointly}---the combination missing from prior art.
+  \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
+        deterministic seed, an autocannon-driven matrix runner, and an
+        automated \textbf{correctness cross-check} that asserts every layer
+        returns identical results; released as a replication package.
+  \item Empirical evidence that \textbf{abstraction cost concentrates in
+        relation-materializing patterns} (the deep/nested fetch), that the
+        \textbf{layer ordering is stable across engines}, and that
+        \textbf{writes are engine-bound} (MySQL's InnoDB commit path
+        dominates).
+  \item A set of \textbf{methodological pitfalls specific to access-layer
+        benchmarking}---aggregation fan-out, OFFSET vs keyset pagination,
+        write-workload contamination, and query-formulation
+        confounds---surfaced by the correctness cross-check; a reusable
+        checklist for this genre.
+\end{itemize}
+
+The remainder of the paper surveys related work in more detail
+(Section~\ref{sec:related}), details the benchmark design
+(Section~\ref{sec:methodology}), reports results per research question
+(Section~\ref{sec:results}), discusses their implications
+(Section~\ref{sec:discussion}) alongside threats to validity
+(Section~\ref{sec:threats}), and concludes (Section~\ref{sec:conclusion}).

@@ -47,8 +47,16 @@ access-layer taxonomy---native drivers (\texttt{pg}, \texttt{mysql2}), a query
 builder (Knex), and six ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection,
 MikroORM)---served through an identical Express application over five access
 patterns, on both PostgreSQL and MySQL, reporting throughput and tail latency
-(p50/p90/p99) together. \emph{(Results pending first measurement run.)}
+(p50/p90/p99) together. Abstraction cost concentrates in relation-materializing
+patterns: the deep/nested fetch spreads up to $6.4\times$ between the native driver
+and the heaviest data-mapper ORM, while point reads and raw-SQL aggregation are
+near layer-agnostic; the ordering is stable across engines and writes are
+engine-bound.
 \end{abstract}
+
+% \tabledir is set here so the shared results section can locate the generated
+% tables; the IST build (paper/ist/) sets it to ../tables/ instead.
+\newcommand{\tabledir}{tables/}
 
 \input{sections/introduction}
 \input{sections/related_work}

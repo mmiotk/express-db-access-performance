@@ -1,31 +1,126 @@
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Peer-reviewed studies.}
-Two 2025 studies benchmark Node/TypeScript access layers on PostgreSQL: one
-compares Prisma against optimized raw SQL over eight query
-patterns~\cite{prisma_rawsql_2025} (we cite its methodology; its headline speedup
-figures did not survive independent verification), and one compares Prisma,
-TypeORM, and Sequelize across four relation types~\cite{orm_compare_jcct_2025}.
-Earlier, Colley et al.~\cite{colley2018orm} measured ORM overhead across eight
-frameworks in Java, C\#, Python, and PHP---\emph{but not JavaScript}---making the
-Node ecosystem a standing gap. On methodology, Fritz et al.~\cite{fritz2021tail}
-and Dean and Barroso~\cite{dean2013tail} show why average-case reporting hides the
-tail latencies that matter in production.
+We organize prior work along the same four axes on which our study differs
+from it---taxonomy coverage, engine coverage, whether throughput and tail
+latency are reported jointly, and the neutrality of the source---and
+summarize the comparison in Table~\ref{tab:prior_art}.
+
+\paragraph{Peer-reviewed access-layer and ORM studies.}
+The peer-reviewed literature on access-layer performance is recent, active,
+and narrow. Colley et al.~\cite{colley2018orm} give the earliest systematic
+account, benchmarking eight ORM frameworks across Java, C\#, Python, and PHP
+against a common relational schema---but the study \emph{deliberately
+excludes JavaScript}, leaving the Node.js ecosystem, and Express in
+particular, without an academic baseline for the better part of a decade.
+Two 2025 studies begin to close that gap, but only partially. One, in
+\emph{Procedia Computer Science}, compares Prisma against optimized raw SQL
+over eight query patterns on a containerized PostgreSQL
+setup~\cite{prisma_rawsql_2025}; we cite its methodology, but its headline
+speedup figures did not survive independent verification and are not
+reproduced here. The other compares Prisma, TypeORM, and Sequelize across
+four relation types, also on PostgreSQL, by response time, memory, and
+CPU~\cite{orm_compare_jcct_2025}. Both are useful precedents for
+containerized, Node-specific measurement, but each covers only two or three
+libraries out of the much larger taxonomy in production use, and both are
+confined to a single engine. No peer-reviewed study to date spans the full
+native-driver/query-builder/ORM spectrum, and none includes MySQL.
+
+\paragraph{Database-engine and Node.js performance studies.}
+A second, largely disjoint line of work benchmarks the layers immediately
+below and above the access layer without varying it directly. Salunke and
+Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL head-to-head
+under standard OLTP workloads---the only dual-engine precedent we
+found---but they benchmark the \emph{engines themselves}, bypassing any
+application-level access layer; their work is complementary to ours but
+orthogonal, since it cannot say how a driver, query builder, or ORM would
+change the comparison. On the Node.js side, Chaniotis et
+al.~\cite{chaniotis2015nodejs} established Node's viability as a
+web-application platform, Kuffel and Walter~\cite{kuffel2025nodejs} tracked
+how a Node.js backend's performance characteristics drift over time under
+sustained load, and do Carmo et al.~\cite{carmo2024backend} compared
+back-end frameworks more broadly. None of these studies isolates the
+database access layer as an independent variable, let alone varies it across
+the taxonomy studied here; where database access appears at all, it is
+incidental to their designs rather than the object of study.
 
 \paragraph{Practitioner and vendor benchmarks.}
-A rich but biased landscape exists. Drizzle publishes both a Northwind micro-suite
-spanning the full taxonomy (\texttt{pg}, Knex, Kysely, MikroORM, TypeORM, Prisma,
-Drizzle) and an official k6-driven load benchmark reporting req/s and
-P95~\cite{drizzle_benchmarks}. Prisma's official site compares three ORMs by median
-query latency but reports neither throughput nor tail percentiles~\cite{prisma_benchmarks}.
-IMDBench~\cite{imdbench} and community suites (JS-AK, Orchid) add further coverage.
-All share three limitations: they are PostgreSQL-only, they are authored by parties
-promoting one of the compared products, and they each report a single metric family
-chosen to favour a particular narrative.
+A far richer, but far less trustworthy, body of evidence comes from
+practitioners and vendors. Drizzle publishes both a Northwind micro-suite
+spanning nine targets (\texttt{pg}, Knex, Kysely, MikroORM, TypeORM, Prisma,
+and Drizzle itself, pooled and unpooled) and an official k6-driven load test
+reporting requests per second, average latency, P95, and
+CPU~\cite{drizzle_benchmarks}. Prisma's own site compares Prisma, Drizzle,
+and TypeORM by median query latency over 500 iterations, but reports
+neither throughput nor any latency percentile~\cite{prisma_benchmarks}.
+IMDBench, maintained by Gel Data (formerly EdgeDB), adds Sequelize and
+node-postgres to the mix and reports both throughput and latency on three
+CRUD-style operations~\cite{imdbench}. Between them, these three sources
+cover more of the access-layer taxonomy than the entire peer-reviewed
+literature combined---yet all three share the same defects: each is
+authored, or at minimum hosted, by a party that sells one of the compared
+products; all three run exclusively against PostgreSQL; and each reports a
+single metric family---throughput or latency, rarely both, and almost never
+the tail---chosen in a way that happens to flatter its author's product.
+
+\paragraph{Benchmarking methodology.}
+A separate methodological literature explains why the single-metric habit
+above is a problem in its own right. Fritz et al.~\cite{fritz2021tail}
+catalog pitfalls specific to database benchmarking---coordinated omission,
+JIT and garbage-collector warm-up, and tool-induced distortion---that
+silently corrupt reported p95/p99 values unless explicitly controlled for.
+Dean and Barroso~\cite{dean2013tail} show, at data-center scale, why the
+tail rather than the mean determines user-perceived latency once a request
+fans out over many components, as an Express request serving a deep/nested
+fetch does. Neither paper studies access layers, but together they motivate
+a design choice absent from every benchmark surveyed above: report
+throughput \emph{and} tail latency (p50/p90/p99) for the same run, rather
+than a single metric chosen after the fact.
 
 \paragraph{Positioning.}
-Our study differs on four axes simultaneously: (1)~it adds MySQL; (2)~it is neutral
-and covers the full taxonomy in one design; (3)~it reports throughput and tail
-latency jointly; and (4)~it measures through the Express HTTP layer, i.e.\ the
-request roundtrip a real service experiences.
+No prior study, peer-reviewed or vendor, combines full-taxonomy coverage,
+both engines, joint throughput/tail reporting, and neutrality; each covers
+at most two or three of these four properties (Table~\ref{tab:prior_art}).
+Our study differs from all of them on the four axes simultaneously:
+(1)~it adds MySQL alongside PostgreSQL, closing the engine gap that
+separates access-layer studies from engine-only studies such
+as~\cite{salunke2024pgmysql}; (2)~it is neutral---the author has no
+commercial stake in any compared product---and covers the full taxonomy,
+native drivers, a query builder, and six ORMs, in one design, rather than
+the two or three libraries typical of peer-reviewed work; (3)~it reports
+throughput and tail latency (p50/p90/p99) jointly for every cell, rather
+than the single metric family each vendor benchmark selects; and (4)~it
+measures through the Express HTTP layer, i.e.\ the request roundtrip a real
+service experiences, rather than in-process query timing alone.
+
+% TODO(author): verify which RDBMS engine Colley et al. (2018) used, if
+% precision is needed here; not stated in the sources consulted.
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Prior work on relational-database access-layer performance,
+    positioned along the four axes on which this study differs from it.
+    ``Layers covered'' aggregates native drivers, query builders, and ORMs
+    into one count; ``none'' marks studies that vary the engine or
+    framework but not the access layer.}
+  \label{tab:prior_art}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{@{}llllc@{}}
+    \toprule
+    Study & Layers covered & Engines & Metrics & Neutral? \\
+    \midrule
+    Colley et al.~\cite{colley2018orm} & 8 ORMs, 4 languages (no JS) & not stated & query latency & Yes \\
+    Procedia CS~\cite{prisma_rawsql_2025}$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & Yes \\
+    JCCT~\cite{orm_compare_jcct_2025} & 3 ORMs & PostgreSQL & latency, memory, CPU & Yes \\
+    Salunke and Ouda~\cite{salunke2024pgmysql} & none (engine only) & PostgreSQL + MySQL & throughput, latency & Yes \\
+    Drizzle~\cite{drizzle_benchmarks} & 9 (full taxonomy) & PostgreSQL & throughput, latency, P95 & No (vendor) \\
+    Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & No (vendor) \\
+    IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & No (vendor) \\
+    \midrule
+    \textbf{This study} & \textbf{9 (full taxonomy)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + tail (p50/p90/p99)} & \textbf{Yes} \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+  \vspace{4pt}
+  {\raggedright\footnotesize $^\dagger$Cited for its methodology only; the reported speedup figures did not survive independent verification.\par}
+\end{table}
