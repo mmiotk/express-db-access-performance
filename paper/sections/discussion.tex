@@ -41,7 +41,7 @@ spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
 InnoDB's commit path dominates end-to-end latency regardless of how a query
 reaches it. This is a caution as much as a finding. A write-throughput
-comparison run on a single engine licenses exactly the wrong generalization in
+comparison run on a single engine invites the wrong generalization in
 either direction---``the access layer is irrelevant to writes'' from MySQL
 alone, or ``the access layer matters a great deal for writes'' from PostgreSQL
 alone---and an engine-only benchmark such as~\cite{salunke2024pgmysql} cannot
@@ -85,7 +85,7 @@ performance analysis. We regard the resulting checklist as reusable:
         rows.
 \end{itemize}
 None of these four is specific to our schema; each is a generic failure mode
-of the genre, extending the general database-benchmarking pitfalls catalogued
+of the genre, extending the general database-benchmarking pitfalls cataloged
 by Fritz et al.~\cite{fritz2021tail} to the access-layer-comparison sub-genre
 specifically. We regard the checklist as a contribution in its own right,
 reusable by anyone comparing drivers, query builders, or ORMs: each confound

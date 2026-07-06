@@ -86,23 +86,23 @@ the identical seeded table. \emph{(iv)~Observer separation}: the HTTP load
 generator runs in a process separate from the server.
 
 \subsection{Measurement procedure}
-Load is generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
+Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
-latency histogram. For each of the 80 configurations we open 50 concurrent
-connections, run a two-second warm-up pass whose measurements are discarded
-(absorbing JIT compilation, connection-pool fill, and query-plan caching), then
-take ten measured four-second runs and report the median. autocannon is a
-closed-loop (constant-concurrency) generator. Each run yields throughput (requests
-per second) and latency percentiles p50, p90 and p99. During the measured runs
-we additionally sample the \emph{server} process's CPU utilization and peak
-resident memory from \texttt{/proc}; because the load generator runs in a separate
-process, this isolates the access layer's own footprint from the load tool and the
-database. Both engines run with the working set resident in memory and durability
-relaxed, so results reflect access-layer CPU and allocation cost rather than disk
-synchronization. The hardware and software environment is captured automatically
-into the replication package. To characterize behavior under load, we additionally
-sweep the deep/nested fetch---the most layer-sensitive pattern---across connection
-counts from 1 to 256 for every layer and engine.
+latency histogram; it is a closed-loop (constant-concurrency) generator. For each
+of the 80 configurations we opened 50 concurrent connections, ran a two-second
+warm-up pass whose measurements were discarded (absorbing JIT compilation,
+connection-pool fill, and query-plan caching), then took ten measured four-second
+runs and reported the median. Each run yields throughput (requests per second) and
+latency percentiles p50, p90 and p99. During the measured runs we also sampled the
+\emph{server} process's CPU utilization and peak resident memory from
+\texttt{/proc}; because the load generator runs in a separate process, this isolates
+the access layer's own footprint from the load tool and the database. Both engines
+ran with the working set resident in memory and durability relaxed, so the results
+reflect access-layer CPU and allocation cost rather than disk synchronization. The
+hardware and software environment was captured automatically into the replication
+package. To characterize behavior under load, we additionally swept the deep/nested
+fetch---the most layer-sensitive pattern---across connection counts from 1 to 256
+for every layer and engine.
 
 \subsection{Analysis}
 Because absolute throughput is hardware-specific, we analyze \emph{relative}

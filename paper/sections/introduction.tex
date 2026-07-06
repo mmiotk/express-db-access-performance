@@ -6,14 +6,14 @@ every non-trivial service built on it eventually reaches a relational database
 through some \emph{access layer}. That choice is not settled by the language
 or the framework: access layers span three categories that trade raw
 performance for ergonomics, compile-time type safety, and protection from
-foot-guns such as the N+1 query problem, in which a naively written nested
+common pitfalls such as the N+1 query problem, in which a naively written nested
 fetch silently issues one query per parent row instead of one query for the
 whole result graph. At one end sit native drivers that expose the wire
 protocol directly (\texttt{pg} for PostgreSQL, \texttt{mysql2} for MySQL); in
 the middle sit query builders that assemble SQL programmatically (Knex); at
 the other end sit object-relational mappers (ORMs) that map rows to objects
 and manage relationships automatically (Drizzle---a lightweight ORM---Prisma,
-Sequelize, TypeORM, Objection, and MikroORM). Node.js backend performance
+Sequelize, TypeORM, Objection, and MikroORM). Node.js back-end performance
 under load is itself a recognized empirical topic~\cite{chaniotis2015nodejs,
 kuffel2025nodejs,carmo2024backend}, but that literature treats the runtime and
 the web framework as the unit of comparison; it does not vary the database
@@ -29,7 +29,7 @@ percentile~\cite{prisma_benchmarks}, while Drizzle's and IMDBench's report
 throughput with, at best, a single P95 point~\cite{drizzle_benchmarks,
 imdbench}. None reports the p99 behavior that dominates perceived performance
 under load~\cite{dean2013tail,fritz2021tail}. The peer-reviewed literature is
-thinner still and no less fragmented. Colley et al.\ measured ORM overhead
+thinner still and equally narrow in scope. Colley et al.\ measured ORM overhead
 across eight frameworks, but in Java, C\#, Python, and PHP, deliberately
 excluding JavaScript~\cite{colley2018orm}; two 2025 studies begin to close
 that gap for Node.js/TypeScript, yet each is limited to PostgreSQL and to at
@@ -39,11 +39,11 @@ access layer fixed rather than varying it~\cite{salunke2024pgmysql}.
 
 Taken together, this leaves a gap along four axes: (1)~no access-layer
 comparison includes MySQL, and no PostgreSQL/MySQL benchmark varies the
-access layer; (2)~no neutral, full-taxonomy study exists outside vendor
-marketing, since academic work covers at most two or three libraries;
-(3)~throughput and tail latency are never reported jointly, each source
-picking whichever metric flatters its own product; and (4)~none of the above
-measures through the Express/HTTP layer, i.e.\ the request roundtrip a
+access layer; (2)~no neutral, full-taxonomy study exists---the full-taxonomy
+comparisons are vendor-authored, and academic work covers at most two or three
+libraries; (3)~throughput and tail latency are never reported jointly, each source
+reporting a single metric family; and (4)~none of the above
+measures through the Express/HTTP layer, i.e.\ the request round trip a
 deployed service actually experiences, rather than an isolated query timing.
 
 This paper closes that gap with a single, neutral benchmark. We serve an
@@ -66,13 +66,13 @@ replication package.
 
 We structure the study around three research questions:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
-  \item How large is the throughput and tail-latency overhead of each access
-        layer relative to the native-driver baseline, and how does it vary
-        across the five access patterns?
-  \item Is the relative ordering of access layers consistent across
-        PostgreSQL and MySQL, or is it engine-dependent?
-  \item For which access patterns is the choice of access layer most
-        consequential?
+  \item \emph{(overhead):} How large is the throughput and tail-latency overhead of
+        each access layer relative to the native-driver baseline, and how does it
+        vary across the five access patterns?
+  \item \emph{(engine dependence):} Is the relative ordering of access layers
+        consistent across PostgreSQL and MySQL, or is it engine-dependent?
+  \item \emph{(consequential patterns):} For which access patterns is the choice of
+        access layer most consequential?
 \end{enumerate}
 
 This paper makes four contributions:

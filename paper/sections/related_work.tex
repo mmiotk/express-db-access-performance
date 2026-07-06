@@ -37,7 +37,7 @@ orthogonal, since it cannot say how a driver, query builder, or ORM would
 change the comparison. On the Node.js side, Chaniotis et
 al.~\cite{chaniotis2015nodejs} established Node's viability as a
 web-application platform, Kuffel and Walter~\cite{kuffel2025nodejs} tracked
-how a Node.js backend's performance characteristics drift over time under
+how a Node.js back-end's performance characteristics drift over time under
 sustained load, and do Carmo et al.~\cite{carmo2024backend} compared
 back-end frameworks more broadly. None of these studies isolates the
 database access layer as an independent variable, let alone varies it across
@@ -45,8 +45,9 @@ the taxonomy studied here; where database access appears at all, it is
 incidental to their designs rather than the object of study.
 
 \paragraph{Practitioner and vendor benchmarks.}
-A far richer, but far less trustworthy, body of evidence comes from
-practitioners and vendors. Drizzle publishes both a Northwind micro-suite
+A far richer body of evidence comes from practitioners and vendors, though each
+source is authored by a party with a stake in one of the compared products. Drizzle
+publishes both a Northwind micro-suite
 spanning nine targets (\texttt{pg}, Knex, Kysely, MikroORM, TypeORM, Prisma,
 and Drizzle itself, pooled and unpooled) and an official k6-driven load test
 reporting requests per second, average latency, P95, and
@@ -61,7 +62,7 @@ literature combined---yet all three share the same defects: each is
 authored, or at minimum hosted, by a party that sells one of the compared
 products; all three run exclusively against PostgreSQL; and each reports a
 single metric family---throughput or latency, rarely both, and almost never
-the tail---chosen in a way that happens to flatter its author's product.
+the tail.
 
 \paragraph{Benchmarking methodology.}
 A separate methodological literature explains why the single-metric habit
@@ -90,7 +91,7 @@ native drivers, a query builder, and six ORMs, in one design, rather than
 the two or three libraries typical of peer-reviewed work; (3)~it reports
 throughput and tail latency (p99) jointly for every cell, rather
 than the single metric family each vendor benchmark selects; and (4)~it
-measures through the Express HTTP layer, i.e.\ the request roundtrip a real
+measures through the Express HTTP layer, i.e.\ the request round trip a real
 service experiences, rather than in-process query timing alone.
 
 % TODO(author): verify which RDBMS engine Colley et al. (2018) used, if
