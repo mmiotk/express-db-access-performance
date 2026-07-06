@@ -1,0 +1,81 @@
+% Prior art — see notes/prior-art.md for the fact-checked survey behind these.
+
+@article{prisma_rawsql_2025,
+  author  = {{Authors TBD}},
+  title   = {Optimizing Database Access Strategy: A Performance Analysis Comparison of Raw SQL and Prisma ORM},
+  journal = {Procedia Computer Science},
+  year    = {2025},
+  note    = {Elsevier; ScienceDirect PII S187705092502722X. Cite methodology; headline speedup figures unverified.},
+  url     = {https://www.sciencedirect.com/science/article/pii/S187705092502722X},
+}
+
+@article{orm_compare_jcct_2025,
+  author  = {{Authors TBD}},
+  title   = {Comparing the Performance of Prisma, TypeORM, and Sequelize on PostgreSQL},
+  journal = {Journal of Computer and Creative Technology},
+  volume  = {3},
+  number  = {2},
+  year    = {2025},
+  url     = {https://so13.tci-thaijo.org/index.php/jcct/article/view/2330},
+}
+
+@inproceedings{colley2018orm,
+  author    = {Colley, Derek and Stanier, Clare and Asaduzzaman, Md},
+  title     = {The Impact of Object-Relational Mapping Frameworks on Relational Query Performance},
+  booktitle = {2018 International Conference on Computing, Electronics \& Communications Engineering (iCCECE)},
+  year      = {2018},
+  publisher = {IEEE},
+  doi       = {10.1109/iCCECE.2018.8659222},
+  note      = {Java, C\#, Python, PHP --- deliberately excludes JavaScript/Node.},
+}
+
+@inproceedings{fritz2021tail,
+  author    = {Fritz, Manuel and others},
+  title     = {Tell-Tale Tail Latencies: Pitfalls and Perils in Database Benchmarking},
+  booktitle = {Performance Evaluation and Benchmarking (TPCTC 2021)},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  year      = {2021},
+  eprint    = {2107.11607},
+  archivePrefix = {arXiv},
+}
+
+@article{dean2013tail,
+  author  = {Dean, Jeffrey and Barroso, Luiz Andr\'e},
+  title   = {The Tail at Scale},
+  journal = {Communications of the ACM},
+  volume  = {56},
+  number  = {2},
+  pages   = {74--80},
+  year    = {2013},
+  doi     = {10.1145/2408776.2408794},
+}
+
+@misc{drizzle_benchmarks,
+  author = {{Drizzle Team}},
+  title  = {Drizzle ORM Benchmarks},
+  year   = {2024},
+  howpublished = {\url{https://orm.drizzle.team/benchmarks}},
+  note   = {k6, 1M prepared requests, two-machine setup; reports req/s, avg + P95 latency, CPU.},
+}
+
+@misc{prisma_benchmarks,
+  author = {{Prisma}},
+  title  = {Query Performance Benchmarks},
+  year   = {2024},
+  howpublished = {\url{https://benchmarks.prisma.io/}},
+  note   = {Prisma/Drizzle/TypeORM; median of 500 iterations; no throughput, no p95/p99.},
+}
+
+@misc{imdbench,
+  author = {{Gel Data (EdgeDB)}},
+  title  = {IMDBench: ORM benchmarks},
+  year   = {2024},
+  howpublished = {\url{https://github.com/geldata/imdbench}},
+}
+
+@misc{autocannon,
+  author = {Hinchliffe, Glen and others},
+  title  = {autocannon: fast HTTP/1.1 benchmarking tool for Node.js},
+  howpublished = {\url{https://github.com/mcollina/autocannon}},
+}

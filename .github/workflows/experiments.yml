@@ -1,0 +1,58 @@
+name: Harness smoke test
+
+on:
+  push:
+    paths: ["experiments/**", ".github/workflows/experiments.yml"]
+  pull_request:
+    paths: ["experiments/**"]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: bench
+          POSTGRES_PASSWORD: bench
+          POSTGRES_DB: bench
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U bench" --health-interval 2s
+          --health-timeout 3s --health-retries 30
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_USER: bench
+          MYSQL_PASSWORD: bench
+          MYSQL_DATABASE: bench
+          MYSQL_ROOT_PASSWORD: root
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -ubench -pbench"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install deps
+        working-directory: experiments
+        run: npm ci
+      - name: Prepare databases (small seed)
+        working-directory: experiments
+        env:
+          SEED_AUTHORS: 100
+          SEED_POSTS: 500
+          SEED_COMMENTS_PER_POST: 3
+        run: |
+          npm run migrate
+          npm run seed
+          npm run prisma:generate:pg
+      - name: Smoke benchmark (short)
+        working-directory: experiments
+        env:
+          SEED_AUTHORS: 100
+          SEED_POSTS: 500
+        run: ADAPTERS=pg,mysql2,knex,drizzle,sequelize,typeorm,objection ENGINES=postgres,mysql DURATION=2 REPEATS=1 WARMUP=1 node bench/runner.mjs

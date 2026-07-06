@@ -1,0 +1,26 @@
+\section{Threats to Validity}
+\label{sec:threats}
+
+\paragraph{Construct validity.}
+The benchmark measures HTTP-level throughput and latency, folding in JSON
+serialization and Express routing. This is deliberate---it reflects a real
+service---but means numbers are not pure query-execution times. We mitigate
+cross-layer unfairness by returning an identical result shape from every adapter.
+
+\paragraph{Internal validity.}
+An ORM configured naively could trigger N+1 queries and look artificially slow; we
+force each adapter to use its recommended eager-loading strategy and add a
+correctness cross-check asserting identical results across adapters. Warm-up runs
+absorb JIT, pool-fill, and plan-cache effects. Coordinated omission in the load
+tool is a residual risk~\cite{fritz2021tail}, addressed by a planned fixed-rate
+cross-run.
+
+\paragraph{External validity.}
+A single schema, dataset size, hardware configuration, and pool size limit
+generalization; library versions age quickly. We pin versions, publish the seed and
+environment capture, and release the harness so the matrix can be re-run.
+
+\paragraph{Conclusion validity.}
+We report medians over repeated runs and the coefficient of variation as a
+stability signal; formal pairwise significance testing (e.g.\ Mann--Whitney~U with
+Cliff's~delta) is planned for the camera-ready.

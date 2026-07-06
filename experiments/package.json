@@ -1,0 +1,45 @@
+{
+  "name": "express-db-access-performance-experiments",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Benchmark harness comparing relational database access layers (native driver, query builder, ORMs) in Express.js on PostgreSQL and MySQL",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down -v",
+    "migrate:pg": "ENGINE=postgres node src/migrate.mjs",
+    "migrate:mysql": "ENGINE=mysql node src/migrate.mjs",
+    "migrate": "npm run migrate:pg && npm run migrate:mysql",
+    "seed:pg": "ENGINE=postgres node src/seed.mjs",
+    "seed:mysql": "ENGINE=mysql node src/seed.mjs",
+    "seed": "npm run seed:pg && npm run seed:mysql",
+    "prisma:generate:pg": "prisma generate --schema=prisma/schema.postgres.prisma",
+    "prisma:generate:mysql": "prisma generate --schema=prisma/schema.mysql.prisma",
+    "setup": "npm run db:up && sleep 8 && npm run migrate && npm run seed",
+    "start": "node src/server.mjs",
+    "env": "node bench/environment.mjs",
+    "bench": "node bench/environment.mjs && node bench/runner.mjs",
+    "bench:quick": "ADAPTERS=pg,knex,drizzle,prisma ENGINES=postgres DURATION=3 REPEATS=1 node bench/runner.mjs",
+    "sync:tables": "cp results/tables/*.tex ../paper/tables/"
+  },
+  "dependencies": {
+    "@mikro-orm/core": "^6.4.0",
+    "@mikro-orm/mysql": "^6.4.0",
+    "@mikro-orm/postgresql": "^6.4.0",
+    "@prisma/client": "^5.22.0",
+    "drizzle-orm": "^0.36.4",
+    "express": "^4.21.2",
+    "knex": "^3.1.0",
+    "mysql2": "^3.11.5",
+    "objection": "^3.1.5",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.37.5",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "autocannon": "^7.15.0",
+    "prisma": "^5.22.0"
+  }
+}

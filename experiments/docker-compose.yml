@@ -1,0 +1,48 @@
+# Reproducible database engines for the benchmark. Both are pinned and tuned to
+# hold the seeded working set in memory, so measurements reflect access-layer
+# overhead rather than storage latency.
+#
+#   docker compose up -d        # start postgres + mysql
+#   npm run migrate             # create schema on both
+#   npm run seed                # load rows
+#   docker compose down -v      # tear down + wipe volumes
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+      POSTGRES_DB: bench
+    command: >-
+      postgres -c shared_buffers=512MB -c max_connections=200
+               -c fsync=off -c synchronous_commit=off -c full_page_writes=off
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_USER: bench
+      MYSQL_PASSWORD: bench
+      MYSQL_DATABASE: bench
+      MYSQL_ROOT_PASSWORD: root
+    command: >-
+      --innodb-buffer-pool-size=512M --innodb-flush-log-at-trx-commit=0
+      --max-connections=200
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ubench", "-pbench"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+# NOTE: fsync/synchronous_commit are disabled ON PURPOSE — this is an ephemeral
+# benchmark harness, not a durable store. It removes disk-sync noise so the
+# access-layer comparison is fair. Never use these settings in production.

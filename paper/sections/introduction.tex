@@ -1,0 +1,41 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Express.js remains one of the most widely used server frameworks for Node.js, and
+almost every non-trivial Express service talks to a relational database. The way it
+does so, however, is far from uniform. Developers choose among a spectrum of
+\emph{access layers}: thin native drivers such as \texttt{pg} and \texttt{mysql2},
+query builders such as Knex, and full object-relational mappers (ORMs) such as
+Prisma, Sequelize, TypeORM, Objection, MikroORM, and the lighter-weight Drizzle.
+Each layer trades raw performance for ergonomics, type safety, and protection from
+foot-guns such as the N+1 query problem.
+
+Practitioners typically justify this choice with \emph{vendor benchmarks}. As our
+survey of prior art shows (Section~\ref{sec:related}), these are fragmented,
+almost exclusively target PostgreSQL, and---critically---report either throughput
+\emph{or} latency, seldom both, and rarely the tail (p95/p99) that dominates
+user-perceived performance at scale~\cite{dean2013tail,fritz2021tail}. The
+peer-reviewed literature is thinner still and covers at most two or three
+libraries; the one cross-language academic study of ORM overhead deliberately
+excludes JavaScript altogether~\cite{colley2018orm}.
+
+This paper addresses that gap with a neutral, reproducible benchmark. We serve an
+\emph{identical} Express application through nine access layers, over five
+canonical access patterns, against \emph{both} PostgreSQL and MySQL, and we report
+throughput and tail latency together.
+
+\paragraph{Research questions.}
+\begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
+  \item How much throughput and tail-latency overhead does each access layer add
+        relative to the native-driver baseline, per access pattern?
+  \item Does the ranking of access layers hold across PostgreSQL and MySQL, or is
+        it engine-dependent?
+  \item For which access patterns (point read, range scan, deep/nested fetch,
+        aggregation, insert) is the layer choice most consequential?
+\end{enumerate}
+
+\paragraph{Contributions.}
+(i)~A full-taxonomy, dual-engine, Express-specific benchmark harness released as an
+open replication package; (ii)~a joint throughput/tail-latency comparison that
+existing benchmarks omit; (iii)~the first inclusion of MySQL alongside PostgreSQL in
+this comparison genre.

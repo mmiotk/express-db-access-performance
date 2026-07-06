@@ -1,0 +1,54 @@
+// Prisma schema — PostgreSQL. Generate before running the pg cell:
+//   npx prisma generate --schema=prisma/schema.postgres.prisma
+// Prisma fixes the provider at generate time, so only one engine's client
+// exists at a time; the runner regenerates when it switches engines.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id         BigInt    @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  created_at DateTime  @default(now())
+  posts      Post[]
+  comments   Comment[]
+
+  @@map("authors")
+}
+
+model Post {
+  id         BigInt    @id @default(autoincrement())
+  author_id  BigInt
+  title      String
+  body       String
+  published  Boolean   @default(true)
+  views      Int       @default(0)
+  created_at DateTime  @default(now())
+  author     Author    @relation(fields: [author_id], references: [id])
+  comments   Comment[]
+
+  @@index([author_id])
+  @@index([created_at])
+  @@map("posts")
+}
+
+model Comment {
+  id         BigInt   @id @default(autoincrement())
+  post_id    BigInt
+  author_id  BigInt
+  body       String
+  created_at DateTime @default(now())
+  post       Post     @relation(fields: [post_id], references: [id])
+  author     Author   @relation(fields: [author_id], references: [id])
+
+  @@index([post_id])
+  @@index([author_id])
+  @@map("comments")
+}

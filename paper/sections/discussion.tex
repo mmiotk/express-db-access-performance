@@ -1,0 +1,13 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\emph{To be written after results.} Intended threads:
+\begin{itemize}[leftmargin=*]
+  \item Where abstraction cost is negligible (e.g.\ point reads dominated by
+        network/parse) versus where it compounds (deep fetch, aggregation).
+  \item Whether the throughput ranking and the tail-latency ranking agree---if a
+        layer wins on average but loses on p99, that is the paper's practical punch.
+  \item PostgreSQL vs MySQL: does engine choice reorder the layers?
+  \item Practical guidance: when the ergonomics of an ORM are worth the measured
+        cost, and when a thin layer is warranted.
+\end{itemize}

@@ -1,0 +1,15 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We set out to replace vendor-benchmark folklore with a neutral, reproducible
+comparison of relational database access layers in Express.js. Our harness covers
+the full taxonomy---native drivers, a query builder, and six ORMs---across
+PostgreSQL and MySQL, over five access patterns, reporting throughput and tail
+latency together. This closes four gaps left by prior art: the absence of MySQL,
+the lack of a neutral full-taxonomy study, the separation of throughput from tail
+latency, and the omission of the Express HTTP layer.
+
+\emph{Quantitative findings and guidance will follow the first measurement run.}
+Planned extensions include a connection-pool-size sweep, an isolated N+1 penalty
+study, and cold-start latency per layer. The complete replication package---harness,
+seed, and analysis---is released under open licenses.

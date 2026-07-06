@@ -1,0 +1,63 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{adjustbox}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\setlength{\emergencystretch}{3em}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,
+    pdftitle={A Comparative Analysis of Relational Database Access-Layer Performance in Express.js across PostgreSQL and MySQL},
+}
+\usepackage{csquotes}
+
+% --- Bibliography (biblatex + biber) ---
+\usepackage[backend=biber, style=ieee, sorting=nyt]{biblatex}
+\addbibresource{references.bib}
+
+% --- Document metadata ---
+\title{A Comparative Analysis of Relational Database Access-Layer\\
+  Performance in Express.js across PostgreSQL and MySQL}
+\author{Mateusz Miotk\\
+  Faculty of Mathematics, Physics and Informatics,\\
+  University of Gdańsk\\
+  \texttt{mateusz.miotk@ug.edu.pl}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Node.js/Express applications reach relational databases through a spectrum of
+access layers: native drivers, query builders, and object-relational mappers
+(ORMs). Practitioners choose between them largely on the basis of vendor
+benchmarks, which are fragmented, PostgreSQL-only, and report either throughput or
+latency but rarely both. We present a neutral, reproducible benchmark of the full
+access-layer taxonomy---native drivers (\texttt{pg}, \texttt{mysql2}), a query
+builder (Knex), and six ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection,
+MikroORM)---served through an identical Express application over five access
+patterns, on both PostgreSQL and MySQL, reporting throughput and tail latency
+(p50/p90/p99) together. \emph{(Results pending first measurement run.)}
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/methodology}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/threats}
+\input{sections/conclusion}
+
+\printbibliography
+
+\end{document}

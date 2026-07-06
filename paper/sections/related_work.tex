@@ -1,0 +1,31 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Peer-reviewed studies.}
+Two 2025 studies benchmark Node/TypeScript access layers on PostgreSQL: one
+compares Prisma against optimized raw SQL over eight query
+patterns~\cite{prisma_rawsql_2025} (we cite its methodology; its headline speedup
+figures did not survive independent verification), and one compares Prisma,
+TypeORM, and Sequelize across four relation types~\cite{orm_compare_jcct_2025}.
+Earlier, Colley et al.~\cite{colley2018orm} measured ORM overhead across eight
+frameworks in Java, C\#, Python, and PHP---\emph{but not JavaScript}---making the
+Node ecosystem a standing gap. On methodology, Fritz et al.~\cite{fritz2021tail}
+and Dean and Barroso~\cite{dean2013tail} show why average-case reporting hides the
+tail latencies that matter in production.
+
+\paragraph{Practitioner and vendor benchmarks.}
+A rich but biased landscape exists. Drizzle publishes both a Northwind micro-suite
+spanning the full taxonomy (\texttt{pg}, Knex, Kysely, MikroORM, TypeORM, Prisma,
+Drizzle) and an official k6-driven load benchmark reporting req/s and
+P95~\cite{drizzle_benchmarks}. Prisma's official site compares three ORMs by median
+query latency but reports neither throughput nor tail percentiles~\cite{prisma_benchmarks}.
+IMDBench~\cite{imdbench} and community suites (JS-AK, Orchid) add further coverage.
+All share three limitations: they are PostgreSQL-only, they are authored by parties
+promoting one of the compared products, and they each report a single metric family
+chosen to favour a particular narrative.
+
+\paragraph{Positioning.}
+Our study differs on four axes simultaneously: (1)~it adds MySQL; (2)~it is neutral
+and covers the full taxonomy in one design; (3)~it reports throughput and tail
+latency jointly; and (4)~it measures through the Express HTTP layer, i.e.\ the
+request roundtrip a real service experiences.
