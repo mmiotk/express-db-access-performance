@@ -15,6 +15,7 @@
 
 import { spawn, execFileSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import autocannon from 'autocannon';
@@ -75,6 +76,43 @@ function runAutocannon(opts, { duration }) {
   });
 }
 
+// --- Server-process resource sampler (Linux /proc). The load generator runs in
+// THIS process; the server under test is the child, so sampling child.pid isolates
+// the access layer's own CPU and memory from the load generator and the database.
+const CLK_TCK = 100; // Linux USER_HZ
+
+function cpuTicks(pid) {
+  try {
+    const s = readFileSync(`/proc/${pid}/stat`, 'utf8');
+    const f = s.slice(s.lastIndexOf(')') + 2).split(' '); // fields from #3 (state)
+    return Number(f[11]) + Number(f[12]);                 // utime(#14)+stime(#15)
+  } catch { return null; }
+}
+function rssMB(pid) {
+  try {
+    const m = readFileSync(`/proc/${pid}/status`, 'utf8').match(/VmRSS:\s+(\d+)\s+kB/);
+    return m ? Number(m[1]) / 1024 : null;
+  } catch { return null; }
+}
+function startSampler(pid) {
+  let last = cpuTicks(pid); let lastT = process.hrtime.bigint();
+  const cpu = []; let rssPeak = 0; let timer = null; let stopped = false;
+  const tick = () => {
+    if (stopped) return;
+    const c = cpuTicks(pid); const t = process.hrtime.bigint();
+    const dt = Number(t - lastT) / 1e9;
+    if (c != null && last != null && dt > 0) cpu.push(((c - last) / CLK_TCK) / dt * 100);
+    last = c; lastT = t;
+    const r = rssMB(pid); if (r && r > rssPeak) rssPeak = r;
+    timer = setTimeout(tick, 200);
+  };
+  timer = setTimeout(tick, 200);
+  return () => {
+    stopped = true; if (timer) clearTimeout(timer);
+    return { cpuPct: cpu.length ? Math.round(median(cpu)) : null, rssPeakMB: rssPeak ? Math.round(rssPeak) : null };
+  };
+}
+
 // Prisma's client is generated per provider; regenerate before a prisma cell so
 // the full matrix runs in one command.
 function ensurePrismaClient(engine) {
@@ -114,18 +152,23 @@ async function benchCell(adapter, engine, port) {
 
       const reqps = [];
       const p50 = []; const p90 = []; const p99 = []; const p975 = [];
+      const stopSampler = startSampler(child.pid); // server-process CPU/RSS over the measured runs
       for (let i = 0; i < REPEATS; i++) {
         const r = await runAutocannon(ep.opts, { duration: DURATION });
         reqps.push(r.requests.average);
         p50.push(r.latency.p50); p90.push(r.latency.p90); p975.push(r.latency.p97_5 ?? r.latency.p975); p99.push(r.latency.p99);
       }
+      const res = stopSampler();
       rows.push({
         adapter, engine, category: ADAPTERS[adapter].category, endpoint: ep.key,
         rps: Math.round(median(reqps)),
         p50: median(p50), p90: median(p90), p975: median(p975), p99: median(p99),
+        cpu_pct: res.cpuPct, rss_mb: res.rssPeakMB,
         connections: CONNECTIONS, duration: DURATION, repeats: REPEATS,
+        rps_samples: reqps.map((x) => Math.round(x)), // retained for CV + significance tests
+        p99_samples: p99,
       });
-      console.log(`  ${adapter}/${engine}/${ep.key}: ${Math.round(median(reqps))} req/s  p99=${median(p99)}ms`);
+      console.log(`  ${adapter}/${engine}/${ep.key}: ${Math.round(median(reqps))} req/s  p99=${median(p99)}ms  cpu=${res.cpuPct}%  rss=${res.rssPeakMB}MB`);
     }
   } finally {
     child.kill('SIGTERM');
@@ -153,7 +196,9 @@ async function main() {
   }
 
   await writeFile(join(resultsDir, 'raw.json'), JSON.stringify(all, null, 2));
-  await writeFile(join(resultsDir, 'summary.csv'), toCsv(all));
+  // CSV omits the per-run sample arrays (scalar columns only).
+  const flat = all.map(({ rps_samples, p99_samples, ...r }) => r); // eslint-disable-line no-unused-vars
+  await writeFile(join(resultsDir, 'summary.csv'), toCsv(flat));
 
   const tablesDir = join(resultsDir, 'tables');
   const eps = [

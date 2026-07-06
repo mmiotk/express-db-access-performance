@@ -15,6 +15,49 @@ export function cv(xs) {
   return mean === 0 ? 0 : Math.sqrt(variance) / mean;
 }
 
+// --- Nonparametric comparison of two small samples (throughput runs) ---
+
+function erf(x) {
+  const t = 1 / (1 + 0.3275911 * Math.abs(x));
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+  return x >= 0 ? y : -y;
+}
+const normalCdf = (x) => 0.5 * (1 + erf(x / Math.SQRT2));
+
+// Mann–Whitney U with average ranks and a normal approximation (continuity-
+// corrected, two-sided). Adequate for the small n of repeated benchmark runs;
+// report alongside Cliff's delta, which needs no distributional assumption.
+export function mannWhitneyU(a, b) {
+  const comb = a.map((v) => ({ v, g: 0 })).concat(b.map((v) => ({ v, g: 1 }))).sort((x, y) => x.v - y.v);
+  const n = comb.length;
+  for (let i = 0; i < n;) {
+    let j = i; while (j + 1 < n && comb[j + 1].v === comb[i].v) j++;
+    const rank = (i + j) / 2 + 1;
+    for (let k = i; k <= j; k++) comb[k].rank = rank;
+    i = j + 1;
+  }
+  const n1 = a.length; const n2 = b.length;
+  const R1 = comb.filter((x) => x.g === 0).reduce((s, x) => s + x.rank, 0);
+  const U1 = R1 - (n1 * (n1 + 1)) / 2;
+  const U = Math.min(U1, n1 * n2 - U1);
+  const mu = (n1 * n2) / 2;
+  const sigma = Math.sqrt((n1 * n2 * (n1 + n2 + 1)) / 12);
+  const z = sigma > 0 ? (U - mu + 0.5) / sigma : 0;
+  return { U, p: 2 * normalCdf(-Math.abs(z)) };
+}
+
+// Cliff's delta effect size in [-1, 1]; |d|: <.147 negligible, <.33 small,
+// <.474 medium, else large.
+export function cliffsDelta(a, b) {
+  let gt = 0; let lt = 0;
+  for (const x of a) for (const y of b) { if (x > y) gt++; else if (x < y) lt++; }
+  return a.length && b.length ? (gt - lt) / (a.length * b.length) : 0;
+}
+export function cliffsMagnitude(d) {
+  const ad = Math.abs(d);
+  return ad < 0.147 ? 'negligible' : ad < 0.33 ? 'small' : ad < 0.474 ? 'medium' : 'large';
+}
+
 export function toCsv(rows) {
   if (!rows.length) return '';
   const cols = Object.keys(rows[0]);
