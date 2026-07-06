@@ -78,8 +78,13 @@ export function texTable({ rows, endpoint, metric, caption, label, unit }) {
   }
   const colspec = `l l ${engines.map(() => 'r').join(' ')}`;
   const header = `Layer & Category & ${engines.map((e) => `\\textbf{${e}}`).join(' & ')} \\\\`;
+  // Canonical taxonomy order (native → query builder → lightweight ORM → ORMs), so
+  // rows read consistently across tables regardless of measurement/merge order.
+  const ORDER = ['pg', 'mysql2', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
+  const rank = (a) => { const i = ORDER.indexOf(a); return i < 0 ? ORDER.length : i; };
   const lines = [];
-  for (const [adapter, data] of byAdapter) {
+  for (const adapter of [...byAdapter.keys()].sort((a, b) => rank(a) - rank(b))) {
+    const data = byAdapter.get(adapter);
     const cells = engines.map((e) => (data[e] == null ? '--' : fmt(data[e]))).join(' & ');
     lines.push(`${tex(adapter)} & ${tex(data.category)} & ${cells} \\\\`);
   }

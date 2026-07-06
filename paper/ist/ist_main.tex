@@ -15,6 +15,7 @@
 \setlength{\emergencystretch}{3em}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepackage{url}
 
 % Shared sections resolve result tables through \tabledir; from paper/ist/ the
 % tables live one level up.
@@ -95,9 +96,12 @@ vendors evaluated in this study.
 \section*{Data availability}
 The complete replication package---benchmark harness, database schema and
 deterministic seed, all nine adapter implementations, the correctness cross-check,
-raw per-cell measurements, and the scripts that generate every table---is publicly
-available.
-% TODO(author): insert the archived Zenodo DOI and the GitHub URL before submission.
+raw per-cell measurements, and the scripts that generate every table in this
+paper---is publicly available at
+\url{https://github.com/mmiotk/express-db-access-performance} and archived at Zenodo.
+% TODO(author): deposit the tagged commit to Zenodo, replace "archived at Zenodo"
+% with the concrete DOI, and cite it in the abstract/introduction. The GitHub
+% repository is made public at submission time.
 
 \section*{Funding}
 This research received no external funding.

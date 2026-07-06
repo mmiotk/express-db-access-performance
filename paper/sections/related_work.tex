@@ -66,7 +66,7 @@ the tail.
 
 \paragraph{Benchmarking methodology.}
 A separate methodological literature explains why the single-metric habit
-above is a problem in its own right. Fritz et al.~\cite{fritz2021tail}
+above is a problem in its own right. Fruth et al.~\cite{fruth2022tail}
 catalog pitfalls specific to database benchmarking---coordinated omission,
 JIT and garbage-collector warm-up, and tool-induced distortion---that
 silently corrupt reported p95/p99 values unless explicitly controlled for.
@@ -94,8 +94,6 @@ than the single metric family each vendor benchmark selects; and (4)~it
 measures through the Express HTTP layer, i.e.\ the request round trip a real
 service experiences, rather than in-process query timing alone.
 
-% TODO(author): verify which RDBMS engine Colley et al. (2018) used, if
-% precision is needed here; not stated in the sources consulted.
 \begin{table}[htbp]
   \centering
   \small

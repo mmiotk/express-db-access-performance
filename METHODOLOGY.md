@@ -52,16 +52,25 @@ against. Grounded in the prior-art review (`notes/prior-art.md`), especially
 
 ## Reproducibility
 
-- `REPEATS` medians per cell; coefficient of variation across repeats is available
-  as a stability signal (`bench/stats.mjs`).
-- All inputs are deterministic; the entire matrix is one command (`npm run bench`).
-- Raw per-cell results (`results/raw.json`) and the released `summary.csv` back
-  every number in the paper.
+- `REPEATS` medians per cell; coefficient of variation across repeats is reported
+  as a stability signal (`bench/stats.mjs`, `bench/analyze.mjs`).
+- The **database seed** is deterministic (fixed mulberry32 PRNG); every engine gets
+  byte-identical data. The **load-generator request stream** (which post/author id
+  each request hits) uses `Math.random()` and is therefore *not* seeded — this is
+  absorbed by the ten measured runs and the low CV, but it means individual request
+  sequences are not reproducible.
+- The entire matrix is one command (`npm run bench`); `bench/analyze.mjs` and
+  `bench/scaling.mjs` produce the statistics and the concurrency-sweep figure.
+- Raw per-cell results (`results/raw.json`, `results/scaling.json`) back every number
+  in the paper.
 
-## Open method questions (to resolve before first submission)
+## Method decisions taken for the published run
 
-- Client and server on the **same host** (simpler, some interference) vs **two
-  machines over ethernet** (Drizzle's approach; cleaner, harder to reproduce)?
-- Concurrency level(s): single `CONNECTIONS=50` point, or a sweep (1/10/50/100/200)
-  to expose where each layer saturates?
-- Add memory/CPU sampling per cell (RSS, `process.cpuUsage`) for a resource table?
+- **Same-host** client and server (removes network variance; understates network-bound
+  effects — a two-machine cross-run is noted as future work).
+- **Concurrency**: a primary operating point of `CONNECTIONS=50`, plus a 1–256 sweep
+  on the deep fetch (`bench/scaling.mjs`) to expose saturation.
+- **Resource sampling**: per-cell server-process CPU and peak RSS from `/proc`
+  (`bench/runner.mjs`), feeding the paper's resource table.
+- **Statistics**: medians + CV, and Mann–Whitney~U + Cliff's~δ between adjacent layers
+  (`bench/analyze.mjs`).

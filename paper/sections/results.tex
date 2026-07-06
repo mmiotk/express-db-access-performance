@@ -50,7 +50,11 @@ The \emph{relative} ordering of access layers is largely stable across PostgreSQ
 and MySQL: native drivers and Prisma lead, query builders and the lightweight ORM
 form a middle band, and the data-mapper ORMs trail, on both engines (the
 deep-fetch ordering, for instance, is preserved, with a $4.5\times$ spread on
-MySQL versus $6.2\times$ on PostgreSQL). The clearest engine-specific effect is on
+MySQL versus $6.2\times$ on PostgreSQL). On MySQL, Prisma in fact edges past the
+native \texttt{mysql2} driver on most patterns (e.g.\ deep fetch 3{,}514
+vs.\ 2{,}324~req/s), so the native driver is not always the ceiling there; we still
+report all spreads native-relative for cross-pattern comparability. The clearest
+engine-specific effect is on
 \textbf{inserts} (Table~\ref{tab:write_rps}): on MySQL, throughput is uniformly low
 across \emph{all} layers---roughly 750--930~req/s, a spread of only $1.2\times$---so
 the InnoDB commit path dominates and masks access-layer differences, whereas on
@@ -93,7 +97,7 @@ single-metric, throughput-only vendor benchmarks omit.
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across all 80 cells the coefficient
-of variation of throughput over the ten runs is at most 10.7\%
+of variation of throughput over the ten runs is at most 10.8\%
 (Table~\ref{tab:cv}), an order of magnitude below the between-layer spreads
 (up to $6.2\times$). To confirm that neighboring ranks are not measurement
 artifacts, we compare each adjacently ranked pair on the deep/nested fetch
@@ -133,7 +137,7 @@ honest: this is \emph{application-process} CPU only---database-side CPU lives in
 \texttt{postgres}/\texttt{mysqld} process and is excluded for every layer alike---and
 the multiplier is pattern-dependent (Prisma's aggregation cell draws only $\approx
 200\%$). Memory tells a gentler story: the native driver, Knex, and Objection are
-lightest (204--213~MB peak RSS), while the remaining ORMs sit higher (248--278~MB).
+lightest (204--213~MB peak RSS), while the remaining ORMs sit higher (251--278~MB).
 Resource cost, like throughput, is therefore pattern- and layer-specific, and
 matters when sizing horizontally scaled deployments.
 

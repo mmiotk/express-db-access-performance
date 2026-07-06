@@ -34,7 +34,7 @@ endpoint forces all adapters onto the same correlated-subquery plan rather than
 each adapter's first-instinct formulation, so it measures access-layer overhead,
 not incidental differences in SQL shape. A residual risk is coordinated omission in
 the load generator, which can under-report tail latency at
-saturation~\cite{fritz2021tail}; a fixed-rate, constant-arrival cross-run is
+saturation~\cite{fruth2022tail}; a fixed-rate, constant-arrival cross-run is
 planned to bound it.
 
 \paragraph{External validity.}
@@ -66,7 +66,6 @@ ranked adjacent layers, where the effect size is small, remain appropriately
 cautious. One caveat on the design: the ten runs of a cell share a single server
 process lifetime (the server is booted once per layer/engine cell), so they are
 repeated measures rather than fully independent replicates; the tests are best read
-as within-process stability checks. This is unlikely to affect the conclusions,
-since the between-layer gaps are roughly an order of magnitude larger than the
-within-cell CV, but a design that reboots the server per replicate would be
-stronger.
+as within-process stability checks. Given the large between-layer gaps noted above,
+this is unlikely to affect the conclusions, but a design that reboots the server per
+replicate would be stronger.

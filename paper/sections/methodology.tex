@@ -61,9 +61,10 @@ Every access layer implements the same factory interface---five query methods pl
 a teardown---so the Express server and the load runner are layer-agnostic. Each
 adapter returns an \emph{identical result shape}, and each uses that layer's
 \emph{recommended idiomatic} mechanism to avoid the N+1 query problem on the deep
-fetch: a hand-written join for the native drivers and Knex, and relation eager
-loading (\texttt{with}, \texttt{include}, \texttt{withGraphFetched},
-\texttt{populate}, or \texttt{relations}) for the ORMs. To guarantee that no
+fetch: a hand-written join for the native drivers, the Knex query builder, and the
+query-builder-style Drizzle, and relation eager loading (\texttt{include},
+\texttt{withGraphFetched}, \texttt{populate}, or \texttt{relations}) for the
+data-mapper ORMs. To guarantee that no
 adapter gains an unfair advantage by silently returning less---or by issuing N+1
 queries---an automated cross-check asserts that all nine adapters produce the same
 normalized object for the same inputs before any timing is collected. This check
@@ -108,8 +109,9 @@ for every layer and engine.
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
 differences across layers within an engine. We quantify a pattern's sensitivity to
 the access layer by its \emph{spread}: the ratio of the native driver's median
-throughput to that of the slowest layer on that pattern; where an ORM exceeds the
-native driver we also report the full max/min range. We report medians over the ten
+throughput to that of the slowest layer on that pattern (native-relative, so it is
+comparable across patterns even where one ORM exceeds the native driver). We report
+medians over the ten
 runs and the coefficient of variation (CV) across runs as a stability signal
 (Section~\ref{sec:results}). To test whether adjacently ranked layers are
 distinguishable rather than an artifact of measurement noise, we compare each
