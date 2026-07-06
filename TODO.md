@@ -14,20 +14,27 @@ Ordered roughly by priority. `[ ]` open, `[x]` done.
 - [x] First full matrix run: 9 layers × 2 engines × 5 patterns = 80 rows →
       `results/{raw.json,summary.csv}` + 10 LaTeX tables, wired into the paper (9pp).
 
-## 1. Measurement design (next)
+## 1. Measurement design
 
-- [ ] **Fix range-scan confound**: current `ORDER BY created_at DESC` sorts over
-      near-identical seed timestamps with large random OFFSET → dominates MySQL and
-      is not an access-layer signal. Switch to keyset pagination and/or spread
-      `created_at` in the seed; re-run.
-- [ ] Scale up: default seed (1k/20k/200k), DURATION≥10, REPEATS≥5, then report
-      medians + CV (harness already computes these).
+- [x] **range-scan confound fixed**: OFFSET (collapsed on MySQL) → keyset pagination
+      on the PK. Healthy on both engines.
+- [x] **aggregation confound fixed**: full-table pre-aggregation (24 req/s at scale)
+      → correlated subqueries touching only the author's rows (3k–8k req/s).
+- [x] **write isolation**: runner deletes `id > SEED_POSTS` before every cell.
+- [x] Scaled up: seed 2000/100000/1M, 50 conn, median of 3. Corrected run published.
 - [ ] Concurrency sweep (1/10/50/100/200) — locate saturation per layer.
 - [ ] Per-cell CPU/RSS sampling for a resource table.
-- [ ] Investigate MikroORM's flat slowness (per-request `em.fork()` overhead?) —
-      confirm it's idiomatic and not a harness artifact.
+- [ ] Report CV per cell in a table (harness computes it; not yet emitted).
+- [ ] Investigate MikroORM's flat slowness (per-request `em.fork()` overhead?) and
+      why Objection trails on aggregation — confirm idiomatic, not harness artifacts.
 - [ ] Optional: k6 constant-arrival cross-run to bound coordinated omission.
 - [ ] Decide same-host vs two-machine (see METHODOLOGY open questions).
+
+## 1b. Venue (researched 2026-07-06 — see notes/venue.md)
+
+- [ ] Decide: **two-output strategy** — harness → SoftwareX (200 MEiN pts, ~$1,560);
+      study → IEEE Access (100 pts, fast, $2,160) or JSS (100 pts, free via
+      subscription). Single-paper fallback: IEEE Access. Low-cost/continuity: e-Informatica (40).
 
 ## 2. Secondary studies (differentiators vs prior art)
 
