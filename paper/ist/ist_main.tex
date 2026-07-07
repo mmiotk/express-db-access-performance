@@ -45,10 +45,10 @@ spectrum of access layers---native drivers, query builders, and object-relationa
 mappers (ORMs)---yet practitioners choose between them largely on the basis of
 vendor benchmarks that are fragmented, PostgreSQL-only, and report either
 throughput or latency but seldom both.
-\textbf{Objective.} We quantify, neutrally and reproducibly, the performance cost
+\textbf{Objectives.} We quantify, neutrally and reproducibly, the performance cost
 of the access layer as a function of the layer, the database engine, and the
 access pattern.
-\textbf{Method.} An identical Express application is served through nine access
+\textbf{Methods.} An identical Express application is served through nine access
 layers (the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM)
 over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
@@ -66,7 +66,7 @@ benchmarking pitfalls specific to this genre are released as a replication packa
 \end{abstract}
 
 \begin{keyword}
-database access layer \sep object-relational mapping \sep Node.js \sep Express.js
+database access layer \sep object-relational mapping \sep Node.js
 \sep performance benchmarking \sep tail latency \sep empirical software engineering
 \end{keyword}
 
