@@ -137,7 +137,8 @@ $469\%$ (about five cores) against the $\approx100\%$ (one core) of the others,
 because Prisma runs a multi-threaded query engine (a Tokio runtime) in-process.
 Because the pool is held constant, this is a property of the layer, not of a larger
 connection pool. Prisma's throughput parity with native therefore trades CPU for
-latency, which a throughput-only benchmark would not reveal. Two caveats apply: this
+latency, which a throughput-only benchmark would not reveal
+(Figure~\ref{fig:cpu_tradeoff}). Two caveats apply: this
 is \emph{application-process} CPU only (database-side CPU lives in the
 \texttt{postgres}/\texttt{mysqld} process and is excluded for every layer alike), and
 the multiplier is pattern-dependent (Prisma's aggregation cell draws only $\approx
@@ -151,3 +152,4 @@ use governs how many replicas a given load requires~\cite{vaquero2011scaling}.
 \input{\tabledir cv_mysql}
 \input{\tabledir significance_deep_fetch}
 \input{\tabledir resources}
+\input{\tabledir fig_cpu_tradeoff}
