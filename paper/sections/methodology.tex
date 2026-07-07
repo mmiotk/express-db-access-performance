@@ -81,15 +81,19 @@ recommends, so a measured difference reflects the access layer together with the
 it generates, its round-trip count, and how it materializes results. The number of
 round trips is itself part of what varies: the native drivers, Knex, and Drizzle
 issue a two-query deep fetch, whereas each ORM's eager-loading strategy selects its
-own query count and join shape. Enabling each driver's query log in the harness
-recovers the exact SQL and round-trip count per layer; publishing these plans with
-their \texttt{EXPLAIN} output is a planned extension (Section~\ref{sec:threats}). To
-guarantee that no
+own query count and join shape. Server-side statement logging captures the exact SQL
+each layer emits, its round-trip count, and \texttt{EXPLAIN} plans for the native
+statements; these are released with the replication package, and
+Table~\ref{tab:query_counts} reports the per-endpoint counts. They differ by design:
+the deep fetch takes one query in Sequelize and MikroORM, two in the native drivers,
+Knex, Drizzle, and TypeORM, and four in Prisma and Objection. To guarantee that no
 adapter gains an unfair advantage by silently returning less, or by issuing N+1
 queries, an automated cross-check asserts that all nine adapters produce the same
 normalized object for the same inputs before any timing is collected. This check
 caught two genuine defects during development (a fan-out aggregation bug and a
 driver result-shape mismatch; see Section~\ref{sec:discussion}).
+
+\input{\tabledir query_counts}
 
 \subsection{Controls}
 Four controls isolate the access layer as the only variable. \emph{(i)~Pool size}
@@ -104,8 +108,9 @@ aggregation, in particular, uses a single correlated-subquery formulation
 everywhere (the documented raw-SQL path), so that endpoint measures layer
 overhead on an identical plan rather than differences in generated SQL.
 \emph{(iii)~Write isolation}: because the insert endpoint mutates the dataset, the
-runner deletes benchmark-inserted rows before every cell, so each cell starts from
-the identical seeded table. \emph{(iv)~Observer separation}: the HTTP load
+runner deletes benchmark-inserted rows before every measured run of the write
+endpoint (not merely before each cell), so each run starts from the identical seeded
+table and no run inserts into a table grown by an earlier one. \emph{(iv)~Observer separation}: the HTTP load
 generator runs in a process separate from the server.
 
 \subsection{Measurement procedure}

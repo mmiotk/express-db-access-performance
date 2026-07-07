@@ -36,6 +36,7 @@ const BASE_PORT = Number(env('PORT', 3100));
 
 const wantAdapters = (env('ADAPTERS', Object.keys(ADAPTERS).join(','))).split(',').map((s) => s.trim());
 const wantEngines = (env('ENGINES', 'postgres,mysql')).split(',').map((s) => s.trim());
+const wantEndpoints = (env('ENDPOINTS', 'point_read,range_scan,deep_fetch,aggregation,write')).split(',').map((s) => s.trim());
 
 const SEED_POSTS = cfg.seed.posts;
 const SEED_AUTHORS = cfg.seed.authors;
@@ -146,7 +147,11 @@ async function benchCell(adapter, engine, port) {
   try {
     await waitForHealth(base);
     await resetWrites(engine); // start every cell from the identical seeded table
-    for (const ep of endpoints(base)) {
+    for (const ep of endpoints(base).filter((e) => wantEndpoints.includes(e.key))) {
+      // The write endpoint grows the table, so reset before the warm-up and before
+      // every measured run (not just once per cell), so each run starts from the
+      // identical seeded table rather than one grown by the earlier runs.
+      if (ep.key === 'write') await resetWrites(engine);
       // warm-up (JIT + pool fill + plan cache) — measurements discarded
       if (WARMUP > 0) await runAutocannon(ep.opts, { duration: WARMUP });
 
@@ -154,6 +159,7 @@ async function benchCell(adapter, engine, port) {
       const p50 = []; const p90 = []; const p99 = []; const p975 = [];
       const stopSampler = startSampler(child.pid); // server-process CPU/RSS over the measured runs
       for (let i = 0; i < REPEATS; i++) {
+        if (ep.key === 'write') await resetWrites(engine);
         const r = await runAutocannon(ep.opts, { duration: DURATION });
         reqps.push(r.requests.average);
         p50.push(r.latency.p50); p90.push(r.latency.p90); p975.push(r.latency.p97_5 ?? r.latency.p975); p99.push(r.latency.p99);

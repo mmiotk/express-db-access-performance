@@ -38,10 +38,9 @@ induced measurement bias~\cite{mytkowicz2009producing}), and two further control
 (Section~\ref{sec:methodology}) rule out non-layer confounds: benchmark-inserted rows are reset before every cell, and the
 aggregation endpoint uses one correlated-subquery plan across layers, so it measures
 access-layer overhead rather than differences in SQL shape. The write endpoint is
-reset before each cell but not between the ten runs within a cell, so later runs of a
-write cell insert into a table grown by earlier runs (roughly $100{,}000$ toward
-$140{,}000$ rows); this barely shifts B-tree depth, but a per-run reset is a planned
-refinement. A residual risk is coordinated omission in the load generator, which can
+reset to the seeded table before every measured run (not merely before each cell), so
+no run inserts into a table grown by an earlier run. A residual risk is coordinated
+omission in the load generator, which can
 under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency}; a
 fixed-rate, constant-arrival (open-loop) cross-run with a coordinated-omission-corrected
 generator such as k6 or wrk2 is planned to bound it.

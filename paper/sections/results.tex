@@ -55,10 +55,10 @@ footprint). We still report all spreads native-relative for cross-pattern
 comparability. The clearest
 engine-specific effect is on
 \textbf{inserts} (Table~\ref{tab:write}): on MySQL, throughput is uniformly low
-across \emph{all} layers (roughly 750--930~req/s, a spread of only $1.2\times$), so
+across \emph{all} layers (roughly 765--922~req/s, a spread of only $1.2\times$), so
 the InnoDB write path dominates and masks access-layer differences, whereas on
-PostgreSQL the same pattern spreads $4.0\times$ (native 6{,}375 down to MikroORM
-1{,}575). Thus for writes the engine, not the access layer, is the primary
+PostgreSQL the same pattern spreads $4.0\times$ (native 7{,}085 down to MikroORM
+1{,}765). Thus for writes the engine, not the access layer, is the primary
 determinant of throughput. The keyset range scan is healthy for eight of the nine
 layers on both engines (Table~\ref{tab:range_scan}; native \texttt{mysql2}
 2{,}901, \texttt{pg} 3{,}620, and a $\approx1.7\times$ spread among the remaining

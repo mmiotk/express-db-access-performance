@@ -35,17 +35,20 @@ parity is also implementation-relative: because our native adapters use idiomati
 parameterized queries rather than tuned prepared statements, the finding is best
 stated as ``under this implementation and resource model, a query-engine ORM can
 match or exceed the native-driver adapter, at substantially higher application-side
-CPU,'' not as an intrinsic ceiling. Knex and Drizzle sit in a consistent middle
-ground on every pattern (never fastest, never
+CPU,'' not as an intrinsic ceiling. Round-trip count alone does not set throughput:
+Prisma issues four queries for the deep fetch (Table~\ref{tab:query_counts}) yet
+matches the native driver, while Objection issues the same four and is among the
+slowest, so how a layer pipelines and materializes its queries matters as much as how
+many it sends. Knex and Drizzle sit in a consistent middle ground on every pattern (never fastest, never
 among the slowest data-mapper ORMs), which is what a query builder and a
 non-data-mapper, lightweight ORM should deliver.
 
 \paragraph{Writes: an engine-bound cost.}
 RQ2 has a clear answer on inserts, within the relaxed-durability configuration used
 here. MySQL write throughput is low and flat across all eight layers
-(\char`~750--930~req/s, a $1.2\times$ spread; Table~\ref{tab:write}), while the
-identical comparison on PostgreSQL spreads $4.0\times$ (native 6{,}375
-vs.\ MikroORM 1{,}575~req/s). The access
+(\char`~765--922~req/s, a $1.2\times$ spread; Table~\ref{tab:write}), while the
+identical comparison on PostgreSQL spreads $4.0\times$ (native 7{,}085
+vs.\ MikroORM 1{,}765~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
 InnoDB's per-insert write path (redo-log generation, the doublewrite buffer, and
 clustered-index, secondary-index, and undo maintenance), work internal to the engine
