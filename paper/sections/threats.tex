@@ -27,13 +27,11 @@ during development: a fan-out bug that inflated the \texttt{SUM(views)} aggregat
 for every join-based adapter, and a result-shape parsing defect in one driver
 binding, both fixed before the measurements reported here. Explicit warm-up phases
 per (layer, engine, endpoint) cell absorb JIT, pool-fill, and plan-cache effects
-before timing begins. Because the insert endpoint mutates the dataset,
-benchmark-inserted rows are deleted before every cell, so every read and
-aggregation measurement starts from an identical seeded table. The aggregation
-endpoint forces all adapters onto the same correlated-subquery plan rather than
-each adapter's first-instinct formulation, so it measures access-layer overhead,
-not incidental differences in SQL shape. A residual risk is coordinated omission in
-the load generator, which can under-report tail latency at
+before timing begins, and two further controls (Section~\ref{sec:methodology}) rule
+out non-layer confounds: benchmark-inserted rows are reset before every cell, and the
+aggregation endpoint uses one correlated-subquery plan across layers, so it measures
+access-layer overhead rather than differences in SQL shape. A residual risk is
+coordinated omission in the load generator, which can under-report tail latency at
 saturation~\cite{fruth2022tail}; a fixed-rate, constant-arrival cross-run is
 planned to bound it.
 
@@ -53,17 +51,15 @@ variance as a confound, but it can understate network-bound effects. A
 two-machine cross-run over a dedicated link is planned to bound this.
 
 \paragraph{Conclusion validity.}
-We report medians of ten measured runs per cell and use the coefficient of
-variation (CV) across runs as a stability signal (Table~\ref{tab:cv}). To guard
-against reading noise as a ranking, we test each adjacently ranked pair on the
-deep/nested fetch with a two-sided Mann--Whitney~$U$ test and report Cliff's~$\delta$
-as the effect size (Table~\ref{tab:significance}); the coarse ordering is supported
-with large effect sizes. Two bounds reinforce this: the widest spreads, such as
-$6.2\times$ on the deep/nested fetch (Table~\ref{tab:deep_fetch_rps}), are an order
-of magnitude larger than the run-to-run CV, and the ranking is preserved across the
-full 1--256 connection sweep (Figure~\ref{fig:scaling}). Claims about very closely
-ranked adjacent layers, where the effect size is small, remain appropriately
-cautious. One caveat on the design: the ten runs of a cell share a single server
+Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of
+variation as a stability signal and tests adjacently ranked layers with the
+Mann--Whitney~$U$ test and Cliff's~$\delta$ (Tables~\ref{tab:cv},
+\ref{tab:significance}); the coarse ordering is supported with large effect sizes.
+Two bounds reinforce this: the widest spreads, such as $6.2\times$ on the deep/nested
+fetch, are an order of magnitude larger than the run-to-run CV, and the ranking is
+preserved across the full 1--256 connection sweep (Figure~\ref{fig:scaling}). Claims
+about very closely ranked adjacent layers, where the effect size is small, remain
+appropriately cautious. One caveat on the design: the ten runs of a cell share a single server
 process lifetime (the server is booted once per layer/engine cell), so they are
 repeated measures rather than fully independent replicates; the tests are best read
 as within-process stability checks. Given the large between-layer gaps noted above,

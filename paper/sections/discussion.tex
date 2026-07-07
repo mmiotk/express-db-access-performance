@@ -11,7 +11,7 @@ data-mapper ORMs are most expensive: Sequelize, TypeORM, Objection, and
 especially MikroORM (579~req/s) trail the native \texttt{pg} driver
 (3{,}616~req/s) by up to $6.2\times$ on PostgreSQL---the widest spread in the
 study (Table~\ref{tab:deep_fetch_rps})---with a comparable $4.5\times$ spread on
-MySQL. The tail agrees with the average: MikroORM's deep-fetch p99 is 357~ms
+MySQL. The tail shows the same pattern: MikroORM's deep-fetch p99 is 357~ms
 against 17~ms for \texttt{pg} on PostgreSQL (Table~\ref{tab:deep_fetch_p99}).
 A team whose hot path assembles nested object graphs therefore pays the
 largest abstraction cost precisely on its highest-value traffic. Point reads
@@ -19,27 +19,26 @@ and aggregation are the opposite case: dominated by connection and parsing
 cost that every layer shares, point reads spread only $3.2\times$/$2.4\times$;
 aggregation spreads just $1.8\times$/$1.4\times$ once every adapter, native
 drivers included, is forced onto the same raw correlated-subquery plan---once
-the SQL shape is fixed, the layer is nearly incidental. Prisma is the clearest
-evidence that ``ORM'' need not mean ``slow'': its compiled query engine stays
-within a few percent of native throughput on the deep fetch (3{,}521
-vs.\ 3{,}616~req/s) and matches or exceeds native on aggregation on both
-engines (8{,}076 vs.\ 7{,}210~req/s on PostgreSQL). That parity is not free,
-however: at the \emph{same} ten-connection pool, Prisma's process draws roughly
-five times the application-side CPU of the other layers on the deep fetch
-($469\%$; Section~\ref{sec:results}), trading cores for latency---a cost a
+the SQL shape is fixed, the layer is nearly incidental. Prisma shows that an ORM
+need not be slow: its compiled query engine stays within a few percent of native
+throughput on the deep fetch (3{,}521 vs.\ 3{,}616~req/s) and matches or exceeds
+native on aggregation on both engines (8{,}076 vs.\ 7{,}210~req/s on PostgreSQL).
+That parity is not free, however: at the \emph{same} ten-connection pool, Prisma's
+process draws roughly five times the application-side CPU of the other layers on the
+deep fetch ($469\%$; Section~\ref{sec:results}), trading CPU for latency---a cost a
 throughput-only benchmark would miss. Knex and Drizzle sit in a
 consistent middle ground on every pattern---never fastest, never among the
 data-mapper laggards---which is what a query builder and a non-data-mapper,
 lightweight ORM should deliver.
 
 \paragraph{The engine, not the layer, governs writes.}
-RQ2 has an unusually clean answer on inserts. MySQL write throughput is low
+RQ2 has a clear answer on inserts. MySQL write throughput is low
 and flat across all eight layers (\char`~750--930~req/s, a $1.2\times$ spread;
 Table~\ref{tab:write_rps}), while the identical comparison on PostgreSQL
 spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
 InnoDB's commit path dominates end-to-end latency regardless of how a query
-reaches it. This is a caution as much as a finding. A write-throughput
+reaches it. This is also a caution. A write-throughput
 comparison run on a single engine invites the wrong generalization in
 either direction---``the access layer is irrelevant to writes'' from MySQL
 alone, or ``the access layer matters a great deal for writes'' from PostgreSQL
@@ -50,8 +49,8 @@ instead of confounded with layer choice.
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking.}
 Reaching the figures above meant confronting four confounds that would otherwise
-have silently corrupted the comparison. Their provenance differs, and the
-distinction is instructive. One---the aggregation fan-out---is a \emph{correctness}
+have silently corrupted the comparison. Their provenance differs. One---the
+aggregation fan-out---is a \emph{correctness}
 bug that our automated cross-check caught (the same check, which compares each
 adapter's output against a native-driver reference on four of the five endpoints,
 also caught a driver result-shape mismatch). The other three return \emph{correct}
@@ -100,7 +99,7 @@ and a thin layer---the native driver, a query builder, or a query-engine-based
 ORM such as Prisma---is the safer default, since a heavyweight data-mapper ORM
 concentrates its largest penalty exactly on that traffic. Where the workload
 mix is read-simple (point reads, keyset scans) or write-bound, especially on
-MySQL where the engine floor swamps layer differences regardless of choice,
+MySQL where the engine floor dominates layer differences regardless of choice,
 the productivity, type safety, and migration tooling of a full ORM cost little
 in relative throughput and are reasonable grounds for the decision on their
 own. A pragmatic middle path, already forced onto every layer by our
