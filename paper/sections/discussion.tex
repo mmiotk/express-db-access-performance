@@ -11,9 +11,9 @@ made concrete---not merely to issue SQL, and this is exactly where the
 data-mapper ORMs are most expensive: Sequelize, TypeORM, Objection, and
 especially MikroORM (579~req/s) trail the native \texttt{pg} driver
 (3{,}616~req/s) by up to $6.2\times$ on PostgreSQL---the widest spread in the
-study (Table~\ref{tab:deep_fetch_rps})---with a comparable $4.5\times$ spread on
+study (Table~\ref{tab:deep_fetch})---with a comparable $4.5\times$ spread on
 MySQL. The tail shows the same pattern: MikroORM's deep-fetch p99 is 357~ms
-against 17~ms for \texttt{pg} on PostgreSQL (Table~\ref{tab:deep_fetch_p99}).
+against 17~ms for \texttt{pg} on PostgreSQL (Table~\ref{tab:deep_fetch}).
 A team whose hot path assembles nested object graphs therefore pays the
 largest abstraction cost precisely on its highest-value traffic. Point reads
 and aggregation are the opposite case: dominated by connection and parsing
@@ -35,7 +35,7 @@ lightweight ORM should deliver.
 \paragraph{The engine, not the layer, governs writes.}
 RQ2 has a clear answer on inserts. MySQL write throughput is low
 and flat across all eight layers (\char`~750--930~req/s, a $1.2\times$ spread;
-Table~\ref{tab:write_rps}), while the identical comparison on PostgreSQL
+Table~\ref{tab:write}), while the identical comparison on PostgreSQL
 spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
 InnoDB's commit path dominates end-to-end latency regardless of how a query

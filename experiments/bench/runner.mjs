@@ -22,7 +22,7 @@ import autocannon from 'autocannon';
 import pg from 'pg';
 import mysql from 'mysql2/promise';
 import { ADAPTERS, config as cfg } from '../src/config.mjs';
-import { median, toCsv, texTable } from './stats.mjs';
+import { median, toCsv, texTableCombined } from './stats.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, '..', 'results');
@@ -214,20 +214,22 @@ async function main() {
   await writeFile(join(resultsDir, 'summary.csv'), toCsv(flat));
 
   const tablesDir = join(resultsDir, 'tables');
+  // One combined table per pattern: throughput and p99 side by side (fewer tables,
+  // and the two metrics reported jointly — the paper's central point).
   const eps = [
-    ['point_read', 'Point-read throughput by access layer'],
-    ['range_scan', 'Range-scan throughput by access layer'],
-    ['deep_fetch', 'Deep-fetch (nested) throughput by access layer'],
-    ['aggregation', 'Aggregation throughput by access layer'],
-    ['write', 'Insert throughput by access layer'],
+    ['point_read', 'Point read'],
+    ['range_scan', 'Keyset range scan'],
+    ['deep_fetch', 'Deep/nested fetch'],
+    ['aggregation', 'Aggregation'],
+    ['write', 'Insert'],
   ];
-  for (const [key, caption] of eps) {
-    await writeFile(join(tablesDir, `${key}_rps.tex`),
-      texTable({ rows: merged, endpoint: key, metric: 'rps', caption, label: `tab:${key}_rps`, unit: 'req/s, higher is better' }));
-    await writeFile(join(tablesDir, `${key}_p99.tex`),
-      texTable({ rows: merged, endpoint: key, metric: 'p99', caption: caption.replace('throughput', 'tail latency (p99)'), label: `tab:${key}_p99`, unit: 'ms, lower is better' }));
+  for (const [key, name] of eps) {
+    await writeFile(join(tablesDir, `${key}.tex`), texTableCombined({
+      rows: merged, endpoint: key, label: `tab:${key}`,
+      caption: `${name}: throughput (req/s, higher is better) and tail latency (p99, ms, lower is better) by access layer and engine.`,
+    }));
   }
-  console.log(`\nWrote ${merged.length} rows → results/raw.json, summary.csv, ${eps.length * 2} tables.`);
+  console.log(`\nWrote ${merged.length} rows → results/raw.json, summary.csv, ${eps.length} tables.`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
