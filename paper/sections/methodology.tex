@@ -43,8 +43,8 @@ measured configurations.
 \end{table}
 
 \subsection{Objects: schema, workload, and data}
-The workload is a minimal blog domain---\texttt{authors} $1\!-\!*$ \texttt{posts}
-$1\!-\!*$ \texttt{comments} $*\!-\!1$ \texttt{authors}---which exercises a
+The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts}
+$1\!-\!*$ \texttt{comments} $*\!-\!1$ \texttt{authors}), which exercises a
 one-to-many relationship and a two-hop join for the deep fetch while remaining
 small enough to reason about. The five endpoints map onto the canonical access
 patterns a CRUD service issues~\cite{cooper2010ycsb}: a primary-key point read; a newest-first
@@ -61,16 +61,16 @@ instruction and logging cost dominate execution rather than disk
 I/O~\cite{harizopoulos2008oltp}.
 
 \subsection{The adapter contract and N+1 control}
-Every access layer implements the same factory interface---five query methods plus
-a teardown---so the Express server and the load runner are layer-agnostic. Each
+Every access layer implements the same factory interface (five query methods plus
+a teardown), so the Express server and the load runner are layer-agnostic. Each
 adapter returns an \emph{identical result shape}, and each uses that layer's
 \emph{recommended idiomatic} mechanism to avoid the N+1 query problem on the deep
 fetch: a hand-written join for the native drivers, the Knex query builder, and the
 query-builder-style Drizzle, and relation eager loading (\texttt{include},
 \texttt{withGraphFetched}, \texttt{populate}, or \texttt{relations}) for the
 data-mapper ORMs. To guarantee that no
-adapter gains an unfair advantage by silently returning less---or by issuing N+1
-queries---an automated cross-check asserts that all nine adapters produce the same
+adapter gains an unfair advantage by silently returning less, or by issuing N+1
+queries, an automated cross-check asserts that all nine adapters produce the same
 normalized object for the same inputs before any timing is collected. This check
 caught two genuine defects during development (a fan-out aggregation bug and a
 driver result-shape mismatch; see Section~\ref{sec:discussion}).
@@ -85,7 +85,7 @@ otherwise derived from the core count, this is pinned explicitly through the
 \texttt{connection\_limit} URL parameter. \emph{(ii)~Identical query
 semantics}: each endpoint issues the same logical query across layers; the
 aggregation, in particular, uses a single correlated-subquery formulation
-everywhere (the documented raw-SQL escape hatch), so that endpoint measures layer
+everywhere (the documented raw-SQL path), so that endpoint measures layer
 overhead on an identical plan rather than differences in generated SQL.
 \emph{(iii)~Write isolation}: because the insert endpoint mutates the dataset, the
 runner deletes benchmark-inserted rows before every cell, so each cell starts from
@@ -96,13 +96,12 @@ generator runs in a process separate from the server.
 Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
 latency histogram; it is a closed-loop (constant-concurrency)
-generator~\cite{schroeder2006open}. For each
-of the 80 configurations we opened 50 concurrent connections, ran a two-second
-warm-up pass whose measurements were discarded (absorbing JIT compilation,
-connection-pool fill, and query-plan caching), a precaution that matters because
-managed runtimes do not always reach a stable steady state
-promptly~\cite{barrett2017warmup}, then took ten measured four-second
-runs and reported the median. Each run yields throughput (requests per second) and
+generator~\cite{schroeder2006open}. For each of the 80 configurations we opened
+50 concurrent connections and ran a two-second warm-up pass whose measurements
+were discarded, absorbing JIT compilation, connection-pool fill, and query-plan
+caching; warm-up matters because managed runtimes do not always reach a stable
+steady state promptly~\cite{barrett2017warmup}. We then took ten measured
+four-second runs and reported the median. Each run yields throughput (requests per second) and
 latency percentiles p50, p90 and p99. During the measured runs we also sampled the
 \emph{server} process's CPU utilization and peak resident memory from
 \texttt{/proc}; because the load generator runs in a separate process, this isolates
@@ -111,7 +110,7 @@ ran with the working set resident in memory and durability relaxed, so the resul
 reflect access-layer CPU and allocation cost rather than disk synchronization. The
 hardware and software environment was captured automatically into the replication
 package. To characterize behavior under load, we additionally swept the deep/nested
-fetch---the most layer-sensitive pattern---across connection counts from 1 to 256
+fetch (the most layer-sensitive pattern) across connection counts from 1 to 256
 for every layer and engine, since throughput and contention scale non-linearly with
 concurrency~\cite{yu2014concurrency}.
 
@@ -164,8 +163,8 @@ operation.
 \end{table}
 
 \subsection{Replication package}
-The harness---the Express application, the adapter contract and all nine adapters,
+The harness (the Express application, the adapter contract and all nine adapters,
 the deterministic seed, the \texttt{autocannon} matrix runner, the correctness
 cross-check, and the scripts that regenerate every table in
-Section~\ref{sec:results}---is released so the full matrix can be re-run with a
+Section~\ref{sec:results}) is released so the full matrix can be re-run with a
 single command against a containerized or local PostgreSQL and MySQL.

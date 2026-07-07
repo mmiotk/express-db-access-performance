@@ -7,14 +7,14 @@ categories~\cite{cook1979quasi,wohlin2012experimentation}.
 \paragraph{Construct validity.}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
 (p99) measured at the Express endpoint, not query-execution time at the
-driver or database boundary. This is deliberate---it captures the full request
+driver or database boundary. This is deliberate, since it captures the full request
 round trip a deployed service incurs, including Express routing and JSON
-serialization---but it means the overhead we attribute to the \emph{access layer}
+serialization, but it means the overhead we attribute to the \emph{access layer}
 may partly reflect these surrounding costs instead. We control for this by holding
 those costs constant across conditions: every adapter satisfies a documented
 \emph{adapter contract} (Section~\ref{sec:methodology}) that guarantees an
-identical result shape to Express, so the JSON payload---and its serialization
-cost---is the same regardless of which layer produced it. Observed differences
+identical result shape to Express, so the JSON payload (and its serialization
+cost) is the same regardless of which layer produced it. Observed differences
 between layers are therefore attributable to how each layer reaches that shape,
 not to what is returned.
 
@@ -23,16 +23,15 @@ A naively configured ORM can trigger N+1 queries and appear artificially slow fo
 reasons unrelated to its inherent cost; every adapter is required to use its
 layer's documented, idiomatic eager-loading strategy on the deep-fetch endpoint
 (Section~\ref{sec:methodology}). An automated correctness cross-check asserts that
-all nine adapters return identical, normalized results---compared as a projection of
-key fields on four of the five access patterns---before any timing run is trusted;
-this is not a formality---it caught two defects
-during development: a fan-out bug that inflated the \texttt{SUM(views)} aggregate
-for every join-based adapter, and a result-shape parsing defect in one driver
-binding, both fixed before the measurements reported here. Explicit warm-up phases
+all nine adapters return identical, normalized results (compared as a projection of
+key fields on four of the five access patterns) before any timing run is trusted.
+This check caught two defects during development: a fan-out bug that inflated the
+\texttt{SUM(views)} aggregate for every join-based adapter, and a result-shape
+parsing defect in one driver binding, both fixed before the measurements reported here. Explicit warm-up phases
 per (layer, engine, endpoint) cell absorb JIT, pool-fill, and plan-cache effects
-before timing begins---controls of the kind that guard against environmentally
-induced measurement bias~\cite{mytkowicz2009producing}--- and two further controls (Section~\ref{sec:methodology}) rule
-out non-layer confounds: benchmark-inserted rows are reset before every cell, and the
+before timing begins (controls of the kind that guard against environmentally
+induced measurement bias~\cite{mytkowicz2009producing}), and two further controls
+(Section~\ref{sec:methodology}) rule out non-layer confounds: benchmark-inserted rows are reset before every cell, and the
 aggregation endpoint uses one correlated-subquery plan across layers, so it measures
 access-layer overhead rather than differences in SQL shape. A residual risk is
 coordinated omission in the load generator, which can under-report tail latency at
@@ -50,8 +49,8 @@ engine is intended to travel. We mitigate this by pinning every dependency
 version, publishing the deterministic seed and an automated environment capture,
 and releasing the full harness so the matrix can be re-run on other hardware or
 against newer releases. A further limitation is that the load generator and server
-under test share a host---common practice in this genre, and it removes network
-variance as a confound, but it can understate network-bound effects. A
+under test share a host, which is common practice in this genre and removes network
+variance as a confound, though it can understate network-bound effects. A
 two-machine cross-run over a dedicated link is planned to bound this.
 
 \paragraph{Conclusion validity.}
@@ -61,7 +60,7 @@ Mann--Whitney~$U$ test and Cliff's~$\delta$ (Tables~\ref{tab:cv},
 \ref{tab:significance}); the coarse ordering is supported with large effect sizes.
 Two bounds reinforce this: the widest spreads, such as $6.2\times$ on the deep/nested
 fetch, are an order of magnitude larger than the run-to-run CV, and the ranking is
-preserved across the full 1--256 connection sweep (Figure~\ref{fig:scaling}). Claims
+preserved across the full 1--256 connection sweep (Fig.~\ref{fig:scaling}). Claims
 about very closely ranked adjacent layers, where the effect size is small, remain
 appropriately cautious. One caveat on the design: the ten runs of a cell share a single server
 process lifetime (the server is booted once per layer/engine cell), so they are

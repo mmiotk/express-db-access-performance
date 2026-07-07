@@ -2,8 +2,8 @@
 \label{sec:related}
 
 We organize prior work along the same four axes on which our study differs
-from it---taxonomy coverage, engine coverage, whether throughput and tail
-latency are reported jointly, and the neutrality of the source---and
+from it (taxonomy coverage, engine coverage, whether throughput and tail
+latency are reported jointly, and the neutrality of the source), and
 summarize the comparison in Table~\ref{tab:prior_art}.
 
 \subsection{Object-relational mapping and the access-layer spectrum}
@@ -15,8 +15,8 @@ directly, through query builders, to object-relational mappers that hydrate rows
 into objects and manage associations following patterns such as Data Mapper and
 Active Record~\cite{fowler2002patterns}. Torres et al.~\cite{torres2017orm}
 survey two decades of ORM patterns and their implications for application design;
-the trade-off they document---developer productivity against a runtime cost that
-is hard to predict---is the one this paper quantifies. The same abstraction
+the trade-off they document, developer productivity against a runtime cost that
+is hard to predict, is the one this paper quantifies. The same abstraction
 question recurs one level up in the polyglot-persistence debate over when to
 adopt non-relational stores at all~\cite{sadalage2012nosql}; we hold that choice
 fixed at relational engines and vary only the access layer.
@@ -44,8 +44,8 @@ Lorenz et al.~\cite{lorenz2017orm} show quantitatively that the best O/R mapping
 strategy depends on the underlying database technology, and van Zyl et
 al.~\cite{vanzyl2009optimisations} that ORM performance is highly sensitive to
 tuning, while a recent study adds an energy dimension to the picture~\cite{bonvoisin2024orm}.
-This literature establishes \emph{where} ORM overhead concentrates---relation-materializing,
-N+1-prone access---and that it is configurable rather than fixed; our per-pattern
+This literature establishes \emph{where} ORM overhead concentrates (relation-materializing,
+N+1-prone access) and that it is configurable rather than fixed; our per-pattern
 results confirm and quantify both across the full layer taxonomy. It does not,
 however, compare drivers, query builders, and ORMs head-to-head under controlled
 load, which is our aim.
@@ -56,7 +56,7 @@ An early empirical study by van Zyl et al.~\cite{vanzyl2006orm} weighed object
 databases against ORM tools, an ancestor of the present comparison. Colley et
 al.~\cite{colley2018orm} give the earliest systematic cross-language account,
 benchmarking eight ORM frameworks across Java, C\#, Python, and PHP against a
-common relational schema---but the study \emph{deliberately excludes JavaScript},
+common relational schema, but the study \emph{deliberately excludes JavaScript},
 leaving the Node.js ecosystem, and Express in particular, without an academic
 baseline for the better part of a decade. Two 2025 studies address it partially.
 One, in \emph{Procedia Computer Science}, compares Prisma against optimized raw
@@ -74,7 +74,7 @@ spans the full native-driver/query-builder/ORM spectrum, and none includes MySQL
 A second, largely disjoint line of work benchmarks the layers immediately below
 and above the access layer without varying it directly. Salunke and
 Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL head-to-head under
-standard OLTP workloads---the only dual-engine precedent we found---but they
+standard OLTP workloads (the only dual-engine precedent we found), but they
 benchmark the \emph{engines themselves}, bypassing any application-level access
 layer, so their work cannot say how a driver, query builder, or ORM would change
 the comparison. In the broader engine-comparison line, Li and
@@ -101,12 +101,12 @@ transaction-processing suites~\cite{chen2011tpce} for OLTP, with
 OLTP-Bench~\cite{difallah2013oltpbench} providing a reusable, extensible harness.
 These target the \emph{engine} and its transaction mix; by construction they say
 nothing about the driver, query builder, or ORM through which an application
-issues work---the variable this study isolates---but they set the methodological
+issues work (the variable this study isolates), but they set the methodological
 bar for controlled, repeatable load. A separate methodological literature explains
 why the single-metric habit of the vendor benchmarks below is a problem in its own
 right. Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair}
-catalog pitfalls specific to database benchmarking---coordinated omission,
-warm-up, and tool-induced distortion---that silently corrupt reported percentiles.
+catalog pitfalls specific to database benchmarking (coordinated omission,
+warm-up, and tool-induced distortion) that silently corrupt reported percentiles.
 Dean and Barroso~\cite{dean2013tail} show why the tail rather than the mean
 determines user-perceived latency once a request fans out over many components, as
 an Express request serving a deep/nested fetch does, and Li et
@@ -114,7 +114,7 @@ al.~\cite{li2014tales} trace the hardware, OS, and application sources of that
 tail. Surveys of load testing~\cite{jiang2015load} and of performance-testing
 practice~\cite{leitner2017exploratory} report that such measurement is often ad
 hoc, and repeatability studies~\cite{collberg2016repeatability} that systems
-results are frequently hard to reproduce---together motivating a shared, neutral,
+results are frequently hard to reproduce, together motivating a shared, neutral,
 reusable harness. More broadly, the benchmarking literature stresses relevance,
 repeatability, and fairness as the marks of a good benchmark~\cite{huppler2009benchmark}
 and the role of neutral benchmarks in advancing a field~\cite{sim2003benchmark}.
@@ -134,10 +134,10 @@ nor any latency percentile~\cite{prisma_benchmarks}. IMDBench, maintained by Gel
 Data (formerly EdgeDB), adds Sequelize and node-postgres to the mix and reports
 both throughput and latency on three CRUD-style operations~\cite{imdbench}. Between
 them, these three sources cover more of the access-layer taxonomy than the entire
-peer-reviewed literature combined---yet all three share the same defects: each is
+peer-reviewed literature combined, yet all three share the same defects: each is
 authored, or at minimum hosted, by a party that sells one of the compared products;
 all three run exclusively against PostgreSQL; and each reports a single metric
-family---throughput or latency, rarely both, and almost never the tail.
+family: throughput or latency, rarely both, and almost never the tail.
 
 \subsection{Positioning}
 No prior study, peer-reviewed or vendor, combines full-taxonomy coverage, both
@@ -145,9 +145,9 @@ engines, joint throughput/tail reporting, and neutrality; each covers at most tw
 or three of these four properties (Table~\ref{tab:prior_art}). Our study differs
 from all of them on the four axes simultaneously: (1)~it adds MySQL alongside
 PostgreSQL, closing the engine gap that separates access-layer studies from
-engine-only studies such as~\cite{salunke2024pgmysql}; (2)~it is neutral---the
-author has no commercial stake in any compared product---and covers the full
-taxonomy, native drivers, a query builder, and six ORMs, in one design, rather
+engine-only studies such as~\cite{salunke2024pgmysql}; (2)~it is neutral (the
+author has no commercial stake in any compared product) and covers the full
+taxonomy of native drivers, a query builder, and six ORMs in one design, rather
 than the two or three libraries typical of peer-reviewed work; (3)~it reports
 throughput and tail latency (p99) jointly for every cell, rather than the single
 metric family each vendor benchmark selects; and (4)~it measures through the

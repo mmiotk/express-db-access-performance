@@ -3,25 +3,25 @@
 
 We set out to replace vendor-benchmark claims with a neutral, reproducible
 comparison of relational database access layers in Express.js. Our harness serves
-an identical application through the full taxonomy---native drivers, a query
-builder, and six ORMs---across PostgreSQL and MySQL, over five access patterns,
-and reports throughput and tail latency together. This closes the four gaps that
+an identical application through the full taxonomy (native drivers, a query
+builder, and six ORMs) across PostgreSQL and MySQL, over five access patterns,
+and reports throughput and tail latency together. This addresses the four gaps that
 characterize prior art: the absence of MySQL from access-layer comparisons, the
 lack of a neutral full-taxonomy study, the separation of throughput from tail
 latency, and the omission of the Express HTTP layer.
 
 The empirical answer is that the cost of abstraction is concentrated, not uniform.
 It is negligible for point reads and for aggregation issued through a raw-SQL path,
-but it grows sharply---up to $6.2\times$ between the native driver and the heaviest
-data-mapper ORM---for the deep/nested fetch, where the layer must assemble a nested
+but it grows sharply (up to $6.2\times$ between the native driver and the heaviest
+data-mapper ORM) for the deep/nested fetch, where the layer must assemble a nested
 object graph on the application side. The relative ordering of layers is stable
 across the two engines, and a competitively fast modern ORM (Prisma) shows that
 ``ORM'' need not imply large overhead. Writes are the exception: MySQL's commit
 path makes insert throughput nearly layer-independent, a caution against
 generalizing single-engine write results. Beyond these findings, development
-surfaced a reusable checklist of benchmarking pitfalls---aggregation fan-out,
+surfaced a reusable checklist of benchmarking pitfalls (aggregation fan-out,
 \texttt{OFFSET}-versus-keyset pagination, write-workload contamination, and
-query-formulation confounds---that silently distort naive access-layer benchmarks;
+query-formulation confounds) that silently distort naive access-layer benchmarks;
 one was caught by our correctness cross-check, the rest by performance analysis.
 
 Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
@@ -32,7 +32,7 @@ fixed-rate, two-machine cross-run would bound coordinated-omission and
 observer-interference effects; additional engines and dataset sizes would widen
 external validity; and a dedicated study of the N+1 penalty (naive versus eager
 loading per ORM) and of cold-start latency would deepen the practical guidance. The
-complete replication package---harness, seed, adapters, and analysis---is released
+complete replication package (harness, seed, adapters, and analysis) is released
 under open licenses so that these extensions, and independent re-runs on current
 library versions, are straightforward, addressing the repeatability gap widely
 documented in computer-systems research~\cite{collberg2016repeatability}.

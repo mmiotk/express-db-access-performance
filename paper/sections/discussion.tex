@@ -3,15 +3,15 @@
 
 \paragraph{Implications for practice.}
 Read together, RQ1 and RQ3 point to the same conclusion: abstraction cost is not
-a fixed ``ORM tax'' but a tax on a specific \emph{access pattern}, and it
-concentrates in the pattern that assembles a nested object graph. The deep/nested
-fetch requires the access layer to hydrate rows into objects and resolve
-associations---the object-relational impedance mismatch~\cite{ireland2009impedance}
-made concrete---not merely to issue SQL, and this is exactly where the
+a fixed, uniform overhead but a cost specific to a particular \emph{access pattern},
+and it concentrates in the pattern that assembles a nested object graph. The
+deep/nested fetch requires the access layer to hydrate rows into objects and resolve
+associations (the object-relational impedance mismatch~\cite{ireland2009impedance}
+made concrete), not merely to issue SQL, and this is exactly where the
 data-mapper ORMs are most expensive: Sequelize, TypeORM, Objection, and
 especially MikroORM (579~req/s) trail the native \texttt{pg} driver
-(3{,}616~req/s) by up to $6.2\times$ on PostgreSQL---the widest spread in the
-study (Table~\ref{tab:deep_fetch})---with a comparable $4.5\times$ spread on
+(3{,}616~req/s) by up to $6.2\times$ on PostgreSQL, the widest spread in the
+study (Table~\ref{tab:deep_fetch}), with a comparable $4.5\times$ spread on
 MySQL. The tail shows the same pattern: MikroORM's deep-fetch p99 is 357~ms
 against 17~ms for \texttt{pg} on PostgreSQL (Table~\ref{tab:deep_fetch}).
 A team whose hot path assembles nested object graphs therefore pays the
@@ -19,7 +19,7 @@ largest abstraction cost precisely on its highest-value traffic. Point reads
 and aggregation are the opposite case: dominated by connection and parsing
 cost that every layer shares, point reads spread only $3.2\times$/$2.4\times$;
 aggregation spreads just $1.8\times$/$1.4\times$ once every adapter, native
-drivers included, is forced onto the same raw correlated-subquery plan---once
+drivers included, is forced onto the same raw correlated-subquery plan. Once
 the SQL shape is fixed, the layer is nearly incidental. Prisma shows that an ORM
 need not be slow, consistent with evidence that ORM cost is highly sensitive to
 implementation and tuning~\cite{vanzyl2009optimisations}: its compiled query engine
@@ -29,25 +29,25 @@ native on aggregation on both engines (8{,}076 vs.\ 7{,}210~req/s on PostgreSQL)
 That parity is not free, however: at the \emph{same} ten-connection pool, Prisma's
 process draws roughly five times the application-side CPU of the other layers on the
 deep fetch ($469\%$; Section~\ref{sec:results}), trading CPU for
-latency~\cite{bonvoisin2024orm}---a cost a throughput-only benchmark would miss. Knex and Drizzle sit in a
-consistent middle ground on every pattern---never fastest, never among the
-data-mapper laggards---which is what a query builder and a non-data-mapper,
-lightweight ORM should deliver.
+latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss. Knex
+and Drizzle sit in a consistent middle ground on every pattern (never fastest, never
+among the slowest data-mapper ORMs), which is what a query builder and a
+non-data-mapper, lightweight ORM should deliver.
 
-\paragraph{The engine, not the layer, governs writes.}
+\paragraph{Writes: an engine-bound cost.}
 RQ2 has a clear answer on inserts. MySQL write throughput is low
 and flat across all eight layers (\char`~750--930~req/s, a $1.2\times$ spread;
 Table~\ref{tab:write}), while the identical comparison on PostgreSQL
 spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
-InnoDB's commit path---the group-commit and log-flush work long identified as the
-dominant OLTP write cost~\cite{johnson2010aether,harizopoulos2008oltp}---governs
-end-to-end latency regardless of how a query reaches it. This is also a caution. A write-throughput
-comparison run on a single engine invites the wrong generalization in
-either direction---``the access layer is irrelevant to writes'' from MySQL
-alone, or ``the access layer matters a great deal for writes'' from PostgreSQL
-alone---and an engine-only benchmark such as~\cite{salunke2024pgmysql} cannot
-expose this interaction because it omits the access layer entirely. Only the
+InnoDB's commit path (the group-commit and log-flush work long identified as the
+dominant OLTP write cost~\cite{johnson2010aether,harizopoulos2008oltp}) governs
+end-to-end latency regardless of how a query reaches it. This finding also warrants
+caution: a write-throughput comparison run on a single engine invites the wrong
+generalization in either direction (``the access layer is irrelevant to writes''
+from MySQL alone, or ``the access layer matters a great deal for writes'' from
+PostgreSQL alone), and an engine-only benchmark such as~\cite{salunke2024pgmysql}
+cannot expose this interaction because it omits the access layer entirely. Only the
 dual-engine design used here makes the InnoDB-commit-path explanation visible
 instead of confounded with layer choice; that the underlying database technology
 modulates the cost of a given mapping strategy is consistent with earlier
@@ -55,8 +55,8 @@ quantitative ORM work~\cite{lorenz2017orm}.
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking.}
 Reaching the figures above meant confronting four confounds that would otherwise
-have silently corrupted the comparison. Their provenance differs. One---the
-aggregation fan-out---is a \emph{correctness}
+have silently corrupted the comparison. Their provenance differs. One, the
+aggregation fan-out, is a \emph{correctness}
 bug that our automated cross-check caught (the same check, which compares each
 adapter's output against a native-driver reference on four of the five endpoints,
 also caught a driver result-shape mismatch). The other three return \emph{correct}
@@ -66,12 +66,12 @@ performance analysis. We regard the resulting checklist as reusable:
   \item \textbf{Aggregation fan-out.} A naive join between \texttt{posts} and
         \texttt{comments} evaluated before the \texttt{SUM} multiplies each
         post's view count by its number of matching comment rows, inflating
-        the aggregate---a correctness bug invisible unless every layer's
+        the aggregate, a correctness bug invisible unless every layer's
         output is checked against a reference, not a performance one.
   \item \textbf{OFFSET vs.\ keyset pagination.} An early, OFFSET-based design
         for the range-scan endpoint collapsed specifically on MySQL at
         realistic offsets, which would have been misread as an access-layer
-        weakness rather than what it is---a pagination-strategy cost that
+        weakness rather than what it is: a pagination-strategy cost that
         InnoDB pays more dearly for than PostgreSQL. Rewriting every adapter
         around keyset pagination (\texttt{WHERE id < cursor ORDER BY id DESC
         LIMIT n}) removed the confound.
@@ -83,7 +83,7 @@ performance analysis. We regard the resulting checklist as reusable:
   \item \textbf{Query-formulation confounds.} A first attempt at the
         aggregation endpoint pre-aggregated \emph{all} of \texttt{comments}
         before filtering to one author, so every request re-scanned the whole
-        table regardless of which author was requested---a query-plan
+        table regardless of which author was requested, a query-plan
         artifact masquerading as an access-layer effect~\cite{leis2015optimizers},
         fixed by rewriting
         the query as a correlated subquery touching only the target author's
@@ -94,16 +94,16 @@ of the genre, extending the general database-benchmarking pitfalls cataloged
 by Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair}
 to the access-layer-comparison sub-genre specifically. We regard the checklist as a contribution in its own right,
 reusable by anyone comparing drivers, query builders, or ORMs: each confound
-is easy to introduce by accident and hard to detect---the correctness ones without
-an automated cross-check, the performance ones without profiling every cell---and at
+is easy to introduce by accident and hard to detect (the correctness ones without
+an automated cross-check, the performance ones without profiling every cell), and at
 least one such confound plausibly explains part of the gap between some
 vendor-reported and independently verified figures in this space.
 
-\paragraph{When to use what.}
+\paragraph{Practical guidance.}
 The practical synthesis follows directly from RQ1--RQ3. Where a service's hot
 path is dominated by deep/nested fetches, the access layer is consequential
-and a thin layer---the native driver, a query builder, or a query-engine-based
-ORM such as Prisma---is the safer default, since a heavyweight data-mapper ORM
+and a thin layer (the native driver, a query builder, or a query-engine-based
+ORM such as Prisma) is the safer default, since a heavyweight data-mapper ORM
 concentrates its largest penalty exactly on that traffic. Where the workload
 mix is read-simple (point reads, keyset scans) or write-bound, especially on
 MySQL where the engine floor dominates layer differences regardless of choice,
@@ -111,7 +111,7 @@ the productivity, type safety, and migration tooling of a full ORM cost little
 in relative throughput and are reasonable grounds for the decision on their
 own. A pragmatic middle path, already forced onto every layer by our
 aggregation endpoint, is to keep the ORM for the bulk of the application and
-drop to raw SQL or the native driver only for the specific endpoints that
+fall back to raw SQL or the native driver only for the specific endpoints that
 assemble large object graphs; orthogonally, second-level caching can absorb part of
 an ORM's read cost where the workload tolerates staleness~\cite{chen2016cacheoptimizer}.
 

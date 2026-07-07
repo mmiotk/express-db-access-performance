@@ -41,27 +41,27 @@
   country={Poland}}
 
 \begin{abstract}
-\textbf{Context.} Node.js/Express services reach relational databases through a
-spectrum of access layers---native drivers, query builders, and object-relational
-mappers (ORMs)---yet practitioners choose between them largely on the basis of
+\textbf{Context:} Node.js/Express services reach relational databases through a
+spectrum of access layers (native drivers, query builders, and object-relational
+mappers, or ORMs), yet practitioners choose between them largely on the basis of
 vendor benchmarks that are fragmented, PostgreSQL-only, and report either
 throughput or latency but seldom both.
-\textbf{Objectives.} We quantify, neutrally and reproducibly, the performance cost
+\textbf{Objective:} We quantify, neutrally and reproducibly, the performance cost
 of the access layer as a function of the layer, the database engine, and the
 access pattern.
-\textbf{Methods.} An identical Express application is served through nine access
+\textbf{Methods:} An identical Express application is served through nine access
 layers (the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM)
 over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
 generator. We report throughput and tail latency (p99) jointly, hold the
 connection pool constant, and verify that every layer returns identical results
 through an automated cross-check.
-\textbf{Results.} Abstraction cost concentrates in relation-materializing
+\textbf{Results:} Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads up to $6.2\times$ between the native
 driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is near layer-agnostic and point reads only mildly affected. The relative ordering of layers is stable
 across engines, while insert throughput is governed by the engine (MySQL's InnoDB
 commit path) rather than the layer.
-\textbf{Conclusion.} The choice of access layer matters most where the layer must
+\textbf{Conclusion:} The choice of access layer matters most where the layer must
 assemble a nested object graph; a reproducible harness and a checklist of
 benchmarking pitfalls specific to this genre are released as a replication package.
 \end{abstract}
@@ -95,10 +95,10 @@ The author is not affiliated with, nor funded by, any of the database libraries 
 vendors evaluated in this study.
 
 \section*{Data availability}
-The complete replication package---benchmark harness, database schema and
+The complete replication package (benchmark harness, database schema and
 deterministic seed, all nine adapter implementations, the correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table in this
-paper---is publicly available at
+paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and archived at Zenodo.
 % TODO(author): deposit the tagged commit to Zenodo, replace "archived at Zenodo"
 % with the concrete DOI, and cite it in the abstract/introduction. The GitHub
