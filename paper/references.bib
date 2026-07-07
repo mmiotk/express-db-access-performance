@@ -1,9 +1,12 @@
 % Prior art — see notes/prior-art.md for the fact-checked survey behind these.
+% All entries Crossref-/ISBN-verified (audit 2026-07).
 
 @article{prisma_rawsql_2025,
   author  = {Yusmita, Joseph Christian and Arya, Ronald and Wijaya, Jason Manuel and Suryaningrum, Kristien Margi and Siswanto, Ricky Reynardo},
   title   = {Optimizing Database Access Strategy: A Performance Analysis Comparison of Raw SQL and Prisma ORM},
   journal = {Procedia Computer Science},
+  volume  = {269},
+  pages   = {1201--1210},
   year    = {2025},
   doi     = {10.1016/j.procs.2025.09.061},
 }
@@ -14,7 +17,9 @@
   journal = {Journal of Computer and Creative Technology},
   volume  = {3},
   number  = {2},
+  pages   = {201--213},
   year    = {2025},
+  doi     = {10.14456/jcct.2025.16},
   url     = {https://so13.tci-thaijo.org/index.php/jcct/article/view/2330},
 }
 
@@ -22,9 +27,10 @@
   author    = {Colley, Derek and Stanier, Clare and Asaduzzaman, Md},
   title     = {The Impact of Object-Relational Mapping Frameworks on Relational Query Performance},
   booktitle = {2018 International Conference on Computing, Electronics \& Communications Engineering (iCCECE)},
+  pages     = {47--52},
   year      = {2018},
   publisher = {IEEE},
-  doi       = {10.1109/iCCECE.2018.8659222},
+  doi       = {10.1109/iccecome.2018.8659222},
   note      = {Java, C\#, Python, PHP --- deliberately excludes JavaScript/Node.},
 }
 
@@ -51,6 +57,101 @@
   doi     = {10.1145/2408776.2408794},
 }
 
+% --- ORM patterns, impedance mismatch, N+1, pooling (background) ---
+
+@book{fowler2002patterns,
+  author    = {Fowler, Martin},
+  title     = {Patterns of Enterprise Application Architecture},
+  publisher = {Addison-Wesley},
+  address   = {Boston, MA},
+  year      = {2002},
+  isbn      = {978-0-321-12742-6},
+}
+
+@inproceedings{ireland2009impedance,
+  author    = {Ireland, Christopher and Bowers, David and Newton, Michael and Waugh, Kevin},
+  title     = {A Classification of Object-Relational Impedance Mismatch},
+  booktitle = {2009 First International Conference on Advances in Databases, Knowledge, and Data Applications (DBKDA)},
+  pages     = {36--43},
+  publisher = {IEEE},
+  year      = {2009},
+  doi       = {10.1109/DBKDA.2009.11},
+}
+
+@inproceedings{chen2014orm,
+  author    = {Chen, Tse-Hsun and Shang, Weiyi and Jiang, Zhen Ming and Hassan, Ahmed E. and Nasser, Mohamed and Flora, Parminder},
+  title     = {Detecting Performance Anti-patterns for Applications Developed Using Object-Relational Mapping},
+  booktitle = {Proceedings of the 36th International Conference on Software Engineering (ICSE)},
+  pages     = {1001--1012},
+  publisher = {ACM},
+  year      = {2014},
+  doi       = {10.1145/2568225.2568259},
+}
+
+@inproceedings{gupta2017pooling,
+  author    = {Gupta, Kirti and Mathuria, Manish},
+  title     = {Improving Performance of Web Application Approaches Using Connection Pooling},
+  booktitle = {2017 International Conference of Electronics, Communication and Aerospace Technology (ICECA)},
+  pages     = {355--358},
+  publisher = {IEEE},
+  year      = {2017},
+  doi       = {10.1109/ICECA.2017.8212833},
+}
+
+% --- Benchmarking methodology / rigor ---
+
+@misc{tene2015latency,
+  author       = {Tene, Gil},
+  title        = {How {NOT} to Measure Latency},
+  year         = {2015},
+  howpublished = {\url{https://www.infoq.com/presentations/latency-response-time/}},
+  note         = {Conference presentation; origin of the term ``coordinated omission''.},
+}
+
+@inproceedings{georges2007rigorous,
+  author    = {Georges, Andy and Buytaert, Dries and Eeckhout, Lieven},
+  title     = {Statistically Rigorous {Java} Performance Evaluation},
+  booktitle = {Proceedings of the 22nd ACM SIGPLAN Conference on Object-Oriented Programming Systems, Languages and Applications (OOPSLA)},
+  pages     = {57--76},
+  publisher = {ACM},
+  year      = {2007},
+  doi       = {10.1145/1297027.1297033},
+}
+
+@inproceedings{kalibera2013rigorous,
+  author    = {Kalibera, Tomas and Jones, Richard},
+  title     = {Rigorous Benchmarking in Reasonable Time},
+  booktitle = {Proceedings of the 2013 International Symposium on Memory Management (ISMM)},
+  pages     = {63--74},
+  publisher = {ACM},
+  year      = {2013},
+  doi       = {10.1145/2464157.2464160},
+}
+
+@inproceedings{huppler2009benchmark,
+  author    = {Huppler, Karl},
+  title     = {The Art of Building a Good Benchmark},
+  booktitle = {Performance Evaluation and Benchmarking (TPCTC 2009)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {5895},
+  pages     = {18--30},
+  publisher = {Springer},
+  year      = {2009},
+  doi       = {10.1007/978-3-642-10424-4\_3},
+}
+
+@inproceedings{sim2003benchmark,
+  author    = {Sim, Susan Elliott and Easterbrook, Steve and Holt, Richard C.},
+  title     = {Using Benchmarking to Advance Research: A Challenge to Software Engineering},
+  booktitle = {Proceedings of the 25th International Conference on Software Engineering (ICSE)},
+  pages     = {74--83},
+  publisher = {IEEE},
+  year      = {2003},
+  doi       = {10.1109/ICSE.2003.1201189},
+}
+
+% --- Vendor / practitioner benchmarks (biased; cited for scope, not verdicts) ---
+
 @misc{drizzle_benchmarks,
   author = {{Drizzle Team}},
   title  = {Drizzle ORM Benchmarks},
@@ -75,15 +176,16 @@
 }
 
 @misc{autocannon,
-  author = {Hinchliffe, Glen and others},
+  author = {Collina, Matteo and others},
   title  = {autocannon: fast HTTP/1.1 benchmarking tool for Node.js},
+  year   = {2023},
   howpublished = {\url{https://github.com/mcollina/autocannon}},
 }
 
-% --- Topical precedent (Crossref-verified; see notes/venue.md) ---
+% --- Topical precedent: engine + Node.js performance studies ---
 
 @article{salunke2024pgmysql,
-  author  = {Salunke, Sanket and Ouda, Abdelkader},
+  author  = {Salunke, Sanket Vilas and Ouda, Abdelkader},
   title   = {A Performance Benchmark for the {PostgreSQL} and {MySQL} Databases},
   journal = {Future Internet},
   volume  = {16},
@@ -105,28 +207,43 @@
 }
 
 @inproceedings{kuffel2025nodejs,
-  author    = {Kuffel, Piotr and Walter, Bartosz},
+  author    = {Kuffe\l{}, Pawe\l{} and Walter, Bartosz},
   title     = {Changes in {Node.js} Server-Side Application Performance Characteristics Over Time Under Load},
   booktitle = {Advances in Information Systems Development},
   series    = {Lecture Notes in Information Systems and Organisation},
   volume    = {77},
+  pages     = {275--294},
   publisher = {Springer},
   year      = {2025},
   doi       = {10.1007/978-3-031-87880-0\_14},
 }
 
 @inproceedings{carmo2024backend,
-  author    = {do Carmo, Rafael and Ferreira, Jo\~ao and Figueiredo, Eduardo},
+  author    = {Carmo, Klayver Ximenes and Ferreira, Fischer and Figueiredo, Eduardo},
   title     = {Performance Evaluation of Back-End Frameworks: A Comparative Study},
   booktitle = {Proceedings of the 20th Brazilian Symposium on Information Systems (SBSI)},
+  pages     = {1--9},
   publisher = {ACM},
   year      = {2024},
   doi       = {10.1145/3658271.3658314},
 }
 
-@misc{postgres_docs_indexes,
-  author = {{The PostgreSQL Global Development Group}},
-  title  = {PostgreSQL Documentation: Indexes and \texttt{EXPLAIN}},
-  year   = {2024},
-  howpublished = {\url{https://www.postgresql.org/docs/}},
+@inproceedings{vanzyl2006orm,
+  author    = {van Zyl, Pieter and Kourie, Derrick G. and Boake, Andrew},
+  title     = {Comparing the Performance of Object Databases and {ORM} Tools},
+  booktitle = {Proceedings of the 2006 Annual Research Conference of the South African Institute of Computer Scientists and Information Technologists (SAICSIT)},
+  pages     = {1--11},
+  publisher = {ACM},
+  year      = {2006},
+  doi       = {10.1145/1216262.1216263},
+}
+
+@inproceedings{li2013sqlnosql,
+  author    = {Li, Yishan and Manoharan, Sathiamoorthy},
+  title     = {A Performance Comparison of {SQL} and {NoSQL} Databases},
+  booktitle = {2013 IEEE Pacific Rim Conference on Communications, Computers and Signal Processing (PACRIM)},
+  pages     = {15--19},
+  publisher = {IEEE},
+  year      = {2013},
+  doi       = {10.1109/PACRIM.2013.6625441},
 }

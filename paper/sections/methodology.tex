@@ -74,7 +74,8 @@ driver result-shape mismatch; see Section~\ref{sec:discussion}).
 \subsection{Controls}
 Four controls isolate the access layer as the only variable. \emph{(i)~Pool size}
 is fixed at ten connections for every adapter, so the comparison measures
-access-layer overhead rather than pool tuning; for Prisma, whose default pool is
+access-layer overhead rather than pool tuning, itself a known web-application
+performance factor~\cite{gupta2017pooling}; for Prisma, whose default pool is
 otherwise derived from the core count, this is pinned explicitly through the
 \texttt{connection\_limit} URL parameter. \emph{(ii)~Identical query
 semantics}: each endpoint issues the same logical query across layers; the
@@ -112,8 +113,10 @@ the access layer by its \emph{spread}: the ratio of the native driver's median
 throughput to that of the slowest layer on that pattern (native-relative, so it is
 comparable across patterns even where one ORM exceeds the native driver). We report
 medians over the ten
-runs and the coefficient of variation (CV) across runs as a stability signal
-(Section~\ref{sec:results}). To test whether adjacently ranked layers are
+runs and the coefficient of variation (CV) across runs as a stability signal,
+following the practice of reporting central tendency and variability rather than a
+single number~\cite{georges2007rigorous} (Section~\ref{sec:results}). To test whether
+adjacently ranked layers are
 distinguishable rather than an artifact of measurement noise, we compare each
 adjacent pair on the deep/nested fetch with the Mann--Whitney $U$ test (two-sided)
 and report Cliff's~$\delta$ as a nonparametric effect size, the latter being robust

@@ -8,11 +8,12 @@ or the framework: access layers span three categories that trade raw
 performance for ergonomics, compile-time type safety, and protection from
 common pitfalls such as the N+1 query problem, in which a naively written nested
 fetch silently issues one query per parent row instead of one query for the
-whole result graph. At one end sit native drivers that expose the wire
-protocol directly (\texttt{pg} for PostgreSQL, \texttt{mysql2} for MySQL); in
+whole result graph~\cite{chen2014orm}. At one end sit native drivers that expose the
+wire protocol directly (\texttt{pg} for PostgreSQL, \texttt{mysql2} for MySQL); in
 the middle sit query builders that assemble SQL programmatically (Knex); at
 the other end sit object-relational mappers (ORMs) that map rows to objects
-and manage relationships automatically (Drizzle---a lightweight ORM---Prisma,
+and manage relationships automatically, following patterns such as Data Mapper and
+Active Record~\cite{fowler2002patterns} (Drizzle---a lightweight ORM---Prisma,
 Sequelize, TypeORM, Objection, and MikroORM). Node.js back-end performance
 under load is itself a recognized empirical topic~\cite{chaniotis2015nodejs,
 kuffel2025nodejs,carmo2024backend}, but that literature treats the runtime and

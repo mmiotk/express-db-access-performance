@@ -7,9 +7,11 @@ latency are reported jointly, and the neutrality of the source---and
 summarize the comparison in Table~\ref{tab:prior_art}.
 
 \paragraph{Peer-reviewed access-layer and ORM studies.}
-The peer-reviewed literature on access-layer performance is recent, active,
-and narrow. Colley et al.~\cite{colley2018orm} give the earliest systematic
-account, benchmarking eight ORM frameworks across Java, C\#, Python, and PHP
+The peer-reviewed literature on access-layer performance is narrow. An early
+empirical study by van Zyl et al.~\cite{vanzyl2006orm} weighed object databases
+against ORM tools, an ancestor of the present comparison; more recent work remains
+limited. Colley et al.~\cite{colley2018orm} give the earliest systematic
+cross-language account, benchmarking eight ORM frameworks across Java, C\#, Python, and PHP
 against a common relational schema---but the study \emph{deliberately
 excludes JavaScript}, leaving the Node.js ecosystem, and Express in
 particular, without an academic baseline for the better part of a decade.
@@ -34,7 +36,9 @@ under standard OLTP workloads---the only dual-engine precedent we
 found---but they benchmark the \emph{engines themselves}, bypassing any
 application-level access layer; their work is complementary to ours but
 orthogonal, since it cannot say how a driver, query builder, or ORM would
-change the comparison. On the Node.js side, Chaniotis et
+change the comparison. In the broader engine-comparison line, Li and
+Manoharan~\cite{li2013sqlnosql} contrast SQL and NoSQL databases, again without an
+application-level access layer. On the Node.js side, Chaniotis et
 al.~\cite{chaniotis2015nodejs} established Node's viability as a
 web-application platform, Kuffel and Walter~\cite{kuffel2025nodejs} tracked
 how a Node.js back-end's performance characteristics drift over time under
@@ -76,7 +80,10 @@ fans out over many components, as an Express request serving a deep/nested
 fetch does. Neither paper studies access layers, but together they motivate
 a design choice absent from every benchmark surveyed above: report
 throughput \emph{and} tail latency (p99) for the same run, rather
-than a single metric chosen after the fact.
+than a single metric chosen after the fact. More broadly, the benchmarking
+literature stresses relevance, repeatability, and fairness as the marks of a good
+benchmark~\cite{huppler2009benchmark}, and the role of shared, neutral benchmarks in
+advancing a research field~\cite{sim2003benchmark}---the stance this paper takes.
 
 \paragraph{Positioning.}
 No prior study, peer-reviewed or vendor, combines full-taxonomy coverage,

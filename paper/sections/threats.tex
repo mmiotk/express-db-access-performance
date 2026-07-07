@@ -32,8 +32,8 @@ out non-layer confounds: benchmark-inserted rows are reset before every cell, an
 aggregation endpoint uses one correlated-subquery plan across layers, so it measures
 access-layer overhead rather than differences in SQL shape. A residual risk is
 coordinated omission in the load generator, which can under-report tail latency at
-saturation~\cite{fruth2022tail}; a fixed-rate, constant-arrival cross-run is
-planned to bound it.
+saturation~\cite{fruth2022tail,tene2015latency}; a fixed-rate, constant-arrival
+cross-run is planned to bound it.
 
 \paragraph{External validity.}
 All measurements come from a single schema, a single dataset size, one hardware
@@ -61,7 +61,7 @@ preserved across the full 1--256 connection sweep (Figure~\ref{fig:scaling}). Cl
 about very closely ranked adjacent layers, where the effect size is small, remain
 appropriately cautious. One caveat on the design: the ten runs of a cell share a single server
 process lifetime (the server is booted once per layer/engine cell), so they are
-repeated measures rather than fully independent replicates; the tests are best read
-as within-process stability checks. Given the large between-layer gaps noted above,
+repeated measures rather than fully independent replicates~\cite{kalibera2013rigorous};
+the tests are best read as within-process stability checks. Given the large between-layer gaps noted above,
 this is unlikely to affect the conclusions, but a design that reboots the server per
 replicate would be stronger.

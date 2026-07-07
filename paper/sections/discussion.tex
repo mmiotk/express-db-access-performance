@@ -6,7 +6,8 @@ Read together, RQ1 and RQ3 point to the same conclusion: abstraction cost is not
 a fixed ``ORM tax'' but a tax on a specific \emph{access pattern}, and it
 concentrates in the pattern that assembles a nested object graph. The deep/nested
 fetch requires the access layer to hydrate rows into objects and resolve
-associations, not merely to issue SQL, and this is exactly where the
+associations---the object-relational impedance mismatch~\cite{ireland2009impedance}
+made concrete---not merely to issue SQL, and this is exactly where the
 data-mapper ORMs are most expensive: Sequelize, TypeORM, Objection, and
 especially MikroORM (579~req/s) trail the native \texttt{pg} driver
 (3{,}616~req/s) by up to $6.2\times$ on PostgreSQL---the widest spread in the
