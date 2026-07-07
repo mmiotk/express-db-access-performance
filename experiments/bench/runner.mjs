@@ -135,7 +135,7 @@ async function resetWrites(engine) {
   }
 }
 
-async function benchCell(adapter, engine, port) {
+async function benchCell(adapter, engine, port, { repeats = REPEATS } = {}) {
   if (adapter === 'prisma') ensurePrismaClient(engine);
   const base = `http://127.0.0.1:${port}`;
   const child = spawn(process.execPath, [join(here, '..', 'src', 'server.mjs')], {
@@ -158,7 +158,7 @@ async function benchCell(adapter, engine, port) {
       const reqps = [];
       const p50 = []; const p90 = []; const p99 = []; const p975 = [];
       const stopSampler = startSampler(child.pid); // server-process CPU/RSS over the measured runs
-      for (let i = 0; i < REPEATS; i++) {
+      for (let i = 0; i < repeats; i++) {
         if (ep.key === 'write') await resetWrites(engine);
         const r = await runAutocannon(ep.opts, { duration: DURATION });
         reqps.push(r.requests.average);
@@ -183,7 +183,52 @@ async function benchCell(adapter, engine, port) {
   return rows;
 }
 
+// INDEP mode (P3/P8): each replicate boots a FRESH server per cell and takes one
+// measured run, so replicates are independent processes rather than repeats within
+// one process; cell order is randomized per replicate. Writes results/raw-indep.json
+// (separate from raw.json), with rps_samples holding the N independent replicate
+// values for bootstrap CIs and CV.
+async function mainIndep() {
+  const REPLICATES = Number(env('REPLICATES', 5));
+  const cells = [];
+  for (const engine of wantEngines) for (const adapter of wantAdapters) {
+    const meta = ADAPTERS[adapter];
+    if (meta && meta.engines.includes(engine)) cells.push({ adapter, engine });
+  }
+  const acc = new Map();
+  const K = (a, e, ep) => `${a}|${e}|${ep}`;
+  let port = BASE_PORT;
+  for (let rep = 0; rep < REPLICATES; rep++) {
+    const order = cells.slice();
+    for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+    console.log(`\n===== replicate ${rep + 1}/${REPLICATES} (order ${order.map((c) => c.adapter).join(',')}) =====`);
+    for (const { adapter, engine } of order) {
+      console.log(`\n== rep ${rep + 1}: ${adapter} on ${engine} ==`);
+      try {
+        const rows = await benchCell(adapter, engine, port++, { repeats: 1 });
+        for (const r of rows) {
+          const k = K(r.adapter, r.engine, r.endpoint);
+          if (!acc.has(k)) acc.set(k, { adapter: r.adapter, engine: r.engine, category: r.category, endpoint: r.endpoint, rps: [], p50: [], p90: [], p975: [], p99: [], cpu: [], rss: [] });
+          const a = acc.get(k);
+          a.rps.push(r.rps); a.p50.push(r.p50); a.p90.push(r.p90); a.p975.push(r.p975); a.p99.push(r.p99); a.cpu.push(r.cpu_pct); a.rss.push(r.rss_mb);
+        }
+      } catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
+    }
+  }
+  const rows = [...acc.values()].map((a) => ({
+    adapter: a.adapter, engine: a.engine, category: a.category, endpoint: a.endpoint,
+    rps: Math.round(median(a.rps)),
+    p50: median(a.p50), p90: median(a.p90), p975: median(a.p975), p99: median(a.p99),
+    cpu_pct: Math.round(median(a.cpu)), rss_mb: Math.round(median(a.rss)),
+    connections: CONNECTIONS, duration: DURATION, repeats: a.rps.length, independent: true,
+    rps_samples: a.rps.map((x) => Math.round(x)), p99_samples: a.p99,
+  }));
+  await writeFile(join(resultsDir, 'raw-indep.json'), JSON.stringify(rows, null, 2));
+  console.log(`\nWrote ${rows.length} rows → results/raw-indep.json (${REPLICATES} independent replicates, randomized order, ${DURATION}s runs).`);
+}
+
 async function main() {
+  if (process.env.INDEP === '1') return mainIndep();
   const all = [];
   let port = BASE_PORT;
   for (const engine of wantEngines) {
