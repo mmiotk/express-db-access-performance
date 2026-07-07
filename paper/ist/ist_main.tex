@@ -60,8 +60,9 @@ through an automated cross-check.
 patterns: the deep/nested fetch spreads up to $6.2\times$ between the native
 driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is much less
 sensitive and point reads only mildly affected. The coarse ordering of layers is
-stable across engines, while insert throughput is governed by the engine (MySQL's
-InnoDB write path) rather than the layer.
+stable across engines. Single-row insert throughput, under the relaxed-durability
+configuration used here, is largely layer-insensitive on MySQL (engine-bound) yet
+layer-dependent on PostgreSQL.
 \textbf{Conclusion:} The choice of access layer matters most where the layer must
 assemble a nested object graph; a reproducible harness and a checklist of
 benchmarking pitfalls specific to this genre are released as a replication package.

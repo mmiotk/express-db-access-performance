@@ -17,8 +17,10 @@ package (\texttt{METHODOLOGY.md}).
 We vary three factors. The \emph{access layer} has nine levels spanning the
 taxonomy: the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle (a lightweight, query-builder-style ORM), Prisma,
-Sequelize, TypeORM, Objection, and MikroORM. The \emph{engine} has two levels,
-PostgreSQL~18.4 and MySQL~9.7.1. The \emph{access pattern} has five levels,
+Sequelize, TypeORM, Objection, and MikroORM. These nine cover the taxonomy's three
+tiers but are a representative cross-section, not an exhaustive catalogue; other
+libraries (for example Kysely, Slonik, and pg-promise) are omitted. The \emph{engine}
+has two levels, PostgreSQL~18.4 and MySQL~9.7.1. The \emph{access pattern} has five levels,
 realized as HTTP endpoints (Table~\ref{tab:patterns}). The native drivers are
 engine-specific (\texttt{pg} runs only on PostgreSQL, \texttt{mysql2} only on
 MySQL); the other seven layers run on both engines, giving
@@ -58,7 +60,12 @@ independently of any layer under test, so that every engine receives byte-identi
 data. The working set fits in memory, so measurements reflect access-layer cost
 rather than storage latency; once the working set is memory-resident, per-request
 instruction and logging cost dominate execution rather than disk
-I/O~\cite{harizopoulos2008oltp}.
+I/O~\cite{harizopoulos2008oltp}. Every request draws its target identifier uniformly
+at random from the full seeded range (posts $1$--$100{,}000$, authors
+$1$--$2{,}000$), so the load spreads across the whole working set rather than
+repeatedly hitting one hot record; because that set is memory-resident, the read
+endpoints measure warm access-layer cost. A skewed, production-like key distribution
+is a planned variant (Section~\ref{sec:threats}).
 
 \subsection{The adapter contract and N+1 control}
 Every access layer implements the same factory interface (five query methods plus
@@ -68,7 +75,16 @@ adapter returns an \emph{identical result shape}, and each uses that layer's
 fetch: a hand-written join for the native drivers, the Knex query builder, and the
 query-builder-style Drizzle, and relation eager loading (\texttt{include},
 \texttt{withGraphFetched}, \texttt{populate}, or \texttt{relations}) for the
-data-mapper ORMs. To guarantee that no
+data-mapper ORMs. The comparison is therefore one of \emph{idiomatic usage} rather
+than of a single fixed query plan: each layer runs the code its documentation
+recommends, so a measured difference reflects the access layer together with the SQL
+it generates, its round-trip count, and how it materializes results. The number of
+round trips is itself part of what varies: the native drivers, Knex, and Drizzle
+issue a two-query deep fetch, whereas each ORM's eager-loading strategy selects its
+own query count and join shape. Enabling each driver's query log in the harness
+recovers the exact SQL and round-trip count per layer; publishing these plans with
+their \texttt{EXPLAIN} output is a planned extension (Section~\ref{sec:threats}). To
+guarantee that no
 adapter gains an unfair advantage by silently returning less, or by issuing N+1
 queries, an automated cross-check asserts that all nine adapters produce the same
 normalized object for the same inputs before any timing is collected. This check
@@ -144,9 +160,11 @@ apply significance testing to widely separated layers, where the effect is obvio
 the tests target the close pairs where a ranking could plausibly be noise.
 
 \subsection{Experimental setup}
-All measurements were taken on a single host (Intel Xeon Gold~6140, 16~cores,
-126~GB RAM; Linux~6.17; Node.js~24.16.0) with the database engines running locally
-under relaxed durability. Because access-layer performance is version-sensitive, we
+All measurements were taken on 2026-07-06 on a single host (Intel Xeon Gold~6140,
+16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0) with the database engines running
+locally under relaxed durability. The pinned versions (Table~\ref{tab:versions}) were
+the current releases at that date and were frozen for the study, so later point
+releases (for example Node.js~24.17.0) are deliberately excluded. Because access-layer performance is version-sensitive, we
 pin every dependency (Table~\ref{tab:versions}); these are the versions the reported
 numbers characterize, and re-running the harness on newer releases is a one-command
 operation.

@@ -46,8 +46,13 @@ form a middle band, and the data-mapper ORMs trail, on both engines (the
 deep-fetch ordering, for instance, is preserved, with a $4.5\times$ spread on
 MySQL versus $6.2\times$ on PostgreSQL). On MySQL, Prisma in fact edges past the
 native \texttt{mysql2} driver on most patterns (e.g.\ deep fetch 3{,}514
-vs.\ 2{,}324~req/s), so the native driver is not always the ceiling there; we still
-report all spreads native-relative for cross-pattern comparability. The clearest
+vs.\ 2{,}324~req/s), so the native driver is not always the ceiling there. This
+should be read cautiously: the native adapters issue parameterized \texttt{query()}
+calls rather than reusable prepared statements, so they represent idiomatic rather
+than maximally tuned native usage, and Prisma reaches this throughput at roughly
+five times their application-side CPU (Section~\ref{sec:results}, resource
+footprint). We still report all spreads native-relative for cross-pattern
+comparability. The clearest
 engine-specific effect is on
 \textbf{inserts} (Table~\ref{tab:write}): on MySQL, throughput is uniformly low
 across \emph{all} layers (roughly 750--930~req/s, a spread of only $1.2\times$), so
@@ -85,15 +90,20 @@ throughput: the layers and patterns that lose throughput also exhibit the worst 
 (Tables~\ref{tab:deep_fetch}, \ref{tab:range_scan}).
 The data-mapper ORMs' deep-fetch cells, in particular, combine the lowest
 throughput with the highest p99, so the penalty a heavyweight ORM imposes on a
-nested-fetch hot path is visible not only in mean capacity but in the tail that
-governs user-perceived latency under load, the quantity that single-metric,
-throughput-only vendor benchmarks omit.
+nested-fetch hot path is visible not only in mean capacity but in the tail under
+load, the quantity that single-metric, throughput-only vendor benchmarks omit. These
+p99 values come from a closed-loop, constant-concurrency generator and are not
+equivalent to the tail a system exhibits under constant request arrival; an
+open-loop, constant-arrival cross-run corrected for coordinated omission is a planned
+extension (Section~\ref{sec:threats}), so we read the tail results as relative within
+the closed-loop model.
 
 \subsection{Measurement stability and significance}
-The rankings above rest on stable measurements. Across all 80 cells the coefficient
-of variation of throughput over the ten runs is at most 10.7\%
-(Table~\ref{tab:cv}), an order of magnitude below the between-layer spreads
-(up to $6.2\times$). To confirm that neighboring ranks are not measurement
+The rankings above rest on stable measurements. Across the 40 PostgreSQL cells the
+coefficient of variation of throughput over the ten runs is at most 10.7\%
+(Table~\ref{tab:cv}), and across the 40 MySQL cells at most 7.1\%
+(Table~\ref{tab:cv_mysql}); this global maximum is an order of magnitude below the
+between-layer spreads (up to $6.2\times$). To confirm that neighboring ranks are not measurement
 artifacts, we compare each adjacently ranked pair on the deep/nested fetch
 (Table~\ref{tab:significance}): \emph{every} adjacent pair separates with a large
 Cliff's~$\delta$ effect size ($\delta \geq 0.78$) and a Mann--Whitney~$U$
@@ -138,5 +148,6 @@ matters when sizing horizontally scaled deployments, where per-instance resource
 use governs how many replicas a given load requires~\cite{vaquero2011scaling}.
 
 \input{\tabledir cv_all}
+\input{\tabledir cv_mysql}
 \input{\tabledir significance_deep_fetch}
 \input{\tabledir resources}

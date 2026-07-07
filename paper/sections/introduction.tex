@@ -41,7 +41,7 @@ access layer fixed rather than varying it~\cite{salunke2024pgmysql}.
 
 Taken together, this leaves a gap along four axes: (1)~no access-layer
 comparison includes MySQL, and no PostgreSQL/MySQL benchmark varies the
-access layer; (2)~no neutral, full-taxonomy study exists: the full-taxonomy
+access layer; (2)~no neutral study spans the taxonomy broadly: the broad-coverage
 comparisons are vendor-authored, and academic work covers at most two or three
 libraries; (3)~throughput and tail latency are never reported jointly, each source
 reporting a single metric family; and (4)~none of the above
@@ -63,8 +63,11 @@ under an identical schema, dataset, and connection-pool size, and for every
 second) and tail latency (p99) together, rather than either in
 isolation. The full harness (adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
-that all nine layers return identical results) is released as an open
-replication package.
+that all nine layers return identical results) is released as an open replication
+package.\footnote{Harness, deterministic seed, all nine adapters, raw per-cell
+measurements, and the table/figure-generating scripts:
+\texttt{https://github.com/mmiotk/express-db-access-performance} (a tagged release
+is archived at Zenodo; the DOI is inserted on acceptance).}
 
 We structure the study around three research questions:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
@@ -79,8 +82,9 @@ We structure the study around three research questions:
 
 This paper makes four contributions:
 \begin{itemize}[leftmargin=*]
-  \item A \textbf{neutral, full-taxonomy} (native driver $\to$ query builder
-        $\to$ six ORMs), \textbf{dual-engine} (PostgreSQL and MySQL),
+  \item A \textbf{neutral, broad-coverage} benchmark spanning the taxonomy's
+        three tiers (native driver $\to$ query builder $\to$ six ORMs),
+        \textbf{dual-engine} (PostgreSQL and MySQL),
         \textbf{Express-level} benchmark that reports throughput and tail
         latency \textbf{jointly}, the combination missing from prior art.
   \item An \textbf{open, reproducible harness}: a uniform adapter contract, a

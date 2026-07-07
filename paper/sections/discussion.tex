@@ -30,16 +30,22 @@ native on aggregation on both engines (8{,}076 vs.\ 7{,}210~req/s on PostgreSQL)
 That parity is not free, however: at the \emph{same} ten-connection pool, Prisma's
 process draws roughly five times the application-side CPU of the other layers on the
 deep fetch ($469\%$; Section~\ref{sec:results}), trading CPU for
-latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss. Knex
-and Drizzle sit in a consistent middle ground on every pattern (never fastest, never
+latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss. The
+parity is also implementation-relative: because our native adapters use idiomatic
+parameterized queries rather than tuned prepared statements, the finding is best
+stated as ``under this implementation and resource model, a query-engine ORM can
+match or exceed the native-driver adapter, at substantially higher application-side
+CPU,'' not as an intrinsic ceiling. Knex and Drizzle sit in a consistent middle
+ground on every pattern (never fastest, never
 among the slowest data-mapper ORMs), which is what a query builder and a
 non-data-mapper, lightweight ORM should deliver.
 
 \paragraph{Writes: an engine-bound cost.}
-RQ2 has a clear answer on inserts. MySQL write throughput is low
-and flat across all eight layers (\char`~750--930~req/s, a $1.2\times$ spread;
-Table~\ref{tab:write}), while the identical comparison on PostgreSQL
-spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
+RQ2 has a clear answer on inserts, within the relaxed-durability configuration used
+here. MySQL write throughput is low and flat across all eight layers
+(\char`~750--930~req/s, a $1.2\times$ spread; Table~\ref{tab:write}), while the
+identical comparison on PostgreSQL spreads $4.0\times$ (native 6{,}375
+vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
 InnoDB's per-insert write path (redo-log generation, the doublewrite buffer, and
 clustered-index, secondary-index, and undo maintenance), work internal to the engine
@@ -119,6 +125,9 @@ fall back to raw SQL or the native driver only for the specific endpoints that
 assemble large object graphs; orthogonally, second-level caching can absorb part of
 an ORM's read cost where the workload tolerates staleness~\cite{chen2016cacheoptimizer}.
 
-These recommendations rest on one schema, one hardware configuration, and the
-library versions pinned in the replication package, and
-Section~\ref{sec:threats} sets out how far they can be expected to generalize.
+These recommendations rest on one schema, one hardware configuration, a single-host
+local-database deployment with relaxed durability, and the library versions pinned in
+the replication package. A production deployment adds network latency, TLS, a reverse
+proxy, a separate database host, connection poolers, read replicas, default
+durability, and larger or more varied payloads, any of which can shift the balance;
+Section~\ref{sec:threats} sets out how far these results can be expected to generalize.
