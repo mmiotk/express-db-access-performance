@@ -105,9 +105,16 @@ four-second runs and reported the median. Each run yields throughput (requests p
 latency percentiles p50, p90 and p99. During the measured runs we also sampled the
 \emph{server} process's CPU utilization and peak resident memory from
 \texttt{/proc}; because the load generator runs in a separate process, this isolates
-the access layer's own footprint from the load tool and the database. Both engines
-ran with the working set resident in memory and durability relaxed, so the results
-reflect access-layer CPU and allocation cost rather than disk synchronization. The
+the access layer's own footprint from the load tool and the database. Both engines ran
+with the working set resident in memory and durability deliberately relaxed, so the
+results reflect access-layer CPU and allocation cost rather than disk
+synchronization: PostgreSQL with \texttt{fsync=off}, \texttt{synchronous\_commit=off},
+and \texttt{full\_page\_writes=off}, and MySQL with
+\texttt{innodb\_flush\_log\_at\_trx\_commit=0}. This relaxation is not symmetric
+across engines (MySQL still performs doublewrite and data-page writes, whereas
+PostgreSQL disables all fsyncs), so absolute write throughput is not directly
+comparable between engines; we therefore read the write result only \emph{within}
+each engine (Section~\ref{sec:threats}). The
 hardware and software environment was captured automatically into the replication
 package. To characterize behavior under load, we additionally swept the deep/nested
 fetch (the most layer-sensitive pattern) across connection counts from 1 to 256

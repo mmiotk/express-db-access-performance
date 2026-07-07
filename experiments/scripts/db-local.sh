@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # User-space PostgreSQL + MySQL for the benchmark WITHOUT Docker/root, via a conda
-# env. Mirrors docker-compose.yml (ports 5432/3306, user/pass/db = bench).
+# env. Mirrors docker-compose.yml (ports 5432/3306, user/pass/db = bench). This is
+# the path used for the runs reported in the paper; the versions are pinned to the
+# ones characterized there (PostgreSQL 18.4, MySQL 9.7.1).
 #
-#   conda create -y -n dbbench -c conda-forge postgresql mysql-server
+#   conda create -y -n dbbench -c conda-forge postgresql=18.4 mysql-server=9.7.1
 #   ./scripts/db-local.sh start|stop|status|init
 #
 # `init` wipes and recreates both data dirs + the bench role/db (first-time setup).

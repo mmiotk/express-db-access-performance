@@ -9,7 +9,7 @@
 
 services:
   postgres:
-    image: postgres:16
+    image: postgres:18.4
     environment:
       POSTGRES_USER: bench
       POSTGRES_PASSWORD: bench
@@ -26,7 +26,7 @@ services:
       retries: 30
 
   mysql:
-    image: mysql:8.4
+    image: mysql:9.7.1
     environment:
       MYSQL_USER: bench
       MYSQL_PASSWORD: bench

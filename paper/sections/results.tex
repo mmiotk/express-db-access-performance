@@ -31,12 +31,13 @@ few percent, and Knex (2{,}454) and the lightweight ORM Drizzle (2{,}098) remain
 competitive, whereas the data-mapper ORMs are markedly slower: TypeORM 1{,}259,
 Sequelize 1{,}066, Objection 1{,}009, and MikroORM 579, i.e.\ $6.2\times$ below
 native. \textbf{Point reads} show a smaller $3.2\times$ spread (native 6{,}902 down
-to MikroORM 2{,}141). \textbf{Aggregation} is nearly layer-agnostic: because every
-layer issues the same correlated-subquery plan through its raw-SQL path, throughput
-ranges only $1.8\times$ native-relative (native 7{,}210 vs.\ Objection's 4{,}047),
-or $2.0\times$ counting Prisma's 8{,}076, the highest of any layer. Abstraction is
-thus inexpensive when the layer forwards a query and costly when it must materialize
-a nested object graph.
+to MikroORM 2{,}141). \textbf{Aggregation} overhead is much reduced but not eliminated: because every
+layer issues the same correlated-subquery plan through its raw-SQL path, the spread
+narrows to $1.8\times$ native-relative (native 7{,}210 vs.\ Objection's 4{,}047),
+or $2.0\times$ counting Prisma's 8{,}076, the highest of any layer. Even on this
+identical query plan the layer still moves throughput about twofold, with Objection's
+raw path the low outlier. Abstraction is thus inexpensive when the layer forwards a
+query and costly when it must materialize a nested object graph.
 
 \subsection{RQ2: engine dependence of the ranking}
 The \emph{relative} ordering of access layers is largely stable across PostgreSQL
@@ -50,7 +51,7 @@ report all spreads native-relative for cross-pattern comparability. The clearest
 engine-specific effect is on
 \textbf{inserts} (Table~\ref{tab:write}): on MySQL, throughput is uniformly low
 across \emph{all} layers (roughly 750--930~req/s, a spread of only $1.2\times$), so
-the InnoDB commit path dominates and masks access-layer differences, whereas on
+the InnoDB write path dominates and masks access-layer differences, whereas on
 PostgreSQL the same pattern spreads $4.0\times$ (native 6{,}375 down to MikroORM
 1{,}575). Thus for writes the engine, not the access layer, is the primary
 determinant of throughput. The keyset range scan is healthy for eight of the nine
@@ -60,7 +61,8 @@ layers), confirming that the earlier collapse we observed under \texttt{OFFSET}
 pagination was a workload artifact rather than an engine or layer property
 (Section~\ref{sec:discussion}). The one exception is MikroORM, whose range-scan
 throughput drops to 676~req/s on PostgreSQL and 627 on MySQL (p99 of 263 and
-323~ms), which we return to below.
+323~ms), an anomaly we flag but do not fully isolate; it is consistent with the
+per-request cost of materializing the returned page into MikroORM's identity map.
 
 \subsection{RQ3: which patterns matter most}
 Ranking the patterns by how much the layer choice moves throughput yields a clear
@@ -89,7 +91,7 @@ throughput-only vendor benchmarks omit.
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across all 80 cells the coefficient
-of variation of throughput over the ten runs is at most 10.8\%
+of variation of throughput over the ten runs is at most 10.7\%
 (Table~\ref{tab:cv}), an order of magnitude below the between-layer spreads
 (up to $6.2\times$). To confirm that neighboring ranks are not measurement
 artifacts, we compare each adjacently ranked pair on the deep/nested fetch
@@ -99,7 +101,9 @@ $p \leq 0.004$, including the two closest pairs (\texttt{pg}~$>$~Prisma,
 3{,}616 vs.\ 3{,}521, and Sequelize~$>$~Objection, 1{,}066 vs.\ 1{,}009~req/s; both
 $\delta = 0.78$, $p = 0.004$). The full ordering (native, Prisma, the query builder and lightweight
 ORM, then the data-mapper ORMs) is therefore statistically supported at every step,
-not merely in aggregate.
+not merely in aggregate. Because the ten runs of a cell share one server-process
+lifetime, these tests establish within-process stability rather than independent
+replication (Section~\ref{sec:threats}).
 
 \subsection{Scaling with concurrency}
 Figure~\ref{fig:scaling} sweeps the deep/nested fetch from 1 to 256 connections. The

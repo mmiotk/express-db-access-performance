@@ -142,17 +142,13 @@ family: throughput or latency, rarely both, and almost never the tail.
 \subsection{Positioning}
 No prior study, peer-reviewed or vendor, combines full-taxonomy coverage, both
 engines, joint throughput/tail reporting, and neutrality; each covers at most two
-or three of these four properties (Table~\ref{tab:prior_art}). Our study differs
-from all of them on the four axes simultaneously: (1)~it adds MySQL alongside
-PostgreSQL, closing the engine gap that separates access-layer studies from
-engine-only studies such as~\cite{salunke2024pgmysql}; (2)~it is neutral (the
-author has no commercial stake in any compared product) and covers the full
-taxonomy of native drivers, a query builder, and six ORMs in one design, rather
-than the two or three libraries typical of peer-reviewed work; (3)~it reports
-throughput and tail latency (p99) jointly for every cell, rather than the single
-metric family each vendor benchmark selects; and (4)~it measures through the
-Express HTTP layer, i.e.\ the request round trip a real service experiences,
-rather than in-process query timing alone.
+or three of these four properties (Table~\ref{tab:prior_art}). Ours is the first to
+satisfy all four at once: it adds MySQL alongside PostgreSQL, remains author-neutral
+across the full native-driver-to-ORM taxonomy rather than the two or three libraries
+typical of peer-reviewed work, reports throughput and tail latency (p99) jointly for
+every cell, and measures through the Express HTTP layer rather than in-process query
+timing alone. The engine gap it closes is the same one that separates access-layer
+studies from engine-only work such as~\cite{salunke2024pgmysql}.
 
 \begin{table}[htbp]
   \centering

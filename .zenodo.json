@@ -1,6 +1,6 @@
 {
   "title": "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js across PostgreSQL and MySQL",
-  "description": "Reproducible benchmark harness and paper comparing relational database access layers in an Express.js service — native drivers (pg, mysql2), a query builder (Knex), and ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM) — across PostgreSQL 16 and MySQL 8.4, over five access patterns (point read, range scan, deep/nested fetch, aggregation, insert), reporting both throughput (req/s) and tail latency (p50/p90/p97.5/p99). Load driven by autocannon; per-cell warm-up plus repeated runs with per-cell medians as the experimental unit; connection pool held constant at 10 across adapters.",
+  "description": "Reproducible benchmark harness and paper comparing relational database access layers in an Express.js service — native drivers (pg, mysql2), a query builder (Knex), and ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM) — across PostgreSQL 18.4 and MySQL 9.7.1, over five access patterns (point read, range scan, deep/nested fetch, aggregation, insert), reporting both throughput (req/s) and tail latency (p50/p90/p97.5/p99). Load driven by autocannon; per-cell warm-up plus repeated runs with per-cell medians as the experimental unit; connection pool held constant at 10 across adapters.",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",

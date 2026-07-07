@@ -44,8 +44,8 @@
 \textbf{Context:} Node.js/Express services reach relational databases through a
 spectrum of access layers (native drivers, query builders, and object-relational
 mappers, or ORMs), yet practitioners choose between them largely on the basis of
-vendor benchmarks that are fragmented, PostgreSQL-only, and report either
-throughput or latency but seldom both.
+vendor benchmarks that are fragmented, PostgreSQL-only, and report
+throughput or latency but rarely the tail (p99).
 \textbf{Objective:} We quantify, neutrally and reproducibly, the performance cost
 of the access layer as a function of the layer, the database engine, and the
 access pattern.
@@ -58,9 +58,10 @@ connection pool constant, and verify that every layer returns identical results
 through an automated cross-check.
 \textbf{Results:} Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads up to $6.2\times$ between the native
-driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is near layer-agnostic and point reads only mildly affected. The relative ordering of layers is stable
-across engines, while insert throughput is governed by the engine (MySQL's InnoDB
-commit path) rather than the layer.
+driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is much less
+sensitive and point reads only mildly affected. The coarse ordering of layers is
+stable across engines, while insert throughput is governed by the engine (MySQL's
+InnoDB write path) rather than the layer.
 \textbf{Conclusion:} The choice of access layer matters most where the layer must
 assemble a nested object graph; a reproducible harness and a checklist of
 benchmarking pitfalls specific to this genre are released as a replication package.

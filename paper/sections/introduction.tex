@@ -28,8 +28,8 @@ targets PostgreSQL almost exclusively, and each settles on a single metric
 family rather than reporting throughput and the tail together. Prisma's
 official suite reports median query latency with neither throughput nor any
 percentile~\cite{prisma_benchmarks}, while Drizzle's and IMDBench's report
-throughput with, at best, a single P95 point~\cite{drizzle_benchmarks,
-imdbench}. None reports the p99 behavior that dominates perceived performance
+throughput and latency, though only Drizzle's includes a percentile (a single
+P95)~\cite{drizzle_benchmarks,imdbench}. None reports the p99 behavior that dominates perceived performance
 under load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is
 even sparser and equally narrow in scope. Colley et al.\ measured ORM overhead
 across eight frameworks, but in Java, C\#, Python, and PHP, deliberately
@@ -90,7 +90,7 @@ This paper makes four contributions:
   \item Empirical evidence that \textbf{abstraction cost concentrates in
         relation-materializing patterns} (the deep/nested fetch), that the
         \textbf{layer ordering is stable across engines}, and that
-        \textbf{writes are engine-bound} (MySQL's InnoDB commit path
+        \textbf{writes are engine-bound} (MySQL's InnoDB write path
         dominates).
   \item A set of \textbf{methodological pitfalls specific to access-layer
         benchmarking} (aggregation fan-out, OFFSET versus keyset pagination,

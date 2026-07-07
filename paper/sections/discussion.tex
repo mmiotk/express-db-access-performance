@@ -19,8 +19,9 @@ largest abstraction cost precisely on its highest-value traffic. Point reads
 and aggregation are the opposite case: dominated by connection and parsing
 cost that every layer shares, point reads spread only $3.2\times$/$2.4\times$;
 aggregation spreads just $1.8\times$/$1.4\times$ once every adapter, native
-drivers included, is forced onto the same raw correlated-subquery plan. Once
-the SQL shape is fixed, the layer is nearly incidental. Prisma shows that an ORM
+drivers included, is forced onto the same raw correlated-subquery plan; even then
+the layer still moves throughput about twofold, far less than on the deep fetch but
+not negligible. Prisma shows that an ORM
 need not be slow, consistent with evidence that ORM cost is highly sensitive to
 implementation and tuning~\cite{vanzyl2009optimisations}: its compiled query engine
 stays within a few percent of native
@@ -40,15 +41,18 @@ and flat across all eight layers (\char`~750--930~req/s, a $1.2\times$ spread;
 Table~\ref{tab:write}), while the identical comparison on PostgreSQL
 spreads $4.0\times$ (native 6{,}375 vs.\ MikroORM 1{,}575~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
-InnoDB's commit path (the group-commit and log-flush work long identified as the
-dominant OLTP write cost~\cite{johnson2010aether,harizopoulos2008oltp}) governs
-end-to-end latency regardless of how a query reaches it. This finding also warrants
+InnoDB's per-insert write path (redo-log generation, the doublewrite buffer, and
+clustered-index, secondary-index, and undo maintenance), work internal to the engine
+rather than to any access layer~\cite{harizopoulos2008oltp}, governs end-to-end
+latency regardless of how a query reaches it. This holds even though the redo log is
+flushed lazily under our relaxed-durability configuration
+(Section~\ref{sec:methodology}): the remaining per-row engine work still dominates. This finding also warrants
 caution: a write-throughput comparison run on a single engine invites the wrong
 generalization in either direction (``the access layer is irrelevant to writes''
 from MySQL alone, or ``the access layer matters a great deal for writes'' from
 PostgreSQL alone), and an engine-only benchmark such as~\cite{salunke2024pgmysql}
 cannot expose this interaction because it omits the access layer entirely. Only the
-dual-engine design used here makes the InnoDB-commit-path explanation visible
+dual-engine design used here makes the engine-write-path explanation visible
 instead of confounded with layer choice; that the underlying database technology
 modulates the cost of a given mapping strategy is consistent with earlier
 quantitative ORM work~\cite{lorenz2017orm}.

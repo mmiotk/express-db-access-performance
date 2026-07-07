@@ -16,7 +16,7 @@ but it grows sharply (up to $6.2\times$ between the native driver and the heavie
 data-mapper ORM) for the deep/nested fetch, where the layer must assemble a nested
 object graph on the application side. The relative ordering of layers is stable
 across the two engines, and a competitively fast modern ORM (Prisma) shows that
-``ORM'' need not imply large overhead. Writes are the exception: MySQL's commit
+``ORM'' need not imply large overhead. Writes are the exception: MySQL's write
 path makes insert throughput nearly layer-independent, a caution against
 generalizing single-engine write results. Beyond these findings, development
 surfaced a reusable checklist of benchmarking pitfalls (aggregation fan-out,

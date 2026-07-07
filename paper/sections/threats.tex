@@ -16,7 +16,11 @@ those costs constant across conditions: every adapter satisfies a documented
 identical result shape to Express, so the JSON payload (and its serialization
 cost) is the same regardless of which layer produced it. Observed differences
 between layers are therefore attributable to how each layer reaches that shape,
-not to what is returned.
+not to what is returned. One caveat is specific to writes: durability is relaxed
+asymmetrically across the two engines (Section~\ref{sec:methodology}), so absolute
+insert throughput is not comparable between PostgreSQL and MySQL. We therefore state
+the write finding only within each engine (a $1.2\times$ layer spread on MySQL versus
+$4.0\times$ on PostgreSQL), not as a cross-engine magnitude comparison.
 
 \paragraph{Internal validity.}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
