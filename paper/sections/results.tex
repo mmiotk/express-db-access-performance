@@ -130,7 +130,8 @@ the multiplier is pattern-dependent (Prisma's aggregation cell draws only $\appr
 200\%$). Memory differences are smaller: the native driver, Knex, and Objection are
 lightest (204--213~MB peak RSS), while the remaining ORMs use more (251--278~MB).
 Resource cost, like throughput, is therefore pattern- and layer-specific, and
-matters when sizing horizontally scaled deployments.
+matters when sizing horizontally scaled deployments, where per-instance resource
+use governs how many replicas a given load requires~\cite{vaquero2011scaling}.
 
 \input{\tabledir cv_all}
 \input{\tabledir significance_deep_fetch}

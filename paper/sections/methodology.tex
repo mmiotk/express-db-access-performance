@@ -5,7 +5,9 @@ Our goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
 database access layer of an Express.js service \emph{for the purpose of}
 quantifying its performance cost \emph{with respect to} throughput and tail
 latency \emph{from the point of view of} an application developer choosing a layer
-\emph{in the context of} PostgreSQL and MySQL back ends. The design crosses the
+\emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. The
+design follows established guidelines for controlled experimentation in software
+engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines} and crosses the
 seven portable access layers with both engines and all five access patterns, plus
 the two engine-specific native-driver baselines; the complete rationale, including
 the pitfalls each control guards against, is distributed with the replication
@@ -45,7 +47,7 @@ The workload is a minimal blog domain---\texttt{authors} $1\!-\!*$ \texttt{posts
 $1\!-\!*$ \texttt{comments} $*\!-\!1$ \texttt{authors}---which exercises a
 one-to-many relationship and a two-hop join for the deep fetch while remaining
 small enough to reason about. The five endpoints map onto the canonical access
-patterns a CRUD service issues: a primary-key point read; a newest-first
+patterns a CRUD service issues~\cite{cooper2010ycsb}: a primary-key point read; a newest-first
 \emph{keyset} page (\texttt{WHERE id < cursor ORDER BY id DESC LIMIT}~$n$, using
 the primary-key index rather than a large \texttt{OFFSET}); a deep/nested fetch
 that returns a post together with its author and every comment, each with its own
@@ -54,7 +56,9 @@ and a single-row insert. The database is loaded from a deterministic seed
 (2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments) by the native driver,
 independently of any layer under test, so that every engine receives byte-identical
 data. The working set fits in memory, so measurements reflect access-layer cost
-rather than storage latency.
+rather than storage latency; once the working set is memory-resident, per-request
+instruction and logging cost dominate execution rather than disk
+I/O~\cite{harizopoulos2008oltp}.
 
 \subsection{The adapter contract and N+1 control}
 Every access layer implements the same factory interface---five query methods plus
@@ -75,7 +79,8 @@ driver result-shape mismatch; see Section~\ref{sec:discussion}).
 Four controls isolate the access layer as the only variable. \emph{(i)~Pool size}
 is fixed at ten connections for every adapter, so the comparison measures
 access-layer overhead rather than pool tuning, itself a known web-application
-performance factor~\cite{gupta2017pooling}; for Prisma, whose default pool is
+performance factor and a recurring concern in database-backed
+services~\cite{gupta2017pooling,laigner2021microservices}; for Prisma, whose default pool is
 otherwise derived from the core count, this is pinned explicitly through the
 \texttt{connection\_limit} URL parameter. \emph{(ii)~Identical query
 semantics}: each endpoint issues the same logical query across layers; the
@@ -90,10 +95,13 @@ generator runs in a process separate from the server.
 \subsection{Measurement procedure}
 Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
-latency histogram; it is a closed-loop (constant-concurrency) generator. For each
+latency histogram; it is a closed-loop (constant-concurrency)
+generator~\cite{schroeder2006open}. For each
 of the 80 configurations we opened 50 concurrent connections, ran a two-second
 warm-up pass whose measurements were discarded (absorbing JIT compilation,
-connection-pool fill, and query-plan caching), then took ten measured four-second
+connection-pool fill, and query-plan caching), a precaution that matters because
+managed runtimes do not always reach a stable steady state
+promptly~\cite{barrett2017warmup}, then took ten measured four-second
 runs and reported the median. Each run yields throughput (requests per second) and
 latency percentiles p50, p90 and p99. During the measured runs we also sampled the
 \emph{server} process's CPU utilization and peak resident memory from
@@ -104,7 +112,8 @@ reflect access-layer CPU and allocation cost rather than disk synchronization. T
 hardware and software environment was captured automatically into the replication
 package. To characterize behavior under load, we additionally swept the deep/nested
 fetch---the most layer-sensitive pattern---across connection counts from 1 to 256
-for every layer and engine.
+for every layer and engine, since throughput and contention scale non-linearly with
+concurrency~\cite{yu2014concurrency}.
 
 \subsection{Analysis}
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
@@ -115,12 +124,16 @@ comparable across patterns even where one ORM exceeds the native driver). We rep
 medians over the ten
 runs and the coefficient of variation (CV) across runs as a stability signal,
 following the practice of reporting central tendency and variability rather than a
-single number~\cite{georges2007rigorous} (Section~\ref{sec:results}). To test whether
-adjacently ranked layers are
+single number~\cite{georges2007rigorous} and of using enough repetitions to bound
+run-to-run variance~\cite{laaber2019microbenchmarking} (Section~\ref{sec:results}).
+To test whether adjacently ranked layers are
 distinguishable rather than an artifact of measurement noise, we compare each
 adjacent pair on the deep/nested fetch with the Mann--Whitney $U$ test (two-sided)
 and report Cliff's~$\delta$ as a nonparametric effect size, the latter being robust
-to the small number of runs and to non-normal throughput distributions. We do not
+to the small number of runs and to non-normal throughput distributions; reporting a
+nonparametric test together with a standardized effect size follows recommended
+practice for randomized performance experiments in software
+engineering~\cite{arcuri2014hitchhiker,cliff1993dominance}. We do not
 apply significance testing to widely separated layers, where the effect is obvious;
 the tests target the close pairs where a ranking could plausibly be noise.
 

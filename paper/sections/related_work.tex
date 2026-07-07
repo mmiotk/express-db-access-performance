@@ -6,114 +6,153 @@ from it---taxonomy coverage, engine coverage, whether throughput and tail
 latency are reported jointly, and the neutrality of the source---and
 summarize the comparison in Table~\ref{tab:prior_art}.
 
-\paragraph{Peer-reviewed access-layer and ORM studies.}
-The object-relational mapping literature is itself mature---Torres et al.\ survey
-two decades of ORM patterns and their implications for application
-design~\cite{torres2017orm}---but the peer-reviewed literature on access-layer
-\emph{performance} specifically is narrow. An early empirical study by van Zyl et
-al.~\cite{vanzyl2006orm} weighed object databases against ORM tools, an ancestor of
-the present comparison; more recent work remains limited. Colley et al.~\cite{colley2018orm} give the earliest systematic
-cross-language account, benchmarking eight ORM frameworks across Java, C\#, Python, and PHP
-against a common relational schema---but the study \emph{deliberately
-excludes JavaScript}, leaving the Node.js ecosystem, and Express in
-particular, without an academic baseline for the better part of a decade.
-Two 2025 studies address it partially. One, in
-\emph{Procedia Computer Science}, compares Prisma against optimized raw SQL
-over eight query patterns on a containerized PostgreSQL
-setup~\cite{prisma_rawsql_2025}; we cite its methodology, but its headline
-speedup figures did not survive independent verification and are not
-reproduced here. The other compares Prisma, TypeORM, and Sequelize across
-four relation types, also on PostgreSQL, by response time, memory, and
-CPU~\cite{orm_compare_jcct_2025}. Both are useful precedents for
-containerized, Node-specific measurement, but each covers only two or three
-libraries out of the much larger taxonomy in production use, and both are
-confined to a single engine. No peer-reviewed study to date spans the full
-native-driver/query-builder/ORM spectrum, and none includes MySQL.
+\subsection{Object-relational mapping and the access-layer spectrum}
+Access layers exist to bridge the object-relational impedance mismatch, the
+structural gap between the row-and-table relational model and the object graphs
+an application manipulates~\cite{ireland2009impedance,russell2008bridging}. They
+span a spectrum from native drivers that expose SQL and the wire protocol
+directly, through query builders, to object-relational mappers that hydrate rows
+into objects and manage associations following patterns such as Data Mapper and
+Active Record~\cite{fowler2002patterns}. Torres et al.~\cite{torres2017orm}
+survey two decades of ORM patterns and their implications for application design;
+the trade-off they document---developer productivity against a runtime cost that
+is hard to predict---is the one this paper quantifies. The same abstraction
+question recurs one level up in the polyglot-persistence debate over when to
+adopt non-relational stores at all~\cite{sadalage2012nosql}; we hold that choice
+fixed at relational engines and vary only the access layer.
 
-\paragraph{ORM performance in software engineering.}
-A parallel line studies ORM performance from the opposite direction---not
-benchmarking layers, but detecting and repairing the inefficient SQL that mapping
-frameworks emit. Chen et al.\ quantify the performance impact of redundant data
-access in ORM-backed Java systems~\cite{chen2016redundant}, developing their earlier
-anti-pattern detection work~\cite{chen2014orm}, and Yang et al.\ document the ORM
-performance bugs---N+1 retrievals prominent among them---that pervade real-world web
-applications~\cite{yang2018dbapps}. This literature establishes \emph{where} ORM
-overhead concentrates (relation-materializing, N+1-prone access), which our
-per-pattern results confirm and quantify across the full layer taxonomy; it does
-not, however, compare layers head-to-head under controlled load, which is our aim.
+\subsection{ORM performance and data-access anti-patterns}
+A parallel line of software-engineering research studies ORM performance from the
+opposite direction: rather than benchmarking layers, it detects and repairs the
+inefficient SQL that mapping frameworks emit. The costliest pattern is the N+1
+query problem, in which iterating over a parent collection issues one child query
+per row; Yang et al.~\cite{yang2018dbapps} and Yan et al.~\cite{yan2017inefficiencies}
+find it and related redundant-query anti-patterns pervasive across real-world web
+applications, and Shao et al.~\cite{shao2020antipatterns} give an independent
+taxonomy and detector for database-access anti-patterns. Chen et al.\ quantify the
+performance impact of redundant data access in ORM-backed Java
+systems~\cite{chen2016redundant}, extending their earlier anti-pattern detection
+work~\cite{chen2014orm}. A complementary strand shows the overhead is often
+\emph{removable}: query synthesis lifts imperative accessor code into more
+efficient SQL~\cite{cheung2013querysynthesis}, lazy evaluation batches round trips
+that would otherwise serialize~\cite{cheung2014sloth}, view-centric optimization
+rewrites whole request handlers~\cite{yang2019view}, and configuring second-level
+caching absorbs repeated reads~\cite{chen2016cacheoptimizer}; the analogous hazard
+one level up, in the JavaScript runtime, is mis-sequenced \texttt{async}/\texttt{await}
+that serializes independent I/O~\cite{turcotte2022asyncjs}. Closest to our design,
+Lorenz et al.~\cite{lorenz2017orm} show quantitatively that the best O/R mapping
+strategy depends on the underlying database technology, and van Zyl et
+al.~\cite{vanzyl2009optimisations} that ORM performance is highly sensitive to
+tuning, while a recent study adds an energy dimension to the picture~\cite{bonvoisin2024orm}.
+This literature establishes \emph{where} ORM overhead concentrates---relation-materializing,
+N+1-prone access---and that it is configurable rather than fixed; our per-pattern
+results confirm and quantify both across the full layer taxonomy. It does not,
+however, compare drivers, query builders, and ORMs head-to-head under controlled
+load, which is our aim.
 
-\paragraph{Database-engine and Node.js performance studies.}
-A second, largely disjoint line of work benchmarks the layers immediately
-below and above the access layer without varying it directly. Salunke and
-Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL head-to-head
-under standard OLTP workloads---the only dual-engine precedent we
-found---but they benchmark the \emph{engines themselves}, bypassing any
-application-level access layer; their work is complementary to ours but
-orthogonal, since it cannot say how a driver, query builder, or ORM would
-change the comparison. In the broader engine-comparison line, Li and
-Manoharan~\cite{li2013sqlnosql} contrast SQL and NoSQL databases, again without an
-application-level access layer. On the Node.js side, Chaniotis et
-al.~\cite{chaniotis2015nodejs} established Node's viability as a
-web-application platform, Kuffel and Walter~\cite{kuffel2025nodejs} tracked
-how a Node.js back-end's performance characteristics drift over time under
-sustained load, and do Carmo et al.~\cite{carmo2024backend} compared
-back-end frameworks more broadly. None of these studies isolates the
-database access layer as an independent variable, let alone varies it across
-the taxonomy studied here; where database access appears at all, it is
-incidental to their designs rather than the object of study.
+\subsection{Peer-reviewed access-layer comparisons}
+The peer-reviewed literature that measures access layers head-to-head is narrow.
+An early empirical study by van Zyl et al.~\cite{vanzyl2006orm} weighed object
+databases against ORM tools, an ancestor of the present comparison. Colley et
+al.~\cite{colley2018orm} give the earliest systematic cross-language account,
+benchmarking eight ORM frameworks across Java, C\#, Python, and PHP against a
+common relational schema---but the study \emph{deliberately excludes JavaScript},
+leaving the Node.js ecosystem, and Express in particular, without an academic
+baseline for the better part of a decade. Two 2025 studies address it partially.
+One, in \emph{Procedia Computer Science}, compares Prisma against optimized raw
+SQL over eight query patterns on a containerized PostgreSQL
+setup~\cite{prisma_rawsql_2025}; we cite its methodology, but its headline speedup
+figures did not survive independent verification and are not reproduced here. The
+other compares Prisma, TypeORM, and Sequelize across four relation types, also on
+PostgreSQL, by response time, memory, and CPU~\cite{orm_compare_jcct_2025}. Both
+are useful precedents for containerized, Node-specific measurement, but each
+covers only two or three libraries out of the much larger taxonomy in production
+use, and both are confined to a single engine. No peer-reviewed study to date
+spans the full native-driver/query-builder/ORM spectrum, and none includes MySQL.
 
-\paragraph{Practitioner and vendor benchmarks.}
-A larger body of evidence comes from practitioners and vendors, though each
-source is authored by a party with a stake in one of the compared products. Drizzle
-publishes both a Northwind micro-suite
-spanning nine targets (\texttt{pg}, Knex, Kysely, MikroORM, TypeORM, Prisma,
-and Drizzle itself, pooled and unpooled) and an official k6-driven load test
-reporting requests per second, average latency, P95, and
-CPU~\cite{drizzle_benchmarks}. Prisma's own site compares Prisma, Drizzle,
-and TypeORM by median query latency over 500 iterations, but reports
-neither throughput nor any latency percentile~\cite{prisma_benchmarks}.
-IMDBench, maintained by Gel Data (formerly EdgeDB), adds Sequelize and
-node-postgres to the mix and reports both throughput and latency on three
-CRUD-style operations~\cite{imdbench}. Between them, these three sources
-cover more of the access-layer taxonomy than the entire peer-reviewed
-literature combined---yet all three share the same defects: each is
-authored, or at minimum hosted, by a party that sells one of the compared
-products; all three run exclusively against PostgreSQL; and each reports a
-single metric family---throughput or latency, rarely both, and almost never
-the tail.
+\subsection{Database-engine, SQL/NoSQL, and Node.js performance}
+A second, largely disjoint line of work benchmarks the layers immediately below
+and above the access layer without varying it directly. Salunke and
+Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL head-to-head under
+standard OLTP workloads---the only dual-engine precedent we found---but they
+benchmark the \emph{engines themselves}, bypassing any application-level access
+layer, so their work cannot say how a driver, query builder, or ORM would change
+the comparison. In the broader engine-comparison line, Li and
+Manoharan~\cite{li2013sqlnosql} contrast SQL and NoSQL databases and Gyorodi et
+al.~\cite{gyorodi2015mongodb} compare MongoDB against MySQL specifically, while
+surveys of the scalable-datastore landscape frame when each class of store
+applies~\cite{cattell2011scalable,gessert2017nosql}; all measure the store, not
+the application-level access layer. On the Node.js side, Chaniotis et
+al.~\cite{chaniotis2015nodejs} established Node's viability as a web-application
+platform, Kuffel and Walter~\cite{kuffel2025nodejs} tracked how a Node.js
+back-end's performance drifts over time under sustained load, do Carmo et
+al.~\cite{carmo2024backend} compared back-end frameworks more broadly, and Sun et
+al.~\cite{sun2019asyncgraphs} characterize how the single-threaded event loop
+schedules the asynchronous I/O through which every access layer reaches the
+database. None of these studies isolates the database access layer as an
+independent variable, let alone varies it across the taxonomy studied here; where
+database access appears at all, it is incidental to their designs rather than the
+object of study.
 
-\paragraph{Benchmarking methodology.}
-A separate methodological literature explains why the single-metric habit
-above is a problem in its own right. Fruth et al.~\cite{fruth2022tail}
+\subsection{Standard benchmarks and benchmarking methodology}
+Standard benchmarks define how database systems are normally measured:
+YCSB~\cite{cooper2010ycsb} for cloud-serving stores and the TPC-C/TPC-E
+transaction-processing suites~\cite{chen2011tpce} for OLTP, with
+OLTP-Bench~\cite{difallah2013oltpbench} providing a reusable, extensible harness.
+These target the \emph{engine} and its transaction mix; by construction they say
+nothing about the driver, query builder, or ORM through which an application
+issues work---the variable this study isolates---but they set the methodological
+bar for controlled, repeatable load. A separate methodological literature explains
+why the single-metric habit of the vendor benchmarks below is a problem in its own
+right. Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair}
 catalog pitfalls specific to database benchmarking---coordinated omission,
-JIT and garbage-collector warm-up, and tool-induced distortion---that
-silently corrupt reported p95/p99 values unless explicitly controlled for.
-Dean and Barroso~\cite{dean2013tail} show, at data-center scale, why the
-tail rather than the mean determines user-perceived latency once a request
-fans out over many components, as an Express request serving a deep/nested
-fetch does. Neither paper studies access layers, but together they motivate
-a design choice absent from every benchmark surveyed above: report
-throughput \emph{and} tail latency (p99) for the same run, rather
-than a single metric chosen after the fact. More broadly, the benchmarking
-literature stresses relevance, repeatability, and fairness as the marks of a good
-benchmark~\cite{huppler2009benchmark}, and the role of shared, neutral benchmarks in
-advancing a research field~\cite{sim2003benchmark}---the stance this paper takes.
+warm-up, and tool-induced distortion---that silently corrupt reported percentiles.
+Dean and Barroso~\cite{dean2013tail} show why the tail rather than the mean
+determines user-perceived latency once a request fans out over many components, as
+an Express request serving a deep/nested fetch does, and Li et
+al.~\cite{li2014tales} trace the hardware, OS, and application sources of that
+tail. Surveys of load testing~\cite{jiang2015load} and of performance-testing
+practice~\cite{leitner2017exploratory} report that such measurement is often ad
+hoc, and repeatability studies~\cite{collberg2016repeatability} that systems
+results are frequently hard to reproduce---together motivating a shared, neutral,
+reusable harness. More broadly, the benchmarking literature stresses relevance,
+repeatability, and fairness as the marks of a good benchmark~\cite{huppler2009benchmark}
+and the role of neutral benchmarks in advancing a field~\cite{sim2003benchmark}.
+From this literature we take a design choice absent from every access-layer
+benchmark surveyed above: report throughput \emph{and} tail latency (p99) for the
+same run, rather than a single metric family chosen after the fact.
 
-\paragraph{Positioning.}
-No prior study, peer-reviewed or vendor, combines full-taxonomy coverage,
-both engines, joint throughput/tail reporting, and neutrality; each covers
-at most two or three of these four properties (Table~\ref{tab:prior_art}).
-Our study differs from all of them on the four axes simultaneously:
-(1)~it adds MySQL alongside PostgreSQL, closing the engine gap that
-separates access-layer studies from engine-only studies such
-as~\cite{salunke2024pgmysql}; (2)~it is neutral---the author has no
-commercial stake in any compared product---and covers the full taxonomy,
-native drivers, a query builder, and six ORMs, in one design, rather than
-the two or three libraries typical of peer-reviewed work; (3)~it reports
-throughput and tail latency (p99) jointly for every cell, rather
-than the single metric family each vendor benchmark selects; and (4)~it
-measures through the Express HTTP layer, i.e.\ the request round trip a real
-service experiences, rather than in-process query timing alone.
+\subsection{Practitioner and vendor benchmarks}
+A larger body of evidence comes from practitioners and vendors, though each source
+is authored by a party with a stake in one of the compared products. Drizzle
+publishes both a Northwind micro-suite spanning nine targets (\texttt{pg}, Knex,
+Kysely, MikroORM, TypeORM, Prisma, and Drizzle itself, pooled and unpooled) and an
+official k6-driven load test reporting requests per second, average latency, P95,
+and CPU~\cite{drizzle_benchmarks}. Prisma's own site compares Prisma, Drizzle, and
+TypeORM by median query latency over 500 iterations, but reports neither throughput
+nor any latency percentile~\cite{prisma_benchmarks}. IMDBench, maintained by Gel
+Data (formerly EdgeDB), adds Sequelize and node-postgres to the mix and reports
+both throughput and latency on three CRUD-style operations~\cite{imdbench}. Between
+them, these three sources cover more of the access-layer taxonomy than the entire
+peer-reviewed literature combined---yet all three share the same defects: each is
+authored, or at minimum hosted, by a party that sells one of the compared products;
+all three run exclusively against PostgreSQL; and each reports a single metric
+family---throughput or latency, rarely both, and almost never the tail.
+
+\subsection{Positioning}
+No prior study, peer-reviewed or vendor, combines full-taxonomy coverage, both
+engines, joint throughput/tail reporting, and neutrality; each covers at most two
+or three of these four properties (Table~\ref{tab:prior_art}). Our study differs
+from all of them on the four axes simultaneously: (1)~it adds MySQL alongside
+PostgreSQL, closing the engine gap that separates access-layer studies from
+engine-only studies such as~\cite{salunke2024pgmysql}; (2)~it is neutral---the
+author has no commercial stake in any compared product---and covers the full
+taxonomy, native drivers, a query builder, and six ORMs, in one design, rather
+than the two or three libraries typical of peer-reviewed work; (3)~it reports
+throughput and tail latency (p99) jointly for every cell, rather than the single
+metric family each vendor benchmark selects; and (4)~it measures through the
+Express HTTP layer, i.e.\ the request round trip a real service experiences,
+rather than in-process query timing alone.
 
 \begin{table}[htbp]
   \centering

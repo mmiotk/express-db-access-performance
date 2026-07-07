@@ -280,3 +280,434 @@
   year      = {2018},
   doi       = {10.1145/3180155.3180194},
 }
+
+% --- Object-relational mapping and persistence architecture ---
+
+@article{russell2008bridging,
+  author  = {Russell, Craig},
+  title   = {Bridging the Object-Relational Divide},
+  journal = {ACM Queue},
+  volume  = {6},
+  number  = {3},
+  pages   = {18--28},
+  year    = {2008},
+  doi     = {10.1145/1394127.1394139},
+}
+
+@book{sadalage2012nosql,
+  author    = {Sadalage, Pramod J. and Fowler, Martin},
+  title     = {{NoSQL} Distilled: A Brief Guide to the Emerging World of Polyglot Persistence},
+  publisher = {Addison-Wesley},
+  address   = {Upper Saddle River, NJ},
+  year      = {2012},
+  isbn      = {9780321826626},
+}
+
+% --- ORM performance, anti-patterns, and generated-SQL quality ---
+
+@inproceedings{cheung2013querysynthesis,
+  author    = {Cheung, Alvin and Solar-Lezama, Armando and Madden, Samuel},
+  title     = {Optimizing Database-Backed Applications with Query Synthesis},
+  booktitle = {Proceedings of the 34th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)},
+  pages     = {3--14},
+  publisher = {ACM},
+  year      = {2013},
+  doi       = {10.1145/2491956.2462180},
+}
+
+@inproceedings{cheung2014sloth,
+  author    = {Cheung, Alvin and Madden, Samuel and Solar-Lezama, Armando},
+  title     = {Sloth: Being Lazy Is a Virtue (When Issuing Database Queries)},
+  booktitle = {Proceedings of the 2014 ACM SIGMOD International Conference on Management of Data},
+  pages     = {931--942},
+  publisher = {ACM},
+  year      = {2014},
+  doi       = {10.1145/2588555.2593672},
+}
+
+@inproceedings{yan2017inefficiencies,
+  author    = {Yan, Cong and Cheung, Alvin and Yang, Junwen and Lu, Shan},
+  title     = {Understanding Database Performance Inefficiencies in Real-World Web Applications},
+  booktitle = {Proceedings of the 2017 ACM Conference on Information and Knowledge Management (CIKM)},
+  pages     = {1299--1308},
+  publisher = {ACM},
+  year      = {2017},
+  doi       = {10.1145/3132847.3132954},
+}
+
+@inproceedings{yang2019view,
+  author    = {Yang, Junwen and Yan, Cong and Wan, Chengcheng and Lu, Shan and Cheung, Alvin},
+  title     = {View-Centric Performance Optimization for Database-Backed Web Applications},
+  booktitle = {Proceedings of the 41st International Conference on Software Engineering (ICSE)},
+  pages     = {994--1004},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/ICSE.2019.00104},
+}
+
+@inproceedings{shao2020antipatterns,
+  author    = {Shao, Shudi and Qiu, Zhengyi and Yu, Xiao and Yang, Wei and Jin, Guoliang and Xie, Tao and Wu, Xintao},
+  title     = {Database-Access Performance Antipatterns in Database-Backed Web Applications},
+  booktitle = {2020 IEEE International Conference on Software Maintenance and Evolution (ICSME)},
+  pages     = {58--69},
+  publisher = {IEEE},
+  year      = {2020},
+  doi       = {10.1109/ICSME46990.2020.00016},
+}
+
+@inproceedings{chen2016cacheoptimizer,
+  author    = {Chen, Tse-Hsun and Shang, Weiyi and Hassan, Ahmed E. and Nasser, Mohamed and Flora, Parminder},
+  title     = {{CacheOptimizer}: Helping Developers Configure Caching Frameworks for {Hibernate}-Based Database-Centric Web Applications},
+  booktitle = {Proceedings of the 2016 24th ACM SIGSOFT International Symposium on Foundations of Software Engineering (FSE)},
+  pages     = {666--677},
+  publisher = {ACM},
+  year      = {2016},
+  doi       = {10.1145/2950290.2950303},
+}
+
+@inproceedings{lorenz2017orm,
+  author    = {Lorenz, Martin and Rudolph, Jan-Peer and Hesse, G\"unter and Uflacker, Matthias and Plattner, Hasso},
+  title     = {Object-Relational Mapping Revisited---A Quantitative Study on the Impact of Database Technology on {O/R} Mapping Strategies},
+  booktitle = {Proceedings of the 50th Hawaii International Conference on System Sciences (HICSS)},
+  year      = {2017},
+  doi       = {10.24251/HICSS.2017.592},
+}
+
+@inproceedings{vanzyl2009optimisations,
+  author    = {van Zyl, Pieter and Kourie, Derrick G. and Coetzee, Louis and Boake, Andrew},
+  title     = {The Influence of Optimisations on the Performance of an Object Relational Mapping Tool},
+  booktitle = {Proceedings of the 2009 Annual Research Conference of the South African Institute of Computer Scientists and Information Technologists (SAICSIT)},
+  pages     = {150--159},
+  publisher = {ACM},
+  year      = {2009},
+  doi       = {10.1145/1632149.1632169},
+}
+
+@inproceedings{bonvoisin2024orm,
+  author    = {Bonvoisin, Alexandre and Quinton, Cl\'ement and Rouvoy, Romain},
+  title     = {Understanding the Performance-Energy Tradeoffs of Object-Relational Mapping Frameworks},
+  booktitle = {2024 IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER)},
+  pages     = {626--636},
+  publisher = {IEEE},
+  year      = {2024},
+  doi       = {10.1109/SANER60148.2024.00069},
+}
+
+@inproceedings{turcotte2022asyncjs,
+  author    = {Turcotte, Alexi and Shah, Michael D. and Aldrich, Mark W. and Tip, Frank},
+  title     = {{DrAsync}: Identifying and Visualizing Anti-Patterns in Asynchronous {JavaScript}},
+  booktitle = {Proceedings of the 44th International Conference on Software Engineering (ICSE)},
+  pages     = {774--785},
+  publisher = {ACM},
+  year      = {2022},
+  doi       = {10.1145/3510003.3510097},
+}
+
+% --- Node.js runtime and server-side performance ---
+
+@inproceedings{sun2019asyncgraphs,
+  author    = {Sun, Haiyang and Bonetta, Daniele and Schiavio, Filippo and Binder, Walter},
+  title     = {Reasoning about the {Node.js} Event Loop using Async Graphs},
+  booktitle = {2019 IEEE/ACM International Symposium on Code Generation and Optimization (CGO)},
+  pages     = {61--72},
+  publisher = {IEEE},
+  year      = {2019},
+  doi       = {10.1109/CGO.2019.8661173},
+}
+
+% --- SQL vs NoSQL landscape and polyglot persistence ---
+
+@article{cattell2011scalable,
+  author  = {Cattell, Rick},
+  title   = {Scalable {SQL} and {NoSQL} Data Stores},
+  journal = {ACM SIGMOD Record},
+  volume  = {39},
+  number  = {4},
+  pages   = {12--27},
+  year    = {2011},
+  doi     = {10.1145/1978915.1978919},
+}
+
+@article{gessert2017nosql,
+  author  = {Gessert, Felix and Wingerath, Wolfram and Friedrich, Steffen and Ritter, Norbert},
+  title   = {{NoSQL} Database Systems: A Survey and Decision Guidance},
+  journal = {Computer Science -- Research and Development},
+  volume  = {32},
+  number  = {3--4},
+  pages   = {353--365},
+  year    = {2017},
+  doi     = {10.1007/s00450-016-0334-3},
+}
+
+@inproceedings{gyorodi2015mongodb,
+  author    = {Gyorodi, Cornelia and Gyorodi, Robert and Pecherle, George and Olah, Andrada},
+  title     = {A Comparative Study: {MongoDB} vs.\ {MySQL}},
+  booktitle = {2015 13th International Conference on Engineering of Modern Electric Systems (EMES)},
+  pages     = {1--6},
+  publisher = {IEEE},
+  year      = {2015},
+  doi       = {10.1109/EMES.2015.7158433},
+}
+
+% --- Standard OLTP benchmarks and benchmarking harnesses ---
+
+@inproceedings{cooper2010ycsb,
+  author    = {Cooper, Brian F. and Silberstein, Adam and Tam, Erwin and Ramakrishnan, Raghu and Sears, Russell},
+  title     = {Benchmarking Cloud Serving Systems with {YCSB}},
+  booktitle = {Proceedings of the 1st ACM Symposium on Cloud Computing (SoCC)},
+  pages     = {143--154},
+  publisher = {ACM},
+  year      = {2010},
+  doi       = {10.1145/1807128.1807152},
+}
+
+@article{chen2011tpce,
+  author  = {Chen, Shimin and Ailamaki, Anastasia and Athanassoulis, Manos and Gibbons, Phillip B. and Johnson, Ryan and Pandis, Ippokratis and Stoica, Radu},
+  title   = {{TPC-E} vs.\ {TPC-C}: Characterizing the New {TPC-E} Benchmark via an {I/O} Comparison Study},
+  journal = {ACM SIGMOD Record},
+  volume  = {39},
+  number  = {3},
+  pages   = {5--10},
+  year    = {2011},
+  doi     = {10.1145/1942776.1942778},
+}
+
+@article{difallah2013oltpbench,
+  author  = {Difallah, Djellel Eddine and Pavlo, Andrew and Curino, Carlo and Cudr\'e-Mauroux, Philippe},
+  title   = {{OLTP-Bench}: An Extensible Testbed for Benchmarking Relational Databases},
+  journal = {Proceedings of the VLDB Endowment},
+  volume  = {7},
+  number  = {4},
+  pages   = {277--288},
+  year    = {2013},
+  doi     = {10.14778/2732240.2732246},
+}
+
+% --- Performance-benchmarking and measurement methodology ---
+
+@inproceedings{raasveldt2018fair,
+  author    = {Raasveldt, Mark and Holanda, Pedro and Gubner, Tim and M\"uhleisen, Hannes},
+  title     = {Fair Benchmarking Considered Difficult: Common Pitfalls in Database Performance Testing},
+  booktitle = {Proceedings of the Workshop on Testing Database Systems (DBTest)},
+  pages     = {1--6},
+  publisher = {ACM},
+  year      = {2018},
+  doi       = {10.1145/3209950.3209955},
+}
+
+@article{jiang2015load,
+  author  = {Jiang, Zhen Ming and Hassan, Ahmed E.},
+  title   = {A Survey on Load Testing of Large-Scale Software Systems},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {41},
+  number  = {11},
+  pages   = {1091--1118},
+  year    = {2015},
+  doi     = {10.1109/TSE.2015.2445340},
+}
+
+@inproceedings{leitner2017exploratory,
+  author    = {Leitner, Philipp and Bezemer, Cor-Paul},
+  title     = {An Exploratory Study of the State of Practice of Performance Testing in {Java}-Based Open Source Projects},
+  booktitle = {Proceedings of the 8th ACM/SPEC International Conference on Performance Engineering (ICPE)},
+  pages     = {373--384},
+  publisher = {ACM},
+  year      = {2017},
+  doi       = {10.1145/3030207.3030213},
+}
+
+@inproceedings{mytkowicz2009producing,
+  author    = {Mytkowicz, Todd and Diwan, Amer and Hauswirth, Matthias and Sweeney, Peter F.},
+  title     = {Producing Wrong Data Without Doing Anything Obviously Wrong!},
+  booktitle = {Proceedings of the 14th International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS)},
+  pages     = {265--276},
+  publisher = {ACM},
+  year      = {2009},
+  doi       = {10.1145/1508244.1508275},
+}
+
+@article{barrett2017warmup,
+  author  = {Barrett, Edd and Bolz-Tereick, Carl Friedrich and Killick, Rebecca and Mount, Sarah and Tratt, Laurence},
+  title   = {Virtual Machine Warmup Blows Hot and Cold},
+  journal = {Proceedings of the ACM on Programming Languages},
+  volume  = {1},
+  number  = {OOPSLA},
+  pages   = {1--27},
+  year    = {2017},
+  doi     = {10.1145/3133876},
+}
+
+@article{laaber2019microbenchmarking,
+  author  = {Laaber, Christoph and Scheuner, Joel and Leitner, Philipp},
+  title   = {Software Microbenchmarking in the Cloud. How Bad Is It Really?},
+  journal = {Empirical Software Engineering},
+  volume  = {24},
+  number  = {4},
+  pages   = {2469--2508},
+  year    = {2019},
+  doi     = {10.1007/s10664-019-09681-1},
+}
+
+@inproceedings{schroeder2006open,
+  author    = {Schroeder, Bianca and Wierman, Adam and Harchol-Balter, Mor},
+  title     = {Open Versus Closed: A Cautionary Tale},
+  booktitle = {Proceedings of the 3rd USENIX Symposium on Networked Systems Design and Implementation (NSDI)},
+  publisher = {USENIX Association},
+  year      = {2006},
+  url       = {https://www.usenix.org/legacy/event/nsdi06/tech/schroeder.html},
+}
+
+@article{collberg2016repeatability,
+  author  = {Collberg, Christian and Proebsting, Todd A.},
+  title   = {Repeatability in Computer Systems Research},
+  journal = {Communications of the ACM},
+  volume  = {59},
+  number  = {3},
+  pages   = {62--69},
+  year    = {2016},
+  doi     = {10.1145/2812803},
+}
+
+% --- Empirical software-engineering methodology and statistics ---
+
+@book{wohlin2012experimentation,
+  author    = {Wohlin, Claes and Runeson, Per and H\"ost, Martin and Ohlsson, Magnus C. and Regnell, Bj\"orn and Wessl\'en, Anders},
+  title     = {Experimentation in Software Engineering},
+  edition   = {2},
+  publisher = {Springer},
+  address   = {Berlin, Heidelberg},
+  year      = {2012},
+  doi       = {10.1007/978-3-642-29044-2},
+}
+
+@article{basili1988tame,
+  author  = {Basili, Victor R. and Rombach, H. Dieter},
+  title   = {The {TAME} Project: Towards Improvement-Oriented Software Environments},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {14},
+  number  = {6},
+  pages   = {758--773},
+  year    = {1988},
+  doi     = {10.1109/32.6156},
+}
+
+@article{kitchenham2002guidelines,
+  author  = {Kitchenham, Barbara A. and Pfleeger, Shari Lawrence and Pickard, Lesley M. and Jones, Peter W. and Hoaglin, David C. and El Emam, Khaled and Rosenberg, Jarrett},
+  title   = {Preliminary Guidelines for Empirical Research in Software Engineering},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {28},
+  number  = {8},
+  pages   = {721--734},
+  year    = {2002},
+  doi     = {10.1109/TSE.2002.1027796},
+}
+
+@article{arcuri2014hitchhiker,
+  author  = {Arcuri, Andrea and Briand, Lionel},
+  title   = {A Hitchhiker's Guide to Statistical Tests for Assessing Randomized Algorithms in Software Engineering},
+  journal = {Software Testing, Verification and Reliability},
+  volume  = {24},
+  number  = {3},
+  pages   = {219--250},
+  year    = {2014},
+  doi     = {10.1002/stvr.1486},
+}
+
+@article{cliff1993dominance,
+  author  = {Cliff, Norman},
+  title   = {Dominance Statistics: Ordinal Analyses to Answer Ordinal Questions},
+  journal = {Psychological Bulletin},
+  volume  = {114},
+  number  = {3},
+  pages   = {494--509},
+  year    = {1993},
+  doi     = {10.1037/0033-2909.114.3.494},
+}
+
+@book{cook1979quasi,
+  author    = {Cook, Thomas D. and Campbell, Donald T.},
+  title     = {Quasi-Experimentation: Design and Analysis Issues for Field Settings},
+  publisher = {Houghton Mifflin},
+  address   = {Boston, MA},
+  year      = {1979},
+  isbn      = {9780395307908},
+}
+
+% --- Database engine internals grounding specific findings ---
+
+@article{leis2015optimizers,
+  author  = {Leis, Viktor and Gubichev, Andrey and Mirchev, Atanas and Boncz, Peter and Kemper, Alfons and Neumann, Thomas},
+  title   = {How Good Are Query Optimizers, Really?},
+  journal = {Proceedings of the VLDB Endowment},
+  volume  = {9},
+  number  = {3},
+  pages   = {204--215},
+  year    = {2015},
+  doi     = {10.14778/2850583.2850594},
+}
+
+@article{johnson2010aether,
+  author  = {Johnson, Ryan and Pandis, Ippokratis and Stoica, Radu and Athanassoulis, Manos and Ailamaki, Anastasia},
+  title   = {Aether: A Scalable Approach to Logging},
+  journal = {Proceedings of the VLDB Endowment},
+  volume  = {3},
+  number  = {1-2},
+  pages   = {681--692},
+  year    = {2010},
+  doi     = {10.14778/1920841.1920928},
+}
+
+@inproceedings{harizopoulos2008oltp,
+  author    = {Harizopoulos, Stavros and Abadi, Daniel J. and Madden, Samuel and Stonebraker, Michael},
+  title     = {{OLTP} Through the Looking Glass, and What We Found There},
+  booktitle = {Proceedings of the 2008 ACM SIGMOD International Conference on Management of Data},
+  pages     = {981--992},
+  publisher = {ACM},
+  year      = {2008},
+  doi       = {10.1145/1376616.1376713},
+}
+
+@article{yu2014concurrency,
+  author  = {Yu, Xiangyao and Bezerra, George and Pavlo, Andrew and Devadas, Srinivas and Stonebraker, Michael},
+  title   = {Staring into the Abyss: An Evaluation of Concurrency Control with One Thousand Cores},
+  journal = {Proceedings of the VLDB Endowment},
+  volume  = {8},
+  number  = {3},
+  pages   = {209--220},
+  year    = {2014},
+  doi     = {10.14778/2735508.2735511},
+}
+
+% --- Connection management, scaling, and tail latency at scale ---
+
+@article{laigner2021microservices,
+  author  = {Laigner, Rodrigo and Zhou, Yongluan and Vaz Salles, Marcos Antonio and Liu, Yijian and Kalinowski, Marcos},
+  title   = {Data Management in Microservices: State of the Practice, Challenges, and Research Directions},
+  journal = {Proceedings of the VLDB Endowment},
+  volume  = {14},
+  number  = {13},
+  pages   = {3348--3361},
+  year    = {2021},
+  doi     = {10.14778/3484224.3484232},
+}
+
+@inproceedings{li2014tales,
+  author    = {Li, Jialin and Sharma, Naveen Kr. and Ports, Dan R. K. and Gribble, Steven D.},
+  title     = {Tales of the Tail: Hardware, {OS}, and Application-Level Sources of Tail Latency},
+  booktitle = {Proceedings of the ACM Symposium on Cloud Computing (SoCC)},
+  pages     = {1--14},
+  publisher = {ACM},
+  year      = {2014},
+  doi       = {10.1145/2670979.2670988},
+}
+
+@article{vaquero2011scaling,
+  author  = {Vaquero, Luis M. and Rodero-Merino, Luis and Buyya, Rajkumar},
+  title   = {Dynamically Scaling Applications in the Cloud},
+  journal = {ACM SIGCOMM Computer Communication Review},
+  volume  = {41},
+  number  = {1},
+  pages   = {45--52},
+  year    = {2011},
+  doi     = {10.1145/1925861.1925869},
+}

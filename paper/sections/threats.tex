@@ -1,6 +1,9 @@
 \section{Threats to Validity}
 \label{sec:threats}
 
+We organize the threats along the four standard validity
+categories~\cite{cook1979quasi,wohlin2012experimentation}.
+
 \paragraph{Construct validity.}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
 (p99) measured at the Express endpoint, not query-execution time at the
@@ -27,7 +30,8 @@ during development: a fan-out bug that inflated the \texttt{SUM(views)} aggregat
 for every join-based adapter, and a result-shape parsing defect in one driver
 binding, both fixed before the measurements reported here. Explicit warm-up phases
 per (layer, engine, endpoint) cell absorb JIT, pool-fill, and plan-cache effects
-before timing begins, and two further controls (Section~\ref{sec:methodology}) rule
+before timing begins---controls of the kind that guard against environmentally
+induced measurement bias~\cite{mytkowicz2009producing}--- and two further controls (Section~\ref{sec:methodology}) rule
 out non-layer confounds: benchmark-inserted rows are reset before every cell, and the
 aggregation endpoint uses one correlated-subquery plan across layers, so it measures
 access-layer overhead rather than differences in SQL shape. A residual risk is
