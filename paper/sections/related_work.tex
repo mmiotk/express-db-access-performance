@@ -7,10 +7,12 @@ latency are reported jointly, and the neutrality of the source---and
 summarize the comparison in Table~\ref{tab:prior_art}.
 
 \paragraph{Peer-reviewed access-layer and ORM studies.}
-The peer-reviewed literature on access-layer performance is narrow. An early
-empirical study by van Zyl et al.~\cite{vanzyl2006orm} weighed object databases
-against ORM tools, an ancestor of the present comparison; more recent work remains
-limited. Colley et al.~\cite{colley2018orm} give the earliest systematic
+The object-relational mapping literature is itself mature---Torres et al.\ survey
+two decades of ORM patterns and their implications for application
+design~\cite{torres2017orm}---but the peer-reviewed literature on access-layer
+\emph{performance} specifically is narrow. An early empirical study by van Zyl et
+al.~\cite{vanzyl2006orm} weighed object databases against ORM tools, an ancestor of
+the present comparison; more recent work remains limited. Colley et al.~\cite{colley2018orm} give the earliest systematic
 cross-language account, benchmarking eight ORM frameworks across Java, C\#, Python, and PHP
 against a common relational schema---but the study \emph{deliberately
 excludes JavaScript}, leaving the Node.js ecosystem, and Express in
@@ -27,6 +29,18 @@ containerized, Node-specific measurement, but each covers only two or three
 libraries out of the much larger taxonomy in production use, and both are
 confined to a single engine. No peer-reviewed study to date spans the full
 native-driver/query-builder/ORM spectrum, and none includes MySQL.
+
+\paragraph{ORM performance in software engineering.}
+A parallel line studies ORM performance from the opposite direction---not
+benchmarking layers, but detecting and repairing the inefficient SQL that mapping
+frameworks emit. Chen et al.\ quantify the performance impact of redundant data
+access in ORM-backed Java systems~\cite{chen2016redundant}, developing their earlier
+anti-pattern detection work~\cite{chen2014orm}, and Yang et al.\ document the ORM
+performance bugs---N+1 retrievals prominent among them---that pervade real-world web
+applications~\cite{yang2018dbapps}. This literature establishes \emph{where} ORM
+overhead concentrates (relation-materializing, N+1-prone access), which our
+per-pattern results confirm and quantify across the full layer taxonomy; it does
+not, however, compare layers head-to-head under controlled load, which is our aim.
 
 \paragraph{Database-engine and Node.js performance studies.}
 A second, largely disjoint line of work benchmarks the layers immediately
