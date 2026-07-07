@@ -19,8 +19,8 @@ between layers are therefore attributable to how each layer reaches that shape,
 not to what is returned. One caveat is specific to writes: durability is relaxed
 asymmetrically across the two engines (Section~\ref{sec:methodology}), so absolute
 insert throughput is not comparable between PostgreSQL and MySQL. We therefore state
-the write finding only within each engine (a $1.2\times$ layer spread on MySQL versus
-$4.0\times$ on PostgreSQL), not as a cross-engine magnitude comparison.
+the write finding only within each engine (a $1.3\times$ layer spread on MySQL versus
+$4.7\times$ on PostgreSQL), not as a cross-engine magnitude comparison.
 
 \paragraph{Internal validity.}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
@@ -62,21 +62,21 @@ two-machine cross-run over a dedicated link is planned to bound this.
 
 \paragraph{Conclusion validity.}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of
-variation as a stability signal and tests adjacently ranked layers with the
-Mann--Whitney~$U$ test and Cliff's~$\delta$ (Tables~\ref{tab:cv},
-\ref{tab:significance}); the coarse ordering is supported with large effect sizes.
-Two bounds reinforce this: the widest spreads, such as $6.2\times$ on the deep/nested
-fetch, are an order of magnitude larger than the run-to-run CV, and the ranking is
-preserved across the full 1--256 connection sweep (Fig.~\ref{fig:scaling}).
-Tables~\ref{tab:cv} and~\ref{tab:significance} report PostgreSQL; the MySQL
-coefficient of variation is lower still (at most 7.1\%, Table~\ref{tab:cv_mysql}). We
-do not correct for multiple comparisons, but each of the four adjacent-pair
-deep-fetch tests reaches $p \leq 0.004$, which survives a Bonferroni correction at
-$\alpha = 0.05$. Claims about very closely ranked adjacent layers, where the effect
-size is small, remain appropriately cautious. One caveat on the design: the ten runs of a cell share a single server
-process lifetime (the server is booted once per layer/engine cell), so they are
-repeated measures rather than fully independent replicates~\cite{kalibera2013rigorous};
-the tests are best read as within-process stability checks. Given the large between-layer gaps noted above,
-this is unlikely to affect the conclusions, but a design that reboots the server per
-replicate, randomizes cell order, and uses longer measured runs would be stronger;
-these are the primary planned methodological extensions.
+variation and bootstrap 95\% confidence intervals as stability signals and tests
+adjacently ranked layers with the Mann--Whitney~$U$ test and Cliff's~$\delta$
+(Tables~\ref{tab:cv}, \ref{tab:significance}). Two bounds reinforce the ordering: the
+widest spreads, such as $6.3\times$ on the deep/nested fetch, dwarf the run-to-run CV
+(at most 6.9\% on PostgreSQL, Table~\ref{tab:cv}, and 11.2\% on MySQL,
+Table~\ref{tab:cv_mysql}), and the ranking is preserved across the full 1--256
+connection sweep (Fig.~\ref{fig:scaling}). On the deep/nested fetch every adjacent
+pair separates with a maximal effect (Cliff's~$\delta = 1.00$) and non-overlapping
+bootstrap CIs, \emph{except} native \texttt{pg} and Prisma at the top, which are
+statistically indistinguishable; we read those two as tied rather than ranked. The
+Mann--Whitney $p$ is $0.012$ for the separating pairs, near the floor achievable with
+five samples per group, so with only five replicates a Bonferroni correction across
+the pairwise tests is not passed on $p$ alone; the maximal effect sizes and
+non-overlapping intervals carry the inference. Crucially, because each replicate is a
+freshly booted server process with cell order randomized, these are genuine
+\emph{independent} replicates rather than repeated measures within one process
+lifetime~\cite{kalibera2013rigorous}; more replicates or longer runs would tighten
+the intervals further.

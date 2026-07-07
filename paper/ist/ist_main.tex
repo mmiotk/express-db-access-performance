@@ -57,7 +57,7 @@ generator. We report throughput and tail latency (p99) jointly, hold the
 connection pool constant, and verify that every layer returns identical results
 through an automated cross-check.
 \textbf{Results:} Abstraction cost concentrates in relation-materializing
-patterns: the deep/nested fetch spreads up to $6.2\times$ between the native
+patterns: the deep/nested fetch spreads up to $6.3\times$ between the native
 driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is much less
 sensitive and point reads only mildly affected. The coarse ordering of layers is
 stable across engines. Single-row insert throughput, under the relaxed-durability

@@ -11,14 +11,14 @@ lack of a neutral, broad-coverage study, the separation of throughput from tail
 latency, and the omission of the Express HTTP layer.
 
 The empirical answer is that the cost of abstraction is concentrated, not uniform.
-It is negligible for point reads and for aggregation issued through a raw-SQL path,
-but it grows sharply (up to $6.2\times$ between the native driver and the heaviest
+It is modest for point reads and for aggregation issued through a raw-SQL path,
+but it grows sharply (up to $6.3\times$ between the native driver and the heaviest
 data-mapper ORM) for the deep/nested fetch, where the layer must assemble a nested
-object graph on the application side. The relative ordering of layers is stable
+object graph on the application side. The coarse ordering of layers is stable
 across the two engines, and a competitively fast modern ORM (Prisma) shows that
 ``ORM'' need not imply large overhead. Writes are the exception: under the relaxed-durability configuration used here,
 MySQL's engine floor makes single-row insert throughput nearly layer-independent,
-whereas PostgreSQL exposes a fourfold layer spread, a caution against generalizing
+whereas PostgreSQL exposes a $4.7\times$ layer spread, a caution against generalizing
 single-engine write results. Beyond these findings, development
 surfaced a reusable checklist of benchmarking pitfalls (aggregation fan-out,
 \texttt{OFFSET}-versus-keyset pagination, write-workload contamination, and

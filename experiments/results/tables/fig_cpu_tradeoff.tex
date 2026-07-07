@@ -4,16 +4,13 @@
   \begin{tikzpicture}
     \begin{axis}[
       width=\linewidth, height=6.2cm,
-      xlabel={Application-side CPU utilization (\%)},
-      ylabel={Throughput (req/s)},
-      xmin=0, xmax=560, ymin=0, ymax=4200,
-      xtick={0,100,200,300,400,500},
+      xlabel={Application-side CPU utilization (\%)}, ylabel={Throughput (req/s)},
+      xmin=0, xmax=560, ymin=0, ymax=4200, xtick={0,100,200,300,400,500},
       grid=major, grid style={gray!20},
-      scatter/classes={a={mark=*,draw=black,fill=black}},
       nodes near coords, point meta=explicit symbolic,
       every node near coord/.append style={anchor=west, xshift=2pt, font=\footnotesize},
     ]
-      \addplot[scatter, only marks, mark=*, scatter src=explicit symbolic] coordinates {(100,3616) [pg] (100,2454) [knex] (100,2098) [drizzle] (469,3521) [prisma] (100,1066) [sequelize] (105,1259) [typeorm] (100,1009) [objection] (100,579) [mikroorm]};
+      \addplot[scatter, only marks, mark=*, scatter src=explicit symbolic] coordinates {(100,3399) [pg] (100,2424) [knex] (100,2061) [drizzle] (471,3531) [prisma] (105,1079) [sequelize] (105,1244) [typeorm] (100,976) [objection] (105,541) [mikroorm]};
     \end{axis}
   \end{tikzpicture}
   \caption{Throughput versus application-side CPU on the deep/nested fetch (PostgreSQL, ten-connection pool). Prisma reaches near-native throughput at roughly five times the CPU of every other layer; the data-mapper ORMs are low on both axes. CPU is the server process only; database-side CPU is excluded for all layers alike.}

@@ -117,13 +117,17 @@ generator runs in a process separate from the server.
 Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
 latency histogram; it is a closed-loop (constant-concurrency)
-generator~\cite{schroeder2006open}. For each of the 80 configurations we opened
-50 concurrent connections and ran a two-second warm-up pass whose measurements
-were discarded, absorbing JIT compilation, connection-pool fill, and query-plan
-caching; warm-up matters because managed runtimes do not always reach a stable
-steady state promptly~\cite{barrett2017warmup}. We then took ten measured
-four-second runs and reported the median. Each run yields throughput (requests per second) and
-latency percentiles p50, p90, p97.5, and p99. During the measured runs we also sampled the
+generator~\cite{schroeder2006open}. We measured each of the 80 configurations as
+five \emph{independent replicates}. For each replicate we booted a fresh server
+process, opened 50 concurrent connections, ran a two-second warm-up pass whose
+measurements were discarded (absorbing JIT compilation, connection-pool fill, and
+query-plan caching; warm-up matters because managed runtimes do not always reach a
+stable steady state promptly~\cite{barrett2017warmup}), and then took one
+twelve-second measured run. Booting a fresh process per replicate makes the replicates
+statistically independent rather than repeated measures within one process lifetime,
+and the order of cells was randomized within each replicate to spread any drift. We
+report the median of the five replicate values. Each replicate yields throughput
+(requests per second) and latency percentiles p50, p90, p97.5, and p99. During the measured runs we also sampled the
 \emph{server} process's CPU utilization and peak resident memory from
 \texttt{/proc}; because the load generator runs in a separate process, this isolates
 the access layer's own footprint from the load tool and the database. Both engines ran
@@ -148,16 +152,16 @@ differences across layers within an engine. We quantify a pattern's sensitivity 
 the access layer by its \emph{spread}: the ratio of the native driver's median
 throughput to that of the slowest layer on that pattern (native-relative, so it is
 comparable across patterns even where one ORM exceeds the native driver). We report
-medians over the ten
-runs and the coefficient of variation (CV) across runs as a stability signal,
-following the practice of reporting central tendency and variability rather than a
-single number~\cite{georges2007rigorous} and of using enough repetitions to bound
-run-to-run variance~\cite{laaber2019microbenchmarking} (Section~\ref{sec:results}).
+medians over the five independent replicates, the coefficient of variation (CV)
+across them as a stability signal, following the practice of reporting central
+tendency and variability rather than a single number~\cite{georges2007rigorous} and
+of using enough replicates to bound variance~\cite{laaber2019microbenchmarking}
+(Section~\ref{sec:results}), and a bootstrap 95\% confidence interval for the median.
 To test whether adjacently ranked layers are
 distinguishable rather than an artifact of measurement noise, we compare each
 adjacent pair on the deep/nested fetch with the Mann--Whitney $U$ test (two-sided)
 and report Cliff's~$\delta$ as a nonparametric effect size, the latter being robust
-to the small number of runs and to non-normal throughput distributions; reporting a
+to the small number of replicates and to non-normal throughput distributions; reporting a
 nonparametric test together with a standardized effect size follows recommended
 practice for randomized performance experiments in software
 engineering~\cite{arcuri2014hitchhiker,cliff1993dominance}. We do not
@@ -165,7 +169,7 @@ apply significance testing to widely separated layers, where the effect is obvio
 the tests target the close pairs where a ranking could plausibly be noise.
 
 \subsection{Experimental setup}
-All measurements were taken on 2026-07-06 on a single host (Intel Xeon Gold~6140,
+All measurements were taken on 2026-07-07 on a single host (Intel Xeon Gold~6140,
 16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0) with the database engines running
 locally under relaxed durability. The pinned versions (Table~\ref{tab:versions}) were
 the current releases at that date and were frozen for the study, so later point

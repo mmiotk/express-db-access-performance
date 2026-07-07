@@ -1,20 +1,20 @@
 % auto-generated (MySQL CV) — do not edit by hand
 \begin{table}[htbp]
   \centering
-  \caption{Coefficient of variation (\%) of throughput across the 10 measured runs, per access layer and pattern on MySQL. Low values indicate stable measurements (maximum 7.1\%).}
+  \caption{Coefficient of variation (\%) of throughput across the 5 independent replicates, per access layer and pattern on MySQL. Maximum 11.2\%.}
   \label{tab:cv_mysql}
   \begin{tabular}{l r r r r r}
     \toprule
     Layer & Point read & Range scan & Deep fetch & Aggregation & Insert \\
     \midrule
-    \texttt{mysql2} & 3.6 & 2.7 & 2.6 & 6.3 & 1.9 \\
-    \texttt{knex} & 2.7 & 2.0 & 1.7 & 3.3 & 1.6 \\
-    \texttt{drizzle} & 3.8 & 2.7 & 2.5 & 2.3 & 1.6 \\
-    \texttt{prisma} & 1.7 & 1.4 & 0.6 & 5.9 & 1.4 \\
-    \texttt{sequelize} & 3.8 & 2.0 & 2.3 & 2.8 & 1.6 \\
-    \texttt{typeorm} & 3.7 & 2.8 & 2.2 & 5.6 & 2.3 \\
-    \texttt{objection} & 3.9 & 5.6 & 2.7 & 7.1 & 1.6 \\
-    \texttt{mikroorm} & 5.9 & 1.1 & 2.2 & 3.0 & 3.2 \\
+    \texttt{mysql2} & 5.9 & 3.4 & 1.3 & 1.7 & 1.0 \\
+    \texttt{knex} & 2.1 & 1.9 & 2.3 & 2.3 & 1.0 \\
+    \texttt{drizzle} & 0.6 & 1.3 & 2.6 & 1.8 & 1.1 \\
+    \texttt{prisma} & 3.9 & 5.4 & 5.9 & 11.2 & 0.8 \\
+    \texttt{sequelize} & 2.5 & 3.1 & 2.1 & 2.0 & 0.7 \\
+    \texttt{typeorm} & 2.8 & 4.7 & 2.5 & 3.4 & 10.9 \\
+    \texttt{objection} & 2.0 & 3.8 & 1.4 & 1.6 & 0.6 \\
+    \texttt{mikroorm} & 4.3 & 6.4 & 3.4 & 2.4 & 1.5 \\
     \bottomrule
   \end{tabular}
 \end{table}

@@ -9,27 +9,27 @@ deep/nested fetch requires the access layer to hydrate rows into objects and res
 associations (the object-relational impedance mismatch~\cite{ireland2009impedance}
 made concrete), not merely to issue SQL, and this is exactly where the
 data-mapper ORMs are most expensive: Sequelize, TypeORM, Objection, and
-especially MikroORM (579~req/s) trail the native \texttt{pg} driver
-(3{,}616~req/s) by up to $6.2\times$ on PostgreSQL, the widest spread in the
-study (Table~\ref{tab:deep_fetch}), with a comparable $4.5\times$ spread on
-MySQL. The tail shows the same pattern: MikroORM's deep-fetch p99 is 357~ms
-against 17~ms for \texttt{pg} on PostgreSQL (Table~\ref{tab:deep_fetch}).
+especially MikroORM (541~req/s) trail the native \texttt{pg} driver
+(3{,}399~req/s) by up to $6.3\times$ on PostgreSQL, the widest spread in the
+study (Table~\ref{tab:deep_fetch}), with a comparable $4.3\times$ spread on
+MySQL. The tail shows the same pattern: MikroORM's deep-fetch p99 is 111~ms
+against 21~ms for \texttt{pg} on PostgreSQL (Table~\ref{tab:deep_fetch}).
 A team whose hot path assembles nested object graphs therefore pays the
 largest abstraction cost precisely on its highest-value traffic. Point reads
 and aggregation are the opposite case: dominated by connection and parsing
-cost that every layer shares, point reads spread only $3.2\times$/$2.4\times$;
+cost that every layer shares, point reads spread only $3.5\times$/$2.6\times$;
 aggregation spreads just $1.8\times$/$1.4\times$ once every adapter, native
 drivers included, is forced onto the same raw correlated-subquery plan; even then
 a roughly twofold gap separates the fastest and slowest layers, far less than on the
 deep fetch but not negligible. Prisma shows that an ORM
 need not be slow, consistent with evidence that ORM cost is highly sensitive to
 implementation and tuning~\cite{vanzyl2009optimisations}: its compiled query engine
-stays within a few percent of native
-throughput on the deep fetch (3{,}521 vs.\ 3{,}616~req/s) and matches or exceeds
-native on aggregation on both engines (8{,}076 vs.\ 7{,}210~req/s on PostgreSQL).
+is statistically tied with the native driver
+on the deep fetch (3{,}531 vs.\ 3{,}399~req/s) and matches or exceeds
+native on aggregation on both engines (8{,}034 vs.\ 7{,}086~req/s on PostgreSQL).
 That parity is not free, however: at the \emph{same} ten-connection pool, Prisma's
 process draws roughly five times the application-side CPU of the other layers on the
-deep fetch ($469\%$; Section~\ref{sec:results}), trading CPU for
+deep fetch ($471\%$; Section~\ref{sec:results}), trading CPU for
 latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss. The
 parity is also implementation-relative: because our native adapters use idiomatic
 parameterized queries rather than tuned prepared statements, the finding is best
@@ -46,9 +46,9 @@ non-data-mapper, lightweight ORM should deliver.
 \paragraph{Writes: an engine-bound cost.}
 RQ2 has a clear answer on inserts, within the relaxed-durability configuration used
 here. MySQL write throughput is low and flat across all eight layers
-(\char`~765--922~req/s, a $1.2\times$ spread; Table~\ref{tab:write}), while the
-identical comparison on PostgreSQL spreads $4.0\times$ (native 7{,}085
-vs.\ MikroORM 1{,}765~req/s). The access
+(\char`~745--939~req/s, a $1.3\times$ spread; Table~\ref{tab:write}), while the
+identical comparison on PostgreSQL spreads $4.7\times$ (native 7{,}040
+vs.\ MikroORM 1{,}494~req/s). The access
 layer barely matters for MySQL inserts because it is not the bottleneck there:
 InnoDB's per-insert write path (redo-log generation, the doublewrite buffer, and
 clustered-index, secondary-index, and undo maintenance), work internal to the engine
