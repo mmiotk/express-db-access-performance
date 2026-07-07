@@ -43,16 +43,17 @@
 Node.js/Express applications reach relational databases through a spectrum of
 access layers: native drivers, query builders, and object-relational mappers
 (ORMs). Practitioners choose between them largely on the basis of vendor
-benchmarks, which are fragmented, PostgreSQL-only, and report either throughput or
-latency but rarely both. We present a neutral, reproducible benchmark of the full
-access-layer taxonomy---native drivers (\texttt{pg}, \texttt{mysql2}), a query
-builder (Knex), and six ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection,
-MikroORM)---served through an identical Express application over five access
+benchmarks, which are fragmented, PostgreSQL-only, and report throughput or
+latency but rarely the tail (p99). We present a neutral, reproducible benchmark of
+the full access-layer taxonomy (native drivers \texttt{pg} and \texttt{mysql2}, a
+query builder Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM, Objection,
+and MikroORM), served through an identical Express application over five access
 patterns, on both PostgreSQL and MySQL, reporting throughput and tail latency
 (p99) together. Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads up to $6.2\times$ between the native driver
-and the heaviest data-mapper ORM, while raw-SQL aggregation is near layer-agnostic and point reads only mildly affected; the ordering is stable across engines and writes are
-engine-bound.
+and the heaviest data-mapper ORM, while raw-SQL aggregation is much less sensitive
+and point reads only mildly affected; the coarse ordering is stable across engines
+and writes are engine-bound.
 \end{abstract}
 
 % \tabledir is set here so the shared results section can locate the generated

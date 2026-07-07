@@ -102,7 +102,7 @@ were discarded, absorbing JIT compilation, connection-pool fill, and query-plan
 caching; warm-up matters because managed runtimes do not always reach a stable
 steady state promptly~\cite{barrett2017warmup}. We then took ten measured
 four-second runs and reported the median. Each run yields throughput (requests per second) and
-latency percentiles p50, p90 and p99. During the measured runs we also sampled the
+latency percentiles p50, p90, p97.5, and p99. During the measured runs we also sampled the
 \emph{server} process's CPU utilization and peak resident memory from
 \texttt{/proc}; because the load generator runs in a separate process, this isolates
 the access layer's own footprint from the load tool and the database. Both engines ran

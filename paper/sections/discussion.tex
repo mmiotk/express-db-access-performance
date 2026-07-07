@@ -20,8 +20,8 @@ and aggregation are the opposite case: dominated by connection and parsing
 cost that every layer shares, point reads spread only $3.2\times$/$2.4\times$;
 aggregation spreads just $1.8\times$/$1.4\times$ once every adapter, native
 drivers included, is forced onto the same raw correlated-subquery plan; even then
-the layer still moves throughput about twofold, far less than on the deep fetch but
-not negligible. Prisma shows that an ORM
+a roughly twofold gap separates the fastest and slowest layers, far less than on the
+deep fetch but not negligible. Prisma shows that an ORM
 need not be slow, consistent with evidence that ORM cost is highly sensitive to
 implementation and tuning~\cite{vanzyl2009optimisations}: its compiled query engine
 stays within a few percent of native
