@@ -63,7 +63,8 @@ under an identical schema, dataset, and connection-pool size, and for every
 second) and tail latency (p99) together, rather than either in
 isolation. The full harness (adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
-that all nine layers return identical results) is released as an open replication
+that all nine layers return identical results on the four non-mutating
+patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all nine adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance} (a tagged release
@@ -90,7 +91,8 @@ This paper makes four contributions:
   \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
         deterministic seed, an autocannon-driven matrix runner, and an
         automated \textbf{correctness cross-check} that asserts every layer
-        returns identical results; released as a replication package.
+        returns identical results on the four non-mutating patterns; released
+        as a replication package.
   \item Empirical evidence that \textbf{abstraction cost concentrates in
         relation-materializing patterns} (the deep/nested fetch), that the
         \textbf{layer ordering is stable across engines}, and that

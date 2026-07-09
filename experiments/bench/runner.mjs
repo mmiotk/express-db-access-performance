@@ -170,7 +170,7 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS } = {}) {
         rps: Math.round(median(reqps)),
         p50: median(p50), p90: median(p90), p975: median(p975), p99: median(p99),
         cpu_pct: res.cpuPct, rss_mb: res.rssPeakMB,
-        connections: CONNECTIONS, duration: DURATION, repeats: REPEATS,
+        connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: REPEATS,
         rps_samples: reqps.map((x) => Math.round(x)), // retained for CV + significance tests
         p99_samples: p99,
       });
@@ -220,7 +220,7 @@ async function mainIndep() {
     rps: Math.round(median(a.rps)),
     p50: median(a.p50), p90: median(a.p90), p975: median(a.p975), p99: median(a.p99),
     cpu_pct: Math.round(median(a.cpu)), rss_mb: Math.round(median(a.rss)),
-    connections: CONNECTIONS, duration: DURATION, repeats: a.rps.length, independent: true,
+    connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: a.rps.length, independent: true,
     rps_samples: a.rps.map((x) => Math.round(x)), p99_samples: a.p99,
   }));
   await writeFile(join(resultsDir, 'raw-indep.json'), JSON.stringify(rows, null, 2));

@@ -29,7 +29,7 @@ way the cost of abstraction is strongly \emph{pattern-dependent}
 (Tables~\ref{tab:point_read}, \ref{tab:deep_fetch}, \ref{tab:aggregation}). On the
 \textbf{deep/nested fetch} (the pattern that assembles a post, its author, and all
 comments with their authors), Prisma reaches 3{,}531~req/s, statistically tied with
-native's 3{,}399 (Section~\ref{sec:results}, significance), and Knex (2{,}424) and
+native's 3{,}399 (Table~\ref{tab:significance}), and Knex (2{,}424) and
 the lightweight ORM Drizzle (2{,}061) remain competitive, whereas the data-mapper
 ORMs are markedly slower: TypeORM 1{,}244, Sequelize 1{,}079, Objection 976, and
 MikroORM 541, i.e.\ $6.3\times$ below native. \textbf{Point reads} show a smaller
@@ -53,7 +53,7 @@ native driver is not always the ceiling. This should be read cautiously: the nat
 adapters issue parameterized \texttt{query()} calls rather than reusable prepared
 statements, so they represent idiomatic rather than maximally tuned native usage, and
 Prisma reaches this throughput at roughly five times their application-side CPU
-(Section~\ref{sec:results}, resource footprint). We still report all spreads
+(Table~\ref{tab:resources}). We still report all spreads
 native-relative for cross-pattern comparability. The clearest engine-specific effect
 is on \textbf{inserts} (Table~\ref{tab:write}): on MySQL, throughput is uniformly low
 across \emph{all} layers (roughly 745--939~req/s, a spread of only $1.3\times$), so
@@ -120,11 +120,8 @@ Mann--Whitney~$U$ test, Cliff's~$\delta$, and bootstrap 95\% confidence interval
 (Table~\ref{tab:significance}). \emph{Every} adjacent pair separates with a maximal
 effect ($\delta = 1.00$) and $p = 0.012$, \emph{except} the top pair: native
 \texttt{pg} and Prisma are statistically indistinguishable (3{,}399 vs.\ 3{,}531~req/s;
-$\delta = 0.20$, $p = 0.68$, overlapping bootstrap CIs). Every other step in the
-ordering---Prisma and \texttt{pg} at the top, then the query builder and lightweight
-ORM, then the data-mapper ORMs---is supported at $\delta = 1.00$, $p = 0.012$. Because
-each replicate is a freshly booted server process, these are independent replicates
-rather than within-process repeats.
+$\delta = 0.20$, $p = 0.68$, overlapping bootstrap CIs). We therefore read the top of
+the ranking as a tie, and every step below it as statistically supported.
 
 \subsection{Scaling with concurrency}
 Figure~\ref{fig:scaling} sweeps the deep/nested fetch from 1 to 256 connections (a
