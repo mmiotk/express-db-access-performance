@@ -92,11 +92,20 @@ The data-mapper ORMs' deep-fetch cells, in particular, combine the lowest
 throughput with the highest p99, so the penalty a heavyweight ORM imposes on a
 nested-fetch hot path is visible not only in mean capacity but in the tail under
 load, the quantity that single-metric, throughput-only vendor benchmarks omit. These
-p99 values come from a closed-loop, constant-concurrency generator and are not
-equivalent to the tail a system exhibits under constant request arrival; an
-open-loop, constant-arrival cross-run corrected for coordinated omission is a planned
-extension (Section~\ref{sec:threats}), so we read the tail results as relative within
-the closed-loop model.
+p99 values come from a closed-loop, constant-concurrency generator. To check that the
+tail ranking is not an artifact of that model, we additionally drove the deep/nested
+fetch on PostgreSQL under a constant offered request rate (open-loop, via autocannon's
+\texttt{overallRate} over 256 connections; Table~\ref{tab:openloop}). The ranking
+holds and sharpens: at every offered rate native \texttt{pg} has the lowest p99 and
+the data-mapper ORMs the highest, and the ORMs saturate far earlier---MikroORM cannot
+sustain 1{,}000~req/s and its p99 climbs to 3{,}150~ms while native \texttt{pg} stays
+at 157~ms, a $\approx20\times$ tail gap. Under constant arrival the heavyweight-ORM
+tail penalty is therefore \emph{larger} than the closed-loop figures suggest, not
+smaller. This is a constant-arrival generator rather than a formally
+coordinated-omission-corrected one (e.g.\ wrk2), which would report equal or higher
+tails, so these open-loop numbers are conservative.
+
+\input{\tabledir openloop}
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells the

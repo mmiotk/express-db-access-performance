@@ -144,7 +144,10 @@ hardware and software environment was captured automatically into the replicatio
 package. To characterize behavior under load, we additionally swept the deep/nested
 fetch (the most layer-sensitive pattern) across connection counts from 1 to 256
 for every layer and engine, since throughput and contention scale non-linearly with
-concurrency~\cite{yu2014concurrency}.
+concurrency~\cite{yu2014concurrency}. To validate the tail-latency results beyond the
+closed-loop model, we additionally drove the deep/nested fetch on PostgreSQL under a
+constant offered request rate (open-loop) across a range of rates for a
+representative subset of layers (Section~\ref{sec:results}).
 
 \subsection{Analysis}
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
