@@ -90,7 +90,7 @@ function figure(all, engine) {
   \\begin{axis}[width=\\linewidth,height=6.5cm,xlabel={Concurrent connections},
       ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
       legend columns=2,legend cell align=left,font=\\small,grid=both,
-      title={Deep/nested fetch scaling on ${engine}}]
+      title={Deep/nested fetch scaling on ${engine==="postgres"?"PostgreSQL":"MySQL"}}]
 ${plots}
   \\end{axis}
   \\end{tikzpicture}
@@ -106,7 +106,7 @@ for (const engine of wantEngines) {
   for (const adapter of wantAdapters) {
     const meta = ADAPTERS[adapter];
     if (!meta || !meta.engines.includes(engine)) continue;
-    console.log(`\n== sweep ${adapter} on ${engine} ==`);
+    console.log(`\n== sweep ${adapter} on ${engine==="postgres"?"PostgreSQL":"MySQL"} ==`);
     try { all.push(...await sweepCell(adapter, engine, port++)); }
     catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
   }

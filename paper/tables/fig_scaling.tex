@@ -5,7 +5,7 @@
   \begin{axis}[width=\linewidth,height=6.5cm,xlabel={Concurrent connections},
       ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
       legend columns=2,legend cell align=left,font=\small,grid=both,
-      title={Deep/nested fetch scaling on postgres}]
+      title={Deep/nested fetch scaling on PostgreSQL}]
     \addplot+[mark=*] coordinates {(1,728) (8,3485) (32,3535) (64,3471) (128,3514) (256,3433)};
     \addlegendentry{pg}
     \addplot+[mark=square*] coordinates {(1,660) (8,2344) (32,2471) (64,2446) (128,2234) (256,2161)};
@@ -25,6 +25,6 @@
   \end{axis}
   \end{tikzpicture}
   \caption{Throughput of each access layer on the deep/nested fetch as concurrency
-    increases (postgres). The relative ordering is preserved across the load range.}
+    increases (PostgreSQL). The relative ordering is preserved across the load range.}
   \label{fig:scaling}
 \end{figure}

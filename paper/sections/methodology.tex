@@ -172,9 +172,10 @@ apply significance testing to widely separated layers, where the effect is obvio
 the tests target the close pairs where a ranking could plausibly be noise.
 
 \subsection{Experimental setup}
-All measurements were taken on 2026-07-07 on a single host (Intel Xeon Gold~6140,
-16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0) with the database engines running
-locally under relaxed durability. The pinned versions (Table~\ref{tab:versions}) were
+All measurements were taken between 2026-07-07 (the primary matrix) and 2026-07-09
+(the supplementary open-loop, durability, and pinned-core runs) on a single host
+(Intel Xeon Gold~6140, 16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0) with the
+database engines running locally under relaxed durability. The pinned versions (Table~\ref{tab:versions}) were
 the current releases at that date and were frozen for the study, so later point
 releases (for example Node.js~24.17.0) are deliberately excluded. Because access-layer performance is version-sensitive, we
 pin every dependency (Table~\ref{tab:versions}); these are the versions the reported
