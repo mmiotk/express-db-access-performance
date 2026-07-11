@@ -1,6 +1,6 @@
 {
   "title": "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js across PostgreSQL and MySQL",
-  "description": "Reproducible benchmark harness and paper comparing relational database access layers in an Express.js service — native drivers (pg, mysql2), a query builder (Knex), and ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM) — across PostgreSQL 18.4 and MySQL 9.7.1, over five access patterns (point read, range scan, deep/nested fetch, aggregation, insert), reporting both throughput (req/s) and tail latency (p50/p90/p97.5/p99). Load driven by autocannon; per-cell warm-up plus repeated runs with per-cell medians as the experimental unit; connection pool held constant at 10 across adapters.",
+  "description": "Replication package (benchmark harness + paper sources + raw results) for a neutral comparison of relational database access layers in an Express.js service: native drivers (pg, mysql2), a query builder (Knex), and six ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM), across PostgreSQL 18.4 and MySQL 9.7.1, over five access patterns (point read, keyset range scan, deep/nested fetch, aggregation, insert), reporting throughput (req/s) and tail latency (p50/p90/p97.5/p99) jointly. Protocol: 25 independent replicates per cell (fresh server process per replicate, randomized cell order, 12 s runs after warm-up), connection pool fixed at 10; automated cross-layer correctness cross-check; captured per-layer SQL, round-trip counts, and EXPLAIN plans. Supplementary runs: same-plan deep-fetch control, open-loop (constant-arrival) tail validation, three durability regimes, pinned-core resource separation, ten-minute sustained-load drift check, and a no-database Express baseline. One-command re-run against containerized (digest-pinned) or local engines.",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
@@ -29,5 +29,6 @@
       "relation": "isSupplementTo",
       "scheme": "url"
     }
-  ]
+  ],
+  "version": "1.0.0"
 }
