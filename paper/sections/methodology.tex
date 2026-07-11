@@ -131,7 +131,7 @@ Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
 tester that issues requests continuously at a fixed concurrency and records a
 latency histogram; it is a closed-loop (constant-concurrency)
 generator~\cite{schroeder2006open}. We measured each of the 80 configurations as
-five \emph{independent replicates}. For each replicate we booted a fresh server
+25 \emph{independent replicates}. For each replicate we booted a fresh server
 process, opened 50 concurrent connections, ran a two-second warm-up pass whose
 measurements were discarded (absorbing JIT compilation, connection-pool fill, and
 query-plan caching; warm-up matters because managed runtimes do not always reach a
@@ -139,7 +139,7 @@ stable steady state promptly~\cite{barrett2017warmup}), and then took one
 twelve-second measured run. Booting a fresh process per replicate makes the replicates
 statistically independent rather than repeated measures within one process lifetime,
 and the order of cells was randomized within each replicate to spread any drift. We
-report the median of the five replicate values. Each replicate yields throughput
+report the median of the 25 replicate values (one server boot failed in one replicate, leaving the MikroORM/MySQL cells with 24). Each replicate yields throughput
 (requests per second) and latency percentiles p50, p90, p97.5, and p99. During the measured runs we also sampled the
 \emph{server} process's CPU utilization and peak resident memory from
 \texttt{/proc}; because the load generator runs in a separate process, this isolates
@@ -172,7 +172,7 @@ differences across layers within an engine. We quantify a pattern's sensitivity 
 the access layer by its \emph{spread}: the ratio of the native driver's median
 throughput to that of the slowest layer on that pattern (native-relative, so it is
 comparable across patterns even where one ORM exceeds the native driver). We report
-medians over the five independent replicates, the coefficient of variation (CV)
+medians over the 25 independent replicates, the coefficient of variation (CV)
 across them as a stability signal, following the practice of reporting central
 tendency and variability rather than a single number~\cite{georges2007rigorous} and
 of using enough replicates to bound variance~\cite{laaber2019microbenchmarking}
@@ -189,8 +189,10 @@ apply significance testing to widely separated layers, where the effect is obvio
 the tests target the close pairs where a ranking could plausibly be noise.
 
 \subsection{Experimental setup}
-All measurements were taken between 2026-07-07 (the primary matrix) and 2026-07-09
-(the supplementary open-loop, durability, and pinned-core runs) on a single host
+All measurements were taken between 2026-07-09 and 2026-07-11 on a single host: the
+primary matrix on 2026-07-11, the supplementary open-loop, durability, and
+pinned-core runs on 2026-07-09, and the same-plan, baseline, and sustained-load runs
+on 2026-07-11. All ran on the same host
 (Intel Xeon Gold~6140, 16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0) with the
 database engines running locally under relaxed durability. The pinned versions (Table~\ref{tab:versions}) were
 the current releases at that date and were frozen for the study, so later point

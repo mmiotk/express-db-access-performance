@@ -107,22 +107,20 @@ variation and bootstrap 95\% confidence intervals as stability signals and tests
 adjacently ranked layers with the Mann--Whitney~$U$ test and Cliff's~$\delta$
 (Tables~\ref{tab:cv}, \ref{tab:significance}). Two bounds reinforce the ordering: the
 widest spreads, such as $6.3\times$ on the deep/nested fetch, dwarf the run-to-run CV
-(at most 6.9\% on PostgreSQL, Table~\ref{tab:cv}, and 11.2\% on MySQL,
+(at most 6.9\% on PostgreSQL, Table~\ref{tab:cv}, and 8.5\% on MySQL,
 Table~\ref{tab:cv_mysql}), and the ranking is preserved across the full 1--256
 connection sweep (Fig.~\ref{fig:scaling}). On the deep/nested fetch every adjacent
-pair separates with a maximal effect (Cliff's~$\delta = 1.00$) and non-overlapping
-bootstrap CIs, \emph{except} native \texttt{pg} and Prisma at the top, which are
-statistically indistinguishable; we read those two as tied rather than ranked. At
-$n = 5$ these statistics say less than they may appear to: $p = 0.012$ is the
-two-sided Mann--Whitney floor for five samples per group and does not survive a
-Bonferroni correction across the seven tests, and a five-sample bootstrap interval
-coincides with the replicate min--max, so $\delta = 1.00$, the non-overlapping
-intervals, and the $p$-value are three expressions of one fact: every replicate of
-the faster layer exceeded every replicate of the slower one, under randomized order
-and independent processes. The inference rests on that complete separation and on
-spreads one to two orders of magnitude above the run-to-run CV, not on the
-$p$-values; more replicates would provide conventional significance margins.
-Crucially, because each replicate is a
+pair separates with a near-maximal effect (Cliff's~$\delta \geq 0.99$) and
+non-overlapping bootstrap CIs, \emph{except} native \texttt{pg} and Prisma at the
+top, which are
+statistically indistinguishable; we read those two as tied rather than ranked. With
+25 replicates per cell the tests are conventionally powered: every separating
+adjacent pair reaches $p < 0.001$, surviving a Bonferroni correction across the
+seven tests, with near-complete separation ($\delta \geq 0.99$: at most a handful
+of the 625 cross-pairs overlap) and narrow, non-overlapping bootstrap intervals,
+under randomized order and independent processes. The inference is carried jointly
+by that separation and by spreads one to two orders of magnitude above the
+run-to-run CV. Crucially, because each replicate is a
 freshly booted server process with cell order randomized, these are genuine
 \emph{independent} replicates rather than repeated measures within one process
 lifetime~\cite{kalibera2013rigorous}; more replicates or longer runs would tighten
