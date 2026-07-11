@@ -2,7 +2,7 @@ Gdańsk, Poland, 11 July 2026
 
 Dear Editors,
 
-Please consider my manuscript, "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js across PostgreSQL and MySQL," for publication in *Information and Software Technology* as a Research Paper.
+Please consider my manuscript, "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js for PostgreSQL and MySQL," for publication in *Information and Software Technology* as a Research Paper.
 
 Node.js/Express services reach relational databases through a spectrum of access layers: native drivers, query builders, and object-relational mappers (ORMs). This choice is made on nearly every non-trivial back-end project, yet in practice it is guided by vendor benchmarks that are fragmented: each is published by the maintainers of one of the compared products, almost all target PostgreSQL exclusively, and each reports a single metric family (throughput or latency, rarely the p99 tail that dominates perceived performance under load). The peer-reviewed literature is sparser still: the closest prior study compared ORM overhead across eight frameworks but explicitly excluded JavaScript, and two 2025 studies of Node.js/TypeScript access layers are each limited to PostgreSQL and to at most three ORMs. No existing study combines broad taxonomy coverage, both major open-source engines, author neutrality, and joint throughput/tail reporting.
 
