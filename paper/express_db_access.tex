@@ -52,7 +52,9 @@ patterns, on both PostgreSQL and MySQL, reporting throughput and tail latency
 (p99) together. Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads up to $6.3\times$ between the native driver
 and the heaviest data-mapper ORM, while raw-SQL aggregation is much less sensitive
-and point reads only mildly affected; the coarse ordering is stable across engines,
+and point reads only mildly affected; a same-plan control attributes most of that
+spread to default eager-loading strategy and hydration rather than to the layers'
+raw execution paths (within $1.4\times$); the coarse ordering is stable across engines,
 and single-row inserts are engine-bound on MySQL under relaxed durability but
 layer-dependent on PostgreSQL.
 \end{abstract}

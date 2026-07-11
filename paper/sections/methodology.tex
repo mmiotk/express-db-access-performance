@@ -86,10 +86,15 @@ each layer emits, its round-trip count, and \texttt{EXPLAIN} plans for the nativ
 statements; these are released with the replication package, and
 Table~\ref{tab:query_counts} reports the per-endpoint counts. They differ by design:
 the deep fetch takes one query in Sequelize and MikroORM, two in the native drivers,
-Knex, Drizzle, and TypeORM, and four in Prisma and Objection. To guarantee that no
+Knex, Drizzle, and TypeORM, and four in Prisma and Objection. To separate a layer's
+execution machinery from its strategy choice, every adapter also implements a
+\emph{same-plan control}: the identical two-statement deep-fetch plan with identical
+row mapping, executed through the layer's raw-SQL facility, mirroring the aggregation
+control (results in Section~\ref{sec:results}). To guarantee that no
 adapter gains an unfair advantage by silently returning less, or by issuing N+1
 queries, an automated cross-check asserts that all nine adapters produce the same
-normalized object for the same inputs before any timing is collected. This check
+normalized key-field projection (ids, counts, and representative fields, not a
+byte-level comparison) for the same inputs before any timing is collected. This check
 caught two genuine defects during development (a fan-out aggregation bug and a
 driver result-shape mismatch; see Section~\ref{sec:discussion}).
 
@@ -102,7 +107,12 @@ access-layer overhead rather than pool tuning, itself a known web-application
 performance factor and a recurring concern in database-backed
 services~\cite{gupta2017pooling,laigner2021microservices}; for Prisma, whose default pool is
 otherwise derived from the core count, this is pinned explicitly through the
-\texttt{connection\_limit} URL parameter. \emph{(ii)~Identical query
+\texttt{connection\_limit} URL parameter. Because the load generator opens 50
+concurrent connections against this ten-connection pool, roughly forty in-flight
+requests are always waiting in each library's connection-acquisition queue; that
+queueing path is deliberately part of what we measure, since it is exactly what a
+loaded production service exercises, and it is held structurally identical (same
+pool size, same demand) across layers. \emph{(ii)~Identical query
 semantics}: each endpoint issues the same logical query across layers; the
 aggregation, in particular, uses a single correlated-subquery formulation
 everywhere (the documented raw-SQL path), so that endpoint measures layer
@@ -139,7 +149,12 @@ and \texttt{full\_page\_writes=off}, and MySQL with
 across engines (MySQL still performs doublewrite and data-page writes, whereas
 PostgreSQL disables all fsyncs), so absolute write throughput is not directly
 comparable between engines; we therefore read the write result only \emph{within}
-each engine (Section~\ref{sec:threats}). The
+each engine (Section~\ref{sec:threats}). A no-database
+\texttt{/baseline} endpoint returning a fixed, seed-realistic thread-shaped payload
+measures the shared Express-plus-serialization floor: roughly 11{,}100--11{,}700
+req/s on this host, about $3\times$ the fastest deep-fetch cell, so the framework
+floor leaves the between-layer spreads clearly visible rather than compressing them.
+The
 hardware and software environment was captured automatically into the replication
 package. To characterize behavior under load, we additionally swept the deep/nested
 fetch (the most layer-sensitive pattern) across connection counts from 1 to 256
@@ -177,7 +192,11 @@ All measurements were taken between 2026-07-07 (the primary matrix) and 2026-07-
 (Intel Xeon Gold~6140, 16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0) with the
 database engines running locally under relaxed durability. The pinned versions (Table~\ref{tab:versions}) were
 the current releases at that date and were frozen for the study, so later point
-releases (for example Node.js~24.17.0) are deliberately excluded. Because access-layer performance is version-sensitive, we
+releases (for example Node.js~24.17.0) are deliberately excluded. We pin
+Express~4, still the dominant deployed line at measurement time, rather than
+Express~5; the framework version is shared by every cell, so it shifts the common
+floor rather than the between-layer comparison, and re-running the harness on
+Express~5 is a one-line change. Because access-layer performance is version-sensitive, we
 pin every dependency (Table~\ref{tab:versions}); these are the versions the reported
 numbers characterize, and re-running the harness on newer releases is a one-command
 operation.

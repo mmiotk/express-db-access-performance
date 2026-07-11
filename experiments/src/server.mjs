@@ -38,6 +38,28 @@ app.get('/posts/:id/thread', h(async (req, res) => {
   res.json(thread);
 }));
 
+// 3b. same-plan deep-fetch control: the IDENTICAL two-statement plan and identical
+//     row mapping executed through this layer's raw-SQL facility (adapters/_threadraw)
+//     — isolates raw execution path from eager-loading strategy + hydration.
+app.get('/posts/:id/thread-raw', h(async (req, res) => {
+  const thread = await db.getThreadRaw(Number(req.params.id));
+  if (!thread) return res.status(404).json({ error: 'not found' });
+  res.json(thread);
+}));
+
+// 0. no-DB baseline: a fixed, representative thread-shaped payload (post + author +
+//    10 comments, seed-realistic field sizes). Measures the Express + JSON floor of
+//    the request round trip with the database untouched.
+const BASELINE = {
+  post: { id: 50000, title: 'Post 50000', body: 'Body of post 50000. '.repeat(4).trim(), views: 2500, created_at: '2026-07-01T12:00:00.000Z' },
+  author: { id: 1000, name: 'Author 1000', email: 'author1000@example.com' },
+  comments: Array.from({ length: 10 }, (_, i) => ({
+    id: 500000 + i, body: `Comment ${i + 1} on post 50000. `.repeat(2).trim(), created_at: '2026-07-01T13:00:00.000Z',
+    author: { id: 100 + i, name: `Author ${100 + i}`, email: `author${100 + i}@example.com` },
+  })),
+};
+app.get('/baseline', (_req, res) => res.json(BASELINE));
+
 // 2. range scan — keyset pagination by primary key (WHERE id < before). Uses the
 //    PK index and is O(limit) regardless of depth, unlike large-OFFSET scans.
 app.get('/posts', h(async (req, res) => {

@@ -41,6 +41,27 @@ Prisma's 8{,}034, the highest of any layer. Even on this identical query plan th
 layer still moves throughput about twofold, with Objection's raw path the low outlier. Abstraction is thus inexpensive when the layer forwards a
 query and costly when it must materialize a nested object graph.
 
+\subsection{Decomposing the deep-fetch spread}
+The idiomatic deep fetch deliberately lets each layer choose its own query strategy,
+so its spread mixes two causes: what the library's execution path costs, and what its
+default eager-loading strategy chooses to do. To separate them, we re-measured the
+deep fetch under a \emph{same-plan control}, in which every layer executes the
+identical two-statement plan with identical row mapping through its raw-SQL facility,
+exactly as the aggregation endpoint already does (Table~\ref{tab:sameplan}). On the
+identical plan the nine layers collapse into a narrow band: the native-relative
+spread falls from $6.3\times$ to $1.35\times$ on PostgreSQL (from $4.3\times$ to
+$1.31\times$ on MySQL), and MikroORM, the slowest idiomatic layer at 541~req/s,
+sustains 3{,}077~req/s on the same plan, within a few percent of the native driver's
+own raw path. The idiomatic-to-same-plan ratio therefore attributes the bulk of the
+data-mapper ORMs' deficit to their default eager-loading strategies and entity
+hydration (ratios 0.18--0.46) rather than to their execution machinery; Knex and
+Prisma sit near parity with their raw paths (0.90 and 0.92), and Prisma's raw path
+(3{,}847~req/s) is in fact the fastest of all nine, consistent with its pipelined
+query engine. In short, on this pattern the access layer's cost is dominated by what
+it \emph{chooses to do} by default, not by what its machinery \emph{is}.
+
+\input{\tabledir sameplan}
+
 \subsection{RQ2: engine dependence of the ranking}
 The \emph{relative} ordering of access layers is largely stable across PostgreSQL
 and MySQL: native drivers and Prisma lead, query builders and the lightweight ORM
@@ -86,7 +107,7 @@ range-scan drop a layer-specific anomaly rather than a graded cost.
 
 \subsection{Tail latency}
 We report p99 for every pattern (the tail metric that governs perceived latency
-under load); p50 and p90 are in the replication package. Tail latency tracks
+under load); p50, p90, and p97.5 are in the replication package. Tail latency tracks
 throughput: the layers and patterns that lose throughput also exhibit the worst p99
 (Tables~\ref{tab:deep_fetch}, \ref{tab:range_scan}).
 The data-mapper ORMs' deep-fetch cells, in particular, combine the lowest

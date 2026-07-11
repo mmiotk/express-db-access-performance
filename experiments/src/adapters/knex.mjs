@@ -1,6 +1,7 @@
 // Query builder — Knex. Fluent SQL, same 2-query deep fetch (no N+1). Works on
 // both engines by switching the client.
 import knexFactory from 'knex';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const knex = knexFactory({
@@ -41,6 +42,15 @@ export default async function createAdapter({ engine, config }) {
           author: { id: c.author_id, name: c.author_name, email: c.author_email },
         })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via knex.raw.
+    async getThreadRaw(id) {
+      const p = await knex.raw(THREAD_Q1('?'), [id]);
+      const post = (p.rows ? p.rows : p[0])[0]; // pg: {rows}; mysql2: [rows,fields]
+      if (!post) return null;
+      const c = await knex.raw(THREAD_Q2('?'), [id]);
+      return mapThread(post, c.rows ? c.rows : c[0]);
     },
 
     async authorSummary(id) {

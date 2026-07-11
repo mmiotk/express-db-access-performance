@@ -2,6 +2,7 @@
 // which batches related rows, avoiding N+1 for the deep fetch.
 import knexFactory from 'knex';
 import { Model } from 'objection';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 class Author extends Model {
   static get tableName() { return 'authors'; }
@@ -54,6 +55,16 @@ export default async function createAdapter({ engine, config }) {
         author: post.author,
         comments: (post.comments || []).map((c) => ({ id: c.id, body: c.body, created_at: c.created_at, author: c.author })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via the underlying knex.
+    async getThreadRaw(id) {
+      const k = Post.knex();
+      const p = await k.raw(THREAD_Q1('?'), [id]);
+      const post = (p.rows ? p.rows : p[0])[0];
+      if (!post) return null;
+      const c = await k.raw(THREAD_Q2('?'), [id]);
+      return mapThread(post, c.rows ? c.rows : c[0]);
     },
 
     async authorSummary(id) {

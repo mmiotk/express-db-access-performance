@@ -1,6 +1,7 @@
 // ORM — Sequelize. Models + `include` eager loading (single query with joins)
 // for the deep fetch. Aggregation via a raw SELECT to keep it comparable.
 import { Sequelize, DataTypes, Model, Op } from 'sequelize';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const c = engine === 'postgres' ? config.postgres : config.mysql;
@@ -55,6 +56,16 @@ export default async function createAdapter({ engine, config }) {
         author: j.author,
         comments: (j.comments || []).map((cm) => ({ id: cm.id, body: cm.body, created_at: cm.created_at, author: cm.author })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via sequelize.query.
+    async getThreadRaw(id) {
+      const ph = engine === 'postgres' ? '$1' : '?';
+      const opts = engine === 'postgres' ? { bind: [id] } : { replacements: [id] };
+      const [postRows] = await sequelize.query(THREAD_Q1(ph), opts);
+      if (!postRows[0]) return null;
+      const [commentRows] = await sequelize.query(THREAD_Q2(ph), opts);
+      return mapThread(postRows[0], commentRows);
     },
 
     async authorSummary(id) {

@@ -54,12 +54,14 @@ layers (the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM)
 over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
 generator. We report throughput and tail latency (p99) jointly, hold the
-connection pool constant, and verify through an automated cross-check that every
-layer returns identical results on the four non-mutating patterns.
+connection pool constant, and verify through an automated key-field cross-check
+that every layer returns equivalent results on the four non-mutating patterns.
 \textbf{Results:} Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads up to $6.3\times$ between the native
 driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is much less
-sensitive and point reads only mildly affected. The coarse ordering of layers is
+sensitive and point reads only mildly affected. A same-plan control shows the
+layers' raw execution paths lie within $1.4\times$ of one another, so this spread
+is dominated by each layer's default eager-loading strategy and hydration. The coarse ordering of layers is
 stable across engines. Single-row insert throughput, under the relaxed-durability
 configuration used here, is largely layer-insensitive on MySQL (engine-bound) yet
 layer-dependent on PostgreSQL.

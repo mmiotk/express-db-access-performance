@@ -1,6 +1,7 @@
 // Native driver — mysql2 (promise pool). MySQL counterpart of the pg baseline.
 // Same two-query deep fetch to avoid N+1.
 import mysql from 'mysql2/promise';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 export default async function createAdapter({ config }) {
   const pool = mysql.createPool({
@@ -48,6 +49,14 @@ export default async function createAdapter({ config }) {
           author: { id: c.author_id, name: c.author_name, email: c.author_email },
         })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via the raw facility.
+    async getThreadRaw(id) {
+      const [postRows] = await pool.query(THREAD_Q1('?'), [id]);
+      if (!postRows[0]) return null;
+      const [commentRows] = await pool.query(THREAD_Q2('?'), [id]);
+      return mapThread(postRows[0], commentRows);
     },
 
     async authorSummary(id) {

@@ -14,7 +14,10 @@ The empirical answer is that the cost of abstraction is concentrated, not unifor
 It is modest for point reads and for aggregation issued through a raw-SQL path,
 but it grows sharply (up to $6.3\times$ between the native driver and the heaviest
 data-mapper ORM) for the deep/nested fetch, where the layer must assemble a nested
-object graph on the application side. The coarse ordering of layers is stable
+object graph on the application side. A same-plan control decomposes that spread:
+the layers' raw execution paths lie within about $1.4\times$ of one another, so most
+of the deep-fetch cost is each layer's default eager-loading strategy and hydration
+rather than its machinery. The coarse ordering of layers is stable
 across the two engines, and a competitively fast modern ORM (Prisma) shows that
 ``ORM'' need not imply large overhead. Writes are the exception: under the relaxed-durability configuration used here,
 MySQL's engine floor makes single-row insert throughput nearly layer-independent,

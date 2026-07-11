@@ -2,6 +2,7 @@
 // typed query builder with explicit joins (2-query deep fetch, no N+1). This is
 // Drizzle's idiomatic style and mirrors the native-driver query plan closely.
 import { eq, lt, desc, sql } from 'drizzle-orm';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 export default async function createAdapter({ engine, config }) {
   let db, tables, close;
@@ -87,6 +88,18 @@ export default async function createAdapter({ engine, config }) {
         comments: cRows.map((c) => ({ id: c.id, body: c.body, created_at: c.created_at,
           author: { id: c.author_id, name: c.author_name, email: c.author_email } })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via db.execute. The
+    // shared statement is split on a placeholder token so the id stays a bound
+    // parameter inside drizzle's sql template.
+    async getThreadRaw(id) {
+      const tpl = (text, val) => { const [a, b] = text.split('__P__'); return sql`${sql.raw(a)}${val}${sql.raw(b ?? '')}`; };
+      const p = await db.execute(tpl(THREAD_Q1('__P__'), id));
+      const post = engine === 'postgres' ? p.rows?.[0] : p[0]?.[0];
+      if (!post) return null;
+      const c = await db.execute(tpl(THREAD_Q2('__P__'), id));
+      return mapThread(post, engine === 'postgres' ? c.rows : c[0]);
     },
 
     async authorSummary(id) {

@@ -2,6 +2,7 @@
 // Deep fetch uses `populate` (MikroORM batches related loads, avoiding N+1).
 // A fresh EntityManager fork is used per request to isolate identity maps.
 import { MikroORM, EntitySchema } from '@mikro-orm/core';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 const Author = new EntitySchema({
   name: 'Author', tableName: 'authors',
@@ -79,6 +80,17 @@ export default async function createAdapter({ engine, config }) {
           author: { id: num(cm.author.id), name: cm.author.name, email: cm.author.email },
         })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via the connection's
+    // raw execute (fork mirrors this adapter's per-request idiom).
+    async getThreadRaw(id) {
+      const em = orm.em.fork();
+      const conn = em.getConnection();
+      const postRows = await conn.execute(THREAD_Q1('?'), [id]);
+      if (!postRows[0]) return null;
+      const commentRows = await conn.execute(THREAD_Q2('?'), [id]);
+      return mapThread(postRows[0], commentRows);
     },
 
     async authorSummary(id) {

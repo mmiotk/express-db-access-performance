@@ -11,12 +11,18 @@ driver or database boundary. This is deliberate, since it captures the full requ
 round trip a deployed service incurs, including Express routing and JSON
 serialization, but it means the overhead we attribute to the \emph{access layer}
 may partly reflect these surrounding costs instead. We control for this by holding
-those costs constant across conditions: every adapter satisfies a documented
-\emph{adapter contract} (Section~\ref{sec:methodology}) that guarantees an
-identical result shape to Express, so the JSON payload (and its serialization
-cost) is the same regardless of which layer produced it. Observed differences
-between layers are therefore attributable to how each layer reaches that shape,
-not to what is returned. One caveat is specific to writes: durability is relaxed
+those costs near-constant across conditions: every adapter satisfies a documented
+\emph{adapter contract} (Section~\ref{sec:methodology}). On the deep fetch and the
+aggregation the payload is uniform by construction (each adapter maps rows into the
+same explicit shape); on the point read and range scan adapters return their raw row
+objects, whose payloads differ marginally across layers (column selection such as
+\texttt{created\_at}/\texttt{published}, and id typing), which is immaterial against
+the $2.6$--$3.5\times$ spreads measured there. A no-database baseline endpoint
+returning a fixed thread-shaped payload bounds the shared Express-plus-serialization
+floor well above the fastest measured cell (Section~\ref{sec:methodology}), so the
+framework floor compresses, rather than manufactures, between-layer differences.
+Observed differences between layers are therefore attributable to how each layer
+reaches that shape, not to what is returned. One caveat is specific to writes: durability is relaxed
 asymmetrically across the two engines (Section~\ref{sec:methodology}), so absolute
 insert throughput is not comparable between PostgreSQL and MySQL. We therefore state
 the write finding only within each engine (a $1.3\times$ layer spread on MySQL versus
@@ -42,7 +48,10 @@ induced measurement bias~\cite{mytkowicz2009producing}), and two further control
 aggregation endpoint uses one correlated-subquery plan across layers, so it measures
 access-layer overhead rather than differences in SQL shape. The write endpoint is
 reset to the seeded table before every measured run (not merely before each cell), so
-no run inserts into a table grown by an earlier run. A residual risk is coordinated
+no run inserts into a table grown by an earlier run. Request target ids are drawn per
+request from an unseeded uniform generator; the workload is therefore deterministic in
+distribution but not per request, and adapters are not driven by paired id streams, a
+variance-reduction opportunity we forgo. A residual risk is coordinated
 omission in the load generator, which can
 under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency}. A
 constant-arrival (open-loop) cross-run on the deep fetch confirms the tail ranking and
@@ -55,7 +64,15 @@ All measurements come from a single schema, a single dataset size, one hardware
 configuration, and a connection pool fixed at ten, against specific engine and
 library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology});
 results may not transfer to larger working sets, other pool sizes, or other engine
-versions, and library performance ages quickly. We do not claim the absolute req/s
+versions, and library performance ages quickly. Two consequences of the design
+deserve emphasis. First, the working set is memory-resident, so these results are a
+hot-cache regime that maximizes the visibility of layer differences; as a workload
+becomes I/O-bound (larger than RAM, cold caches), every layer increasingly waits on
+the same storage and the spreads should compress toward $1\times$. Second, the
+deep-fetch object graph is small (a post with on average ten comments, at most 25 in
+the seed), so the reported spread is specific to small-graph hydration; abstraction
+cost is expected to grow with graph size, but we do not sweep that axis. We do not
+claim the absolute req/s
 figures generalize beyond our hardware; only the \emph{relative} ordering within an
 engine is intended to travel. We mitigate this by pinning every dependency
 version, publishing the deterministic seed and an automated environment capture,
@@ -67,9 +84,14 @@ check, we re-ran a representative subset with the database, application server, 
 load generator pinned to disjoint core sets (Table~\ref{tab:pinned}), approximating
 the resource separation of a multi-host deployment: the layer ordering is preserved,
 though Prisma's near-native parity narrows when its multi-threaded engine is confined
-to four cores rather than the whole host, so that advantage depends on spare CPU. A
-two-machine cross-run over a dedicated link, adding real network latency, is planned
-to bound this further.
+to four cores rather than the whole host, so that advantage depends on spare CPU. The
+same caveat extends to deployment topology: the server runs as a single Node.js
+process, whereas production deployments typically run one worker per core
+(\texttt{cluster}, pm2, or per-pod replicas); under $N$ workers saturating all cores,
+no spare cores remain for Prisma's engine threads, and the single-threaded layers'
+per-core efficiency should dominate, so the CPU-for-latency trade we report is a
+single-process result. A two-machine cross-run over a dedicated link, adding real
+network latency, and a multi-worker variant are planned to bound this further.
 
 \input{\tabledir pinned}
 

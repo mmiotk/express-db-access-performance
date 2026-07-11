@@ -5,6 +5,8 @@
 // this cell — Prisma's client is engine-specific and generated ahead of time.
 // BigInt ids are serialized to Number for JSON parity with the other adapters.
 
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+
 export default async function createAdapter({ engine, config }) {
   process.env.DATABASE_URL = (await import('../config.mjs')).connectionUrl(engine);
   const { PrismaClient } = await import('@prisma/client');
@@ -42,6 +44,19 @@ export default async function createAdapter({ engine, config }) {
           author: { id: n(c.author.id), name: c.author.name, email: c.author.email },
         })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via $queryRawUnsafe.
+    // Prisma's raw rows surface BIGSERIAL/BIGINT columns as JS BigInt, which
+    // JSON.stringify rejects; coerce to Number (safe: ids < 2^53), matching the
+    // JSON-compatible types every other layer hands to Express.
+    async getThreadRaw(id) {
+      const ph = engine === 'postgres' ? '$1' : '?';
+      const fix = (r) => { const o = { ...r }; for (const k in o) if (typeof o[k] === 'bigint') o[k] = Number(o[k]); return o; };
+      const postRows = await prisma.$queryRawUnsafe(THREAD_Q1(ph), id);
+      if (!postRows[0]) return null;
+      const commentRows = await prisma.$queryRawUnsafe(THREAD_Q2(ph), id);
+      return mapThread(fix(postRows[0]), commentRows.map(fix));
     },
 
     async authorSummary(id) {

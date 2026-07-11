@@ -2,6 +2,7 @@
 // Deep fetch uses `relations` eager loading; aggregation via QueryBuilder.
 import 'reflect-metadata';
 import { DataSource, EntitySchema, LessThan } from 'typeorm';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 const Author = new EntitySchema({
   name: 'Author', tableName: 'authors',
@@ -73,6 +74,15 @@ export default async function createAdapter({ engine, config }) {
         author: post.author,
         comments: (post.comments || []).map((cm) => ({ id: num(cm.id), body: cm.body, created_at: cm.created_at, author: cm.author })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via ds.query.
+    async getThreadRaw(id) {
+      const ph = engine === 'postgres' ? '$1' : '?';
+      const postRows = await ds.query(THREAD_Q1(ph), [id]);
+      if (!postRows[0]) return null;
+      const commentRows = await ds.query(THREAD_Q2(ph), [id]);
+      return mapThread(postRows[0], commentRows);
     },
 
     async authorSummary(id) {

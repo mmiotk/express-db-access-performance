@@ -21,8 +21,8 @@ kuffel2025nodejs,carmo2024backend}, but that literature treats the runtime and
 the web framework as the unit of comparison; it does not vary the database
 access layer.
 
-In practice, the choice among access layers is made largely on the strength
-of \emph{vendor benchmarks}. These are plentiful but narrow: each is
+In practice, the most visible public performance comparisons available to guide
+this choice are \emph{vendor benchmarks}. These are plentiful but narrow: each is
 published by the maintainers of one of the products under comparison, each
 targets PostgreSQL almost exclusively, and each settles on a single metric
 family rather than reporting throughput and the tail together. Prisma's
@@ -63,7 +63,8 @@ under an identical schema, dataset, and connection-pool size, and for every
 second) and tail latency (p99) together, rather than either in
 isolation. The full harness (adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
-that all nine layers return identical results on the four non-mutating
+that all nine layers return equivalent results, compared on a key-field
+projection, on the four non-mutating
 patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all nine adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
@@ -81,28 +82,37 @@ We structure the study around three research questions:
         access layer most consequential?
 \end{enumerate}
 
-This paper makes four contributions:
+This paper makes four contributions. The first two are the durable ones; the
+absolute numbers in the third are, by construction, a version-dated snapshot of a
+fast-moving ecosystem, whereas the design, the harness, and the interaction
+findings are built to outlive the pinned versions:
 \begin{itemize}[leftmargin=*]
-  \item A \textbf{neutral, broad-coverage} benchmark spanning the taxonomy's
-        three tiers (native driver $\to$ query builder $\to$ six ORMs),
-        \textbf{dual-engine} (PostgreSQL and MySQL),
-        \textbf{Express-level} benchmark that reports throughput and tail
-        latency \textbf{jointly}, the combination missing from prior art.
   \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
-        deterministic seed, an autocannon-driven matrix runner, and an
-        automated \textbf{correctness cross-check} that asserts every layer
-        returns identical results on the four non-mutating patterns; released
-        as a replication package.
-  \item Empirical evidence that \textbf{abstraction cost concentrates in
-        relation-materializing patterns} (the deep/nested fetch), that the
-        \textbf{layer ordering is stable across engines}, and that
-        \textbf{writes are engine-bound} (MySQL's InnoDB write path
-        dominates).
-  \item A set of \textbf{methodological pitfalls specific to access-layer
-        benchmarking} (aggregation fan-out, OFFSET versus keyset pagination,
-        write-workload contamination, and query-formulation confounds), surfaced
-        during development, one caught by the correctness cross-check and the rest
-        by performance analysis; a reusable checklist for this genre.
+        deterministic seed, an autocannon-driven matrix runner with independent
+        replicates, a same-plan control for the deep fetch, and an automated
+        \textbf{correctness cross-check} that asserts every layer returns
+        equivalent results (a key-field projection) on the four non-mutating
+        patterns; released as a replication package and re-runnable in one
+        command against future library versions.
+  \item A \textbf{neutral, broad-coverage benchmark design} spanning the
+        taxonomy's three tiers (native driver $\to$ query builder $\to$ six
+        ORMs), \textbf{dual-engine} (PostgreSQL and MySQL), measured at the
+        \textbf{Express level}, reporting throughput and tail latency
+        \textbf{jointly}, the combination missing from prior art.
+  \item Empirical findings on the pinned versions: two that are not obvious in
+        advance, that a \textbf{query-engine ORM can statistically tie the
+        native driver} on the most ORM-hostile pattern while spending roughly
+        five times the application CPU, and that \textbf{whether writes are
+        layer-bound depends on the engine} (visible only in a dual-engine
+        design); and a controlled \textbf{confirmation and quantification} of
+        the expected effects, that abstraction cost concentrates in
+        relation-materializing patterns and that the coarse layer ordering is
+        stable across engines.
+  \item A practitioner-oriented \textbf{checklist of pitfalls specific to
+        access-layer benchmarking} (aggregation fan-out, OFFSET versus keyset
+        pagination, write-workload contamination, and query-formulation
+        confounds), surfaced during development, one caught by the correctness
+        cross-check and the rest by performance analysis.
 \end{itemize}
 
 The remainder of the paper surveys related work in more detail

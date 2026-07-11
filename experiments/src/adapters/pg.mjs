@@ -2,6 +2,7 @@
 // hand-written SQL, parameterized, pooled. Deep fetch avoids N+1 with exactly
 // two queries (post+author, then all comments+their authors joined).
 import pg from 'pg';
+import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 
 export default async function createAdapter({ config }) {
   const pool = new pg.Pool({ ...config.postgres, min: config.pool.min, max: config.pool.max });
@@ -46,6 +47,15 @@ export default async function createAdapter({ config }) {
           author: { id: c.author_id, name: c.author_name, email: c.author_email },
         })),
       };
+    },
+
+    // Same-plan control: identical SQL + identical mapping via the raw facility
+    // (for the native driver this coincides with the idiomatic getThread).
+    async getThreadRaw(id) {
+      const postRes = await pool.query(THREAD_Q1('$1'), [id]);
+      if (!postRes.rows[0]) return null;
+      const commentsRes = await pool.query(THREAD_Q2('$1'), [id]);
+      return mapThread(postRes.rows[0], commentsRes.rows);
     },
 
     async authorSummary(id) {

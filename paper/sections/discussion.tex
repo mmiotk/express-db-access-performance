@@ -39,7 +39,13 @@ CPU,'' not as an intrinsic ceiling. Round-trip count alone does not set throughp
 Prisma issues four queries for the deep fetch (Table~\ref{tab:query_counts}) yet
 matches the native driver, while Objection issues the same four and is among the
 slowest, so how a layer pipelines and materializes its queries matters as much as how
-many it sends. Knex and Drizzle sit in a consistent middle ground on every pattern (never fastest, never
+many it sends. The same-plan control (Table~\ref{tab:sameplan}) makes the
+decomposition explicit: on an identical plan the nine raw execution paths sit within
+$1.35\times$ of one another, so the wide idiomatic deficits are dominated by default
+eager-loading strategy and hydration (MikroORM's idiomatic path delivers 0.18 of its
+own raw-path throughput, a $5.7\times$ strategy-and-hydration cost). What the
+deep-fetch pattern prices is each layer's default behavior, not the wrapper around
+the driver. Knex and Drizzle sit in a consistent middle ground on every pattern (never fastest, never
 among the slowest data-mapper ORMs), which is what a query builder and a
 non-data-mapper, lightweight ORM should deliver.
 
@@ -117,8 +123,8 @@ performance analysis. We regard the resulting checklist as reusable:
 None of these four is specific to our schema; each is a generic failure mode
 of the genre, extending the general database-benchmarking pitfalls cataloged
 by Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair}
-to the access-layer-comparison sub-genre specifically. We regard the checklist as a contribution in its own right,
-reusable by anyone comparing drivers, query builders, or ORMs: each confound
+to the access-layer-comparison sub-genre specifically. We offer the checklist as a
+practitioner aid for anyone comparing drivers, query builders, or ORMs: each confound
 is easy to introduce by accident and hard to detect (the correctness ones without
 an automated cross-check, the performance ones without profiling every cell), and at
 least one such confound plausibly explains part of the gap between some
