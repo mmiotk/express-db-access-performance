@@ -19,9 +19,9 @@ distclean:
 
 ## Assemble a self-contained submission folder (flattens ../sections, ../tables,
 ## ../references.bib) + zip, as Elsevier expects a flat source set.
-package:
+package: pdf
 	rm -rf _package && mkdir -p _package
-	cp ../references.bib highlights.tex _package/
+	cp ../references.bib highlights.tex $(MAIN).bbl _package/
 	sed -e 's|\.\./sections/|sections_|g' -e 's|\.\./tables/|tables_|g' \
 	    -e 's|\.\./references|references|g' $(MAIN).tex > _package/$(MAIN).tex
 	@for f in ../sections/*.tex; do cp "$$f" "_package/sections_$$(basename $$f)"; done

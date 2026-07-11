@@ -1,4 +1,4 @@
-Gdańsk, Poland, [DATE]
+Gdańsk, Poland, 11 July 2026
 
 Dear Editors,
 
