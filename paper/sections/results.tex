@@ -88,8 +88,10 @@ among the remaining layers), confirming that the earlier collapse we observed un
 pagination was a workload artifact rather than an engine or layer property
 (Section~\ref{sec:discussion}). The one exception is MikroORM, whose range-scan
 throughput drops to 640~req/s on PostgreSQL and 619 on MySQL (p99 of 94 and
-92~ms), an anomaly we flag but do not fully isolate; it is consistent with the
-per-request cost of materializing the returned page into MikroORM's identity map.
+92~ms), an anomaly we flag but do not fully isolate on this endpoint; it is
+consistent with the per-request cost of materializing the returned page into
+MikroORM's identity map, the same hydration overhead the same-plan control isolates
+directly on the deep fetch (Table~\ref{tab:sameplan}, ratio 0.18).
 
 \subsection{RQ3: which patterns matter most}
 Ranking the patterns by how much the layer choice moves throughput yields a clear
@@ -137,8 +139,9 @@ most 6.9\% (Table~\ref{tab:cv}), and across the 40 MySQL cells at most 11.2\%
 (Table~\ref{tab:cv_mysql}); this global maximum is well below the between-layer
 spreads (up to $6.3\times$). To confirm that neighboring ranks are not measurement
 artifacts, we compare each adjacently ranked pair on the deep/nested fetch with the
-Mann--Whitney~$U$ test, Cliff's~$\delta$, and bootstrap 95\% confidence intervals
-(Table~\ref{tab:significance}). \emph{Every} adjacent pair separates with a maximal
+Mann--Whitney~$U$ test, Cliff's~$\delta$, and bootstrap 95\% confidence intervals,
+which at five replicates coincide with the replicate min--max, i.e.\ the observed
+range (Table~\ref{tab:significance}). \emph{Every} adjacent pair separates with a maximal
 effect ($\delta = 1.00$) and $p = 0.012$, \emph{except} the top pair: native
 \texttt{pg} and Prisma are statistically indistinguishable (3{,}399 vs.\ 3{,}531~req/s;
 $\delta = 0.20$, $p = 0.68$, overlapping bootstrap CIs). We therefore read the top of

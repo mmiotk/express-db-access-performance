@@ -90,8 +90,14 @@ process, whereas production deployments typically run one worker per core
 (\texttt{cluster}, pm2, or per-pod replicas); under $N$ workers saturating all cores,
 no spare cores remain for Prisma's engine threads, and the single-threaded layers'
 per-core efficiency should dominate, so the CPU-for-latency trade we report is a
-single-process result. A two-machine cross-run over a dedicated link, adding real
-network latency, and a multi-worker variant are planned to bound this further.
+single-process result. A sustained-load check bounds temporal drift: holding three
+representative layers (native \texttt{pg}, Prisma, MikroORM) under ten minutes of
+continuous deep-fetch load moves throughput by at most $\pm2.1\%$ between the first
+and last three minutes, with the band ordering preserved in every single minute
+(replication package), so the short measured runs are not sampling a transient;
+longer-horizon drift over hours to days~\cite{kuffel2025nodejs} remains untested. A
+two-machine cross-run over a dedicated link, adding real network latency, and a
+multi-worker variant are planned to bound this further.
 
 \input{\tabledir pinned}
 
@@ -106,11 +112,17 @@ Table~\ref{tab:cv_mysql}), and the ranking is preserved across the full 1--256
 connection sweep (Fig.~\ref{fig:scaling}). On the deep/nested fetch every adjacent
 pair separates with a maximal effect (Cliff's~$\delta = 1.00$) and non-overlapping
 bootstrap CIs, \emph{except} native \texttt{pg} and Prisma at the top, which are
-statistically indistinguishable; we read those two as tied rather than ranked. The
-Mann--Whitney $p$ is $0.012$ for the separating pairs, near the floor achievable with
-five samples per group, so with only five replicates a Bonferroni correction across
-the pairwise tests is not passed on $p$ alone; the maximal effect sizes and
-non-overlapping intervals carry the inference. Crucially, because each replicate is a
+statistically indistinguishable; we read those two as tied rather than ranked. At
+$n = 5$ these statistics say less than they may appear to: $p = 0.012$ is the
+two-sided Mann--Whitney floor for five samples per group and does not survive a
+Bonferroni correction across the seven tests, and a five-sample bootstrap interval
+coincides with the replicate min--max, so $\delta = 1.00$, the non-overlapping
+intervals, and the $p$-value are three expressions of one fact: every replicate of
+the faster layer exceeded every replicate of the slower one, under randomized order
+and independent processes. The inference rests on that complete separation and on
+spreads one to two orders of magnitude above the run-to-run CV, not on the
+$p$-values; more replicates would provide conventional significance margins.
+Crucially, because each replicate is a
 freshly booted server process with cell order randomized, these are genuine
 \emph{independent} replicates rather than repeated measures within one process
 lifetime~\cite{kalibera2013rigorous}; more replicates or longer runs would tighten

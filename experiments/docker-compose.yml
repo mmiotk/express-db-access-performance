@@ -9,7 +9,8 @@
 
 services:
   postgres:
-    image: postgres:18.4
+    # tag pinned by content digest so a re-pushed tag cannot silently change the engine
+    image: postgres:18.4@sha256:22c89fe0d0f507606260237fd55e51f6137f58b2d5bcf6152242b96d9fe8f9a4
     environment:
       POSTGRES_USER: bench
       POSTGRES_PASSWORD: bench
@@ -26,7 +27,8 @@ services:
       retries: 30
 
   mysql:
-    image: mysql:9.7.1
+    # tag pinned by content digest so a re-pushed tag cannot silently change the engine
+    image: mysql:9.7.1@sha256:ae269281abffe401d65f04cb54d45a069a495b8174b9c0a815e502fed7fa0370
     environment:
       MYSQL_USER: bench
       MYSQL_PASSWORD: bench

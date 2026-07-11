@@ -214,6 +214,11 @@ async function mainIndep() {
         }
       } catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
     }
+    // checkpoint: persist accumulated samples after every replicate so a crash in a
+    // long overnight run loses at most the replicate in progress
+    await writeFile(join(resultsDir, 'raw-indep.partial.json'),
+      JSON.stringify([...acc.values()], null, 2));
+    console.log(`[checkpoint] replicate ${rep + 1}/${REPLICATES} saved (${acc.size} cells)`);
   }
   const rows = [...acc.values()].map((a) => ({
     adapter: a.adapter, engine: a.engine, category: a.category, endpoint: a.endpoint,

@@ -57,3 +57,4 @@ notes/.trash/
 *.swo
 .DS_Store
 Thumbs.db
+raw-indep.partial.json

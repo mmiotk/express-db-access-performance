@@ -36,10 +36,9 @@ parameterized queries rather than tuned prepared statements, the finding is best
 stated as ``under this implementation and resource model, a query-engine ORM can
 match or exceed the native-driver adapter, at substantially higher application-side
 CPU,'' not as an intrinsic ceiling. Round-trip count alone does not set throughput:
-Prisma issues four queries for the deep fetch (Table~\ref{tab:query_counts}) yet
-matches the native driver, while Objection issues the same four and is among the
-slowest, so how a layer pipelines and materializes its queries matters as much as how
-many it sends. The same-plan control (Table~\ref{tab:sameplan}) makes the
+Prisma and Objection both issue four deep-fetch queries (Table~\ref{tab:query_counts}),
+yet one matches the native driver and the other is among the
+slowest. The same-plan control (Table~\ref{tab:sameplan}) makes the
 decomposition explicit: on an identical plan the nine raw execution paths sit within
 $1.35\times$ of one another, so the wide idiomatic deficits are dominated by default
 eager-loading strategy and hydration (MikroORM's idiomatic path delivers 0.18 of its
