@@ -6,6 +6,7 @@
 // BigInt ids are serialized to Number for JSON parity with the other adapters.
 
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   process.env.DATABASE_URL = (await import('../config.mjs')).connectionUrl(engine);
@@ -20,14 +21,14 @@ export default async function createAdapter({ engine, config }) {
     category: 'orm',
 
     async getPost(id) {
-      return post(await prisma.post.findUnique({ where: { id: BigInt(id) } }));
+      return canonPost(await prisma.post.findUnique({ where: { id: BigInt(id) } }));
     },
 
     async listPosts({ limit, before }) {
       const rows = await prisma.post.findMany({
         where: { id: { lt: BigInt(before) } }, orderBy: { id: 'desc' }, take: limit,
       });
-      return rows.map(post);
+      return canonPosts(rows);
     },
 
     async getThread(id) {
@@ -35,15 +36,7 @@ export default async function createAdapter({ engine, config }) {
         where: { id: BigInt(id) },
         include: { author: true, comments: { include: { author: true }, orderBy: { id: 'asc' } } },
       });
-      if (!p) return null;
-      return {
-        post: { id: n(p.id), title: p.title, body: p.body, views: p.views, created_at: p.created_at },
-        author: { id: n(p.author.id), name: p.author.name, email: p.author.email },
-        comments: p.comments.map((c) => ({
-          id: n(c.id), body: c.body, created_at: c.created_at,
-          author: { id: n(c.author.id), name: c.author.name, email: c.author.email },
-        })),
-      };
+      return p ? canonThread(p, p.author, p.comments) : null;
     },
 
     // Same-plan control: identical SQL + identical mapping via $queryRawUnsafe.
@@ -68,9 +61,7 @@ export default async function createAdapter({ engine, config }) {
                    WHERE p.author_id = a.id) AS comments
            FROM authors a
           WHERE a.id = ${engine === 'postgres' ? '$1' : '?'}`, id);
-      const r = rows[0];
-      if (!r) return null;
-      return { author_id: n(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
+      return canonSummary(rows[0]);
     },
 
     async createPost({ authorId, title, body }) {

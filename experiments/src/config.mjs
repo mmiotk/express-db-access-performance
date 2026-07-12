@@ -1,5 +1,12 @@
 // Central configuration for the harness. Everything is overridable via env so
 // the benchmark matrix (bench/runner.mjs) can drive a single server binary.
+//
+// Timezone: the whole harness runs in UTC. Drivers disagree on whether a
+// timestamp-without-time-zone / DATETIME value is local or UTC time; pinning
+// TZ=UTC before any driver is imported makes every client's interpretation
+// coincide, so canonical timestamps are byte-identical across layers (enforced
+// by bench/verify.mjs).
+process.env.TZ = process.env.TZ || 'UTC';
 
 const int = (v, d) => (v === undefined || v === '' ? d : Number.parseInt(v, 10));
 

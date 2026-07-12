@@ -3,6 +3,7 @@
 // Drizzle's idiomatic style and mirrors the native-driver query plan closely.
 import { eq, lt, desc, sql } from 'drizzle-orm';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   let db, tables, close;
@@ -13,19 +14,19 @@ export default async function createAdapter({ engine, config }) {
     const t = await import('drizzle-orm/pg-core');
     const authors = t.pgTable('authors', {
       id: t.bigserial('id', { mode: 'number' }).primaryKey(),
-      name: t.varchar('name'), email: t.varchar('email'), created_at: t.timestamp('created_at'),
+      name: t.varchar('name'), email: t.varchar('email'), created_at: t.timestamp('created_at', { withTimezone: true }),
     });
     const posts = t.pgTable('posts', {
       id: t.bigserial('id', { mode: 'number' }).primaryKey(),
       author_id: t.bigint('author_id', { mode: 'number' }),
       title: t.varchar('title'), body: t.text('body'), views: t.integer('views'),
-      published: t.boolean('published'), created_at: t.timestamp('created_at'),
+      published: t.boolean('published'), created_at: t.timestamp('created_at', { withTimezone: true }),
     });
     const comments = t.pgTable('comments', {
       id: t.bigserial('id', { mode: 'number' }).primaryKey(),
       post_id: t.bigint('post_id', { mode: 'number' }),
       author_id: t.bigint('author_id', { mode: 'number' }),
-      body: t.text('body'), created_at: t.timestamp('created_at'),
+      body: t.text('body'), created_at: t.timestamp('created_at', { withTimezone: true }),
     });
     const pool = new pg.Pool({ ...config.postgres, min: config.pool.min, max: config.pool.max });
     db = drizzle(pool); tables = { authors, posts, comments }; close = () => pool.end();
@@ -61,11 +62,11 @@ export default async function createAdapter({ engine, config }) {
 
     async getPost(id) {
       const rows = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
-      return rows[0] || null;
+      return canonPost(rows[0]);
     },
 
     async listPosts({ limit, before }) {
-      return db.select().from(posts).where(lt(posts.id, before)).orderBy(desc(posts.id)).limit(limit);
+      return canonPosts(await db.select().from(posts).where(lt(posts.id, before)).orderBy(desc(posts.id)).limit(limit));
     },
 
     async getThread(id) {
@@ -82,12 +83,7 @@ export default async function createAdapter({ engine, config }) {
         .from(comments).innerJoin(authors, eq(authors.id, comments.author_id))
         .where(eq(comments.post_id, id)).orderBy(comments.id);
 
-      return {
-        post: { id: p.id, title: p.title, body: p.body, views: p.views, created_at: p.created_at },
-        author: { id: p.author_id, name: p.author_name, email: p.author_email },
-        comments: cRows.map((c) => ({ id: c.id, body: c.body, created_at: c.created_at,
-          author: { id: c.author_id, name: c.author_name, email: c.author_email } })),
-      };
+      return canonThreadRows(p, cRows);
     },
 
     // Same-plan control: identical SQL + identical mapping via db.execute. The
@@ -113,9 +109,7 @@ export default async function createAdapter({ engine, config }) {
           FROM authors a
          WHERE a.id = ${id}`);
       // node-postgres returns { rows }; mysql2 returns [rows, fields].
-      const r = engine === 'postgres' ? res.rows?.[0] : res[0]?.[0];
-      if (!r) return null;
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
+      return canonSummary(engine === 'postgres' ? res.rows?.[0] : res[0]?.[0]);
     },
 
     async createPost({ authorId, title, body }) {

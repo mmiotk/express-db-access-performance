@@ -3,6 +3,7 @@
 import knexFactory from 'knex';
 import { Model } from 'objection';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 class Author extends Model {
   static get tableName() { return 'authors'; }
@@ -38,23 +39,18 @@ export default async function createAdapter({ engine, config }) {
     category: 'orm',
 
     async getPost(id) {
-      return (await Post.query().findById(id)) || null;
+      return canonPost(await Post.query().findById(id));
     },
 
     async listPosts({ limit, before }) {
-      return Post.query().where('id', '<', before).orderBy('id', 'desc').limit(limit);
+      return canonPosts(await Post.query().where('id', '<', before).orderBy('id', 'desc').limit(limit));
     },
 
     async getThread(id) {
       const post = await Post.query().findById(id)
         .withGraphFetched('[author, comments(orderById).author]')
         .modifiers({ orderById: (b) => b.orderBy('comments.id') });
-      if (!post) return null;
-      return {
-        post: { id: post.id, title: post.title, body: post.body, views: post.views, created_at: post.created_at },
-        author: post.author,
-        comments: (post.comments || []).map((c) => ({ id: c.id, body: c.body, created_at: c.created_at, author: c.author })),
-      };
+      return post ? canonThread(post, post.author, post.comments || []) : null;
     },
 
     // Same-plan control: identical SQL + identical mapping via the underlying knex.
@@ -77,8 +73,7 @@ export default async function createAdapter({ engine, config }) {
           Author.knex().raw('(SELECT COALESCE(SUM(views),0) FROM posts WHERE posts.author_id = authors.id) as views'),
           Author.knex().raw('(SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id WHERE p.author_id = authors.id) as comments'),
         );
-      if (!r) return null;
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
+      return canonSummary(r);
     },
 
     async createPost({ authorId, title, body }) {

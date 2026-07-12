@@ -3,6 +3,7 @@
 // A fresh EntityManager fork is used per request to isolate identity maps.
 import { MikroORM, EntitySchema } from '@mikro-orm/core';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonSummary } from './_canon.mjs';
 
 const Author = new EntitySchema({
   name: 'Author', tableName: 'authors',
@@ -56,12 +57,14 @@ export default async function createAdapter({ engine, config }) {
 
     async getPost(id) {
       const em = orm.em.fork();
-      return (await em.findOne(Post, { id })) || null;
+      const p = await em.findOne(Post, { id });
+      return p ? canonPost({ ...p, author_id: p.author?.id ?? p.author }) : null;
     },
 
     async listPosts({ limit, before }) {
       const em = orm.em.fork();
-      return em.find(Post, { id: { $lt: before } }, { orderBy: { id: 'DESC' }, limit });
+      const rows = await em.find(Post, { id: { $lt: before } }, { orderBy: { id: 'DESC' }, limit });
+      return rows.map((p) => canonPost({ ...p, author_id: p.author?.id ?? p.author }));
     },
 
     async getThread(id) {
@@ -70,16 +73,7 @@ export default async function createAdapter({ engine, config }) {
         populate: ['author', 'comments', 'comments.author'],
         orderBy: { comments: { id: 'ASC' } },
       });
-      if (!post) return null;
-      const p = em.map ? post : post; // entity
-      return {
-        post: { id: num(p.id), title: p.title, body: p.body, views: p.views, created_at: p.created_at },
-        author: { id: num(p.author.id), name: p.author.name, email: p.author.email },
-        comments: p.comments.getItems().map((cm) => ({
-          id: num(cm.id), body: cm.body, created_at: cm.created_at,
-          author: { id: num(cm.author.id), name: cm.author.name, email: cm.author.email },
-        })),
-      };
+      return post ? canonThread(post, post.author, post.comments.getItems()) : null;
     },
 
     // Same-plan control: identical SQL + identical mapping via the connection's
@@ -106,9 +100,7 @@ export default async function createAdapter({ engine, config }) {
            FROM authors a
           WHERE a.id = ?`, [id]);
       void knex;
-      const r = rows[0];
-      if (!r) return null;
-      return { author_id: num(r.author_id), posts: num(r.posts), comments: num(r.comments), views: num(r.views || 0) };
+      return canonSummary(rows[0]);
     },
 
     async createPost({ authorId, title, body }) {

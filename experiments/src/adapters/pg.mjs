@@ -3,6 +3,7 @@
 // two queries (post+author, then all comments+their authors joined).
 import pg from 'pg';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ config }) {
   const pool = new pg.Pool({ ...config.postgres, min: config.pool.min, max: config.pool.max });
@@ -13,7 +14,7 @@ export default async function createAdapter({ config }) {
 
     async getPost(id) {
       const { rows } = await pool.query('SELECT * FROM posts WHERE id = $1', [id]);
-      return rows[0] || null;
+      return canonPost(rows[0]);
     },
 
     async listPosts({ limit, before }) {
@@ -21,7 +22,7 @@ export default async function createAdapter({ config }) {
         'SELECT * FROM posts WHERE id < $1 ORDER BY id DESC LIMIT $2',
         [before, limit],
       );
-      return rows;
+      return canonPosts(rows);
     },
 
     async getThread(id) {
@@ -39,14 +40,7 @@ export default async function createAdapter({ config }) {
           WHERE c.post_id = $1
           ORDER BY c.id`, [id]);
 
-      return {
-        post: { id: post.id, title: post.title, body: post.body, views: post.views, created_at: post.created_at },
-        author: { id: post.author_id, name: post.author_name, email: post.author_email },
-        comments: commentsRes.rows.map((c) => ({
-          id: c.id, body: c.body, created_at: c.created_at,
-          author: { id: c.author_id, name: c.author_name, email: c.author_email },
-        })),
-      };
+      return canonThreadRows(post, commentsRes.rows);
     },
 
     // Same-plan control: identical SQL + identical mapping via the raw facility
@@ -71,9 +65,7 @@ export default async function createAdapter({ config }) {
                    WHERE p.author_id = a.id) AS comments
            FROM authors a
           WHERE a.id = $1`, [id]);
-      if (!rows[0]) return null;
-      const r = rows[0];
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views) };
+      return canonSummary(rows[0]);
     },
 
     async createPost({ authorId, title, body }) {

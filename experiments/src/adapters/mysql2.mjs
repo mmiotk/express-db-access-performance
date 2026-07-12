@@ -2,6 +2,7 @@
 // Same two-query deep fetch to avoid N+1.
 import mysql from 'mysql2/promise';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ config }) {
   const pool = mysql.createPool({
@@ -16,14 +17,14 @@ export default async function createAdapter({ config }) {
 
     async getPost(id) {
       const [rows] = await pool.query('SELECT * FROM posts WHERE id = ?', [id]);
-      return rows[0] || null;
+      return canonPost(rows[0]);
     },
 
     async listPosts({ limit, before }) {
       const [rows] = await pool.query(
         'SELECT * FROM posts WHERE id < ? ORDER BY id DESC LIMIT ?',
         [before, limit]);
-      return rows;
+      return canonPosts(rows);
     },
 
     async getThread(id) {
@@ -41,14 +42,7 @@ export default async function createAdapter({ config }) {
           WHERE c.post_id = ?
           ORDER BY c.id`, [id]);
 
-      return {
-        post: { id: post.id, title: post.title, body: post.body, views: post.views, created_at: post.created_at },
-        author: { id: post.author_id, name: post.author_name, email: post.author_email },
-        comments: commentRows.map((c) => ({
-          id: c.id, body: c.body, created_at: c.created_at,
-          author: { id: c.author_id, name: c.author_name, email: c.author_email },
-        })),
-      };
+      return canonThreadRows(post, commentRows);
     },
 
     // Same-plan control: identical SQL + identical mapping via the raw facility.
@@ -70,9 +64,7 @@ export default async function createAdapter({ config }) {
                    WHERE p.author_id = a.id) AS comments
            FROM authors a
           WHERE a.id = ?`, [id]);
-      if (!rows[0]) return null;
-      const r = rows[0];
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views) };
+      return canonSummary(rows[0]);
     },
 
     async createPost({ authorId, title, body }) {

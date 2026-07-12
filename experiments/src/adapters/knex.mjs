@@ -2,6 +2,7 @@
 // both engines by switching the client.
 import knexFactory from 'knex';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const knex = knexFactory({
@@ -15,11 +16,11 @@ export default async function createAdapter({ engine, config }) {
     category: 'query-builder',
 
     async getPost(id) {
-      return (await knex('posts').where({ id }).first()) || null;
+      return canonPost(await knex('posts').where({ id }).first());
     },
 
     async listPosts({ limit, before }) {
-      return knex('posts').where('id', '<', before).orderBy('id', 'desc').limit(limit);
+      return canonPosts(await knex('posts').where('id', '<', before).orderBy('id', 'desc').limit(limit));
     },
 
     async getThread(id) {
@@ -34,14 +35,7 @@ export default async function createAdapter({ engine, config }) {
         .select('c.id', 'c.body', 'c.created_at', 'a.id as author_id', 'a.name as author_name', 'a.email as author_email')
         .where('c.post_id', id).orderBy('c.id');
 
-      return {
-        post: { id: post.id, title: post.title, body: post.body, views: post.views, created_at: post.created_at },
-        author: { id: post.author_id, name: post.author_name, email: post.author_email },
-        comments: comments.map((c) => ({
-          id: c.id, body: c.body, created_at: c.created_at,
-          author: { id: c.author_id, name: c.author_name, email: c.author_email },
-        })),
-      };
+      return canonThreadRows(post, comments);
     },
 
     // Same-plan control: identical SQL + identical mapping via knex.raw.
@@ -63,9 +57,7 @@ export default async function createAdapter({ engine, config }) {
                 (SELECT COUNT(*) FROM comments c JOIN posts p ON p.id = c.post_id
                    WHERE p.author_id = a.id) AS comments
            FROM authors a WHERE a.id = ?`, [id]);
-      const r = (res.rows ? res.rows : res[0])[0]; // pg: {rows}; mysql2: [rows,fields]
-      if (!r) return null;
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
+      return canonSummary((res.rows ? res.rows : res[0])[0]);
     },
 
     async createPost({ authorId, title, body }) {

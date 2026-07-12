@@ -3,6 +3,7 @@
 import 'reflect-metadata';
 import { DataSource, EntitySchema, LessThan } from 'typeorm';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 const Author = new EntitySchema({
   name: 'Author', tableName: 'authors',
@@ -55,11 +56,11 @@ export default async function createAdapter({ engine, config }) {
     category: 'orm',
 
     async getPost(id) {
-      return (await posts.findOne({ where: { id } })) || null;
+      return canonPost(await posts.findOne({ where: { id } }));
     },
 
     async listPosts({ limit, before }) {
-      return posts.find({ where: { id: LessThan(before) }, order: { id: 'DESC' }, take: limit });
+      return canonPosts(await posts.find({ where: { id: LessThan(before) }, order: { id: 'DESC' }, take: limit }));
     },
 
     async getThread(id) {
@@ -68,12 +69,7 @@ export default async function createAdapter({ engine, config }) {
         relations: { author: true, comments: { author: true } },
         order: { comments: { id: 'ASC' } },
       });
-      if (!post) return null;
-      return {
-        post: { id: num(post.id), title: post.title, body: post.body, views: post.views, created_at: post.created_at },
-        author: post.author,
-        comments: (post.comments || []).map((cm) => ({ id: num(cm.id), body: cm.body, created_at: cm.created_at, author: cm.author })),
-      };
+      return post ? canonThread(post, post.author, post.comments || []) : null;
     },
 
     // Same-plan control: identical SQL + identical mapping via ds.query.
@@ -96,9 +92,7 @@ export default async function createAdapter({ engine, config }) {
                    WHERE p.author_id = a.id) AS comments
            FROM authors a
           WHERE a.id = ${ph}`, [id]);
-      const r = rows[0];
-      if (!r) return null;
-      return { author_id: num(r.author_id), posts: num(r.posts), comments: num(r.comments), views: num(r.views || 0) };
+      return canonSummary(rows[0]);
     },
 
     async createPost({ authorId, title, body }) {

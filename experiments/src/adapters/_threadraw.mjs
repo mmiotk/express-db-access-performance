@@ -21,14 +21,5 @@ export const THREAD_Q2 = (ph) =>
     WHERE c.post_id = ${ph}
     ORDER BY c.id`;
 
-export function mapThread(post, comments) {
-  if (!post) return null;
-  return {
-    post: { id: post.id, title: post.title, body: post.body, views: post.views, created_at: post.created_at },
-    author: { id: post.author_id, name: post.author_name, email: post.author_email },
-    comments: comments.map((c) => ({
-      id: c.id, body: c.body, created_at: c.created_at,
-      author: { id: c.author_id, name: c.author_name, email: c.author_email },
-    })),
-  };
-}
+import { canonThreadRows } from './_canon.mjs';
+export const mapThread = canonThreadRows;

@@ -2,6 +2,7 @@
 // for the deep fetch. Aggregation via a raw SELECT to keep it comparable.
 import { Sequelize, DataTypes, Model, Op } from 'sequelize';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const c = engine === 'postgres' ? config.postgres : config.mysql;
@@ -17,11 +18,11 @@ export default async function createAdapter({ engine, config }) {
     { sequelize, tableName: 'authors', timestamps: false });
 
   class Post extends Model {}
-  Post.init({ author_id: DataTypes.BIGINT, title: DataTypes.STRING, body: DataTypes.TEXT, views: DataTypes.INTEGER, published: DataTypes.BOOLEAN },
+  Post.init({ author_id: DataTypes.BIGINT, title: DataTypes.STRING, body: DataTypes.TEXT, views: DataTypes.INTEGER, published: DataTypes.BOOLEAN, created_at: DataTypes.DATE },
     { sequelize, tableName: 'posts', timestamps: false });
 
   class Comment extends Model {}
-  Comment.init({ post_id: DataTypes.BIGINT, author_id: DataTypes.BIGINT, body: DataTypes.TEXT },
+  Comment.init({ post_id: DataTypes.BIGINT, author_id: DataTypes.BIGINT, body: DataTypes.TEXT, created_at: DataTypes.DATE },
     { sequelize, tableName: 'comments', timestamps: false });
 
   Post.belongsTo(Author, { as: 'author', foreignKey: 'author_id' });
@@ -34,11 +35,11 @@ export default async function createAdapter({ engine, config }) {
 
     async getPost(id) {
       const p = await Post.findByPk(id, { raw: true });
-      return p || null;
+      return canonPost(p);
     },
 
     async listPosts({ limit, before }) {
-      return Post.findAll({ where: { id: { [Op.lt]: before } }, order: [['id', 'DESC']], limit, raw: true });
+      return canonPosts(await Post.findAll({ where: { id: { [Op.lt]: before } }, order: [['id', 'DESC']], limit, raw: true }));
     },
 
     async getThread(id) {
@@ -51,11 +52,7 @@ export default async function createAdapter({ engine, config }) {
       });
       if (!post) return null;
       const j = post.toJSON();
-      return {
-        post: { id: j.id, title: j.title, body: j.body, views: j.views, created_at: j.created_at },
-        author: j.author,
-        comments: (j.comments || []).map((cm) => ({ id: cm.id, body: cm.body, created_at: cm.created_at, author: cm.author })),
-      };
+      return canonThread(j, j.author, j.comments || []);
     },
 
     // Same-plan control: identical SQL + identical mapping via sequelize.query.
@@ -78,9 +75,7 @@ export default async function createAdapter({ engine, config }) {
            FROM authors a
           WHERE a.id = ${engine === 'postgres' ? '$1' : '?'}`,
         { bind: engine === 'postgres' ? [id] : undefined, replacements: engine === 'postgres' ? undefined : [id] });
-      const r = rows[0];
-      if (!r) return null;
-      return { author_id: Number(r.author_id), posts: Number(r.posts), comments: Number(r.comments), views: Number(r.views || 0) };
+      return canonSummary(rows[0]);
     },
 
     async createPost({ authorId, title, body }) {

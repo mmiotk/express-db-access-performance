@@ -1,6 +1,10 @@
-// Correctness cross-check: boot every adapter for ENGINE and assert each returns
-// the SAME normalized result as the native-driver baseline (pg or mysql2) for the
-// same inputs. This is what proves no adapter cheats via N+1 or a wrong query.
+// Correctness cross-check (harness 2.0): boot every adapter for ENGINE and assert
+// that each returns a BYTE-IDENTICAL JSON response to the native-driver baseline
+// (pg or mysql2) for the same inputs, on all four non-mutating endpoints, plus the
+// same-SQL control. Since every adapter funnels its output through the canonical
+// constructors (src/adapters/_canon.mjs), full-payload equality — field set, key
+// order, value types, serialized byte length — is required, not just a key-field
+// projection. This is what proves the layers are measured on an equivalent task.
 //
 //   ENGINE=postgres node bench/verify.mjs
 //   ENGINE=mysql    node bench/verify.mjs
@@ -8,72 +12,66 @@ import { ADAPTERS, config } from '../src/config.mjs';
 
 const engine = config.engine;
 const baseline = engine === 'postgres' ? 'pg' : 'mysql2';
-const POST_ID = 1;
-const AUTHOR_ID = 1;
-
-// Normalize away engine/driver noise (Date objects, BigInt, numeric strings, key order).
-function norm(v) {
-  if (v == null) return v;
-  if (Array.isArray(v)) return v.map(norm);
-  if (v instanceof Date) return 'date';
-  if (typeof v === 'bigint') return Number(v);
-  if (typeof v === 'object') {
-    const out = {};
-    for (const k of Object.keys(v).sort()) {
-      if (k === 'created_at') continue; // timestamps differ by seed run
-      out[k] = norm(v[k]);
-    }
-    return out;
-  }
-  if (typeof v === 'string' && /^\d+$/.test(v)) return Number(v);
-  return v;
-}
-const j = (v) => JSON.stringify(norm(v));
+// Fixed probe inputs (deterministic seed): mid-range post, mid-range author, and a
+// keyset page below id=1000.
+const POST_IDS = [1, 50000, 99999];
+const AUTHOR_ID = 1000;
 
 async function probe(name) {
   const { default: create } = await import(`../src/adapters/${name}.mjs`);
   const db = await create({ engine, config });
   try {
-    const getPost = await db.getPost(POST_ID);
-    // keyset page just below id=1000 → deterministic across adapters
-    const list = await db.listPosts({ limit: 20, before: 1000 });
-    const thread = await db.getThread(POST_ID);
-    const summary = await db.authorSummary(AUTHOR_ID);
-    return {
-      getPost: { id: Number(getPost.id), title: getPost.title },
-      listCount: list.length,
-      listFirstId: Number(list[0].id),
-      listLastId: Number(list[list.length - 1].id),
-      thread: {
-        postId: Number(thread.post.id),
-        authorId: Number(thread.author.id),
-        comments: thread.comments.length,
-        firstCommentAuthor: thread.comments[0] ? Number(thread.comments[0].author.id) : null,
-      },
-      summary,
-    };
+    const out = {};
+    for (const id of POST_IDS) {
+      out[`getPost:${id}`] = JSON.stringify(await db.getPost(id));
+      out[`thread:${id}`] = JSON.stringify(await db.getThread(id));
+      out[`threadRaw:${id}`] = JSON.stringify(await db.getThreadRaw(id));
+    }
+    out['list:1000'] = JSON.stringify(await db.listPosts({ limit: 20, before: 1000 }));
+    out['list:60000'] = JSON.stringify(await db.listPosts({ limit: 20, before: 60000 }));
+    out[`summary:${AUTHOR_ID}`] = JSON.stringify(await db.authorSummary(AUTHOR_ID));
+    return out;
   } finally {
     await db.close();
   }
 }
 
 const names = Object.keys(ADAPTERS).filter((n) => ADAPTERS[n].engines.includes(engine));
-console.log(`Verifying ${names.length} adapters on ${engine} (baseline=${baseline})\n`);
+console.log(`Verifying ${names.length} adapters on ${engine} (baseline=${baseline}, byte-level)\n`);
 
 const base = await probe(baseline);
-console.log(`baseline ${baseline}:`, JSON.stringify(base));
+const keys = Object.keys(base);
+console.log(`baseline ${baseline}: ${keys.length} probes, bytes: ` +
+  keys.map((k) => `${k}=${Buffer.byteLength(base[k])}`).join(' '));
 
+// internal consistency of the baseline itself: idiomatic thread === same-SQL thread
 let bad = 0;
+for (const id of POST_IDS) {
+  if (base[`thread:${id}`] !== base[`threadRaw:${id}`]) {
+    bad++; console.log(`  ✗ baseline thread(${id}) !== threadRaw(${id})`);
+  }
+}
+
 for (const name of names) {
   if (name === baseline) { console.log(`  ✓ ${name} (baseline)`); continue; }
   try {
     const r = await probe(name);
-    const same = j(r) === j(base);
-    if (same) { console.log(`  ✓ ${name}`); }
-    else { bad++; console.log(`  ✗ ${name}\n      got : ${j(r)}\n      want: ${j(base)}`); }
+    const diffs = keys.filter((k) => r[k] !== base[k]);
+    if (diffs.length === 0) { console.log(`  ✓ ${name} (byte-identical on ${keys.length} probes)`); }
+    else {
+      bad++;
+      console.log(`  ✗ ${name}: ${diffs.length} probe(s) differ`);
+      for (const k of diffs.slice(0, 2)) {
+        const a = r[k] ?? 'undefined', b = base[k];
+        let i = 0; while (i < Math.min(a.length, b.length) && a[i] === b[i]) i++;
+        console.log(`      ${k}: bytes ${Buffer.byteLength(a)} vs ${Buffer.byteLength(b)}; first diff @${i}:`);
+        console.log(`        got : …${a.slice(Math.max(0, i - 30), i + 40)}…`);
+        console.log(`        want: …${b.slice(Math.max(0, i - 30), i + 40)}…`);
+      }
+    }
   } catch (e) {
     bad++; console.log(`  ✗ ${name}  ERROR ${e.code || ''} ${e.message}`);
   }
 }
-console.log(`\n${bad === 0 ? 'ALL MATCH' : bad + ' adapter(s) differ/failed'}`);
+console.log(`\n${bad === 0 ? 'ALL BYTE-IDENTICAL' : bad + ' adapter(s) differ/failed'}`);
 process.exit(bad === 0 ? 0 : 1);
