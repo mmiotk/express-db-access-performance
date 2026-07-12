@@ -16,14 +16,18 @@ PGDATA="$ROOT/pg"; MYDATA="$ROOT/mysql"
 MYSOCK="/tmp/mysql-bench.sock"
 export PATH="$ENVBIN:$PATH"
 
+# Durability is NOT forced here: both engines boot at their defaults (fsync on,
+# flush per commit) and scripts/set-durability.mjs switches regimes explicitly.
+# (The original harness pinned fsync=off etc. on the command line, which silently
+# overrode ALTER SYSTEM; revision E3 measures writes under DEFAULT durability.)
 pg_start() {
   pg_ctl -D "$PGDATA" -l "$ROOT/pg.log" \
-    -o "-p 5432 -k /tmp -c listen_addresses=127.0.0.1 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=512MB" \
+    -o "-p 5432 -k /tmp -c listen_addresses=127.0.0.1 -c shared_buffers=512MB" \
     start
 }
 my_start() {
   nohup mysqld --datadir="$MYDATA" --socket="$MYSOCK" --port=3306 --bind-address=127.0.0.1 \
-    --mysqlx=OFF --innodb-buffer-pool-size=512M --innodb-flush-log-at-trx-commit=0 \
+    --mysqlx=OFF --innodb-buffer-pool-size=512M \
     --max-connections=200 > "$ROOT/mysql.log" 2>&1 &
   for _ in $(seq 1 30); do [ -S "$MYSOCK" ] && break; sleep 1; done
 }

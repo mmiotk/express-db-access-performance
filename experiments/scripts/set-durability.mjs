@@ -15,13 +15,18 @@ for (const [k, v] of mode === 'default'
   await c.query(`ALTER SYSTEM SET ${k}='${v}'`);
 }
 await c.query('SELECT pg_reload_conf()');
+// pg_reload_conf() signals asynchronously; give the backend a moment to re-read
+await new Promise((r) => setTimeout(r, 1200));
 const { rows } = await c.query("SELECT name, setting FROM pg_settings WHERE name IN ('fsync','synchronous_commit','full_page_writes')");
 console.log('PG:', rows.map((r) => `${r.name}=${r.setting}`).join(' '));
 await c.end();
 
 const m = await mysql.createConnection({ socketPath: '/tmp/mysql-bench.sock', user: 'root' });
+// relaxed must relax BOTH commit paths: the InnoDB redo log AND the binary log
+// (sync_binlog=1 is the out-of-the-box default and fsyncs per commit on its own)
 await m.query(`SET GLOBAL innodb_flush_log_at_trx_commit=${mode === 'default' ? 1 : 0}`);
-const [r2] = await m.query("SHOW VARIABLES LIKE 'innodb_flush_log_at_trx_commit'");
+await m.query(`SET GLOBAL sync_binlog=${mode === 'default' ? 1 : 0}`);
+const [r2] = await m.query("SHOW VARIABLES WHERE Variable_name IN ('innodb_flush_log_at_trx_commit','sync_binlog','log_bin')");
 console.log('MySQL:', r2.map((x) => `${x.Variable_name}=${x.Value}`).join(' '));
 await m.end();
 console.log(`durability: ${mode}`);
