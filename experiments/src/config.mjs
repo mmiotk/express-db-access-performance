@@ -17,6 +17,8 @@ export const ENGINES = ['postgres', 'mysql'];
 export const ADAPTERS = {
   pg:        { category: 'native-driver', engines: ['postgres'] },
   mysql2:    { category: 'native-driver', engines: ['mysql'] },
+  'pg-tuned':     { category: 'native-tuned', engines: ['postgres'] }, // named prepared statements
+  'mysql2-tuned': { category: 'native-tuned', engines: ['mysql'] },    // binary protocol, execute()
   knex:      { category: 'query-builder', engines: ['postgres', 'mysql'] },
   drizzle:   { category: 'orm-lightweight', engines: ['postgres', 'mysql'] },
   prisma:    { category: 'orm',            engines: ['postgres', 'mysql'] },

@@ -40,6 +40,10 @@ const wantEndpoints = (env('ENDPOINTS', 'point_read,range_scan,deep_fetch,aggreg
 
 const SEED_POSTS = cfg.seed.posts;
 const SEED_AUTHORS = cfg.seed.authors;
+// Benchmark-insert floor: rows with id > RESET_FLOOR are deleted between write
+// runs. Defaults to the seed size; campaigns with fan-out posts (ids 250001..)
+// must set RESET_FLOOR=300000 so those rows survive the resets.
+const RESET_FLOOR = Number(env('RESET_FLOOR', SEED_POSTS));
 
 // Port allocator: never hand a server a port the databases (or anything else on the
 // host) listen on — a replicate of the first overnight run was lost to a collision
@@ -185,7 +189,7 @@ async function rebuildDb(engine) {
     await c.end();
   } else {
     const c = await mysql.createConnection(cfg.mysql);
-    await c.query('DELETE FROM posts WHERE id > ?', [SEED_POSTS]);
+    await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]);
     await c.query('OPTIMIZE TABLE posts');
     const [[{ ai }]] = await c.query('SELECT COALESCE(MAX(id),0)+1 AS ai FROM posts');
     await c.query(`ALTER TABLE posts AUTO_INCREMENT = ${Number(ai)}`);
@@ -207,10 +211,10 @@ function ensurePrismaClient(engine) {
 async function resetWrites(engine) {
   if (engine === 'postgres') {
     const c = new pg.Client(cfg.postgres); await c.connect();
-    await c.query('DELETE FROM posts WHERE id > $1', [SEED_POSTS]); await c.end();
+    await c.query('DELETE FROM posts WHERE id > $1', [RESET_FLOOR]); await c.end();
   } else {
     const c = await mysql.createConnection(cfg.mysql);
-    await c.query('DELETE FROM posts WHERE id > ?', [SEED_POSTS]); await c.end();
+    await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]); await c.end();
   }
 }
 
