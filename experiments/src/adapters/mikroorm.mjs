@@ -110,6 +110,12 @@ export default async function createAdapter({ engine, config }) {
       return { id: num(post.id) };
     },
 
+    poolStats() {
+      const k = orm.em.getConnection().getKnex?.();
+      const p = k?.client?.pool; if (!p) return null;
+      return { used: p.numUsed(), free: p.numFree(), pending: p.numPendingAcquires() };
+    },
+
     async close() { try { await orm.close(true); } catch { /* teardown races on pooled conns */ } },
   };
 }

@@ -100,6 +100,21 @@ export default async function createAdapter({ engine, config }) {
       return { id: num(row.id) };
     },
 
+    poolStats() {
+      const d = ds.driver;
+      const pgPool = d.master; // postgres driver
+      if (pgPool && pgPool.totalCount != null) {
+        return { used: pgPool.totalCount - pgPool.idleCount, free: pgPool.idleCount, pending: pgPool.waitingCount };
+      }
+      const my = d.pool && d.pool.pool; // mysql driver (promise wrapper? core pool)
+      const p = my || d.pool;
+      if (p && p._allConnections) {
+        const all = p._allConnections.length, free = p._freeConnections.length;
+        return { used: all - free, free, pending: p._connectionQueue ? p._connectionQueue.length : 0 };
+      }
+      return null;
+    },
+
     async close() { await ds.destroy(); },
   };
 }

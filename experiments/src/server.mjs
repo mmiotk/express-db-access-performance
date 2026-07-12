@@ -3,6 +3,7 @@
 // The benchmark runner boots one server process per (adapter, engine) cell.
 
 import express from 'express';
+import { PerformanceObserver } from 'node:perf_hooks';
 import { config } from './config.mjs';
 
 const adapterName = config.adapter;
@@ -22,6 +23,36 @@ const h = (fn) => (req, res) => fn(req, res).catch((err) => {
 });
 
 app.get('/health', (_req, res) => res.json({ ok: true, adapter: db.name, engine }));
+
+// --- observability for the harness (review 6.21 / minor 14) -------------------
+// GC: count + total pause time since boot, via the perf_hooks GC observer.
+const gc = { count: 0, ms: 0 };
+try {
+  new PerformanceObserver((list) => {
+    for (const e of list.getEntries()) { gc.count++; gc.ms += e.duration; }
+  }).observe({ entryTypes: ['gc'] });
+} catch { /* observer unavailable */ }
+
+// Pool: adapters may expose poolStats() -> {used, free, pending}; sample it every
+// 200ms and keep aggregates, so the runner can report acquisition pressure.
+const pool = { samples: 0, usedSum: 0, pendingSum: 0, pendingMax: 0 };
+if (typeof db.poolStats === 'function') {
+  setInterval(() => {
+    try {
+      const s = db.poolStats();
+      if (!s) return;
+      pool.samples++; pool.usedSum += s.used ?? 0; pool.pendingSum += s.pending ?? 0;
+      if ((s.pending ?? 0) > pool.pendingMax) pool.pendingMax = s.pending;
+    } catch { /* ignore */ }
+  }, 200).unref();
+}
+app.get('/stats', (_req, res) => res.json({
+  gc_count: gc.count, gc_ms: Math.round(gc.ms),
+  pool_samples: pool.samples,
+  pool_used_avg: pool.samples ? +(pool.usedSum / pool.samples).toFixed(1) : null,
+  pool_pending_avg: pool.samples ? +(pool.pendingSum / pool.samples).toFixed(1) : null,
+  pool_pending_max: pool.samples ? pool.pendingMax : null,
+}));
 
 // 1. point read
 app.get('/posts/:id', h(async (req, res) => {

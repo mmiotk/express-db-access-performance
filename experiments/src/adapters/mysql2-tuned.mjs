@@ -62,6 +62,13 @@ export default async function createAdapter({ config }) {
       return { id: Number(res.insertId) };
     },
 
+    poolStats() {
+      const p = pool.pool;
+      if (!p || !p._allConnections) return null;
+      const all = p._allConnections.length, free = p._freeConnections.length;
+      return { used: all - free, free, pending: p._connectionQueue ? p._connectionQueue.length : 0 };
+    },
+
     async close() { await pool.end(); },
   };
 }

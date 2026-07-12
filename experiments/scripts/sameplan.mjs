@@ -18,6 +18,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const SEED_POSTS = cfg.seed.posts;
 const rnd = (n) => 1 + Math.floor(Math.random() * n);
 const CONNECTIONS = 50, DURATION = 12, WARMUP = 2, PROBE_ID = 50000;
+const SP_REPS = Number(process.env.SP_REPS ?? 1);
 
 function health(base, tries = 100) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
 function run(base, path, dur, dynamic = true) {
@@ -62,10 +63,15 @@ for (const engine of ['postgres', 'mysql']) {
       ]);
       const ok = agree(ti, tr);
       await run(base, () => `/posts/${rnd(SEED_POSTS)}/thread-raw`, WARMUP);
-      const r = await run(base, () => `/posts/${rnd(SEED_POSTS)}/thread-raw`, DURATION);
-      const rps = Math.round(r.requests.average);
-      out.cells.push({ adapter, engine, rps, p99: r.latency.p99, idiomatic: idio(adapter, engine), agree: ok });
-      console.log(`  ${adapter}/${engine}: same-plan ${rps} req/s (p99 ${r.latency.p99}ms)  idiomatic ${idio(adapter, engine)}  agree=${ok}`);
+      const samples = [], p99s = [];
+      for (let i = 0; i < SP_REPS; i++) {
+        const r = await run(base, () => `/posts/${rnd(SEED_POSTS)}/thread-raw`, DURATION);
+        samples.push(Math.round(r.requests.average)); p99s.push(r.latency.p99);
+      }
+      const med = (a) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
+      const rps = med(samples);
+      out.cells.push({ adapter, engine, rps, p99: med(p99s), idiomatic: idio(adapter, engine), agree: ok, rps_samples: samples, reps: SP_REPS });
+      console.log(`  ${adapter}/${engine}: same-SQL ${rps} req/s (n=${SP_REPS})  idiomatic ${idio(adapter, engine)}  agree=${ok}`);
       if (adapter === 'pg' || adapter === 'mysql2') { // baseline once per engine (layer-independent)
         await run(base, '/baseline', WARMUP, false);
         const b = await run(base, '/baseline', DURATION, false);

@@ -6,7 +6,7 @@ import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
-  let db, tables, close;
+  let db, tables, close, rawPool;
 
   if (engine === 'postgres') {
     const pg = (await import('pg')).default;
@@ -29,7 +29,7 @@ export default async function createAdapter({ engine, config }) {
       body: t.text('body'), created_at: t.timestamp('created_at', { withTimezone: true }),
     });
     const pool = new pg.Pool({ ...config.postgres, min: config.pool.min, max: config.pool.max });
-    db = drizzle(pool); tables = { authors, posts, comments }; close = () => pool.end();
+    db = drizzle(pool); tables = { authors, posts, comments }; close = () => pool.end(); rawPool = pool;
   } else {
     const mysql = (await import('mysql2/promise')).default;
     const { drizzle } = await import('drizzle-orm/mysql2');
@@ -51,7 +51,7 @@ export default async function createAdapter({ engine, config }) {
       body: t.text('body'), created_at: t.datetime('created_at'),
     });
     const pool = mysql.createPool({ ...config.mysql, connectionLimit: config.pool.max });
-    db = drizzle(pool); tables = { authors, posts, comments }; close = () => pool.end();
+    db = drizzle(pool); tables = { authors, posts, comments }; close = () => pool.end(); rawPool = pool;
   }
 
   const { authors, posts, comments } = tables;
@@ -119,6 +119,16 @@ export default async function createAdapter({ engine, config }) {
       }
       const res = await db.insert(posts).values({ author_id: authorId, title, body });
       return { id: Number(res[0].insertId) };
+    },
+
+    poolStats() {
+      if (engine === 'postgres') {
+        const p = rawPool; if (!p || p.totalCount == null) return null;
+        return { used: p.totalCount - p.idleCount, free: p.idleCount, pending: p.waitingCount };
+      }
+      const p = rawPool?.pool; if (!p || !p._allConnections) return null;
+      const all = p._allConnections.length, free = p._freeConnections.length;
+      return { used: all - free, free, pending: p._connectionQueue ? p._connectionQueue.length : 0 };
     },
 
     async close() { await close(); },

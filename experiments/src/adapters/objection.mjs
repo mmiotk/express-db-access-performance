@@ -81,6 +81,11 @@ export default async function createAdapter({ engine, config }) {
       return { id: Number(row.id) };
     },
 
+    poolStats() {
+      const p = Post.knex()?.client?.pool; if (!p) return null;
+      return { used: p.numUsed(), free: p.numFree(), pending: p.numPendingAcquires() };
+    },
+
     async close() { await knex.destroy(); },
   };
 }

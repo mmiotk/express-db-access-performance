@@ -75,6 +75,10 @@ export default async function createAdapter({ config }) {
       return { id: Number(rows[0].id) };
     },
 
+    poolStats() {
+      return { used: pool.totalCount - pool.idleCount, free: pool.idleCount, pending: pool.waitingCount };
+    },
+
     async close() { await pool.end(); },
   };
 }

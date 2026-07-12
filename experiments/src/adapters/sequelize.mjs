@@ -83,6 +83,11 @@ export default async function createAdapter({ engine, config }) {
       return { id: Number(row.id) };
     },
 
+    poolStats() {
+      const p = sequelize.connectionManager?.pool; if (!p) return null;
+      return { used: p.using ?? null, free: p.available ?? null, pending: p.waiting ?? null };
+    },
+
     async close() { await sequelize.close(); },
   };
 }

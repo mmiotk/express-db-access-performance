@@ -251,6 +251,8 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
         errors += r.errors ?? 0; timeouts += r.timeouts ?? 0; non2xx += r.non2xx ?? 0;
       }
       const res = stopSampler();
+      let srvStats = {};
+      try { srvStats = await (await fetch(`${base}/stats`)).json(); } catch { /* optional */ }
       rows.push({
         adapter, engine, category: ADAPTERS[adapter].category, endpoint: ep.key,
         rps: Math.round(median(reqps)),
@@ -258,6 +260,8 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
         cpu_pct: res.cpuPct, cpu_children_pct: res.cpuChildrenPct, db_cpu_pct: res.dbCpuPct, gen_cpu_pct: res.genCpuPct,
         rss_mb: res.rssPeakMB,
         errors, timeouts, non2xx,
+        gc_count: srvStats.gc_count ?? null, gc_ms: srvStats.gc_ms ?? null,
+        pool_used_avg: srvStats.pool_used_avg ?? null, pool_pending_avg: srvStats.pool_pending_avg ?? null, pool_pending_max: srvStats.pool_pending_max ?? null,
         connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: REPEATS,
         rps_samples: reqps.map((x) => Math.round(x)), // retained for CV + significance tests
         p99_samples: p99,
@@ -278,6 +282,7 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
 // values for bootstrap CIs and CV.
 async function mainIndep() {
   const REPLICATES = Number(env('REPLICATES', 5));
+  const OUT = env('INDEP_OUT', 'raw-indep');
   // ORDER=shuffle (default) randomizes cell order per replicate; ORDER=forward and
   // ORDER=reverse fix it, so an order-reversal A/B run can demonstrate the absence
   // of history effects. REBUILD_WRITES=1 (default) measures the write endpoint in
@@ -299,6 +304,8 @@ async function mainIndep() {
     const a = acc.get(k);
     a.rps.push(r.rps); a.p50.push(r.p50); a.p90.push(r.p90); a.p975.push(r.p975); a.p99.push(r.p99);
     a.cpu.push(r.cpu_pct); a.cpuKids.push(r.cpu_children_pct); a.cpuDb.push(r.db_cpu_pct); a.cpuGen.push(r.gen_cpu_pct); a.rss.push(r.rss_mb);
+    (a.gc ??= []).push(r.gc_count); (a.gcMs ??= []).push(r.gc_ms);
+    (a.poolUsed ??= []).push(r.pool_used_avg); (a.poolPend ??= []).push(r.pool_pending_avg); (a.poolPendMax ??= []).push(r.pool_pending_max);
     a.errors += r.errors; a.timeouts += r.timeouts; a.non2xx += r.non2xx;
   };
   for (let rep = 0; rep < REPLICATES; rep++) {
@@ -319,7 +326,7 @@ async function mainIndep() {
     }
     // checkpoint: persist accumulated samples after every replicate so a crash in a
     // long overnight run loses at most the replicate in progress
-    await writeFile(join(resultsDir, 'raw-indep.partial.json'),
+    await writeFile(join(resultsDir, `${OUT}.partial.json`),
       JSON.stringify([...acc.values()], null, 2));
     console.log(`[checkpoint] replicate ${rep + 1}/${REPLICATES} saved (${acc.size} cells)`);
   }
@@ -330,6 +337,8 @@ async function mainIndep() {
     p50: median(a.p50), p90: median(a.p90), p975: median(a.p975), p99: median(a.p99),
     cpu_pct: m0(a.cpu), cpu_children_pct: m0(a.cpuKids), db_cpu_pct: m0(a.cpuDb), gen_cpu_pct: m0(a.cpuGen),
     rss_mb: m0(a.rss),
+    gc_count: m0(a.gc ?? []), gc_ms: m0(a.gcMs ?? []),
+    pool_used_avg: m0(a.poolUsed ?? []), pool_pending_avg: m0(a.poolPend ?? []), pool_pending_max: m0(a.poolPendMax ?? []),
     errors: a.errors, timeouts: a.timeouts, non2xx: a.non2xx,
     connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: a.rps.length, independent: true,
     order_mode: ORDER, rebuild_writes: REBUILD_WRITES, paired_streams: true,
@@ -344,8 +353,8 @@ async function mainIndep() {
     }
   }
   await writeFile(join(resultsDir, 'traces-sample.json'), JSON.stringify(sample, null, 2));
-  await writeFile(join(resultsDir, 'raw-indep.json'), JSON.stringify(rows, null, 2));
-  console.log(`\nWrote ${rows.length} rows → results/raw-indep.json (${REPLICATES} independent replicates, order=${ORDER}, paired streams, write-rebuild=${REBUILD_WRITES}, ${DURATION}s runs).`);
+  await writeFile(join(resultsDir, `${OUT}.json`), JSON.stringify(rows, null, 2));
+  console.log(`\nWrote ${rows.length} rows → results/${OUT}.json (${REPLICATES} independent replicates, order=${ORDER}, paired streams, write-rebuild=${REBUILD_WRITES}, ${DURATION}s runs).`);
 }
 
 async function main() {
