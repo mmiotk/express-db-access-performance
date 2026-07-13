@@ -3,7 +3,7 @@
     {
       "adapter": "pg",
       "engine": "postgres",
-      "rps": 3686,
+      "rps": 3643,
       "p99": 21,
       "idiomatic": 3741,
       "agree": true,
@@ -24,7 +24,7 @@
     {
       "adapter": "pg-tuned",
       "engine": "postgres",
-      "rps": 3794,
+      "rps": 3787,
       "p99": 19,
       "agree": true,
       "rps_samples": [
@@ -45,7 +45,7 @@
     {
       "adapter": "knex",
       "engine": "postgres",
-      "rps": 2924,
+      "rps": 2906,
       "p99": 24,
       "idiomatic": 2491,
       "agree": true,
@@ -66,7 +66,7 @@
     {
       "adapter": "drizzle",
       "engine": "postgres",
-      "rps": 3449,
+      "rps": 3446,
       "p99": 22,
       "idiomatic": 2080,
       "agree": true,
@@ -87,7 +87,7 @@
     {
       "adapter": "prisma",
       "engine": "postgres",
-      "rps": 4343,
+      "rps": 4342,
       "p99": 16,
       "idiomatic": 3685,
       "agree": true,
@@ -108,7 +108,7 @@
     {
       "adapter": "sequelize",
       "engine": "postgres",
-      "rps": 2480,
+      "rps": 2472,
       "p99": 27,
       "idiomatic": 989,
       "agree": true,
@@ -129,7 +129,7 @@
     {
       "adapter": "typeorm",
       "engine": "postgres",
-      "rps": 2998,
+      "rps": 2974,
       "p99": 25,
       "idiomatic": 1327,
       "agree": true,
@@ -150,7 +150,7 @@
     {
       "adapter": "objection",
       "engine": "postgres",
-      "rps": 2860,
+      "rps": 2845,
       "p99": 25,
       "idiomatic": 1037,
       "agree": true,
@@ -171,7 +171,7 @@
     {
       "adapter": "mikroorm",
       "engine": "postgres",
-      "rps": 2884,
+      "rps": 2869,
       "p99": 25,
       "idiomatic": 571,
       "agree": true,
@@ -192,7 +192,7 @@
     {
       "adapter": "mysql2",
       "engine": "mysql",
-      "rps": 2423,
+      "rps": 2419,
       "p99": 29,
       "idiomatic": 2405,
       "agree": true,
@@ -213,7 +213,7 @@
     {
       "adapter": "mysql2-tuned",
       "engine": "mysql",
-      "rps": 2381,
+      "rps": 2378,
       "p99": 26,
       "agree": true,
       "rps_samples": [
@@ -234,7 +234,7 @@
     {
       "adapter": "knex",
       "engine": "mysql",
-      "rps": 2311,
+      "rps": 2305,
       "p99": 28,
       "idiomatic": 2050,
       "agree": true,
@@ -255,7 +255,7 @@
     {
       "adapter": "drizzle",
       "engine": "mysql",
-      "rps": 2110,
+      "rps": 2105,
       "p99": 34,
       "idiomatic": 1446,
       "agree": true,
@@ -276,7 +276,7 @@
     {
       "adapter": "prisma",
       "engine": "mysql",
-      "rps": 4227,
+      "rps": 4220,
       "p99": 15,
       "idiomatic": 3701,
       "agree": true,
@@ -318,7 +318,7 @@
     {
       "adapter": "typeorm",
       "engine": "mysql",
-      "rps": 2520,
+      "rps": 2517,
       "p99": 25,
       "idiomatic": 1170,
       "agree": true,
@@ -339,7 +339,7 @@
     {
       "adapter": "objection",
       "engine": "mysql",
-      "rps": 2249,
+      "rps": 2243,
       "p99": 27,
       "idiomatic": 860,
       "agree": true,
@@ -360,7 +360,7 @@
     {
       "adapter": "mikroorm",
       "engine": "mysql",
-      "rps": 2177,
+      "rps": 2172,
       "p99": 28,
       "idiomatic": 535,
       "agree": true,

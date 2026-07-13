@@ -23,19 +23,17 @@ on its highest-value traffic, and a fan-out sweep of the same endpoint over grap
 $5.9\times$ at zero comments to $16.1\times$ at 500, with the leader flipping from
 Prisma on small graphs to \texttt{pg} from 50 comments on, as hydration cost scales
 with the number of materialized rows; the primary workload's roughly ten-comment
-graph sits near the low end of that range, so the headline deep-fetch spreads above
-are conservative. Point reads and aggregation are the opposite case:
+graph sits near the low end of that range. Point reads and aggregation are the opposite case:
 dominated by connection and parsing cost that every layer shares, point reads spread
 only $3.06\times$/$2.36\times$; aggregation spreads just $1.86\times$/$1.42\times$
 once every adapter, native drivers included, runs the same raw
 correlated-subquery plan, though Prisma's raw-SQL path still beats the slowest
 layer, Objection, by $2.09\times$ (PostgreSQL) to $2.49\times$ (MySQL). On the
-controlled same-SQL estimand, the idiomatic deep-fetch spread collapses: executing
-the identical two-statement SQL (and, per engine, identical \texttt{EXPLAIN} plans)
-through every layer's raw-SQL facility leaves the nine
-execution paths within $1.76\times$ of one another on PostgreSQL and $2.21\times$ on
-MySQL (Table~\ref{tab:sameplan}), so the wide default-configuration deficits are
-dominated by eager-loading strategy and hydration, not by execution machinery.
+controlled same-SQL estimand, the idiomatic deep-fetch spread collapses to
+$1.76\times$ on PostgreSQL and $2.21\times$ on MySQL
+(Section~\ref{sec:results}, Table~\ref{tab:sameplan}), so the wide
+default-configuration deficits are dominated by eager-loading strategy and
+hydration, not by execution machinery.
 MikroORM illustrates this most starkly: its default path delivers only 0.20 of its
 own same-SQL throughput on PostgreSQL and 0.25 on MySQL, a $5.0\times$/$4.1\times$
 strategy-and-hydration cost, while Prisma's raw path is the fastest same-SQL cell on
@@ -88,32 +86,30 @@ billing model).
 \paragraph{Queueing under load and the open-loop check.}
 The pool sampler turns a previously inferential design property into a direct
 measurement: on the deep fetch, the native PostgreSQL driver's ten-connection pool
-sits fully utilized (pool\_used\_avg~$\approx 10$) with roughly 39--40 requests
-waiting in the acquisition queue under the 50 concurrent connections used
-throughout, confirming queueing rather than an idle pool. A
+sits fully utilized (pool\_used\_avg~$\approx 10$) with a mean of about 32
+requests waiting in the acquisition queue (peaks of 39--40) under the 50
+concurrent connections used throughout, confirming queueing rather than an idle pool. A
 coordinated-omission-corrected, constant-arrival cross-run of the deep fetch on
 PostgreSQL (online supplement) shows the closed-loop ranking transfers under
 that stricter model: below each layer's capacity the corrected tail is flat and
 small (\texttt{pg} and Prisma hold p99~$\leq$~2--4~ms up to 2{,}000~req/s, both
 sustaining the full offered rate), but once the offered rate crosses a layer's
 capacity the heavy data-mapper ORMs collapse rather than degrade gracefully,
-Sequelize reaching only 772 of an offered 2{,}000~req/s with roughly half its
-requests timing out, and MikroORM collapsing already at 1{,}000~req/s (488
+Sequelize reaching only 772 of an offered 2{,}000~req/s with a third of the
+issued requests timing out, and MikroORM collapsing already at 1{,}000~req/s (488
 achieved), so a closed-loop benchmark alone underestimates how abruptly, not just
 how much, a heavyweight ORM's tail degrades beyond capacity.
 
 \paragraph{Writes: an engine-bound cost under default durability.}
 RQ2 has a clear answer on inserts, and the headline figures now come from each
-engine's \emph{default} durability configuration (PostgreSQL \texttt{fsync=on},
-\texttt{synchronous\_commit=on}, \texttt{full\_page\_writes=on}; MySQL
-\texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1}) rather than
-the relaxed one used in earlier campaigns. Even with fsync on, PostgreSQL's insert
+engine's \emph{default} durability configuration (Section~\ref{sec:methodology})
+rather than the relaxed one used in earlier campaigns. Even with fsync on, PostgreSQL's insert
 throughput remains layer-dependent: \texttt{pg-tuned} and \texttt{pg} lead at
 6{,}280 and 6{,}064~req/s, Prisma and Knex stay competitive (5{,}465 and 4{,}693),
 and MikroORM trails at 1{,}571, a $3.86\times$ spread (Table~\ref{tab:write}). At the
 50-connection concurrency used throughout, group commit absorbs most of the
 per-commit flush cost: a secondary, symmetrically relaxed run ($n=10$, both engines,
-including MySQL's doublewrite buffer off) shows relaxing durability buys native
+including MySQL's binlog sync off) shows relaxing durability buys native
 PostgreSQL at most $14\%$ and at most a few percent on most layer-bound ORMs (median
 $+8\%$ across the nine PostgreSQL cells; per-layer table in the online supplement), so the
 layer-dependence is a property of the write path itself, not of fsync. MySQL
@@ -122,9 +118,10 @@ $1.22\times$ spread), the same ``engine floor'' pattern the relaxed-durability r
 already showed; what default durability newly exposes is the mechanism in the tail:
 MySQL's p99 sits at 135--155~ms across every layer, consistent with the per-commit
 double flush (redo log, then binlog) InnoDB performs on every insert regardless of
-how the request reaches it~\cite{harizopoulos2008oltp}, against 11--24~ms on
+how the request reaches it~\cite{harizopoulos2008oltp}, against 11--37~ms on
 PostgreSQL. Relaxing MySQL's durability recovers only $19$--$24\%$, and the absolute
-gap to PostgreSQL remains roughly $7.5\times$ even then (809 vs.\ 6{,}064~req/s). The
+gap to PostgreSQL remains roughly $7\times$ even then (966 vs.\ 6{,}895~req/s
+under the relaxed regime on both engines). The
 engine contrast is not a durability artifact: under vendor defaults it is,
 if anything, slightly larger than under the secondary, mechanism-isolating relaxed
 run. This finding also warrants caution: a write-throughput comparison run on a

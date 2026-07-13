@@ -4,8 +4,8 @@
   \caption{Insert throughput (req/s) under the default durability configuration
     (PostgreSQL \texttt{fsync=on}, \texttt{synchronous\_commit=on}; MySQL
     \texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1};
-    25 replicates) and under the relaxed regime (all of the above off; 10
-    replicates), with the relaxed$\div$default ratio. At 50 concurrent
+    median of 25 replicates) and under the relaxed regime (all of the above off;
+    median of 10), with the relaxed$\div$default ratio. At 50 concurrent
     connections, group commit amortizes the per-commit flushes: relaxing
     durability buys at most 14\% on PostgreSQL (and $\le$4\% on the
     layer-bound ORMs) and 19--24\% on MySQL.}
@@ -17,17 +17,17 @@
     \cmidrule(lr){2-4}\cmidrule(lr){5-7}
     Layer & default & relaxed & ratio & default & relaxed & ratio \\
     \midrule
-    \texttt{pg} & 6064 & 6958 & 1.15 & -- & -- & -- \\
+    \texttt{pg} & 6064 & 6895 & 1.14 & -- & -- & -- \\
     \texttt{mysql2} & -- & -- & -- & 809 & 966 & 1.19 \\
-    \texttt{pg-tuned} & 6280 & 7167 & 1.14 & -- & -- & -- \\
+    \texttt{pg-tuned} & 6280 & 7150 & 1.14 & -- & -- & -- \\
     \texttt{mysql2-tuned} & -- & -- & -- & 808 & 972 & 1.20 \\
-    \texttt{knex} & 4697 & 5247 & 1.12 & 795 & 948 & 1.19 \\
-    \texttt{drizzle} & 4230 & 4691 & 1.11 & 796 & 950 & 1.19 \\
-    \texttt{prisma} & 5465 & 5679 & 1.04 & 714 & 880 & 1.23 \\
-    \texttt{sequelize} & 2668 & 2654 & 0.99 & 772 & 926 & 1.20 \\
-    \texttt{typeorm} & 2595 & 2699 & 1.04 & 732 & 887 & 1.21 \\
-    \texttt{objection} & 3926 & 4260 & 1.09 & 787 & 944 & 1.20 \\
-    \texttt{mikroorm} & 1571 & 1613 & 1.03 & 663 & 822 & 1.24 \\
+    \texttt{knex} & 4693 & 5212 & 1.11 & 795 & 948 & 1.19 \\
+    \texttt{drizzle} & 4230 & 4675 & 1.11 & 796 & 950 & 1.19 \\
+    \texttt{prisma} & 5465 & 5675 & 1.04 & 714 & 879 & 1.23 \\
+    \texttt{sequelize} & 2668 & 2653 & 0.99 & 772 & 925 & 1.20 \\
+    \texttt{typeorm} & 2595 & 2675 & 1.03 & 732 & 886 & 1.21 \\
+    \texttt{objection} & 3926 & 4245 & 1.08 & 787 & 944 & 1.20 \\
+    \texttt{mikroorm} & 1571 & 1607 & 1.02 & 663 & 822 & 1.24 \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

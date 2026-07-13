@@ -31,9 +31,7 @@ compresses, rather than manufactures, between-layer differences. Observed
 differences between layers are therefore attributable to how each layer reaches an
 identical response, not to what is returned. Writes are the one endpoint that
 mutates state, and the reported finding uses each engine's \emph{default},
-vendor-standard durability configuration (PostgreSQL \texttt{fsync=on},
-\texttt{synchronous\_commit=on}; MySQL
-\texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1}), not a
+vendor-standard durability configuration (Section~\ref{sec:methodology}), not a
 configuration we relaxed ourselves, so the reported spreads ($3.86\times$ on
 PostgreSQL, $1.22\times$ on MySQL) and the roughly $7.5\times$ native-driver gap
 between engines (809 MySQL vs.\ 6{,}064 PostgreSQL req/s) describe a standard
@@ -153,7 +151,7 @@ separating adjacent pair reaches $p < 0.001$, surviving the Bonferroni correctio
 with large-to-maximal effect sizes and narrow, non-overlapping bootstrap intervals,
 under randomized order and independent processes. The inference is carried jointly
 by that separation and by spreads one to two orders of magnitude above the
-run-to-run CV. Crucially, because each replicate is a freshly booted server process
+run-to-run CV. Because each replicate is a freshly booted server process
 with cell order randomized independently every time, these are genuine
 \emph{independent} replicates rather than repeated measures within one process
 lifetime~\cite{kalibera2013rigorous}; more replicates or longer runs would tighten

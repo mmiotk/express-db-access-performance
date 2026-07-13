@@ -110,8 +110,9 @@ per layer as enumerated in Section~\ref{sec:methodology}; the honest description
 of this control is therefore \emph{same SQL, protocol disclosed}, not
 \emph{same plan}.
 
-On the identical SQL, the idiomatic deep-fetch spread collapses to a max/min
-ratio of $1.76\times$ on PostgreSQL (top: Prisma's raw path at 4{,}342~req/s;
+On the identical SQL, the deep-fetch spread collapses to a max/min ratio
+(across the nine layers; the idiomatic spreads above are native-relative, whose
+max/min counterparts are $6.7\times$ and $6.9\times$) of $1.76\times$ on PostgreSQL (top: Prisma's raw path at 4{,}342~req/s;
 bottom: Sequelize's raw facility at 2{,}472) and $2.21\times$ on MySQL (Prisma
 4{,}220; Sequelize 1{,}912). Prisma's raw path leads on both engines, consistent
 with its pipelined query engine; the new low end is Sequelize's raw facility
@@ -131,7 +132,8 @@ cell, so the framework floor does not manufacture this collapse.
 \subsection{RQ2: engine dependence of the ranking}
 The relative ordering of access layers is largely, but not uniformly, stable
 across engines. Spearman rank correlation between the PostgreSQL and MySQL
-orderings (bootstrap 95\% CI) is $\rho=0.89$ [0.89--0.96] on the point read,
+orderings of the seven portable layers (a small basis of $n=7$ ranks, so the
+bootstrap CIs are coarse) is $\rho=0.89$ [0.89--0.96] on the point read,
 $0.89$ [0.86--0.89] on the range scan, $0.96$ [0.96--0.96] on the deep fetch, and
 $0.89$ [0.89--0.96] on aggregation (Kendall's $\tau$ between 0.81 and 0.90 on all
 four), so a layer's rank on one engine reasonably predicts its rank on the other
@@ -163,13 +165,9 @@ MikroORM's identity map, the same hydration overhead the same-SQL control
 isolates on the deep fetch (ratio 0.20 on PostgreSQL, above).
 
 \textbf{Inserts} are the pattern where the engine dominates most visibly, and
-where the durability regime matters to that claim. All headline
-write numbers here are measured under each engine's \emph{default} durability
-(PostgreSQL \texttt{fsync=on}, \texttt{synchronous\_commit=on},
-\texttt{full\_page\_writes=on}; MySQL
-\texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1},
-\texttt{log\_bin=ON}; Section~\ref{sec:methodology}), not the relaxed
-configuration used for the read patterns. On MySQL, insert throughput is low and
+where the durability regime matters to that claim. All headline write numbers
+here are measured under each engine's \emph{default} durability configuration
+(Section~\ref{sec:methodology}). On MySQL, insert throughput is low and
 tightly clustered across all nine layers (663--809~req/s, a $1.22\times$ spread,
 CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms for every layer (a
 per-commit redo-log and binlog flush), whereas PostgreSQL spreads $3.86\times$
@@ -236,7 +234,8 @@ only 33~ms at 2{,}000. Beyond each layer's capacity the tail collapses rather
 than degrading gracefully: at the 4{,}000~req/s tier, \texttt{pg} achieves
 3{,}697 of the offered requests with a corrected p99 of 1.20~s, Prisma achieves
 3{,}501 (2.11~s), and Knex achieves 2{,}448 (9.4~s); Sequelize already collapses
-at 2{,}000~req/s (achieving 772, with half the requests timing out), and
+at 2{,}000~req/s (achieving 772, with a third of the issued requests timing
+out: 9{,}992 of 30{,}000), and
 MikroORM collapses at 1{,}000~req/s (achieving 488) and again at 4{,}000
 (achieving 259, with 53{,}315 of 60{,}000 requests timing out). The ranking
 matches the closed-loop result and sharpens it: once offered load crosses a
@@ -277,7 +276,9 @@ Figure~\ref{fig:scaling} sweeps the deep/nested fetch from 1 to 256 connections
 (a separate sweep on PostgreSQL). The coarse three-band ordering, native and
 tuned-native together with Prisma on top, the query builder and the lightweight
 ORM in a middle band, and the data-mapper ORMs below, holds at every operating
-point at or above 8 connections. Within the top band, \texttt{pg} and
+point at or above 32 connections; at 8 connections Prisma's engine is still
+mid-pack (1{,}869~req/s, below Knex's 2{,}438), joining the top band only from
+32 upward. Within the top band, \texttt{pg} and
 \texttt{pg-tuned} lead Prisma at every concurrency from 8 upward (for example, at
 256 connections: \texttt{pg-tuned} 3{,}709, \texttt{pg} 3{,}511, Prisma
 3{,}203), so Prisma's near-native parity at the primary 50-connection operating
@@ -285,7 +286,7 @@ point does not extend to an outright lead at higher concurrency in this sweep.
 At a single connection the ranking differs from the higher-concurrency regime
 (the workload is latency- rather than throughput-bound at that point), and
 Prisma is among the slowest layers there (503~req/s). The lightweight layers
-reach a markedly higher throughput ceiling than the data-mapper ORMs across the
+reach a substantially higher throughput ceiling than the data-mapper ORMs across the
 whole load range, so the RQ1 finding is not an artifact of the single
 50-connection operating point.
 

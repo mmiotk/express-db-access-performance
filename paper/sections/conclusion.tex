@@ -13,7 +13,7 @@ It is modest for point reads and for aggregation issued through a raw-SQL path, 
 it grows sharply, up to $6.55\times$ on PostgreSQL and $4.50\times$ on MySQL, for the
 deep/nested fetch, where the layer must assemble a nested object graph on the
 application side; a fan-out sweep shows that spread growing further still as the
-fetched graph grows larger, so this figure is itself conservative. A same-SQL
+fetched graph grows larger. A same-SQL
 control decomposes the idiomatic spread: executing the identical two-statement SQL
 through every layer's raw-SQL facility collapses the nine execution paths to within
 $1.76\times$ of one another on PostgreSQL and $2.21\times$ on MySQL, so most of the
@@ -30,7 +30,7 @@ Writes are the exception, and are now measured under each engine's default
 durability rather than a relaxed one: MySQL's engine floor makes insert throughput
 nearly layer-independent ($1.22\times$), while PostgreSQL exposes a $3.86\times$
 layer spread even with \texttt{fsync} on, and unlike every read pattern the write
-ranking does not transfer across engines at all (Spearman $\rho = 0.43$), a caution
+ranking does not transfer across engines at all, a caution
 against generalizing single-engine write results that a symmetric
 relaxed-durability run confirms is not a durability artifact. Beyond these
 findings, development surfaced a reusable checklist of benchmarking pitfalls
