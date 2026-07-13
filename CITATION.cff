@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below."
-title: "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js across PostgreSQL and MySQL"
+title: "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js for PostgreSQL and MySQL"
 abstract: >-
   Reproducible benchmark harness and paper comparing the performance of relational
   database access layers in an Express.js service — native drivers (pg, mysql2), a
@@ -14,7 +14,7 @@ authors:
     given-names: Mateusz
     affiliation: "Faculty of Mathematics, Physics and Informatics, University of Gdańsk"
     orcid: "https://orcid.org/0000-0003-2768-7861"
-version: 0.1.0
+version: 1.1.0
 license: MIT
 repository-code: "https://github.com/mmiotk/express-db-access-performance"
 keywords:
