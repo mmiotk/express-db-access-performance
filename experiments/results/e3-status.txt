@@ -1,0 +1,27 @@
+===== [2026-07-12 07:35:48] stage durability-default: node scripts/set-durability.mjs default
+OK   durability-default (1s)
+===== [2026-07-12 07:35:49] stage warmupcurve: node scripts/warmupcurve.mjs
+OK   warmupcurve (184s)
+===== [2026-07-12 07:38:53] stage primary: env INDEP=1 REPLICATES=25 DURATION=12 WARMUP=15 RESET_FLOOR=300000 REBUILD_WRITES=1 node bench/runner.mjs
+OK   primary (63038s)
+===== [2026-07-13 01:09:31] stage order-fwd: env INDEP=1 ENDPOINTS=write ORDER=forward REPLICATES=5 DURATION=12 WARMUP=15 RESET_FLOOR=300000 REBUILD_WRITES=1 INDEP_OUT=order-fwd node bench/runner.mjs
+OK   order-fwd (2762s)
+===== [2026-07-13 01:55:33] stage order-rev: env INDEP=1 ENDPOINTS=write ORDER=reverse REPLICATES=5 DURATION=12 WARMUP=15 RESET_FLOOR=300000 REBUILD_WRITES=1 INDEP_OUT=order-rev node bench/runner.mjs
+OK   order-rev (2751s)
+===== [2026-07-13 02:41:24] stage durability-relaxed: node scripts/set-durability.mjs relaxed
+OK   durability-relaxed (1s)
+===== [2026-07-13 02:41:25] stage writes-relaxed: env INDEP=1 ENDPOINTS=write REPLICATES=10 DURATION=12 WARMUP=15 RESET_FLOOR=300000 REBUILD_WRITES=1 INDEP_OUT=raw-writes-relaxed node bench/runner.mjs
+OK   writes-relaxed (5506s)
+===== [2026-07-13 04:13:11] stage durability-restore: node scripts/set-durability.mjs default
+OK   durability-restore (1s)
+===== [2026-07-13 04:13:12] stage sameplan: env SP_REPS=10 node scripts/sameplan.mjs
+OK   sameplan (2243s)
+===== [2026-07-13 04:50:35] stage openloop: node scripts/openloop2.mjs
+OK   openloop (529s)
+===== [2026-07-13 04:59:24] stage fanout: env FO_ENGINES=postgres,mysql node scripts/fanout.mjs
+OK   fanout (2648s)
+===== [2026-07-13 05:43:32] stage equalcpu: node scripts/equalcpu.mjs
+OK   equalcpu (351s)
+===== [2026-07-13 05:49:23] stage scaling: env REPEATS=3 node bench/scaling.mjs
+OK scaling (rerun)
+===== [2026-07-13 10:40:21] E3 campaign COMPLETE

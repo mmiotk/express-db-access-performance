@@ -58,3 +58,5 @@ notes/.trash/
 .DS_Store
 Thumbs.db
 raw-indep.partial.json
+experiments/results/*.log
+experiments/results/*.bak

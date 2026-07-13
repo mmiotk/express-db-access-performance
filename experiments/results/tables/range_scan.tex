@@ -9,15 +9,17 @@
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
     Layer & Category & req/s & p99 & req/s & p99 \\
     \midrule
-    pg & native-driver & 3577 & 18.0 & -- & -- \\
-    mysql2 & native-driver & -- & -- & 2966 & 24.0 \\
-    knex & query-builder & 2981 & 20.0 & 2746 & 21.0 \\
-    drizzle & orm-lightweight & 2773 & 19.0 & 2163 & 30.0 \\
-    prisma & orm & 3619 & 19.0 & 3610 & 19.0 \\
-    sequelize & orm & 2874 & 19.0 & 2376 & 25.0 \\
-    typeorm & orm & 2469 & 24.0 & 2344 & 25.0 \\
-    objection & orm & 2329 & 23.0 & 2183 & 26.0 \\
-    mikroorm & orm & 651 & 92.0 & 608 & 97.5 \\
+    pg & native-driver & 3782 & 18.0 & -- & -- \\
+    mysql2 & native-driver & -- & -- & 3231 & 21.0 \\
+    pg-tuned & native-tuned & 3811 & 17.0 & -- & -- \\
+    mysql2-tuned & native-tuned & -- & -- & 3216 & 18.0 \\
+    knex & query-builder & 3163 & 19.0 & 2952 & 20.0 \\
+    drizzle & orm-lightweight & 2905 & 20.0 & 2265 & 28.0 \\
+    prisma & orm & 3963 & 17.0 & 3936 & 18.0 \\
+    sequelize & orm & 2426 & 24.0 & 2074 & 27.0 \\
+    typeorm & orm & 2546 & 25.0 & 2474 & 24.0 \\
+    objection & orm & 2669 & 22.0 & 2514 & 23.0 \\
+    mikroorm & orm & 773 & 74.0 & 729 & 79.0 \\
     \bottomrule
   \end{tabular}
 \end{table}

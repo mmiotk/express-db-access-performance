@@ -80,7 +80,7 @@ export function texTable({ rows, endpoint, metric, caption, label, unit }) {
   const header = `Layer & Category & ${engines.map((e) => `\\textbf{${e}}`).join(' & ')} \\\\`;
   // Canonical taxonomy order (native → query builder → lightweight ORM → ORMs), so
   // rows read consistently across tables regardless of measurement/merge order.
-  const ORDER = ['pg', 'mysql2', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
+  const ORDER = ['pg', 'mysql2', 'pg-tuned', 'mysql2-tuned', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
   const rank = (a) => { const i = ORDER.indexOf(a); return i < 0 ? ORDER.length : i; };
   const lines = [];
   for (const adapter of [...byAdapter.keys()].sort((a, b) => rank(a) - rank(b))) {
@@ -108,7 +108,7 @@ export function texTable({ rows, endpoint, metric, caption, label, unit }) {
 // side, layer × engine — one table per access pattern instead of two, so the
 // paper reports the two metrics jointly (its central point) and uses fewer tables.
 export function texTableCombined({ rows, endpoint, caption, label }) {
-  const ORDER = ['pg', 'mysql2', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
+  const ORDER = ['pg', 'mysql2', 'pg-tuned', 'mysql2-tuned', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
   const rank = (a) => { const i = ORDER.indexOf(a); return i < 0 ? ORDER.length : i; };
   const byAdapter = new Map();
   for (const r of rows.filter((r) => r.endpoint === endpoint)) {

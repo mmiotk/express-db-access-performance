@@ -42,11 +42,15 @@ const idio = (a, e) => raw.find((r) => r.adapter === a && r.endpoint === 'deep_f
 
 const wantAdapters = (process.env.ADAPTERS ?? Object.keys(ADAPTERS).join(',')).split(',').map((s) => s.trim());
 let out = { cells: [], baseline: {} };
-if (process.env.MERGE === '1') {
+if (process.env.MERGE === '1' || process.env.TABLE_ONLY === '1') {
   try { out = JSON.parse(await readFile(join(here, '..', 'results', 'sameplan.json'), 'utf8')); } catch {}
 }
 let port = 3600;
-for (const engine of ['postgres', 'mysql']) {
+// TABLE_ONLY=1: skip measurement, refresh the idiomatic reference from the
+// CURRENT primary dataset and rebuild the table (used after adopting a new run)
+if (process.env.TABLE_ONLY === '1') {
+  for (const c of out.cells) c.idiomatic = idio(c.adapter, c.engine);
+} else for (const engine of ['postgres', 'mysql']) {
   for (const adapter of Object.keys(ADAPTERS)) {
     if (!ADAPTERS[adapter].engines.includes(engine) || !wantAdapters.includes(adapter)) continue;
     out.cells = out.cells.filter((c) => !(c.adapter === adapter && c.engine === engine)); // MERGE: replace re-measured cell

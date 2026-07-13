@@ -6,8 +6,8 @@
     identical two-statement plan with identical row mapping through its raw-SQL
     facility. The ratio (idiomatic $\div$ same-plan) attributes each layer's deficit
     to its default eager-loading strategy and entity hydration; the remaining
-    same-plan spread (native-relative $1.35\times$ on PostgreSQL,
-    $1.31\times$ on MySQL) is the cost of the library's raw execution
+    same-plan spread (native-relative $1.49\times$ on PostgreSQL,
+    $1.27\times$ on MySQL) is the cost of the library's raw execution
     path itself.}
   \label{tab:sameplan}
   \begin{adjustbox}{max width=\textwidth}
@@ -17,15 +17,15 @@
     \cmidrule(lr){2-4}\cmidrule(lr){5-7}
     Layer & idiom. & same-plan & ratio & idiom. & same-plan & ratio \\
     \midrule
-    \texttt{pg} & 3529 & 3182 & 1.11 & -- & -- & -- \\
-    \texttt{mysql2} & -- & -- & -- & 2296 & 2303 & 1.00 \\
-    \texttt{knex} & 2441 & 2702 & 0.90 & 1954 & 2209 & 0.88 \\
-    \texttt{drizzle} & 2060 & 3395 & 0.61 & 1429 & 2164 & 0.66 \\
-    \texttt{prisma} & 3506 & 3847 & 0.91 & 3482 & 3986 & 0.87 \\
-    \texttt{sequelize} & 1082 & 2362 & 0.46 & 956 & 1763 & 0.54 \\
-    \texttt{typeorm} & 1246 & 2973 & 0.42 & 1114 & 2435 & 0.46 \\
-    \texttt{objection} & 977 & 2688 & 0.36 & 796 & 2145 & 0.37 \\
-    \texttt{mikroorm} & 559 & 3077 & 0.18 & 519 & 2211 & 0.23 \\
+    \texttt{pg} & 3741 & 3686 & 1.01 & -- & -- & -- \\
+    \texttt{mysql2} & -- & -- & -- & 2405 & 2423 & 0.99 \\
+    \texttt{knex} & 2491 & 2924 & 0.85 & 2050 & 2311 & 0.89 \\
+    \texttt{drizzle} & 2080 & 3449 & 0.60 & 1446 & 2110 & 0.69 \\
+    \texttt{prisma} & 3685 & 4343 & 0.85 & 3701 & 4227 & 0.88 \\
+    \texttt{sequelize} & 989 & 2480 & 0.40 & 893 & 1912 & 0.47 \\
+    \texttt{typeorm} & 1327 & 2998 & 0.44 & 1170 & 2520 & 0.46 \\
+    \texttt{objection} & 1037 & 2860 & 0.36 & 860 & 2249 & 0.38 \\
+    \texttt{mikroorm} & 571 & 2884 & 0.20 & 535 & 2177 & 0.25 \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}
