@@ -6,10 +6,10 @@
 \begin{document}
 \noindent\textbf{Highlights}
 \begin{itemize}[leftmargin=1.5em,nosep]
-  \item Nine Node.js data-access layers benchmarked on PostgreSQL and MySQL via Express
-  \item Throughput and tail latency reported jointly, unlike single-metric vendor tests
-  \item Deep nested fetches expose up to 6.3x overhead between native drivers and ORMs
-  \item Layer ranking is stable across engines; MySQL writes are InnoDB write-path bound
-  \item Open reproducible harness with an automated cross-layer correctness check
+  \item Nine idiomatic layers plus tuned native baselines on PostgreSQL and MySQL
+  \item Deep-fetch spread of 6.5x collapses to 2.2x when layers run identical SQL
+  \item Prisma matches or leads native throughput at five times the CPU of other layers
+  \item Read rankings transfer across engines; write rankings do not under default fsync
+  \item Open harness verifies byte-identical responses across layers before measuring
 \end{itemize}
 \end{document}

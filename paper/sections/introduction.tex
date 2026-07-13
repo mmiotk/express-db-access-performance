@@ -58,15 +58,19 @@ materializes a post together with its author and every comment (each with its
 own comment-author), a per-author aggregation of post counts and view sums,
 and an insert. Seven of the nine access layers (every one except the two
 engine-specific native drivers) run against \emph{both} PostgreSQL and MySQL
-under an identical schema, dataset, and connection-pool size, and for every
+under an identical schema, dataset, and connection-pool size; two tuned
+native-driver baselines (prepared-statement variants of \texttt{pg} and
+\texttt{mysql2}) bound what hand-tuned driver use achieves. For every
 (layer, engine, pattern) combination we report throughput (requests per
-second) and tail latency (p99) together, rather than either in
-isolation. The full harness (adapters, seed data, an
-autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
-that all nine layers return equivalent results, compared on a key-field
-projection, on the four non-mutating
-patterns) is released as an open replication
-package.\footnote{Harness, deterministic seed, all nine adapters, raw per-cell
+second) and tail latency (p99) together, rather than either in isolation, from
+25 independent replicates. The study separates two estimands: the
+\emph{default-configuration} effect of each layer used idiomatically (RQ1--RQ3)
+and a controlled \emph{same-SQL} effect that isolates each layer's execution
+machinery from its query-generation and hydration strategy. The full harness
+(adapters, seed data, an autocannon-driven~\cite{autocannon} load runner, and
+an automated cross-check that all layers return \emph{byte-identical} responses
+on the four non-mutating patterns) is released as an open replication
+package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release v1.0.0 is
 permanently archived at Zenodo, \texttt{https://doi.org/10.5281/zenodo.21313859}.}
@@ -88,31 +92,34 @@ fast-moving ecosystem, whereas the design, the harness, and the interaction
 findings are built to outlive the pinned versions:
 \begin{itemize}[leftmargin=*]
   \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
-        deterministic seed, an autocannon-driven matrix runner with independent
-        replicates, a same-plan control for the deep fetch, and an automated
+        deterministic seed, a matrix runner with independent replicates, paired
+        request streams, and a physical write-state rebuild, a same-SQL control
+        for the deep fetch with server-side statement and protocol evidence,
+        a coordinated-omission-corrected open-loop generator, and an automated
         \textbf{correctness cross-check} that asserts every layer returns
-        equivalent results (a key-field projection) on the four non-mutating
-        patterns; released as a replication package and re-runnable in one
-        command against future library versions.
+        \textbf{byte-identical} responses on the four non-mutating patterns;
+        released as a replication package and re-runnable in one command
+        against future library versions.
   \item A \textbf{neutral, broad-coverage benchmark design} spanning the
         taxonomy's three tiers (native driver $\to$ query builder $\to$ six
         ORMs), \textbf{dual-engine} (PostgreSQL and MySQL), measured at the
         \textbf{Express level}, reporting throughput and tail latency
         \textbf{jointly}, the combination missing from prior art.
   \item Empirical findings on the pinned versions: two that are not obvious in
-        advance, that a \textbf{query-engine ORM can statistically tie the
-        native driver} on the most ORM-hostile pattern while spending roughly
-        five times the application CPU, and that \textbf{whether writes are
+        advance, that a \textbf{query-engine ORM can tie, and on several
+        patterns lead, the native driver} while spending roughly five times
+        the application CPU of every other layer (a subsidy the equal-CPU
+        control makes explicit), and that \textbf{whether writes are
         layer-bound depends on the engine} (visible only in a dual-engine
         design); and a controlled \textbf{confirmation and quantification} of
         the expected effects, that abstraction cost concentrates in
-        relation-materializing patterns and that the coarse layer ordering is
-        stable across engines.
+        relation-materializing patterns and grows with the fetched graph, and
+        that the coarse layer ordering of reads is stable across engines.
   \item A practitioner-oriented \textbf{checklist of pitfalls specific to
         access-layer benchmarking} (aggregation fan-out, OFFSET versus keyset
         pagination, write-workload contamination, and query-formulation
-        confounds), surfaced during development, one caught by the correctness
-        cross-check and the rest by performance analysis.
+        confounds), surfaced during development, several caught by the
+        correctness cross-check and the rest by performance analysis.
 \end{itemize}
 
 The remainder of the paper surveys related work in more detail

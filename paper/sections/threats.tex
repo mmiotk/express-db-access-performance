@@ -12,116 +12,142 @@ round trip a deployed service incurs, including Express routing and JSON
 serialization, but it means the overhead we attribute to the \emph{access layer}
 may partly reflect these surrounding costs instead. We control for this by holding
 those costs near-constant across conditions: every adapter satisfies a documented
-\emph{adapter contract} (Section~\ref{sec:methodology}). On the deep fetch and the
-aggregation the payload is uniform by construction (each adapter maps rows into the
-same explicit shape); on the point read and range scan adapters return their raw row
-objects, whose payloads differ marginally across layers (column selection such as
-\texttt{created\_at}/\texttt{published}, and id typing), which is immaterial against
-the $2.6$--$3.5\times$ spreads measured there. A no-database baseline endpoint
-returning a fixed thread-shaped payload bounds the shared Express-plus-serialization
-floor well above the fastest measured cell (Section~\ref{sec:methodology}), so the
-framework floor compresses, rather than manufactures, between-layer differences.
-Observed differences between layers are therefore attributable to how each layer
-reaches that shape, not to what is returned. One caveat is specific to writes: durability is relaxed
-asymmetrically across the two engines (Section~\ref{sec:methodology}), so absolute
-insert throughput is not comparable between PostgreSQL and MySQL. We therefore state
-the write finding only within each engine (a $1.3\times$ layer spread on MySQL versus
-$4.7\times$ on PostgreSQL), not as a cross-engine magnitude comparison. A robustness
-run that relaxes both engines symmetrically, with MySQL's doublewrite buffer also
-disabled, leaves the MySQL spread essentially unchanged (Section~\ref{sec:discussion},
-Table~\ref{tab:durability}), so the asymmetry does not drive the finding.
+\emph{adapter contract} (Section~\ref{sec:methodology}), and every endpoint's
+payload is now uniform by construction rather than only checked for equivalence:
+every adapter funnels its rows through shared canonical constructors (a fixed field
+set, key order, and value typing, under a fixed \texttt{TZ=UTC}), and an automated
+cross-check (\texttt{bench/verify.mjs}) asserted full JSON byte equality against the
+native-driver baseline, on both engines, across the four non-mutating patterns
+before any timing run. That check is itself evidence for the harness, not only a
+precondition of it: during development it caught a defect whereby PostgreSQL's
+schema declared \texttt{created\_at} as a timezone-naive timestamp although the
+column is \texttt{timestamptz}, so Drizzle's PostgreSQL responses carried instants
+shifted by the host's UTC offset, a difference invisible to throughput and to any
+coarser equivalence check; it was fixed (\texttt{withTimezone: true}) before the
+campaign reported here. A no-database baseline endpoint returning a fixed
+thread-shaped payload bounds the shared Express-plus-serialization floor well above
+the fastest measured cell (Section~\ref{sec:methodology}), so the framework floor
+compresses, rather than manufactures, between-layer differences. Observed
+differences between layers are therefore attributable to how each layer reaches an
+identical response, not to what is returned. Writes are the one endpoint that
+mutates state, and the reported finding uses each engine's \emph{default},
+vendor-standard durability configuration (PostgreSQL \texttt{fsync=on},
+\texttt{synchronous\_commit=on}; MySQL
+\texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1}), not a
+configuration we relaxed ourselves, so the reported spreads ($3.86\times$ on
+PostgreSQL, $1.22\times$ on MySQL) and the roughly $7.5\times$ native-driver gap
+between engines (809 MySQL vs.\ 6{,}064 PostgreSQL req/s) describe a standard
+deployment rather than a tuning choice of ours. A labelled secondary run relaxes
+every durability setting on both engines symmetrically, including MySQL's binlog
+sync (an earlier check had left that one MySQL setting at its default, an asymmetry
+that did not affect the primary, default-durability result reported here but could
+have affected that secondary comparison specifically); under the symmetric relaxed
+regime throughput rises (PostgreSQL median $+8\%$, MySQL $+20\%$) but the
+cross-engine gap is, if anything, slightly larger than under defaults, so it is not
+an artifact of either durability configuration (Section~\ref{sec:discussion},
+Table~\ref{tab:durability}).
 
 \paragraph{Internal validity.}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
 reasons unrelated to its inherent cost; every adapter is required to use its
 layer's documented, idiomatic eager-loading strategy on the deep-fetch endpoint
-(Section~\ref{sec:methodology}). An automated correctness cross-check asserts that
-all nine adapters return identical, normalized results (compared as a projection of
-key fields on four of the five access patterns) before any timing run is trusted.
-This check caught two defects during development: a fan-out bug that inflated the
-\texttt{SUM(views)} aggregate for every join-based adapter, and a result-shape
-parsing defect in one driver binding, both fixed before the measurements reported here. Explicit warm-up phases
-per (layer, engine, endpoint) cell absorb JIT, pool-fill, and plan-cache effects
-before timing begins (controls of the kind that guard against environmentally
-induced measurement bias~\cite{mytkowicz2009producing}), and two further controls
-(Section~\ref{sec:methodology}) rule out non-layer confounds: benchmark-inserted rows are reset before every cell, and the
-aggregation endpoint uses one correlated-subquery plan across layers, so it measures
-access-layer overhead rather than differences in SQL shape. The write endpoint is
-reset to the seeded table before every measured run (not merely before each cell), so
-no run inserts into a table grown by an earlier run. Request target ids are drawn per
-request from an unseeded uniform generator; the workload is therefore deterministic in
-distribution but not per request, and adapters are not driven by paired id streams, a
-variance-reduction opportunity we forgo. A residual risk is coordinated
-omission in the load generator, which can
-under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency}. A
-constant-arrival (open-loop) cross-run on the deep fetch confirms the tail ranking and
-shows the data-mapper ORMs saturating earlier still (Section~\ref{sec:results},
-Table~\ref{tab:openloop}); a formally coordinated-omission-corrected generator (wrk2)
-would only widen those tails further, so our tail conclusions are conservative.
+(Section~\ref{sec:methodology}). The correctness cross-check has since been
+upgraded to the byte-level comparison described above (Construct validity); in its
+original, key-field-projection form it caught two defects during development: a
+fan-out bug that inflated the \texttt{SUM(views)} aggregate for every join-based
+adapter, and a result-shape parsing defect in one driver binding, both fixed before
+the measurements reported here. Explicit warm-up phases per (layer, engine,
+endpoint) cell, now set to exceed the slowest layer's measured cold-start
+stabilization (Section~\ref{sec:methodology}), absorb JIT, pool-fill, and
+plan-cache effects before timing begins (controls of the kind that guard against
+environmentally induced measurement bias~\cite{mytkowicz2009producing}), and two
+further controls (Section~\ref{sec:methodology}) rule out non-layer confounds:
+benchmark-inserted rows are reset before every cell, from a physically rebuilt
+database state for writes, and the aggregation endpoint uses one correlated-subquery
+plan across layers, so it measures access-layer overhead rather than differences in
+SQL shape. Request target ids no longer risk contributing between-layer noise:
+every layer and engine within a replicate is driven by the identical, PRNG-seeded id
+sequence (Section~\ref{sec:methodology}), and a forward-versus-reversed cell-order
+check found no detectable history effect, addressing the related concern that a
+fixed processing order could confound layer identity with position in the run. A
+residual risk is coordinated omission in the load generator, which can under-report
+tail latency at saturation~\cite{fruth2022tail,tene2015latency}. A native,
+coordinated-omission-corrected constant-arrival cross-run on the deep fetch
+(Section~\ref{sec:methodology}), which measures latency from each request's
+intended send time, confirms the tail ranking and shows the data-mapper ORMs
+saturating earlier still (Section~\ref{sec:results}, Table~\ref{tab:openloop}).
 
 \paragraph{External validity.}
 All measurements come from a single schema, a single dataset size, one hardware
 configuration, and a connection pool fixed at ten, against specific engine and
 library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology});
 results may not transfer to larger working sets, other pool sizes, or other engine
-versions, and library performance ages quickly. Two consequences of the design
-deserve emphasis. First, the working set is memory-resident, so these results are a
-hot-cache regime that maximizes the visibility of layer differences; as a workload
-becomes I/O-bound (larger than RAM, cold caches), every layer increasingly waits on
-the same storage and the spreads should compress toward $1\times$. Second, the
-deep-fetch object graph is small (a post with on average ten comments, at most 25 in
-the seed), so the reported spread is specific to small-graph hydration; abstraction
-cost is expected to grow with graph size, but we do not sweep that axis. We do not
-claim the absolute req/s
-figures generalize beyond our hardware; only the \emph{relative} ordering within an
-engine is intended to travel. We mitigate this by pinning every dependency
-version, publishing the deterministic seed and an automated environment capture,
-and releasing the full harness so the matrix can be re-run on other hardware or
-against newer releases. A further limitation is that the load generator and server
-under test share a host, which is common practice in this genre and removes network
-variance as a confound, though it can understate network-bound effects. As a partial
-check, we re-ran a representative subset with the database, application server, and
-load generator pinned to disjoint core sets (Table~\ref{tab:pinned}), approximating
-the resource separation of a multi-host deployment: the layer ordering is preserved,
-though Prisma's near-native parity narrows when its multi-threaded engine is confined
-to four cores rather than the whole host, so that advantage depends on spare CPU. The
-same caveat extends to deployment topology: the server runs as a single Node.js
-process, whereas production deployments typically run one worker per core
-(\texttt{cluster}, pm2, or per-pod replicas); under $N$ workers saturating all cores,
-no spare cores remain for Prisma's engine threads, and the single-threaded layers'
-per-core efficiency should dominate, so the CPU-for-latency trade we report is a
-single-process result. A sustained-load check bounds temporal drift: holding three
-representative layers (native \texttt{pg}, Prisma, MikroORM) under ten minutes of
-continuous deep-fetch load moves throughput by at most $\pm2.1\%$ between the first
-and last three minutes, with the band ordering preserved in every single minute
-(replication package), so the short measured runs are not sampling a transient;
-longer-horizon drift over hours to days~\cite{kuffel2025nodejs} remains untested. A
-two-machine cross-run over a dedicated link, adding real network latency, and a
-multi-worker variant are planned to bound this further.
-
-\input{\tabledir pinned}
+versions, and library performance ages quickly. The host itself is a virtualized,
+16-vCPU, single-NUMA-node cloud instance rather than dedicated bare metal, so the
+absolute req/s figures reflect that substrate specifically; only the
+\emph{relative} ordering within an engine is intended to travel, and we do not
+claim the absolute figures generalize beyond our hardware. Two further consequences
+of the design deserve emphasis. First, the working set is memory-resident, so these
+results are a hot-cache regime that maximizes the visibility of layer differences;
+as a workload becomes I/O-bound (larger than RAM, cold caches), every layer
+increasingly waits on the same storage and the spreads should compress toward
+$1\times$. Second, the deep-fetch object graph is small (a post with on average ten
+comments, at most 25 in the seed), so the headline spread is specific to
+small-graph hydration; the fan-out sweep in Section~\ref{sec:results} shows the
+spread grows monotonically with graph size (to $16\times$ at 500 child rows), so
+the headline figures are conservative in that direction. We mitigate these limitations by pinning every
+dependency version, publishing the deterministic seed and an automated environment
+capture, and releasing the full harness so the matrix can be re-run on other
+hardware or against newer releases. A further limitation is that the load generator
+and server under test share a host, which is common practice in this genre and
+removes network variance as a confound, though it can understate network-bound
+effects. As a partial check on whether Prisma's near-native throughput depends on
+having spare CPU to spend, we confined the server process to 1, 2, or 4 cores with
+\texttt{taskset} while holding the database and load generator on disjoint cores
+(Table~\ref{tab:equalcpu}): the native driver reaches its full throughput on a
+single core, whereas Prisma at one core is $4.1\times$ slower (896 vs.\
+3{,}663~req/s) and needs about four cores to approach native's level, directly
+quantifying the CPU subsidy behind its near-native cell rather than only inferring
+it from aggregate CPU\% (Section~\ref{sec:discussion}). The same caveat extends to
+deployment topology: the server runs as a single Node.js process, whereas
+production deployments typically run one worker per core (\texttt{cluster}, pm2, or
+per-pod replicas); under $N$ workers saturating all cores, no spare cores remain for
+Prisma's engine threads, and the single-threaded layers' per-core efficiency should
+dominate, so the CPU-for-latency trade we report is a single-process result. A
+sustained-load check bounds temporal drift: holding three representative layers
+(native \texttt{pg}, Prisma, MikroORM) under ten minutes of continuous deep-fetch
+load moves throughput by at most $\pm2.1\%$ between the first and last three
+minutes, with the band ordering preserved in every single minute (replication
+package), so the short measured runs are not sampling a transient; longer-horizon
+drift over hours to days~\cite{kuffel2025nodejs} remains untested. A two-machine
+cross-run over a dedicated link, adding real network latency, and a multi-worker
+variant are planned to bound this further.
 
 \paragraph{Conclusion validity.}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of
 variation and bootstrap 95\% confidence intervals as stability signals and tests
 adjacently ranked layers with the Mann--Whitney~$U$ test and Cliff's~$\delta$
-(Tables~\ref{tab:cv}, \ref{tab:significance}). Two bounds reinforce the ordering: the
-widest spreads, such as $6.3\times$ on the deep/nested fetch, dwarf the run-to-run CV
-(at most 6.9\% on PostgreSQL, Table~\ref{tab:cv}, and 8.5\% on MySQL,
-Table~\ref{tab:cv_mysql}), and the ranking is preserved across the full 1--256
-connection sweep (Fig.~\ref{fig:scaling}). On the deep/nested fetch every adjacent
-pair separates with a near-maximal effect (Cliff's~$\delta \geq 0.99$) and
-non-overlapping bootstrap CIs, \emph{except} native \texttt{pg} and Prisma at the
-top, which are
-statistically indistinguishable; we read those two as tied rather than ranked. With
-25 replicates per cell the tests are conventionally powered: every separating
-adjacent pair reaches $p < 0.001$, surviving a Bonferroni correction across the
-seven tests, with near-complete separation ($\delta \geq 0.99$: at most a handful
-of the 625 cross-pairs overlap) and narrow, non-overlapping bootstrap intervals,
+(Tables~\ref{tab:cv}, \ref{tab:significance}). Two bounds reinforce the ordering:
+the widest spreads, such as $6.55\times$ on the deep/nested fetch, dwarf the
+run-to-run CV (at most 7.6\% on PostgreSQL, \texttt{pg}/write, Table~\ref{tab:cv},
+and 6.6\% on MySQL, \texttt{knex}/write, Table~\ref{tab:cv_mysql}; the relative
+median absolute deviation peaks lower still, at 5.4\%, on that same PostgreSQL write
+cell), and the ranking is preserved across the full 1--256 connection sweep
+(Fig.~\ref{fig:scaling}). On the deep/nested fetch, six of the seven adjacent pairs
+separate with a large-to-near-maximal effect (Cliff's~$\delta$ between 0.74 and
+1.00, five of the six at the 1.00 maximum) and non-overlapping bootstrap CIs; the
+exception is native \texttt{pg} and Prisma at the top ($\delta = 0.35$, $p = 0.033$,
+not surviving a Bonferroni correction across the seven tests), which a
+pre-specified two one-sided test instead confirms are equivalent within a $\pm5\%$
+margin (ratio $0.985$, 90\% CI $[0.974, 0.998]$), an equivalence claim rather than
+only a failure to reject a difference; we read those two as tied rather than
+ranked. With 25 replicates per cell the tests are conventionally powered: every
+separating adjacent pair reaches $p < 0.001$, surviving the Bonferroni correction,
+with large-to-maximal effect sizes and narrow, non-overlapping bootstrap intervals,
 under randomized order and independent processes. The inference is carried jointly
 by that separation and by spreads one to two orders of magnitude above the
-run-to-run CV. Crucially, because each replicate is a
-freshly booted server process with cell order randomized, these are genuine
+run-to-run CV. Crucially, because each replicate is a freshly booted server process
+with cell order randomized independently every time, these are genuine
 \emph{independent} replicates rather than repeated measures within one process
 lifetime~\cite{kalibera2013rigorous}; more replicates or longer runs would tighten
 the intervals further.

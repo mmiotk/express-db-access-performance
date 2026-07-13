@@ -48,23 +48,28 @@ vendor benchmarks that are fragmented, PostgreSQL-only, and report
 throughput or latency but rarely the tail (p99).
 \textbf{Objective:} We quantify, neutrally and reproducibly, the performance cost
 of the access layer as a function of the layer, the database engine, and the
-access pattern.
-\textbf{Methods:} An identical Express application is served through nine access
-layers (the native drivers \texttt{pg} and \texttt{mysql2}, the query builder
-Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM)
-over five access patterns, against PostgreSQL and MySQL, driven by an HTTP load
-generator. We report throughput and tail latency (p99) jointly, hold the
-connection pool constant, and verify through an automated key-field cross-check
-that every layer returns equivalent results on the four non-mutating patterns.
+access pattern, and decompose that cost into SQL execution versus mapping
+strategy.
+\textbf{Methods:} An identical Express application is served through nine
+idiomatic access layers (the native drivers \texttt{pg} and \texttt{mysql2}, the
+query builder Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection
+and MikroORM) and two tuned native baselines, over five access patterns, against
+PostgreSQL and MySQL. We report throughput and tail latency (p99) jointly from 25
+independent replicates per cell, driven by paired request streams; before any
+measurement, an automated cross-check verifies that every layer returns
+byte-identical responses on the four non-mutating patterns, and inserts are
+measured under the engines' default durability from a physically rebuilt state.
 \textbf{Results:} Abstraction cost concentrates in relation-materializing
-patterns: the deep/nested fetch spreads up to $6.3\times$ between the native
-driver and the heaviest data-mapper ORM, whereas raw-SQL aggregation is much less
-sensitive and point reads only mildly affected. A same-plan control shows the
-layers' raw execution paths lie within $1.4\times$ of one another, so this spread
-is dominated by each layer's default eager-loading strategy and hydration. The coarse ordering of layers is
-stable across engines. Single-row insert throughput, under the relaxed-durability
-configuration used here, is largely layer-insensitive on MySQL (engine-bound) yet
-layer-dependent on PostgreSQL.
+patterns: the deep/nested fetch spreads $6.5\times$ (PostgreSQL) and $4.5\times$
+(MySQL) between the native driver and the heaviest data-mapper ORM, and the
+spread grows with the size of the fetched graph. A same-SQL control collapses it
+to at most $2.2\times$: the deficit is dominated by each layer's default
+eager-loading strategy and hydration, not by its execution machinery. Read
+rankings transfer across engines (Spearman $\rho \geq 0.89$); the write ranking
+does not ($\rho = 0.43$): under default durability, inserts are engine-bound on
+MySQL yet layer-dependent on PostgreSQL. Prisma matches or leads native
+throughput on several patterns at roughly five times the CPU of every other
+layer.
 \textbf{Conclusion:} The choice of access layer matters most where the layer must
 assemble a nested object graph; a reproducible harness and a checklist of
 benchmarking pitfalls specific to this genre are released as a replication package.
@@ -100,7 +105,7 @@ vendors evaluated in this study.
 
 \section*{Data availability}
 The complete replication package (benchmark harness, database schema and
-deterministic seed, all nine adapter implementations, the correctness cross-check,
+deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently

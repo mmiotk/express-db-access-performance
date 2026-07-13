@@ -47,16 +47,19 @@ benchmarks, which are fragmented, PostgreSQL-only, and report throughput or
 latency but rarely the tail (p99). We present a neutral, reproducible benchmark of
 the full access-layer taxonomy (native drivers \texttt{pg} and \texttt{mysql2}, a
 query builder Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM, Objection,
-and MikroORM), served through an identical Express application over five access
-patterns, on both PostgreSQL and MySQL, reporting throughput and tail latency
-(p99) together. Abstraction cost concentrates in relation-materializing
-patterns: the deep/nested fetch spreads up to $6.3\times$ between the native driver
-and the heaviest data-mapper ORM, while raw-SQL aggregation is much less sensitive
-and point reads only mildly affected; a same-plan control attributes most of that
-spread to default eager-loading strategy and hydration rather than to the layers'
-raw execution paths (within $1.4\times$); the coarse ordering is stable across engines,
-and single-row inserts are engine-bound on MySQL under relaxed durability but
-layer-dependent on PostgreSQL.
+and MikroORM, plus two tuned native baselines), served through an identical
+Express application over five access patterns, on both PostgreSQL and MySQL,
+reporting throughput and tail latency (p99) together from 25 independent
+replicates, with every layer verified to return byte-identical responses before
+measurement. Abstraction cost concentrates in relation-materializing patterns:
+the deep/nested fetch spreads $6.5\times$ (PostgreSQL) and $4.5\times$ (MySQL)
+between the native driver and the heaviest data-mapper ORM, and the spread grows
+with the size of the fetched graph; a same-SQL control attributes most of it to
+default eager-loading strategy and hydration rather than to the layers' raw
+execution paths. Read rankings transfer across engines; the write ranking does
+not: under default durability, single-row inserts are engine-bound on MySQL but
+layer-dependent on PostgreSQL. Prisma matches or leads native throughput on
+several patterns at roughly five times the CPU of every other layer.
 \end{abstract}
 
 % \tabledir is set here so the shared results section can locate the generated
@@ -73,7 +76,7 @@ layer-dependent on PostgreSQL.
 
 \section*{Data and code availability}
 The complete replication package (benchmark harness, database schema and
-deterministic seed, all nine adapter implementations, the correctness cross-check,
+deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table and figure) is
 available at \texttt{https://github.com/mmiotk/express-db-access-performance};
 release v1.0.0 is permanently archived at Zenodo

@@ -11,32 +11,46 @@ lack of a neutral, broad-coverage study, the separation of throughput from tail
 latency, and the omission of the Express HTTP layer.
 
 The empirical answer is that the cost of abstraction is concentrated, not uniform.
-It is modest for point reads and for aggregation issued through a raw-SQL path,
-but it grows sharply (up to $6.3\times$ between the native driver and the heaviest
-data-mapper ORM) for the deep/nested fetch, where the layer must assemble a nested
-object graph on the application side. A same-plan control decomposes that spread:
-the layers' raw execution paths lie within about $1.4\times$ of one another, so most
-of the deep-fetch cost is each layer's default eager-loading strategy and hydration
-rather than its machinery. The coarse ordering of layers is stable
-across the two engines, and a competitively fast modern ORM (Prisma) shows that
-``ORM'' need not imply large overhead. Writes are the exception: under the relaxed-durability configuration used here,
-MySQL's engine floor makes single-row insert throughput nearly layer-independent,
-whereas PostgreSQL exposes a $4.7\times$ layer spread, a caution against generalizing
-single-engine write results. Beyond these findings, development
-surfaced a reusable checklist of benchmarking pitfalls (aggregation fan-out,
-\texttt{OFFSET}-versus-keyset pagination, write-workload contamination, and
-query-formulation confounds) that silently distort naive access-layer benchmarks;
-one was caught by our correctness cross-check, the rest by performance analysis.
+It is modest for point reads and for aggregation issued through a raw-SQL path, but
+it grows sharply, up to $6.55\times$ on PostgreSQL and $4.50\times$ on MySQL, for the
+deep/nested fetch, where the layer must assemble a nested object graph on the
+application side; a fan-out sweep shows that spread growing further still as the
+fetched graph grows larger, so this figure is itself conservative. A same-SQL
+control decomposes the idiomatic spread: executing the identical two-statement SQL
+through every layer's raw-SQL facility collapses the nine execution paths to within
+$1.76\times$ of one another on PostgreSQL and $2.21\times$ on MySQL, so most of the
+deep-fetch cost is each layer's default eager-loading strategy and hydration rather
+than its machinery (MikroORM alone pays a $5.0\times$/$4.1\times$
+strategy-and-hydration cost). Read rankings are stable across the two engines
+(Spearman $\rho \geq 0.89$ on every read pattern), and a competitively fast modern
+ORM, Prisma, shows that ``ORM'' need not imply large overhead: on the deep fetch it
+is now formally equivalent to the native driver (TOST equivalence at $\pm5\%$), and
+it leads outright on several other patterns, at roughly five times the CPU of every
+other layer ($498\%$), a subsidy an equal-CPU control now measures directly rather
+than infers (native throughput on one core; Prisma needs about four to approach it).
+Writes are the exception, and are now measured under each engine's default
+durability rather than a relaxed one: MySQL's engine floor makes insert throughput
+nearly layer-independent ($1.22\times$), while PostgreSQL exposes a $3.86\times$
+layer spread even with \texttt{fsync} on, and unlike every read pattern the write
+ranking does not transfer across engines at all (Spearman $\rho = 0.43$), a caution
+against generalizing single-engine write results that a symmetric
+relaxed-durability run confirms is not a durability artifact. Beyond these
+findings, development surfaced a reusable checklist of benchmarking pitfalls
+(aggregation fan-out, \texttt{OFFSET}-versus-keyset pagination, write-workload
+contamination, and query-formulation confounds) that silently distort naive
+access-layer benchmarks; one was caught by our correctness cross-check, the rest by
+performance analysis.
 
 Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
 connections and confirmed the ordering is load-robust, sampled per-layer CPU and
 memory footprint, and tested adjacent layers with Cliff's~$\delta$ and the
 Mann--Whitney~$U$ test. Further extensions would still strengthen the evidence: a
-fixed-rate, two-machine cross-run would bound coordinated-omission and
-observer-interference effects; additional engines and dataset sizes would widen
-external validity; and a dedicated study of the N+1 penalty (naive versus eager
-loading per ORM) and of cold-start latency would deepen the practical guidance. The
-complete replication package (harness, seed, adapters, and analysis) is released
-under open licenses so that these extensions, and independent re-runs on current
-library versions, are straightforward, addressing the repeatability gap widely
-documented in computer-systems research~\cite{collberg2016repeatability}.
+two-machine cross-run, isolating the load generator on separate hardware, would
+bound observer-interference effects beyond the coordinated-omission-corrected,
+single-host open-loop check already performed here; additional engines and dataset
+sizes would widen external validity; and a dedicated study of the N+1 penalty (naive
+versus eager loading per ORM) and of cold-start latency would deepen the practical
+guidance. The complete replication package (harness, seed, adapters, and analysis)
+is released under open licenses so that these extensions, and independent re-runs on
+current library versions, are straightforward, addressing the repeatability gap
+widely documented in computer-systems research~\cite{collberg2016repeatability}.
