@@ -185,7 +185,7 @@ CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms 
 per-commit redo-log and binlog flush), whereas PostgreSQL spreads $3.86\times$
 (\texttt{pg-tuned} 6{,}280 down to MikroORM 1{,}571, CI [3.77--3.98]). A
 default-versus-relaxed comparison ($n=25$ vs.\ $n=10$ medians;
-per-layer table in the online supplement) shows this is not a durability artifact: at 50
+Supplement Table~S3) shows this is not a durability artifact: at 50
 concurrent connections, group commit amortizes most of the per-commit
 flush cost, so relaxing durability buys at most $14\%$ on PostgreSQL (native;
 roughly $0$--$4\%$ on the layer-bound ORMs, median $+8\%$ across all nine rows)
@@ -239,7 +239,7 @@ the deep/nested fetch on PostgreSQL under a constant offered request rate
 with a coordinated-omission-corrected open-loop harness (a native
 \texttt{undici}-based generator; latency measured from each request's intended
 send time, with timed-out requests, a 10~s hard cap, clipped into the
-distribution; full sweep table in the online supplement). Below saturation the corrected tails
+distribution; full sweep in Supplement Table~S6). Below saturation the corrected tails
 are flat and small: \texttt{pg} and Prisma hold p99 at 2--4~ms up to
 2{,}000~req/s, both sustaining the full offered rate, and Knex's p99 is still
 only 33~ms at 2{,}000. Beyond each layer's capacity the tail collapses rather
@@ -260,7 +260,7 @@ layers degrade gradually over a wider range.
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells
 the coefficient of variation of throughput over the 25 independent replicates is
 at most $7.6\%$ (\texttt{pg}, insert; Table~\ref{tab:cv}), and across the 40
-MySQL cells at most $6.6\%$ (Knex, insert; per-cell table in the online supplement); the
+MySQL cells at most $6.6\%$ (Knex, insert; Supplement Table~S1); the
 largest relative median absolute deviation is $5.4\%$ (\texttt{pg}, insert,
 PostgreSQL). These maxima are well below the between-layer spreads reported
 above (up to $6.55\times$). One cell, Knex/PostgreSQL/insert, has $n=24$ rather
@@ -329,7 +329,7 @@ deep fetch, requests per CPU-second are \texttt{pg} 3{,}741 down to Prisma 740 a
 MikroORM 571, so Prisma ranks second-to-last. That figure understates the compute
 of layers that push work to the database, however: \texttt{pg}'s hand-written join
 drives about 3.6 database cores while Prisma's engine keeps more work in the
-application tier (Supplement Table~S6). Counting \emph{combined} application-plus-database
+application tier (Supplement Table~S5). Counting \emph{combined} application-plus-database
 CPU per completed request, \texttt{pg}'s efficiency advantage over Prisma shrinks
 from about $5\times$ (3{,}741 vs.\ 740~req per application-CPU-second) to about
 $1.4\times$ (813 vs.\ 596~req per combined-CPU-second); Prisma remains among the
@@ -338,8 +338,8 @@ one. The application-tier reading is the one that matters when the application
 container's CPU is the budgeted resource; the combined reading is the end-to-end
 compute view. An equal-CPU control corroborates the application-tier trade
 operationally: confining the server process with \texttt{taskset} to 1, 2, or 4
-cores (database and load generator pinned to disjoint cores; per-core table in the
-online supplement), \texttt{pg} reaches its full deep-fetch throughput on a single
+cores (database and load generator pinned to disjoint cores; Supplement
+Table~S4), \texttt{pg} reaches its full deep-fetch throughput on a single
 core (3{,}663, 3{,}277, and 3{,}700~req/s at 1, 2, and 4 cores), whereas Prisma
 needs roughly four cores to approach that level (896, 1{,}726, 3{,}025),
 $4.1\times$ slower than \texttt{pg} on an equal one-core application budget;

@@ -43,7 +43,7 @@ have affected that secondary comparison specifically); under the symmetric relax
 regime throughput rises (PostgreSQL median $+8\%$, MySQL $+20\%$) but the
 cross-engine gap is, if anything, slightly larger than under defaults, so it is not
 an artifact of either durability configuration (Section~\ref{sec:discussion},
-online supplement).
+Supplement Table~S3).
 
 \paragraph{Internal validity.}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
@@ -73,7 +73,7 @@ tail latency at saturation~\cite{fruth2022tail,tene2015latency}. A native,
 coordinated-omission-corrected constant-arrival cross-run on the deep fetch
 (Section~\ref{sec:methodology}), which measures latency from each request's
 intended send time, confirms the tail ranking and shows the data-mapper ORMs
-saturating earlier still (Section~\ref{sec:results}; online supplement).
+saturating earlier still (Section~\ref{sec:results}; Supplement Table~S6).
 
 \paragraph{External validity.}
 All measurements come from a single schema, a single dataset size, one hardware
@@ -108,7 +108,7 @@ removes network variance as a confound, though it can understate network-bound
 effects. As a partial check on whether Prisma's near-native throughput depends on
 having spare CPU to spend, we confined the server process to 1, 2, or 4 cores with
 \texttt{taskset} while holding the database and load generator on disjoint cores
-(per-core table in the online supplement): the native driver reaches its full throughput on a
+(Supplement Table~S4): the native driver reaches its full throughput on a
 single core, whereas Prisma at one core is $4.1\times$ slower (896 vs.\
 3{,}663~req/s) and needs about four cores to approach native's level, directly
 quantifying the CPU subsidy behind its near-native cell rather than only inferring
@@ -137,7 +137,7 @@ permutation, cross-checked with Wilcoxon signed-rank; Tables~\ref{tab:cv},
 \ref{tab:significance}). Two bounds reinforce the ordering: the widest spreads, such
 as $6.55\times$ on the deep/nested fetch, dwarf the run-to-run CV (at most 7.6\% on
 PostgreSQL, \texttt{pg}/write, Table~\ref{tab:cv}, and 6.6\% on MySQL,
-\texttt{knex}/write, tabulated in the online supplement; the relative median absolute
+\texttt{knex}/write, Supplement Table~S1; the relative median absolute
 deviation peaks lower still, at 5.4\%, on that same PostgreSQL write cell), and the
 three-band ordering holds across the sweep at $\geq32$ connections
 (Fig.~\ref{fig:scaling}). On the deep/nested fetch, six of the seven adjacent pairs

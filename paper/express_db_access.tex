@@ -40,28 +40,41 @@
 \maketitle
 
 \begin{abstract}
-Node.js/Express applications reach relational databases through a spectrum of
-access layers: native drivers, query builders, and object-relational mappers
-(ORMs). Practitioners choose between them largely on the basis of vendor
-benchmarks, which are fragmented, PostgreSQL-only, and report throughput or
-latency but rarely the tail (p99). We present a vendor-independent, reproducible benchmark of
-a broad cross-section of the access-layer taxonomy's three tiers (native drivers
-\texttt{pg} and \texttt{mysql2}, a query builder Knex, and six ORMs: Drizzle,
-Prisma, Sequelize, TypeORM, Objection, and MikroORM, plus two tuned native
-baselines), served through an identical
-Express application over five access patterns, on both PostgreSQL and MySQL,
-reporting throughput and tail latency (p99) together from 25 independent
-replicates, with every layer verified to return byte-identical responses before
-measurement. Abstraction cost concentrates in relation-materializing patterns:
+\noindent\textbf{Context:} Node.js/Express services reach relational databases
+through a spectrum of access layers (native drivers, query builders, and
+object-relational mappers, or ORMs), yet practitioners choose between them largely
+on vendor benchmarks that are fragmented, PostgreSQL-only, and rarely report the
+tail (p99).
+\textbf{Objective:} We quantify, reproducibly and independently of the evaluated
+vendors, the performance cost of the access layer as a function of the layer, the
+database engine, and the access pattern, and decompose that cost into SQL execution
+versus mapping strategy.
+\textbf{Methods:} An identical Express application is served through nine idiomatic
+access layers (native drivers \texttt{pg} and \texttt{mysql2}, the query builder
+Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM) and
+two tuned native baselines, over five access patterns, against PostgreSQL and MySQL.
+We report throughput and tail latency (p99) jointly from 25 independent replicates
+per cell; an automated cross-check verifies byte-identical responses across layers
+before measurement, and inserts run under the engines' default durability from a
+physically rebuilt state.
+\textbf{Results:} Abstraction cost concentrates in relation-materializing patterns:
 the deep/nested fetch spreads $6.5\times$ (PostgreSQL) and $4.5\times$ (MySQL)
-between the native driver and the heaviest data-mapper ORM, and the spread grows
-with the size of the fetched graph; a same-SQL control attributes most of it to each
-layer's query-generation and result-construction path (default eager-loading
-strategy, query count, and object hydration) rather than to raw SQL execution. Read rankings transfer across engines; the write ranking does
-not: under default durability, single-row inserts are engine-bound on MySQL but
-layer-dependent on PostgreSQL. Prisma matches or leads native throughput on
-several patterns at roughly five times the CPU of every other layer.
+between the native driver and the heaviest data-mapper ORM, growing with the size
+of the fetched graph. A same-SQL control collapses the spread to at most
+$2.2\times$: most of the deficit lies upstream of raw SQL execution, in each
+layer's query-generation and result-construction path. Read rankings transfer
+across engines (Spearman $\rho \geq 0.89$); the write ranking does not
+($\rho = 0.43$): under default durability, inserts are engine-bound on MySQL yet
+layer-dependent on PostgreSQL. Prisma matches or leads native throughput on several
+patterns at roughly five times the application CPU of every other layer.
+\textbf{Conclusion:} The choice of access layer matters most where the layer must
+assemble a nested object graph; a reproducible harness and a checklist of
+benchmarking pitfalls specific to this genre are released as a replication package.
 \end{abstract}
+
+\vspace{0.5em}
+\noindent\textbf{Keywords:} database access layer; object-relational mapping;
+Node.js; performance benchmarking; tail latency; empirical software engineering
 
 % \tabledir is set here so the shared results section can locate the generated
 % tables; the IST build (paper/ist/) sets it to ../tables/ instead.
@@ -75,16 +88,35 @@ several patterns at roughly five times the CPU of every other layer.
 \input{sections/threats}
 \input{sections/conclusion}
 
-\section*{Data and code availability}
+\section*{Data availability}
 The complete replication package (benchmark harness, database schema and
 deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table and figure) is
 available at \texttt{https://github.com/mmiotk/express-db-access-performance};
 release v1.1.0 is permanently archived at Zenodo
-(\texttt{https://doi.org/10.5281/zenodo.21339518}). This paper is
-prepared for submission to \emph{Information and Software Technology}; the Elsevier
-build (\texttt{ist/ist\_main.tex}) additionally carries the structured abstract,
-CRediT statement, and competing-interest, funding, and generative-AI declarations.
+(\texttt{https://doi.org/10.5281/zenodo.21339518}). This is the generic build; the
+Elsevier submission build is \texttt{ist/ist\_main.tex}.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Mateusz Miotk:} Conceptualization, Methodology, Software, Investigation,
+Data curation, Formal analysis, Visualization, Writing -- original draft,
+Writing -- review \& editing.
+
+\section*{Declaration of competing interest}
+The author declares no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper,
+and is not affiliated with, nor funded by, any of the database libraries or vendors
+evaluated in this study.
+
+\section*{Funding}
+This research did not receive any specific grant from funding agencies in the
+public, commercial, or not-for-profit sectors.
+
+\section*{Declaration of generative AI and AI-assisted technologies}
+During the preparation of this work the author used a large language model (Claude,
+Anthropic) to assist with drafting and editing the manuscript and with implementing
+and analyzing the benchmark harness. After using this tool, the author reviewed and
+edited the content as needed and takes full responsibility for the content.
 
 \printbibliography
 

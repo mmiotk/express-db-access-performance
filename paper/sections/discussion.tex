@@ -43,7 +43,7 @@ facility (\texttt{sequelize.query}) is slowest on both engines,
 evidence of dispatch and marshalling overhead in its raw API rather than in query
 strategy.
 Round-trip count alone does not set throughput: Prisma and Objection both issue four
-deep-fetch queries (statement counts tabulated in the online supplement), yet the two sit at opposite ends
+deep-fetch queries (statement counts in Supplement Table~S2), yet the two sit at opposite ends
 of the default-configuration ranking. Knex and Drizzle sit in a consistent middle
 ground on every pattern (never fastest, never among the slowest data-mapper ORMs),
 which is what a query builder and a non-data-mapper, lightweight ORM should deliver.
@@ -80,7 +80,7 @@ the efficiency ranking inverts sharply (3{,}741 vs.\ 740~req per application-CPU
 for \texttt{pg} and Prisma), but the native driver pushes about 3.6 database cores
 of join work that this figure ignores; counting \emph{combined} application and
 database CPU per request narrows \texttt{pg}'s advantage to about $1.4\times$
-(813 vs.\ 596~req per combined-CPU-second; Supplement Table~S6). The honest reading
+(813 vs.\ 596~req per combined-CPU-second; Supplement Table~S5). The honest reading
 is therefore tier-specific: Prisma spends several times the application CPU of the
 other layers, which matters directly when the application container's CPU is the
 budgeted resource (a shared host, a per-core billing model), yet end-to-end it is
@@ -98,7 +98,7 @@ sits fully utilized (pool\_used\_avg~$\approx 10$) with a mean of about 32
 requests waiting in the acquisition queue (peaks of 39--40) under the 50
 concurrent connections used throughout, confirming queueing rather than an idle pool. A
 coordinated-omission-corrected, constant-arrival cross-run of the deep fetch on
-PostgreSQL (online supplement) shows the closed-loop ranking transfers under
+PostgreSQL (Supplement Table~S6) shows the closed-loop ranking transfers under
 that stricter model: below each layer's capacity the corrected tail is flat and
 small (\texttt{pg} and Prisma hold p99~$\leq$~2--4~ms up to 2{,}000~req/s, both
 sustaining the full offered rate), but once the offered rate crosses a layer's
@@ -119,7 +119,7 @@ and MikroORM trails at 1{,}571, a $3.86\times$ spread (Table~\ref{tab:write}). A
 per-commit flush cost: a secondary, symmetrically relaxed run ($n=10$, both engines,
 including MySQL's binlog sync off) shows relaxing durability buys native
 PostgreSQL at most $14\%$ and at most a few percent on most layer-bound ORMs (median
-$+8\%$ across the nine PostgreSQL cells; per-layer table in the online supplement), so the
+$+8\%$ across the nine PostgreSQL cells; Supplement Table~S3), so the
 layer-dependence is a property of the write path itself, not of fsync. MySQL
 inserts, by contrast, remain low and flat across all nine layers (663--809~req/s, a
 $1.22\times$ spread), the same ``engine floor'' pattern the relaxed-durability run
