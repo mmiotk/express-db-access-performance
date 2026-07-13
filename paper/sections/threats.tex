@@ -45,7 +45,7 @@ have affected that secondary comparison specifically); under the symmetric relax
 regime throughput rises (PostgreSQL median $+8\%$, MySQL $+20\%$) but the
 cross-engine gap is, if anything, slightly larger than under defaults, so it is not
 an artifact of either durability configuration (Section~\ref{sec:discussion},
-Table~\ref{tab:durability}).
+online supplement).
 
 \paragraph{Internal validity.}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
@@ -82,7 +82,13 @@ All measurements come from a single schema, a single dataset size, one hardware
 configuration, and a connection pool fixed at ten, against specific engine and
 library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology});
 results may not transfer to larger working sets, other pool sizes, or other engine
-versions, and library performance ages quickly. The host itself is a virtualized,
+versions, and library performance ages quickly; a concrete instance is Prisma,
+whose measured version (5.22) embeds the in-process Rust query engine that our
+CPU accounting characterizes, whereas the version~7 line announced in late 2025
+replaces that engine with a pure-TypeScript client~\cite{prisma7_benchmarks}, so
+the CPU findings describe the Rust-engine generation specifically and re-running
+the released harness against the new architecture is exactly the kind of
+follow-up the instrument is built for. The host itself is a virtualized,
 16-vCPU, single-NUMA-node cloud instance rather than dedicated bare metal, so the
 absolute req/s figures reflect that substrate specifically; only the
 \emph{relative} ordering within an engine is intended to travel, and we do not
@@ -104,7 +110,7 @@ removes network variance as a confound, though it can understate network-bound
 effects. As a partial check on whether Prisma's near-native throughput depends on
 having spare CPU to spend, we confined the server process to 1, 2, or 4 cores with
 \texttt{taskset} while holding the database and load generator on disjoint cores
-(Table~\ref{tab:equalcpu}): the native driver reaches its full throughput on a
+(per-core table in the online supplement): the native driver reaches its full throughput on a
 single core, whereas Prisma at one core is $4.1\times$ slower (896 vs.\
 3{,}663~req/s) and needs about four cores to approach native's level, directly
 quantifying the CPU subsidy behind its near-native cell rather than only inferring
@@ -116,9 +122,10 @@ Prisma's engine threads, and the single-threaded layers' per-core efficiency sho
 dominate, so the CPU-for-latency trade we report is a single-process result. A
 sustained-load check bounds temporal drift: holding three representative layers
 (native \texttt{pg}, Prisma, MikroORM) under ten minutes of continuous deep-fetch
-load moves throughput by at most $\pm2.1\%$ between the first and last three
-minutes, with the band ordering preserved in every single minute (replication
-package), so the short measured runs are not sampling a transient; longer-horizon
+load, re-run under the final harness, moves throughput by at most $\pm1.4\%$
+between the first and last three minutes, with the band ordering preserved in
+every single minute (replication package), so the short measured runs are not
+sampling a transient; longer-horizon
 drift over hours to days~\cite{kuffel2025nodejs} remains untested. A two-machine
 cross-run over a dedicated link, adding real network latency, and a multi-worker
 variant are planned to bound this further.

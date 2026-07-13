@@ -3,7 +3,7 @@
 
 \paragraph{Implications for practice.}
 Read together, RQ1 and RQ3 point to the same conclusion: abstraction cost is not
-a fixed, uniform overhead but a cost specific to a particular \emph{access pattern},
+a fixed, uniform overhead but is specific to the \emph{access pattern},
 and it concentrates in the pattern that assembles a nested object graph. Two
 estimands separate throughout this discussion: the \emph{default-configuration}
 (idiomatic) effect that a practitioner gets from each layer's documented defaults, and
@@ -11,36 +11,36 @@ the \emph{controlled same-SQL} effect that remains once every layer executes
 identical SQL. Under the default-configuration estimand, the deep/nested fetch
 requires the access layer to hydrate rows into objects and resolve associations (the
 object-relational impedance mismatch~\cite{ireland2009impedance} made concrete), not
-merely to issue SQL, and this is exactly where the data-mapper ORMs are most
+merely to issue SQL, and this is where the data-mapper ORMs are most
 expensive: Sequelize, TypeORM, Objection, and especially MikroORM (571~req/s) trail
 the native \texttt{pg} driver (3{,}741~req/s) by up to $6.55\times$ on PostgreSQL, the
 widest spread in the study (Table~\ref{tab:deep_fetch}), with a comparable
 $4.50\times$ spread on MySQL. The tail shows the same pattern: MikroORM's deep-fetch
 p99 is 106~ms against 20~ms for \texttt{pg} on PostgreSQL. A team whose hot path
-assembles nested object graphs therefore pays the largest abstraction cost precisely
+assembles nested object graphs therefore pays the largest abstraction cost
 on its highest-value traffic, and a fan-out sweep of the same endpoint over graphs of
 0 to 500 comments shows the spread growing monotonically with graph size, from
 $5.9\times$ at zero comments to $16.1\times$ at 500, with the leader flipping from
 Prisma on small graphs to \texttt{pg} from 50 comments on, as hydration cost scales
 with the number of materialized rows; the primary workload's roughly ten-comment
 graph sits near the low end of that range, so the headline deep-fetch spreads above
-are themselves conservative. Point reads and aggregation are the opposite case:
+are conservative. Point reads and aggregation are the opposite case:
 dominated by connection and parsing cost that every layer shares, point reads spread
 only $3.06\times$/$2.36\times$; aggregation spreads just $1.86\times$/$1.42\times$
-once every adapter, native drivers included, is forced onto the same raw
-correlated-subquery plan, though Prisma's own raw-SQL path still beats the slowest
+once every adapter, native drivers included, runs the same raw
+correlated-subquery plan, though Prisma's raw-SQL path still beats the slowest
 layer, Objection, by $2.09\times$ (PostgreSQL) to $2.49\times$ (MySQL). On the
 controlled same-SQL estimand, the idiomatic deep-fetch spread collapses: executing
-the identical two-statement SQL (and, per engine, identical \texttt{EXPLAIN} plans
-for those statements) through every layer's raw-SQL facility leaves the nine
+the identical two-statement SQL (and, per engine, identical \texttt{EXPLAIN} plans)
+through every layer's raw-SQL facility leaves the nine
 execution paths within $1.76\times$ of one another on PostgreSQL and $2.21\times$ on
 MySQL (Table~\ref{tab:sameplan}), so the wide default-configuration deficits are
 dominated by eager-loading strategy and hydration, not by execution machinery.
 MikroORM illustrates this most starkly: its default path delivers only 0.20 of its
 own same-SQL throughput on PostgreSQL and 0.25 on MySQL, a $5.0\times$/$4.1\times$
 strategy-and-hydration cost, while Prisma's raw path is the fastest same-SQL cell on
-both engines. The same control exposes a new low end: Sequelize's own raw-SQL
-facility (\texttt{sequelize.query}) is the slowest same-SQL path on both engines,
+both engines. The same control exposes a new low end: Sequelize's raw-SQL
+facility (\texttt{sequelize.query}) is slowest on both engines,
 evidence of dispatch and marshalling overhead in its raw API rather than in query
 strategy.
 Round-trip count alone does not set throughput: Prisma and Objection both issue four
@@ -50,17 +50,13 @@ ground on every pattern (never fastest, never among the slowest data-mapper ORMs
 which is what a query builder and a non-data-mapper, lightweight ORM should deliver.
 
 \paragraph{Same SQL, different wire protocols.}
-Server-side statement capture (PostgreSQL \texttt{log\_statement=all}; MySQL
-\texttt{general\_log=TABLE}) confirms that the same-SQL control's collapse is not a
-protocol artifact: every layer emits byte-identical control statements on both
-engines, yet the wire protocol carrying them differs. On PostgreSQL every layer uses
-the extended protocol with server-side prepared statements except MikroORM, which
-falls back to the simple protocol with client-side literal inlining; on MySQL every
-layer uses the text protocol except \texttt{mysql2-tuned} and Prisma, which use the
-binary protocol with server-side prepared statements. Protocol choice alone therefore
-does not explain the same-SQL spread: Prisma leads it on MySQL while using the binary
-protocol, and \texttt{mysql2-tuned}'s binary path sits within noise of plain
-\texttt{mysql2}'s text path on most patterns.
+Server-side statement capture confirms that the same-SQL control's collapse is not
+a protocol artifact: every layer emits byte-identical control statements on both
+engines, and the wire protocols differ per layer as enumerated in
+Section~\ref{sec:methodology}. Protocol choice alone does not explain the same-SQL
+spread: Prisma leads it on MySQL while using the binary protocol, and
+\texttt{mysql2-tuned}'s binary path sits within noise of plain \texttt{mysql2}'s
+text path on most patterns.
 
 \paragraph{The CPU cost behind parity.}
 Prisma shows that an ORM need not be slow, consistent with evidence that ORM cost is
@@ -70,7 +66,7 @@ not just statistically indistinguishable from it: a prespecified TOST (two
 one-sided tests) equivalence test at $\pm5\%$ accepts equivalence (ratio $0.985$,
 $90\%$ CI $[0.974, 0.998]$; 3{,}685 vs.\ 3{,}741~req/s). A tuned, prepared-statement
 baseline absent from earlier campaigns, \texttt{pg-tuned}, reaches 3{,}813~req/s
-here, modestly ahead of both, so a genuinely tuned native ceiling is now measured
+here, modestly ahead of both, so a tuned native ceiling is now measured
 rather than assumed. Prisma also leads outright on the keyset range scan and the
 raw-SQL aggregation on both engines (3{,}963/3{,}936 and 7{,}893/7{,}383~req/s), and
 on the point read and deep fetch on MySQL (5{,}993 vs.\ \texttt{mysql2}'s 4{,}337;
@@ -80,24 +76,21 @@ application-side CPU of every other layer on the deep fetch ($498\%$;
 Table~\ref{tab:resources}, Figure~\ref{fig:cpu_tradeoff}), trading CPU for
 latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss; the
 efficiency ranking inverts accordingly (3{,}741 vs.\ 740~req per CPU-second for
-\texttt{pg} and Prisma). A dedicated equal-CPU control now measures that subsidy
-directly rather than inferring it: confining the server process to 1, 2, or 4 cores
-with \texttt{taskset} (database and load generator pinned to disjoint cores;
-Table~\ref{tab:equalcpu}), \texttt{pg} already reaches its full unconstrained
-throughput on a single core (3{,}663), whereas Prisma needs about four cores to
-approach the same figure (896 on one core, 3{,}025 on four), $4.1\times$ slower than
-\texttt{pg} at an equal one-core budget; MikroORM barely moves with more cores (463,
-577, 542), confirming its deficit is a hydration cost rather than a
-parallelism-starved one. The practitioner reading is unchanged, only better
-evidenced: parity or leadership here is CPU-subsidized, consequential wherever CPU,
-not throughput, is the scarce resource (a shared host, a per-core billing model).
+\texttt{pg} and Prisma). The equal-CPU control (Section~\ref{sec:results})
+measures that subsidy directly: at an equal one-core budget Prisma is $4.1\times$
+slower than \texttt{pg} and needs about four cores to approach parity, while
+MikroORM barely moves with more cores, confirming its deficit is a hydration cost
+rather than a parallelism-starved one. The practitioner reading is unchanged, only
+better evidenced: parity or leadership here is CPU-subsidized, consequential
+wherever CPU, not throughput, is the scarce resource (a shared host, a per-core
+billing model).
 
 \paragraph{Queueing under load and the open-loop check.}
 The pool sampler turns a previously inferential design property into a direct
 measurement: on the deep fetch, the native PostgreSQL driver's ten-connection pool
 sits fully utilized (pool\_used\_avg~$\approx 10$) with roughly 39--40 requests
 waiting in the acquisition queue under the 50 concurrent connections used
-throughout, confirming genuine queueing rather than an idle pool. A
+throughout, confirming queueing rather than an idle pool. A
 coordinated-omission-corrected, constant-arrival cross-run of the deep fetch on
 PostgreSQL (online supplement) shows the closed-loop ranking transfers under
 that stricter model: below each layer's capacity the corrected tail is flat and
@@ -122,7 +115,7 @@ and MikroORM trails at 1{,}571, a $3.86\times$ spread (Table~\ref{tab:write}). A
 per-commit flush cost: a secondary, symmetrically relaxed run ($n=10$, both engines,
 including MySQL's doublewrite buffer off) shows relaxing durability buys native
 PostgreSQL at most $14\%$ and at most a few percent on most layer-bound ORMs (median
-$+8\%$ across the nine PostgreSQL cells; Table~\ref{tab:durability}), so the
+$+8\%$ across the nine PostgreSQL cells; per-layer table in the online supplement), so the
 layer-dependence is a property of the write path itself, not of fsync. MySQL
 inserts, by contrast, remain low and flat across all nine layers (663--809~req/s, a
 $1.22\times$ spread), the same ``engine floor'' pattern the relaxed-durability run
@@ -132,7 +125,7 @@ double flush (redo log, then binlog) InnoDB performs on every insert regardless 
 how the request reaches it~\cite{harizopoulos2008oltp}, against 11--24~ms on
 PostgreSQL. Relaxing MySQL's durability recovers only $19$--$24\%$, and the absolute
 gap to PostgreSQL remains roughly $7.5\times$ even then (809 vs.\ 6{,}064~req/s). The
-engine contrast is therefore not a durability artifact: under vendor defaults it is,
+engine contrast is not a durability artifact: under vendor defaults it is,
 if anything, slightly larger than under the secondary, mechanism-isolating relaxed
 run. This finding also warrants caution: a write-throughput comparison run on a
 single engine invites the wrong generalization in either direction (``the access
@@ -146,7 +139,6 @@ consistent with earlier quantitative ORM work~\cite{lorenz2017orm}, and the rank
 itself is engine-specific: unlike every read pattern, the write ranking does not
 transfer across engines (Spearman $\rho = 0.43$ versus $\rho \geq 0.89$ for reads).
 
-\input{\tabledir durability}
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking.}
 Reaching the figures above meant confronting four confounds that would otherwise
@@ -164,7 +156,7 @@ performance analysis. We regard the resulting checklist as reusable:
         the aggregate, a correctness bug invisible unless every layer's
         output is checked against a reference, not a performance one.
   \item \textbf{OFFSET vs.\ keyset pagination.} An early, OFFSET-based design
-        for the range-scan endpoint collapsed specifically on MySQL at
+        for the range-scan endpoint collapsed on MySQL at
         realistic offsets, which would have been misread as an access-layer
         weakness rather than what it is: a pagination-strategy cost that
         InnoDB pays more dearly for than PostgreSQL. Rewriting every adapter
@@ -185,7 +177,7 @@ performance analysis. We regard the resulting checklist as reusable:
         rows.
 \end{itemize}
 None of these four is specific to our schema; each is a generic failure mode
-of the genre, extending the general database-benchmarking pitfalls cataloged
+of the genre, extending the database-benchmarking pitfalls cataloged
 by Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair}
 to the access-layer-comparison sub-genre specifically. We offer the checklist as a
 practitioner aid for anyone comparing drivers, query builders, or ORMs: each confound
@@ -196,21 +188,21 @@ vendor-reported and independently verified figures in this space.
 
 \paragraph{Practical guidance.}
 The practical synthesis follows directly from RQ1--RQ3, read on the
-default-configuration estimand that a practitioner actually faces. Where a service's
+default-configuration estimand that a practitioner faces. Where a service's
 hot path is dominated by deep/nested fetches, the access layer is consequential and
 a thin layer (the native driver, a query builder, or a query-engine-based ORM such
 as Prisma) is the safer default, since a heavyweight data-mapper ORM concentrates its
-largest penalty exactly on that traffic, a penalty that grows, not shrinks, as the
+largest penalty on that traffic, a penalty that grows, not shrinks, as the
 fetched graph grows larger; weigh a query-engine ORM's parity or lead here against
 its CPU cost wherever CPU, not throughput, is the constrained resource. Where the
 workload mix is read-simple (point reads, keyset scans) or write-bound, especially
 on MySQL, whose engine floor for single-row inserts dominates layer differences
-under default durability regardless of choice, the productivity, type safety, and
+under default durability, the productivity, type safety, and
 migration tooling of a full ORM cost little in relative throughput and are
 reasonable grounds for the decision on their own. A pragmatic middle path, already
 forced onto every layer by our aggregation endpoint, is to keep the ORM for the bulk
-of the application and fall back to raw SQL or the native driver only for the
-specific endpoints that assemble large object graphs; the same-SQL control shows
+of the application and fall back to raw SQL or the native driver only for
+endpoints that assemble large object graphs; the same-SQL control shows
 this fallback recovers most of the deep fetch's cost (to at most $2.21\times$), and
 orthogonally, second-level caching can absorb part of an ORM's read cost where the
 workload tolerates staleness~\cite{chen2016cacheoptimizer}.

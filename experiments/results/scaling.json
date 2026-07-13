@@ -1,0 +1,650 @@
+[
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 714
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 3261
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 3615
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 3583
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 3605
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 3511
+  },
+  {
+    "adapter": "pg-tuned",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 1020
+  },
+  {
+    "adapter": "pg-tuned",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 3749
+  },
+  {
+    "adapter": "pg-tuned",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 3882
+  },
+  {
+    "adapter": "pg-tuned",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 3852
+  },
+  {
+    "adapter": "pg-tuned",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 3809
+  },
+  {
+    "adapter": "pg-tuned",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 3709
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 656
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 2438
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 2535
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 2531
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 2460
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 2357
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 609
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1959
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 2095
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1990
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1987
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 1985
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 503
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1869
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 3099
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 3248
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 3196
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 3203
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 545
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1000
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1028
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 992
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 985
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 970
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 444
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1252
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1315
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1307
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1271
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 1234
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 569
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1050
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1051
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1042
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1021
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 851
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 336
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 576
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 585
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 574
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 540
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 530
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 867
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 2352
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 2328
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 2457
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 2359
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 2332
+  },
+  {
+    "adapter": "mysql2-tuned",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 920
+  },
+  {
+    "adapter": "mysql2-tuned",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 2308
+  },
+  {
+    "adapter": "mysql2-tuned",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 2404
+  },
+  {
+    "adapter": "mysql2-tuned",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 2516
+  },
+  {
+    "adapter": "mysql2-tuned",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 2389
+  },
+  {
+    "adapter": "mysql2-tuned",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 2407
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 766
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 2068
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 2138
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 2077
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 2001
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 1933
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 648
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 1430
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 1453
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 1337
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 1441
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 1401
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 434
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 1930
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 2903
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 3088
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 3122
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 3127
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 547
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 870
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 927
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 898
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 885
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 847
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 500
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 1152
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 1174
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 1077
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 1119
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 1121
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 480
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 876
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 852
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 773
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 777
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 767
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 385
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 518
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 467
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 465
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 509
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 466
+  }
+]

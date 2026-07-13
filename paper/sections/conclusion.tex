@@ -5,10 +5,8 @@ We set out to replace vendor-benchmark claims with a neutral, reproducible
 comparison of relational database access layers in Express.js. Our harness serves
 an identical application through a representative taxonomy (native drivers, a query
 builder, and six ORMs) across PostgreSQL and MySQL, over five access patterns,
-and reports throughput and tail latency together. This addresses the four gaps that
-characterize prior art: the absence of MySQL from access-layer comparisons, the
-lack of a neutral, broad-coverage study, the separation of throughput from tail
-latency, and the omission of the Express HTTP layer.
+and reports throughput and tail latency together, addressing the four gaps that
+characterize prior art (Section~\ref{sec:introduction}).
 
 The empirical answer is that the cost of abstraction is concentrated, not uniform.
 It is modest for point reads and for aggregation issued through a raw-SQL path, but
@@ -38,8 +36,8 @@ relaxed-durability run confirms is not a durability artifact. Beyond these
 findings, development surfaced a reusable checklist of benchmarking pitfalls
 (aggregation fan-out, \texttt{OFFSET}-versus-keyset pagination, write-workload
 contamination, and query-formulation confounds) that silently distort naive
-access-layer benchmarks; one was caught by our correctness cross-check, the rest by
-performance analysis.
+access-layer benchmarks; several were caught by the correctness cross-check, the
+rest by performance analysis.
 
 Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
 connections and confirmed the ordering is load-robust, sampled per-layer CPU and

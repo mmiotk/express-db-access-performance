@@ -9,7 +9,7 @@ searching the ACM Digital Library, IEEE Xplore, Scopus, and Google Scholar for
 combinations of \emph{ORM}, \emph{query builder}, \emph{database access layer},
 \emph{Node.js}, \emph{Express}, \emph{PostgreSQL}, and \emph{MySQL} with
 \emph{benchmark}, \emph{performance}, \emph{throughput}, and \emph{latency} over
-2006--2025, followed by citation chaining; we retain empirical performance
+2006--July 2026, followed by citation chaining; we retain empirical performance
 comparisons of relational access layers or engines and set aside non-empirical or
 non-relational studies.
 
@@ -65,17 +65,24 @@ al.~\cite{colley2018orm} give the earliest systematic cross-language account,
 benchmarking eight ORM frameworks across Java, C\#, Python, and PHP against a
 common relational schema, but the study \emph{deliberately excludes JavaScript},
 leaving the Node.js ecosystem, and Express in particular, without an academic
-baseline for the better part of a decade. Two 2025 studies address it partially.
-One, in \emph{Procedia Computer Science}, compares Prisma against optimized raw
-SQL over eight query patterns on a containerized PostgreSQL
+baseline for the better part of a decade. Three recent studies address it
+partially. One, in \emph{Procedia Computer Science}, compares Prisma against
+optimized raw SQL over eight query patterns on a containerized PostgreSQL
 setup~\cite{prisma_rawsql_2025}; we cite it for its methodology, but its headline
-speedup figures were not reproducible in our own setup, so we do not build on them. The
-other compares Prisma, TypeORM, and Sequelize across four relation types, also on
-PostgreSQL, by response time, memory, and CPU~\cite{orm_compare_jcct_2025}. Both
-are useful precedents for containerized, Node-specific measurement, but each
-covers only two or three libraries out of the much larger taxonomy in production
-use, and both are confined to a single engine. No peer-reviewed study to date
-spans the native-driver, query-builder, and ORM tiers together, and none includes MySQL.
+speedup figures were not reproducible in our own setup, so we do not build on them.
+A second compares Prisma, TypeORM, and Sequelize across four relation types, also
+on PostgreSQL, by response time, memory, and CPU~\cite{orm_compare_jcct_2025}. The
+third, and most recent, instruments the same three ORMs on PostgreSQL inside a
+NestJS service, timing internal query stages rather than client-observed
+requests~\cite{zhadko2025orm}; notably, it independently observes the
+concurrency-dependent ranking flip we report for Prisma (worst at single queries,
+best under parallel load). All three are useful precedents for containerized,
+Node-specific measurement, but each covers at most three libraries out of the much
+larger taxonomy in production use, each is confined to PostgreSQL, and none
+measures the client-observed HTTP round trip. A further Express-based study
+optimizes a single stack (pooling, batching, caching) rather than comparing access
+layers~\cite{imamsakti2025async}. No peer-reviewed study to date spans the
+native-driver, query-builder, and ORM tiers together, and none includes MySQL.
 
 \subsection{Database-engine, SQL/NoSQL, and Node.js performance}
 A second, largely disjoint line of work benchmarks the layers immediately below
@@ -174,12 +181,13 @@ studies from engine-only work such as~\cite{salunke2024pgmysql}.
     Colley et al.~\cite{colley2018orm} & 8 ORMs, 4 languages (no JS) & not stated & query latency & Yes \\
     Procedia CS~\cite{prisma_rawsql_2025}$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & Yes \\
     JCCT~\cite{orm_compare_jcct_2025} & 3 ORMs & PostgreSQL & latency, memory, CPU & Yes \\
+    JCSI~\cite{zhadko2025orm} & 3 ORMs & PostgreSQL & per-stage latency & Yes \\
     Salunke and Ouda~\cite{salunke2024pgmysql} & none (engine only) & PostgreSQL + MySQL & throughput, latency & Yes \\
     Drizzle~\cite{drizzle_benchmarks} & 9 (broad) & PostgreSQL & throughput, latency, P95 & No (vendor) \\
     Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & No (vendor) \\
     IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & No (vendor) \\
     \midrule
-    \textbf{This study} & \textbf{9 (broad)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + tail (p99)} & \textbf{Yes} \\
+    \textbf{This study} & \textbf{9 idiomatic (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + tail (p99)} & \textbf{Yes} \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

@@ -1,0 +1,101 @@
+[
+  {
+    "adapter": "pg",
+    "cores": "1core",
+    "mask": "4",
+    "rps": 3663,
+    "rps_samples": [
+      3456,
+      3663,
+      3672
+    ]
+  },
+  {
+    "adapter": "pg",
+    "cores": "2core",
+    "mask": "4-5",
+    "rps": 3277,
+    "rps_samples": [
+      3545,
+      3257,
+      3277
+    ]
+  },
+  {
+    "adapter": "pg",
+    "cores": "4core",
+    "mask": "4-7",
+    "rps": 3700,
+    "rps_samples": [
+      3636,
+      3700,
+      3722
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "cores": "1core",
+    "mask": "4",
+    "rps": 896,
+    "rps_samples": [
+      845,
+      906,
+      896
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "cores": "2core",
+    "mask": "4-5",
+    "rps": 1726,
+    "rps_samples": [
+      1656,
+      1729,
+      1726
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "cores": "4core",
+    "mask": "4-7",
+    "rps": 3025,
+    "rps_samples": [
+      2960,
+      3040,
+      3025
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "cores": "1core",
+    "mask": "4",
+    "rps": 463,
+    "rps_samples": [
+      410,
+      463,
+      516
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "cores": "2core",
+    "mask": "4-5",
+    "rps": 577,
+    "rps_samples": [
+      539,
+      577,
+      595
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "cores": "4core",
+    "mask": "4-7",
+    "rps": 542,
+    "rps_samples": [
+      526,
+      567,
+      542
+    ]
+  }
+]

@@ -33,20 +33,25 @@ P95)~\cite{drizzle_benchmarks,imdbench}. None reports the p99 behavior that domi
 under load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is
 even sparser and equally narrow in scope. Colley et al.\ measured ORM overhead
 across eight frameworks, but in Java, C\#, Python, and PHP, deliberately
-excluding JavaScript~\cite{colley2018orm}; two 2025 studies begin to close
+excluding JavaScript~\cite{colley2018orm}; three recent studies begin to close
 that gap for Node.js/TypeScript, yet each is limited to PostgreSQL and to at
-most three ORMs~\cite{prisma_rawsql_2025,orm_compare_jcct_2025}. A further
+most three ORMs~\cite{prisma_rawsql_2025,orm_compare_jcct_2025,zhadko2025orm}. A further
 line of work benchmarks PostgreSQL against MySQL directly, but holds the
 access layer fixed rather than varying it~\cite{salunke2024pgmysql}.
 
 Taken together, this leaves a gap along four axes: (1)~no access-layer
 comparison includes MySQL, and no PostgreSQL/MySQL benchmark varies the
 access layer; (2)~no neutral study spans the taxonomy broadly: the broad-coverage
-comparisons are vendor-authored, and academic work covers at most two or three
-libraries; (3)~throughput and tail latency are never reported jointly, each source
-reporting a single metric family; and (4)~none of the above
-measures through the Express/HTTP layer, i.e.\ the request round trip a
-deployed service actually experiences, rather than an isolated query timing.
+comparisons are vendor-authored, and academic work covers at most three
+libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~throughput and the p99
+tail are never reported jointly, the sole vendor suite that pairs throughput with
+a percentile stopping at a single P95 at one load
+point~\cite{drizzle_benchmarks}; and (4)~no access-layer comparison measures
+client-observed performance through a production HTTP framework: academic
+studies instrument query execution inside the application
+process~\cite{zhadko2025orm}, and the Express-based work that does measure the
+request round trip compares runtime optimizations on a single stack rather than
+access layers~\cite{imamsakti2025async}.
 
 This paper addresses that gap with a single, neutral benchmark. We serve an
 \emph{identical} Express application through all nine access layers (the two

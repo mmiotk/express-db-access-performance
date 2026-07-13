@@ -1,0 +1,59 @@
+{
+  "layers": [
+    {
+      "adapter": "pg",
+      "perMin": [
+        3383,
+        3304,
+        3423,
+        3514,
+        3468,
+        3410,
+        3343,
+        3397,
+        3389,
+        3403
+      ],
+      "first3": 3383,
+      "last3": 3397,
+      "driftPct": 0.4
+    },
+    {
+      "adapter": "prisma",
+      "perMin": [
+        3048,
+        3035,
+        3034,
+        3019,
+        3114,
+        3033,
+        3044,
+        3074,
+        3021,
+        3071
+      ],
+      "first3": 3035,
+      "last3": 3071,
+      "driftPct": 1.2
+    },
+    {
+      "adapter": "mikroorm",
+      "perMin": [
+        538,
+        562,
+        564,
+        574,
+        564,
+        568,
+        574,
+        570,
+        576,
+        568
+      ],
+      "first3": 562,
+      "last3": 570,
+      "driftPct": 1.4
+    }
+  ],
+  "orderingPreservedEveryMinute": true
+}

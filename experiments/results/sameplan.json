@@ -1,0 +1,386 @@
+{
+  "cells": [
+    {
+      "adapter": "pg",
+      "engine": "postgres",
+      "rps": 3686,
+      "p99": 21,
+      "idiomatic": 3741,
+      "agree": true,
+      "rps_samples": [
+        3686,
+        3495,
+        3478,
+        3561,
+        3600,
+        3720,
+        3756,
+        3515,
+        3790,
+        3817
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "pg-tuned",
+      "engine": "postgres",
+      "rps": 3794,
+      "p99": 19,
+      "agree": true,
+      "rps_samples": [
+        3667,
+        3801,
+        3742,
+        3833,
+        3780,
+        3794,
+        3877,
+        3929,
+        3408,
+        3458
+      ],
+      "reps": 10,
+      "idiomatic": 3813
+    },
+    {
+      "adapter": "knex",
+      "engine": "postgres",
+      "rps": 2924,
+      "p99": 24,
+      "idiomatic": 2491,
+      "agree": true,
+      "rps_samples": [
+        2744,
+        2846,
+        2926,
+        2924,
+        2936,
+        2971,
+        2887,
+        2600,
+        2860,
+        2985
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "drizzle",
+      "engine": "postgres",
+      "rps": 3449,
+      "p99": 22,
+      "idiomatic": 2080,
+      "agree": true,
+      "rps_samples": [
+        3294,
+        3538,
+        3443,
+        3449,
+        3362,
+        3438,
+        3586,
+        3362,
+        3546,
+        3578
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "prisma",
+      "engine": "postgres",
+      "rps": 4343,
+      "p99": 16,
+      "idiomatic": 3685,
+      "agree": true,
+      "rps_samples": [
+        4252,
+        4343,
+        4374,
+        4404,
+        4375,
+        4324,
+        4323,
+        4370,
+        4341,
+        3806
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "sequelize",
+      "engine": "postgres",
+      "rps": 2480,
+      "p99": 27,
+      "idiomatic": 989,
+      "agree": true,
+      "rps_samples": [
+        2309,
+        2492,
+        2525,
+        2534,
+        2553,
+        2480,
+        2389,
+        2455,
+        2452,
+        2464
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "typeorm",
+      "engine": "postgres",
+      "rps": 2998,
+      "p99": 25,
+      "idiomatic": 1327,
+      "agree": true,
+      "rps_samples": [
+        2998,
+        2949,
+        3194,
+        3149,
+        3104,
+        3033,
+        2931,
+        2814,
+        2813,
+        2800
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "objection",
+      "engine": "postgres",
+      "rps": 2860,
+      "p99": 25,
+      "idiomatic": 1037,
+      "agree": true,
+      "rps_samples": [
+        2767,
+        2869,
+        2829,
+        2624,
+        2795,
+        2860,
+        2766,
+        2945,
+        2901,
+        2938
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "mikroorm",
+      "engine": "postgres",
+      "rps": 2884,
+      "p99": 25,
+      "idiomatic": 571,
+      "agree": true,
+      "rps_samples": [
+        2666,
+        2974,
+        2853,
+        2664,
+        2647,
+        2670,
+        2884,
+        2913,
+        2905,
+        3013
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "mysql2",
+      "engine": "mysql",
+      "rps": 2423,
+      "p99": 29,
+      "idiomatic": 2405,
+      "agree": true,
+      "rps_samples": [
+        2264,
+        2429,
+        2394,
+        2460,
+        2448,
+        2414,
+        2392,
+        2448,
+        2423,
+        2326
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "mysql2-tuned",
+      "engine": "mysql",
+      "rps": 2381,
+      "p99": 26,
+      "agree": true,
+      "rps_samples": [
+        2331,
+        2375,
+        2436,
+        2398,
+        2358,
+        2431,
+        2252,
+        2445,
+        2381,
+        2362
+      ],
+      "reps": 10,
+      "idiomatic": 2436
+    },
+    {
+      "adapter": "knex",
+      "engine": "mysql",
+      "rps": 2311,
+      "p99": 28,
+      "idiomatic": 2050,
+      "agree": true,
+      "rps_samples": [
+        2204,
+        2285,
+        2298,
+        2256,
+        2278,
+        2315,
+        2341,
+        2376,
+        2311,
+        2329
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "drizzle",
+      "engine": "mysql",
+      "rps": 2110,
+      "p99": 34,
+      "idiomatic": 1446,
+      "agree": true,
+      "rps_samples": [
+        2100,
+        2133,
+        2086,
+        2117,
+        2174,
+        1895,
+        2042,
+        2114,
+        2059,
+        2110
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "prisma",
+      "engine": "mysql",
+      "rps": 4227,
+      "p99": 15,
+      "idiomatic": 3701,
+      "agree": true,
+      "rps_samples": [
+        4243,
+        4178,
+        4230,
+        4227,
+        4324,
+        4212,
+        4323,
+        4200,
+        3703,
+        4001
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "sequelize",
+      "engine": "mysql",
+      "rps": 1912,
+      "p99": 31,
+      "idiomatic": 893,
+      "agree": true,
+      "rps_samples": [
+        1830,
+        1911,
+        1872,
+        1912,
+        1943,
+        1841,
+        1915,
+        1841,
+        1982,
+        1976
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "typeorm",
+      "engine": "mysql",
+      "rps": 2520,
+      "p99": 25,
+      "idiomatic": 1170,
+      "agree": true,
+      "rps_samples": [
+        2508,
+        2562,
+        2577,
+        2484,
+        2513,
+        2602,
+        2457,
+        2520,
+        2609,
+        2365
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "objection",
+      "engine": "mysql",
+      "rps": 2249,
+      "p99": 27,
+      "idiomatic": 860,
+      "agree": true,
+      "rps_samples": [
+        2237,
+        2235,
+        2335,
+        2330,
+        2280,
+        2320,
+        2196,
+        2249,
+        2109,
+        2165
+      ],
+      "reps": 10
+    },
+    {
+      "adapter": "mikroorm",
+      "engine": "mysql",
+      "rps": 2177,
+      "p99": 28,
+      "idiomatic": 535,
+      "agree": true,
+      "rps_samples": [
+        2146,
+        2183,
+        2133,
+        2077,
+        2166,
+        2196,
+        2177,
+        2161,
+        2249,
+        2245
+      ],
+      "reps": 10
+    }
+  ],
+  "baseline": {
+    "postgres": 10909,
+    "mysql": 10921
+  }
+}

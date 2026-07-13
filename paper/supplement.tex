@@ -53,6 +53,23 @@ throughput ladder.
 
 \input{\tabledir query_counts}
 
+\section{Write throughput under default versus relaxed durability}
+\label{sup:durability}
+Table~\ref{tab:durability} gives the per-layer insert throughput under each
+engine's default durability configuration (the paper's primary write regime)
+and under the symmetric relaxed regime (secondary, 10 replicates), with the
+relaxed$\div$default ratio quoted in the main text.
+
+\input{\tabledir durability}
+
+\section{Equal-CPU-budget control}
+\label{sup:equalcpu}
+Table~\ref{tab:equalcpu} gives the deep-fetch throughput with the server
+confined to 1, 2, or 4 cores (database and load generator pinned to disjoint
+cores); all nine values are quoted in the main text.
+
+\input{\tabledir equalcpu}
+
 \section{Coordinated-omission-corrected open-loop sweep}
 \label{sup:openloop}
 Table~\ref{tab:openloop} gives the full constant-arrival sweep (PostgreSQL,
