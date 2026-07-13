@@ -1,7 +1,7 @@
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-We set out to replace vendor-benchmark claims with a neutral, reproducible
+We set out to replace vendor-benchmark claims with a vendor-independent, reproducible
 comparison of relational database access layers in Express.js. Our harness serves
 an identical application through a representative taxonomy (native drivers, a query
 builder, and six ORMs) across PostgreSQL and MySQL, over five access patterns,
@@ -14,12 +14,12 @@ it grows sharply, up to $6.55\times$ on PostgreSQL and $4.50\times$ on MySQL, fo
 deep/nested fetch, where the layer must assemble a nested object graph on the
 application side; a fan-out sweep shows that spread growing further still as the
 fetched graph grows larger. A same-SQL
-control decomposes the idiomatic spread: executing the identical two-statement SQL
-through every layer's raw-SQL facility collapses the nine execution paths to within
-$1.76\times$ of one another on PostgreSQL and $2.21\times$ on MySQL, so most of the
-deep-fetch cost is each layer's default eager-loading strategy and hydration rather
-than its machinery (MikroORM alone pays a $5.0\times$/$4.1\times$
-strategy-and-hydration cost). Read rankings are stable across the two engines
+control bounds the raw-execution component: executing the identical two-statement
+SQL through every layer's raw-SQL facility collapses the nine execution paths to
+within $1.76\times$ of one another on PostgreSQL and $2.21\times$ on MySQL, so most
+of the deep-fetch cost lies upstream of raw SQL execution, in each layer's default
+query-generation and result-construction path (MikroORM alone shows a
+$5.0\times$/$4.1\times$ gap between its idiomatic and raw-SQL paths). Read rankings are stable across the two engines
 (Spearman $\rho \geq 0.89$ on every read pattern), and a competitively fast modern
 ORM, Prisma, shows that ``ORM'' need not imply large overhead: on the deep fetch it
 is now formally equivalent to the native driver (TOST equivalence at $\pm5\%$), and

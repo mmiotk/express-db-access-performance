@@ -98,7 +98,7 @@ ${plots}
   \\end{axis}
   \\end{tikzpicture}
   \\caption{Throughput of each access layer on the deep/nested fetch as concurrency
-    increases (${engine}). The relative ordering is preserved across the load range.}
+    increases (${engine}). The three-band ordering holds at 32 connections and above; at low concurrency (1 and 8 connections) Prisma is mid-pack.}
   \\label{fig:scaling}
 \\end{figure}
 `;

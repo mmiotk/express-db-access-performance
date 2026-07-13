@@ -27,6 +27,6 @@
   \end{axis}
   \end{tikzpicture}
   \caption{Throughput of each access layer on the deep/nested fetch as concurrency
-    increases (postgres). The relative ordering is preserved across the load range.}
+    increases (postgres). The three-band ordering (native and tuned-native with Prisma on top, query builder and lightweight ORM in the middle, data-mapper ORMs below) holds at 32 connections and above; at 1 and 8 connections Prisma is mid-pack (Section~\ref{sec:results}).}
   \label{fig:scaling}
 \end{figure}

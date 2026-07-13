@@ -27,10 +27,20 @@ counterparts \texttt{pg-tuned} (named prepared statements reused across calls) a
 \texttt{mysql2-tuned} (the binary protocol with server-side prepared statements via
 \texttt{execute()}), included as engine-specific lower-bound baselines rather than
 idiomatic treatments; the query builder Knex; and the ORMs Drizzle (a lightweight,
-query-builder-style ORM), Prisma, Sequelize, TypeORM, Objection, and MikroORM. The
-nine idiomatic layers cover the taxonomy's three tiers but are a representative
-cross-section, not an exhaustive catalogue; other libraries (for example Kysely,
-Slonik, and pg-promise) are omitted. The \emph{engine} has two levels, PostgreSQL~18.4
+query-builder-style ORM), Prisma, Sequelize, TypeORM, Objection, and MikroORM. We
+classify a library by its dominant interface rather than by its self-description:
+native drivers expose SQL and the wire protocol directly, query builders assemble
+SQL programmatically, and ORMs map rows to objects and manage associations; Drizzle
+sits at the query-builder end of the ORM range and Objection layers an ORM over
+Knex, which the results bear out. The nine idiomatic layers cover the taxonomy's
+three tiers but are a representative cross-section, not an exhaustive catalogue;
+other libraries (for example Kysely, Slonik, and pg-promise) are omitted. Vendor
+independence here means authorship: no evaluated library's maintainers were
+involved in the study and none was invited to inspect the adapters. It does not
+remove the consequential choices any benchmark author makes, which libraries to
+include, what counts as idiomatic use, the schema and endpoints, the pool size, and
+what tuning is allowed; we disclose these throughout and release the harness so each
+can be inspected and varied. The \emph{engine} has two levels, PostgreSQL~18.4
 and MySQL~9.7.1. The \emph{access pattern} has five levels, realized as HTTP
 endpoints (Table~\ref{tab:patterns}). The four native and tuned baselines are
 engine-specific (\texttt{pg}/\texttt{pg-tuned} run only on PostgreSQL,
@@ -207,12 +217,13 @@ MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1},
 relaxes it; a labelled secondary run instead relaxed every one of those settings on
 both engines (10 replicates, write endpoint only) to isolate the durability
 mechanism, compared with the default regime in Section~\ref{sec:discussion}
-(online supplement). A no-database \texttt{/baseline} endpoint returning a
+(online supplement). A fixed-payload \texttt{/baseline} endpoint returning a
 fixed, seed-realistic thread-shaped payload measured the shared
-Express-plus-serialization floor: 10{,}909 (PostgreSQL server) and 10{,}921 (MySQL
-server) req/s on this host, roughly $3\times$ the fastest deep-fetch cell, so the
-framework floor leaves the between-layer spreads visible rather than compressing
-them. The hardware and software environment was captured automatically into the
+Express-plus-serialization floor (it bounds framework and serialization cost, not
+the per-request object construction each layer performs): 10{,}909 (PostgreSQL
+server) and 10{,}921 (MySQL server) req/s on this host, roughly $3\times$ the
+fastest deep-fetch cell, so the framework floor leaves the between-layer spreads
+visible rather than compressing them. The hardware and software environment was captured automatically into the
 replication package. To characterize behavior under load, we additionally swept the
 deep/nested fetch (the most layer-sensitive pattern) across connection counts from 1
 to 256 for every layer and engine, since throughput and contention scale
@@ -276,13 +287,15 @@ durability, same-SQL, open-loop, fan-out, equal-CPU, and concurrency-sweep runs
 followed on 2026-07-13, on the same host
 (Intel Xeon Gold~6140, 16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0), with the
 database engines running locally. The pinned versions (Table~\ref{tab:versions})
-were the current releases at that date and were frozen for the study, since
-access-layer performance is version-sensitive; later point releases (for example
-Node.js~24.17.0) are deliberately excluded. We pin
-Express~4, still the dominant deployed line at measurement time, rather than
-Express~5; the framework version is shared by every cell, so it shifts the common
-floor rather than the between-layer comparison, and re-running the harness on
-Express~5 is a one-line change. These are the pinned versions (Table~\ref{tab:versions}) that the reported
+are the versions selected and installed on the measurement date, recorded from the
+lockfile and an automated environment capture (replication package), and frozen for
+the study, since access-layer performance is version-sensitive; later point releases
+(for example Node.js~24.17.0) are deliberately excluded. We pin Express~4 rather
+than Express~5; the framework version is shared by every cell, so to first order it
+shifts the common request-handling floor rather than the between-layer comparison,
+though we cannot rule out that a different framework version interacts with a
+layer's scheduling or serialization, and re-running the harness on Express~5 is a
+one-line change. These are the pinned versions (Table~\ref{tab:versions}) that the reported
 numbers characterize, and re-running the harness on newer releases is a one-command
 operation.
 

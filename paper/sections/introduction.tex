@@ -41,7 +41,7 @@ access layer fixed rather than varying it~\cite{salunke2024pgmysql}.
 
 Taken together, this leaves a gap along four axes: (1)~no access-layer
 comparison includes MySQL, and no PostgreSQL/MySQL benchmark varies the
-access layer; (2)~no neutral study spans the taxonomy broadly: the broad-coverage
+access layer; (2)~no vendor-independent study spans the taxonomy broadly: the broad-coverage
 comparisons are vendor-authored, and academic work covers at most three
 libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~throughput and the p99
 tail are never reported jointly, the sole vendor suite that pairs throughput with
@@ -53,11 +53,11 @@ process~\cite{zhadko2025orm}, and the Express-based work that does measure the
 request round trip compares runtime optimizations on a single stack rather than
 access layers~\cite{imamsakti2025async}.
 
-This paper addresses that gap with a single, neutral benchmark. We serve an
+This paper addresses that gap with a single, vendor-independent benchmark. We serve an
 \emph{identical} Express application through all nine access layers (the two
 native drivers, the Knex query builder, and six ORMs: Drizzle, Prisma,
 Sequelize, TypeORM, Objection, and MikroORM) over five access patterns
-representative of everyday CRUD workloads: a point read by primary key, a
+selected to span common CRUD operations (they are chosen access patterns, not a sample from a measured production workload distribution): a point read by primary key, a
 keyset range scan over the most recent rows, a deep/nested fetch that
 materializes a post together with its author and every comment (each with its
 own comment-author), a per-author aggregation of post counts and view sums,
@@ -105,7 +105,7 @@ findings are built to outlive the pinned versions:
         \textbf{byte-identical} responses on the four non-mutating patterns;
         released as a replication package and re-runnable in one command
         against future library versions.
-  \item A \textbf{neutral, broad-coverage benchmark design} spanning the
+  \item A \textbf{vendor-independent, broad-coverage benchmark design} spanning the
         taxonomy's three tiers (native driver $\to$ query builder $\to$ six
         ORMs), \textbf{dual-engine} (PostgreSQL and MySQL), measured at the
         \textbf{Express level}, reporting throughput and tail latency

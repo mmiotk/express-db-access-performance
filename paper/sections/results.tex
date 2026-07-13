@@ -102,16 +102,21 @@ application side.
 
 \subsection{Same-SQL control}
 The idiomatic deep fetch lets each layer choose its own query strategy, so its
-spread mixes execution-path cost with default eager-loading strategy. To
-separate them, we re-measured the deep fetch under a \emph{same-SQL control}:
-every layer executes identical two-statement SQL (and, per engine, identical
-\texttt{EXPLAIN} plans) with identical row mapping through
+spread mixes raw SQL execution with everything a layer does around it. To bound
+the raw-execution component, we re-measured the deep fetch under a
+\emph{same-SQL control}: every layer executes identical two-statement SQL (and,
+per engine, identical \texttt{EXPLAIN} plans) with identical row mapping through
 its raw-SQL facility, as the aggregation endpoint already does
 (Table~\ref{tab:sameplan}). Server-side capture confirms the statement text is
 byte-identical across layers on both engines, while the wire protocols differ
 per layer as enumerated in Section~\ref{sec:methodology}; the honest description
 of this control is therefore \emph{same SQL, protocol disclosed}, not
-\emph{same plan}.
+\emph{same plan}. The contrast is a composite one: switching from a layer's
+idiomatic relational-fetch path to the common raw-SQL-and-shared-mapping path
+changes its query strategy, query count, prepared-statement behavior, the raw
+versus ORM API, and result marshalling together, so it does not isolate any one of
+these; what it does establish is that the raw-execution component is small and the
+idiomatic overhead lies upstream of it.
 
 On the identical SQL, the deep-fetch spread collapses to a max/min ratio
 (across the nine layers; the idiomatic spreads above are native-relative, whose
@@ -123,9 +128,10 @@ with its pipelined query engine; the new low end is Sequelize's raw facility
 overhead in the raw API itself, not SQL execution. MikroORM shows the largest
 strategy gap: its idiomatic path (571~req/s on PostgreSQL, 535 on MySQL) reaches
 only 0.20 and 0.25 of its own same-SQL throughput (2{,}868 and 2{,}172), a
-$5.0\times$ and $4.1\times$ strategy-and-hydration cost. On this pattern, the
-access layer's idiomatic cost is dominated by what it \emph{chooses to do} by
-default, not by what its raw machinery \emph{is}; a no-database
+$5.0\times$ and $4.1\times$ gap between its idiomatic and raw-SQL paths. On this
+pattern, the access layer's idiomatic cost is dominated by what it \emph{chooses to
+do} by default (its query strategy, round-trip count, and object hydration), not
+by the speed of its raw SQL execution; a fixed-payload
 Express-plus-JSON floor of 10{,}909~req/s (PostgreSQL server) and 10{,}921
 (MySQL server; Section~\ref{sec:methodology}) sits well above every same-SQL
 cell, so the framework floor does not manufacture this collapse.
@@ -243,10 +249,12 @@ than degrading gracefully: at the 4{,}000~req/s tier, \texttt{pg} achieves
 at 2{,}000~req/s (achieving 772, with a third of the issued requests timing
 out: 9{,}992 of 30{,}000), and
 MikroORM collapses at 1{,}000~req/s (achieving 488) and again at 4{,}000
-(achieving 259, with 53{,}315 of 60{,}000 requests timing out). The ranking
-matches the closed-loop result and sharpens it: once offered load crosses a
-data-mapper ORM's capacity, the penalty under constant arrival is not merely
-worse but catastrophic.
+(achieving 259, with 53{,}315 of 60{,}000 requests timing out). We call a layer's behavior at an offered rate a
+\emph{collapse} when it achieves under half the offered rate with a majority of
+requests timing out. By that criterion the ranking matches the closed-loop result
+and sharpens it: the data-mapper ORMs enter unstable queueing with high timeout
+rates as soon as the offered load crosses their capacity, whereas the lightweight
+layers degrade gradually over a wider range.
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells

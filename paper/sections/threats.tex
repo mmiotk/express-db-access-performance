@@ -24,7 +24,7 @@ schema declared \texttt{created\_at} as a timezone-naive timestamp although the
 column is \texttt{timestamptz}, so Drizzle's PostgreSQL responses carried instants
 shifted by the host's UTC offset, a difference invisible to throughput and to any
 coarser equivalence check; it was fixed (\texttt{withTimezone: true}) before the
-campaign reported here. A no-database baseline endpoint returning a fixed
+campaign reported here. A fixed-payload baseline endpoint returning a fixed
 thread-shaped payload bounds the shared Express-plus-serialization floor well above
 the fastest measured cell (Section~\ref{sec:methodology}), so the framework floor
 compresses, rather than manufactures, between-layer differences. Observed

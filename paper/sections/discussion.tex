@@ -32,12 +32,13 @@ layer, Objection, by $2.09\times$ (PostgreSQL) to $2.49\times$ (MySQL). On the
 controlled same-SQL estimand, the idiomatic deep-fetch spread collapses to
 $1.76\times$ on PostgreSQL and $2.21\times$ on MySQL
 (Section~\ref{sec:results}, Table~\ref{tab:sameplan}), so the wide
-default-configuration deficits are dominated by eager-loading strategy and
-hydration, not by execution machinery.
-MikroORM illustrates this most starkly: its default path delivers only 0.20 of its
-own same-SQL throughput on PostgreSQL and 0.25 on MySQL, a $5.0\times$/$4.1\times$
-strategy-and-hydration cost, while Prisma's raw path is the fastest same-SQL cell on
-both engines. The same control exposes a new low end: Sequelize's raw-SQL
+default-configuration deficits lie upstream of raw SQL execution: in each layer's
+query-generation and result-construction path (its default eager-loading strategy,
+query count, and object hydration), which the control changes as a bundle rather
+than isolating one component. MikroORM illustrates this most starkly: its default
+path delivers only 0.20 of its own same-SQL throughput on PostgreSQL and 0.25 on
+MySQL, a $5.0\times$/$4.1\times$ gap between its idiomatic and raw-SQL paths, while
+Prisma's raw path is the fastest same-SQL cell on both engines. The same control exposes a new low end: Sequelize's raw-SQL
 facility (\texttt{sequelize.query}) is slowest on both engines,
 evidence of dispatch and marshalling overhead in its raw API rather than in query
 strategy.
@@ -195,10 +196,11 @@ The practical synthesis follows directly from RQ1--RQ3, read on the
 default-configuration estimand that a practitioner faces. Where a service's
 hot path is dominated by deep/nested fetches, the access layer is consequential and
 a thin layer (the native driver, a query builder, or a query-engine-based ORM such
-as Prisma) is the safer default, since a heavyweight data-mapper ORM concentrates its
-largest penalty on that traffic, a penalty that grows, not shrinks, as the
-fetched graph grows larger; weigh a query-engine ORM's parity or lead here against
-its CPU cost wherever CPU, not throughput, is the constrained resource. Where the
+as Prisma) is the safer default \emph{for throughput and tail latency}, since a
+heavyweight data-mapper ORM concentrates its largest penalty on that traffic, a
+penalty that grows, not shrinks, as the fetched graph grows larger; weigh a
+query-engine ORM's parity or lead here against its application-tier CPU cost
+wherever CPU, not throughput, is the constrained resource. Where the
 workload mix is read-simple (point reads, keyset scans) or write-bound, especially
 on MySQL, whose engine floor for single-row inserts dominates layer differences
 under default durability, the productivity, type safety, and
@@ -211,10 +213,14 @@ this fallback recovers most of the deep fetch's cost (to at most $2.21\times$), 
 orthogonally, second-level caching can absorb part of an ORM's read cost where the
 workload tolerates staleness~\cite{chen2016cacheoptimizer}.
 
-These recommendations rest on one schema, one hardware configuration, a single-host
-local-database deployment measured under each engine's default durability for
-writes, and the pinned library versions; the same-SQL comparisons above decompose
-that cost, not a license to replace idiomatic defaults with raw SQL in practice. A
+These are performance findings only: the access-layer decision also turns on
+developer productivity, type safety, correctness, maintainability, and security,
+none of which this study measures, and which may outweigh the throughput
+differences reported here. Even as performance guidance, the recommendations rest on
+one schema, one hardware configuration, a single-host local-database deployment
+measured under each engine's default durability for writes, and the pinned library
+versions; the same-SQL comparisons above decompose that cost, not a license to
+replace idiomatic defaults with raw SQL in practice. A
 production deployment adds network latency, TLS, a reverse proxy, a separate
 database host, connection poolers, read replicas, and larger or more varied
 payloads, any of which can shift the balance; Section~\ref{sec:threats} sets out how

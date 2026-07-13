@@ -4,11 +4,12 @@
   \caption{Decomposing the deep-fetch spread: throughput (req/s) of the idiomatic
     deep fetch versus the \emph{same-SQL} control (median of 10 replicates), in which every layer executes the
     identical two-statement SQL with identical row mapping through its raw-SQL
-    facility. The ratio (idiomatic $\div$ same-SQL) attributes each layer's deficit
-    to its default eager-loading strategy and entity hydration; the remaining
-    same-SQL spread (native-relative $1.47\times$ on PostgreSQL,
-    $1.27\times$ on MySQL) is the cost of the library's raw execution
-    path itself.}
+    facility. The ratio (idiomatic $\div$ same-SQL) measures the gap between each
+    layer's idiomatic relational-fetch path and the common raw-SQL path, a composite
+    of query strategy, query count, protocol, the raw versus ORM API, and result
+    marshalling and hydration changed together; the residual same-SQL spread
+    (native-relative $1.47\times$ on PostgreSQL,
+    $1.27\times$ on MySQL) bounds the raw-execution component.}
   \label{tab:sameplan}
   \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l r r r r r r}
