@@ -99,7 +99,7 @@ what varies: the native drivers, Knex, and Drizzle issue a two-query deep fetch,
 whereas each ORM's eager-loading strategy selects its own query count and join
 shape. Server-side statement logging captures the exact SQL each layer emits, its
 round-trip count, and \texttt{EXPLAIN} plans for the native statements; these are
-released with the replication package, and Table~\ref{tab:query_counts} reports the
+released with the replication package, and the online supplement tabulates the
 per-endpoint counts. They differ by design: the deep fetch takes one query in
 Sequelize and MikroORM, two in the native drivers, Knex, Drizzle, and TypeORM, and
 four in Prisma and Objection. To separate a layer's execution machinery from its
@@ -123,7 +123,6 @@ four non-mutating patterns and the same-SQL control, before any timing is collec
 This check caught two genuine defects during development (a fan-out aggregation bug
 and a driver result-shape mismatch; see Section~\ref{sec:discussion}).
 
-\input{\tabledir query_counts}
 
 \subsection{Controls}
 Four controls isolate the access layer as the only variable. \emph{(i)~Pool size}

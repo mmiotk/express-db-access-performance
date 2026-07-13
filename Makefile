@@ -2,7 +2,7 @@
 # Run `make help` for the available targets.
 
 .DEFAULT_GOAL := help
-.PHONY: help pdf view setup bench tables results clean distclean
+.PHONY: help pdf supplement view setup bench tables results clean distclean
 
 help: ## Show this help
 	@echo "Targets:"
@@ -12,6 +12,9 @@ help: ## Show this help
 
 pdf: ## Build the generic paper PDF (paper/_build/express_db_access.pdf)
 	$(MAKE) -C paper
+
+supplement: ## Build the online supplement PDF (paper/_build/supplement.pdf)
+	$(MAKE) -C paper supplement
 
 ist: ## Build the IST/Elsevier submission PDF (paper/ist/ist_main.pdf)
 	$(MAKE) -C paper/ist

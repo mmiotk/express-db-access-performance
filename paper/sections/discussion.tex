@@ -44,7 +44,7 @@ facility (\texttt{sequelize.query}) is the slowest same-SQL path on both engines
 evidence of dispatch and marshalling overhead in its raw API rather than in query
 strategy.
 Round-trip count alone does not set throughput: Prisma and Objection both issue four
-deep-fetch queries (Table~\ref{tab:query_counts}), yet the two sit at opposite ends
+deep-fetch queries (statement counts tabulated in the online supplement), yet the two sit at opposite ends
 of the default-configuration ranking. Knex and Drizzle sit in a consistent middle
 ground on every pattern (never fastest, never among the slowest data-mapper ORMs),
 which is what a query builder and a non-data-mapper, lightweight ORM should deliver.
@@ -99,7 +99,7 @@ sits fully utilized (pool\_used\_avg~$\approx 10$) with roughly 39--40 requests
 waiting in the acquisition queue under the 50 concurrent connections used
 throughout, confirming genuine queueing rather than an idle pool. A
 coordinated-omission-corrected, constant-arrival cross-run of the deep fetch on
-PostgreSQL (Table~\ref{tab:openloop}) shows the closed-loop ranking transfers under
+PostgreSQL (online supplement) shows the closed-loop ranking transfers under
 that stricter model: below each layer's capacity the corrected tail is flat and
 small (\texttt{pg} and Prisma hold p99~$\leq$~2--4~ms up to 2{,}000~req/s, both
 sustaining the full offered rate), but once the offered rate crosses a layer's

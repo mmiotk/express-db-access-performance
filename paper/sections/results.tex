@@ -239,7 +239,7 @@ drove the deep/nested fetch on PostgreSQL under a constant offered request rate
 with our own coordinated-omission-corrected open-loop harness (a native
 \texttt{undici}-based generator; latency measured from each request's intended
 send time, with timed-out requests, a 10~s hard cap, clipped into the
-distribution; Table~\ref{tab:openloop}). Below saturation the corrected tails
+distribution; full sweep table in the online supplement). Below saturation the corrected tails
 are flat and small: \texttt{pg} and Prisma hold p99 at 2--4~ms up to
 2{,}000~req/s, both sustaining the full offered rate, and Knex's p99 is still
 only 33~ms at 2{,}000. Beyond each layer's capacity the tail collapses rather
@@ -253,13 +253,12 @@ matches the closed-loop result and sharpens it: once offered load crosses a
 data-mapper ORM's capacity, the penalty under constant arrival is not merely
 worse but catastrophic.
 
-\input{\tabledir openloop}
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells
 the coefficient of variation of throughput over the 25 independent replicates is
 at most $7.6\%$ (\texttt{pg}, insert; Table~\ref{tab:cv}), and across the 40
-MySQL cells at most $6.6\%$ (Knex, insert; Table~\ref{tab:cv_mysql}); the
+MySQL cells at most $6.6\%$ (Knex, insert; per-cell table in the online supplement); the
 largest relative median absolute deviation is $5.4\%$ (\texttt{pg}, insert,
 PostgreSQL). These maxima are well below the between-layer spreads reported
 above (up to $6.55\times$). One cell, Knex/PostgreSQL/insert, has $n=24$ rather
@@ -336,7 +335,6 @@ per-instance resource use governs how many replicas a given load
 requires~\cite{vaquero2011scaling}.
 
 \input{\tabledir cv_all}
-\input{\tabledir cv_mysql}
 \input{\tabledir significance_deep_fetch}
 \input{\tabledir resources}
 \input{\tabledir fig_cpu_tradeoff}

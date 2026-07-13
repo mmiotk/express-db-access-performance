@@ -1,12 +1,15 @@
 MAIN := express_db_access
 BUILD := _build
 
-.PHONY: all pdf view clean distclean
+.PHONY: all pdf supplement view clean distclean
 
 all: pdf
 
 pdf:
 	latexmk -pdf $(MAIN).tex
+
+supplement:
+	latexmk -pdf supplement.tex
 
 view: pdf
 	@xdg-open $(BUILD)/$(MAIN).pdf >/dev/null 2>&1 &

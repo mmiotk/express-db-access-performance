@@ -75,7 +75,7 @@ tail latency at saturation~\cite{fruth2022tail,tene2015latency}. A native,
 coordinated-omission-corrected constant-arrival cross-run on the deep fetch
 (Section~\ref{sec:methodology}), which measures latency from each request's
 intended send time, confirms the tail ranking and shows the data-mapper ORMs
-saturating earlier still (Section~\ref{sec:results}, Table~\ref{tab:openloop}).
+saturating earlier still (Section~\ref{sec:results}; online supplement).
 
 \paragraph{External validity.}
 All measurements come from a single schema, a single dataset size, one hardware
@@ -130,7 +130,7 @@ adjacently ranked layers with the Mann--Whitney~$U$ test and Cliff's~$\delta$
 (Tables~\ref{tab:cv}, \ref{tab:significance}). Two bounds reinforce the ordering:
 the widest spreads, such as $6.55\times$ on the deep/nested fetch, dwarf the
 run-to-run CV (at most 7.6\% on PostgreSQL, \texttt{pg}/write, Table~\ref{tab:cv},
-and 6.6\% on MySQL, \texttt{knex}/write, Table~\ref{tab:cv_mysql}; the relative
+and 6.6\% on MySQL, \texttt{knex}/write, tabulated in the online supplement; the relative
 median absolute deviation peaks lower still, at 5.4\%, on that same PostgreSQL write
 cell), and the ranking is preserved across the full 1--256 connection sweep
 (Fig.~\ref{fig:scaling}). On the deep/nested fetch, six of the seven adjacent pairs
