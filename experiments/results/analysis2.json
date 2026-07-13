@@ -1,19 +1,22 @@
 {
   "seed": "0x57a75",
-  "B": 5000,
-  "generated": "2026-07-12",
+  "bootstrap_B": 5000,
+  "permutation_B": 20000,
+  "paired": true,
+  "generated": "2026-07-13",
   "tost": {
-    "margin": "±5%",
-    "ratio": 0.985,
+    "contrast": "pg / prisma",
+    "margin": "±5% (log scale)",
+    "paired": true,
+    "geomRatio": 1.0198,
     "ci90": [
-      0.9744,
-      0.9978
+      1.0037,
+      1.0368
     ],
-    "ci95": [
-      0.9726,
-      1.0005
-    ],
-    "equivalent": true
+    "equivalent": true,
+    "paired_perm_p": 0.05579721013949303,
+    "wilcoxon_p": 0.0803,
+    "dominance_pg_over_prisma": 0.64
   },
   "spreads": [
     {
@@ -24,7 +27,8 @@
       "ci95": [
         2.97,
         3.16
-      ]
+      ],
+      "paired_ci": true
     },
     {
       "ep": "point_read",
@@ -33,8 +37,9 @@
       "spread": 2.36,
       "ci95": [
         2.31,
-        2.43
-      ]
+        2.42
+      ],
+      "paired_ci": true
     },
     {
       "ep": "range_scan",
@@ -42,9 +47,10 @@
       "slowest": "mikroorm",
       "spread": 4.89,
       "ci95": [
-        4.77,
+        4.8,
         4.99
-      ]
+      ],
+      "paired_ci": true
     },
     {
       "ep": "range_scan",
@@ -52,9 +58,10 @@
       "slowest": "mikroorm",
       "spread": 4.43,
       "ci95": [
-        4.34,
-        4.52
-      ]
+        4.35,
+        4.54
+      ],
+      "paired_ci": true
     },
     {
       "ep": "deep_fetch",
@@ -62,9 +69,10 @@
       "slowest": "mikroorm",
       "spread": 6.55,
       "ci95": [
-        6.43,
-        6.66
-      ]
+        6.46,
+        6.65
+      ],
+      "paired_ci": true
     },
     {
       "ep": "deep_fetch",
@@ -72,9 +80,10 @@
       "slowest": "mikroorm",
       "spread": 4.5,
       "ci95": [
-        4.42,
+        4.41,
         4.59
-      ]
+      ],
+      "paired_ci": true
     },
     {
       "ep": "aggregation",
@@ -84,7 +93,8 @@
       "ci95": [
         1.83,
         1.89
-      ]
+      ],
+      "paired_ci": true
     },
     {
       "ep": "aggregation",
@@ -94,7 +104,8 @@
       "ci95": [
         1.4,
         1.44
-      ]
+      ],
+      "paired_ci": true
     },
     {
       "ep": "write",
@@ -104,7 +115,8 @@
       "ci95": [
         3.77,
         3.98
-      ]
+      ],
+      "paired_ci": true
     },
     {
       "ep": "write",
@@ -114,7 +126,8 @@
       "ci95": [
         1.2,
         1.24
-      ]
+      ],
+      "paired_ci": true
     }
   ],
   "p99": [
@@ -124,7 +137,11 @@
       "ci95": [
         18,
         20
-      ]
+      ],
+      "nRequestsApprox": 44892,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "prisma",
@@ -132,7 +149,11 @@
       "ci95": [
         18,
         19
-      ]
+      ],
+      "nRequestsApprox": 44220,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "knex",
@@ -140,7 +161,11 @@
       "ci95": [
         26,
         28
-      ]
+      ],
+      "nRequestsApprox": 29892,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "drizzle",
@@ -148,7 +173,11 @@
       "ci95": [
         31,
         32
-      ]
+      ],
+      "nRequestsApprox": 24960,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "typeorm",
@@ -156,7 +185,11 @@
       "ci95": [
         45,
         48
-      ]
+      ],
+      "nRequestsApprox": 15924,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "objection",
@@ -164,7 +197,11 @@
       "ci95": [
         53,
         58
-      ]
+      ],
+      "nRequestsApprox": 12444,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "sequelize",
@@ -172,7 +209,11 @@
       "ci95": [
         59,
         62
-      ]
+      ],
+      "nRequestsApprox": 11868,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     },
     {
       "adapter": "mikroorm",
@@ -180,115 +221,115 @@
       "ci95": [
         103,
         109
-      ]
+      ],
+      "nRequestsApprox": 6852,
+      "errors": 0,
+      "timeouts": 0,
+      "non2xx": 0
     }
   ],
   "p99Pairs": [
     {
-      "pair": "pg vs prisma",
-      "medA": 20,
-      "medB": 18,
-      "delta": 0.25,
-      "p": 0.1352
+      "pair": "prisma vs pg",
+      "medSlower": 18,
+      "medFaster": 20,
+      "ratio": 0.99,
+      "paired_perm_p": 0.6154192290385481
     },
     {
-      "pair": "prisma vs knex",
-      "medA": 18,
-      "medB": 27,
-      "delta": -1,
-      "p": 0
+      "pair": "knex vs prisma",
+      "medSlower": 27,
+      "medFaster": 18,
+      "ratio": 1.42,
+      "paired_perm_p": 0.00004999750012499375
     },
     {
-      "pair": "knex vs drizzle",
-      "medA": 27,
-      "medB": 31,
-      "delta": -0.85,
-      "p": 0
+      "pair": "drizzle vs knex",
+      "medSlower": 31,
+      "medFaster": 27,
+      "ratio": 1.17,
+      "paired_perm_p": 0.00004999750012499375
     },
     {
-      "pair": "drizzle vs typeorm",
-      "medA": 31,
-      "medB": 45,
-      "delta": -1,
-      "p": 0
+      "pair": "typeorm vs drizzle",
+      "medSlower": 45,
+      "medFaster": 31,
+      "ratio": 1.48,
+      "paired_perm_p": 0.00004999750012499375
     },
     {
-      "pair": "typeorm vs objection",
-      "medA": 45,
-      "medB": 55,
-      "delta": -0.98,
-      "p": 0
+      "pair": "objection vs typeorm",
+      "medSlower": 55,
+      "medFaster": 45,
+      "ratio": 1.2,
+      "paired_perm_p": 0.00004999750012499375
     },
     {
-      "pair": "objection vs sequelize",
-      "medA": 55,
-      "medB": 60,
-      "delta": -0.79,
-      "p": 0
+      "pair": "sequelize vs objection",
+      "medSlower": 60,
+      "medFaster": 55,
+      "ratio": 1.1,
+      "paired_perm_p": 0.00004999750012499375
     },
     {
-      "pair": "sequelize vs mikroorm",
-      "medA": 60,
-      "medB": 106,
-      "delta": -1,
-      "p": 0
+      "pair": "mikroorm vs sequelize",
+      "medSlower": 106,
+      "medFaster": 60,
+      "ratio": 1.76,
+      "paired_perm_p": 0.00004999750012499375
     }
   ],
   "rq2": [
     {
       "ep": "point_read",
       "spearman": 0.893,
-      "spearmanCI": [
-        0.89,
-        0.96
-      ],
       "kendall": 0.81,
-      "F_interaction": 152.6,
-      "p_interaction": 0.0005
+      "n_layers": 7,
+      "interaction_F": 152.5,
+      "interaction_p": 0.00004999750012499375,
+      "interaction_perm_B": 20000,
+      "block_R": 25
     },
     {
       "ep": "range_scan",
       "spearman": 0.893,
-      "spearmanCI": [
-        0.86,
-        0.89
-      ],
       "kendall": 0.81,
-      "F_interaction": 121.4,
-      "p_interaction": 0.0005
+      "n_layers": 7,
+      "interaction_F": 124.9,
+      "interaction_p": 0.00004999750012499375,
+      "interaction_perm_B": 20000,
+      "block_R": 25
     },
     {
       "ep": "deep_fetch",
       "spearman": 0.964,
-      "spearmanCI": [
-        0.96,
-        0.96
-      ],
       "kendall": 0.905,
-      "F_interaction": 235.7,
-      "p_interaction": 0.0005
+      "n_layers": 7,
+      "interaction_F": 255.9,
+      "interaction_p": 0.00004999750012499375,
+      "interaction_perm_B": 20000,
+      "block_R": 25
     },
     {
       "ep": "aggregation",
       "spearman": 0.893,
-      "spearmanCI": [
-        0.89,
-        0.96
-      ],
       "kendall": 0.81,
-      "F_interaction": 230.1,
-      "p_interaction": 0.0005
+      "n_layers": 7,
+      "interaction_F": 220.7,
+      "interaction_p": 0.00004999750012499375,
+      "interaction_perm_B": 20000,
+      "block_R": 25
     },
     {
       "ep": "write",
       "spearman": 0.429,
-      "spearmanCI": [
-        0.36,
-        0.61
-      ],
       "kendall": 0.429,
-      "F_interaction": 642.1,
-      "p_interaction": 0.0005
+      "n_layers": 7,
+      "interaction_F": 1676.9,
+      "interaction_p": 0.00004999750012499375,
+      "interaction_perm_B": 20000,
+      "block_R": 24,
+      "note": "write: knex/postgres has 24 replicates; truncated to common length pending re-run"
     }
   ],
   "efficiency": [
@@ -296,113 +337,145 @@
       "adapter": "pg",
       "engine": "postgres",
       "rps": 3741,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 3741
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 360,
+      "req_per_app_cpu_s": 3741,
+      "req_per_combined_cpu_s": 813
     },
     {
       "adapter": "knex",
       "engine": "postgres",
       "rps": 2491,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 2491
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 245,
+      "req_per_app_cpu_s": 2491,
+      "req_per_combined_cpu_s": 722
     },
     {
       "adapter": "drizzle",
       "engine": "postgres",
       "rps": 2080,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 2080
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 205,
+      "req_per_app_cpu_s": 2080,
+      "req_per_combined_cpu_s": 682
     },
     {
       "adapter": "prisma",
       "engine": "postgres",
       "rps": 3685,
-      "cpu_pct": 498,
-      "req_per_cpu_s": 740
+      "app_cpu_pct": 498,
+      "db_cpu_pct": 120,
+      "req_per_app_cpu_s": 740,
+      "req_per_combined_cpu_s": 596
     },
     {
       "adapter": "sequelize",
       "engine": "postgres",
       "rps": 989,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 989
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 50,
+      "req_per_app_cpu_s": 989,
+      "req_per_combined_cpu_s": 659
     },
     {
       "adapter": "typeorm",
       "engine": "postgres",
       "rps": 1327,
-      "cpu_pct": 105,
-      "req_per_cpu_s": 1264
+      "app_cpu_pct": 105,
+      "db_cpu_pct": 120,
+      "req_per_app_cpu_s": 1264,
+      "req_per_combined_cpu_s": 590
     },
     {
       "adapter": "objection",
       "engine": "postgres",
       "rps": 1037,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 1037
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 50,
+      "req_per_app_cpu_s": 1037,
+      "req_per_combined_cpu_s": 691
     },
     {
       "adapter": "mikroorm",
       "engine": "postgres",
       "rps": 571,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 571
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 45,
+      "req_per_app_cpu_s": 571,
+      "req_per_combined_cpu_s": 394
     },
     {
       "adapter": "mysql2",
       "engine": "mysql",
       "rps": 2405,
-      "cpu_pct": 105,
-      "req_per_cpu_s": 2290
+      "app_cpu_pct": 105,
+      "db_cpu_pct": 85,
+      "req_per_app_cpu_s": 2290,
+      "req_per_combined_cpu_s": 1266
     },
     {
       "adapter": "knex",
       "engine": "mysql",
       "rps": 2050,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 2050
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 75,
+      "req_per_app_cpu_s": 2050,
+      "req_per_combined_cpu_s": 1171
     },
     {
       "adapter": "drizzle",
       "engine": "mysql",
       "rps": 1446,
-      "cpu_pct": 105,
-      "req_per_cpu_s": 1377
+      "app_cpu_pct": 105,
+      "db_cpu_pct": 50,
+      "req_per_app_cpu_s": 1377,
+      "req_per_combined_cpu_s": 933
     },
     {
       "adapter": "prisma",
       "engine": "mysql",
       "rps": 3701,
-      "cpu_pct": 495,
-      "req_per_cpu_s": 748
+      "app_cpu_pct": 495,
+      "db_cpu_pct": 160,
+      "req_per_app_cpu_s": 748,
+      "req_per_combined_cpu_s": 565
     },
     {
       "adapter": "sequelize",
       "engine": "mysql",
       "rps": 893,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 893
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 30,
+      "req_per_app_cpu_s": 893,
+      "req_per_combined_cpu_s": 687
     },
     {
       "adapter": "typeorm",
       "engine": "mysql",
       "rps": 1170,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 1170
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 80,
+      "req_per_app_cpu_s": 1170,
+      "req_per_combined_cpu_s": 650
     },
     {
       "adapter": "objection",
       "engine": "mysql",
       "rps": 860,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 860
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 45,
+      "req_per_app_cpu_s": 860,
+      "req_per_combined_cpu_s": 593
     },
     {
       "adapter": "mikroorm",
       "engine": "mysql",
       "rps": 535,
-      "cpu_pct": 100,
-      "req_per_cpu_s": 535
+      "app_cpu_pct": 100,
+      "db_cpu_pct": 20,
+      "req_per_app_cpu_s": 535,
+      "req_per_combined_cpu_s": 446
     }
   ],
   "dispersion": {

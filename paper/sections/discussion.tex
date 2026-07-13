@@ -59,10 +59,11 @@ text path on most patterns.
 \paragraph{The CPU cost behind parity.}
 Prisma shows that an ORM need not be slow, consistent with evidence that ORM cost is
 highly sensitive to implementation and tuning~\cite{vanzyl2009optimisations}. On the
-deep fetch its compiled query engine is now formally equivalent to the native driver,
-not just statistically indistinguishable from it: a prespecified TOST (two
-one-sided tests) equivalence test at $\pm5\%$ accepts equivalence (ratio $0.985$,
-$90\%$ CI $[0.974, 0.998]$; 3{,}685 vs.\ 3{,}741~req/s). A tuned, prepared-statement
+deep fetch its compiled query engine is statistically equivalent to the native
+driver: the paired difference is not significant (\texttt{pg} faster by a
+geometric-mean ratio of $1.02$, paired permutation $p=0.058$), and a paired
+two-one-sided-tests equivalence procedure against an a-priori $\pm5\%$ margin
+accepts equivalence ($90\%$ CI $[1.004, 1.037]$; 3{,}685 vs.\ 3{,}741~req/s). A tuned, prepared-statement
 baseline absent from earlier campaigns, \texttt{pg-tuned}, reaches 3{,}813~req/s
 here, modestly ahead of both, so a tuned native ceiling is now measured
 rather than assumed. Prisma also leads outright on the keyset range scan and the
@@ -72,16 +73,22 @@ on the point read and deep fetch on MySQL (5{,}993 vs.\ \texttt{mysql2}'s 4{,}33
 at the \emph{same} ten-connection pool, Prisma's process draws roughly five times the
 application-side CPU of every other layer on the deep fetch ($498\%$;
 Table~\ref{tab:resources}, Figure~\ref{fig:cpu_tradeoff}), trading CPU for
-latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss; the
-efficiency ranking inverts accordingly (3{,}741 vs.\ 740~req per CPU-second for
-\texttt{pg} and Prisma). The equal-CPU control (Section~\ref{sec:results})
-measures that subsidy directly: at an equal one-core budget Prisma is $4.1\times$
-slower than \texttt{pg} and needs about four cores to approach parity, while
-MikroORM barely moves with more cores, confirming its deficit is a hydration cost
-rather than a parallelism-starved one. The practitioner reading is unchanged, only
-better evidenced: parity or leadership here is CPU-subsidized, consequential
-wherever CPU, not throughput, is the scarce resource (a shared host, a per-core
-billing model).
+latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss. How
+large that cost is depends on which CPU one counts. By \emph{application}-tier CPU
+the efficiency ranking inverts sharply (3{,}741 vs.\ 740~req per application-CPU-second
+for \texttt{pg} and Prisma), but the native driver pushes about 3.6 database cores
+of join work that this figure ignores; counting \emph{combined} application and
+database CPU per request narrows \texttt{pg}'s advantage to about $1.4\times$
+(813 vs.\ 596~req per combined-CPU-second; Supplement Table~S6). The honest reading
+is therefore tier-specific: Prisma spends several times the application CPU of the
+other layers, which matters directly when the application container's CPU is the
+budgeted resource (a shared host, a per-core billing model), yet end-to-end it is
+only modestly less compute-efficient than the native driver. The equal-CPU control
+(Section~\ref{sec:results}) confirms the application-tier trade operationally: at an
+equal one-core application budget Prisma is $4.1\times$ slower than \texttt{pg} and
+needs about four cores to approach parity, while MikroORM barely moves with more
+cores, confirming its deficit is a hydration cost rather than a parallelism-starved
+one.
 
 \paragraph{Queueing under load and the open-loop check.}
 The pool sampler turns a previously inferential design property into a direct

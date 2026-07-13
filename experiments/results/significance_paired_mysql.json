@@ -1,0 +1,100 @@
+[
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "prisma>mysql2",
+    "ratio": 1.545,
+    "ratioCI": [
+      1.53,
+      1.561
+    ],
+    "winFraction": 1,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 1
+  },
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "mysql2>knex",
+    "ratio": 1.171,
+    "ratioCI": [
+      1.155,
+      1.187
+    ],
+    "winFraction": 1,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 1
+  },
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "knex>drizzle",
+    "ratio": 1.412,
+    "ratioCI": [
+      1.396,
+      1.428
+    ],
+    "winFraction": 1,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 1
+  },
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "drizzle>typeorm",
+    "ratio": 1.229,
+    "ratioCI": [
+      1.214,
+      1.244
+    ],
+    "winFraction": 1,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 1
+  },
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "typeorm>sequelize",
+    "ratio": 1.319,
+    "ratioCI": [
+      1.301,
+      1.338
+    ],
+    "winFraction": 1,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 1
+  },
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "sequelize>objection",
+    "ratio": 1.043,
+    "ratioCI": [
+      1.03,
+      1.056
+    ],
+    "winFraction": 0.88,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0.0001,
+    "cliffs_delta_unpaired": 0.84
+  },
+  {
+    "engine": "mysql",
+    "endpoint": "deep_fetch",
+    "pair": "objection>mikroorm",
+    "ratio": 1.613,
+    "ratioCI": [
+      1.586,
+      1.642
+    ],
+    "winFraction": 1,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 1
+  }
+]

@@ -40,9 +40,10 @@ access-layer benchmarks; several were caught by the correctness cross-check, the
 rest by performance analysis.
 
 Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
-connections and confirmed the ordering is load-robust, sampled per-layer CPU and
-memory footprint, and tested adjacent layers with Cliff's~$\delta$ and the
-Mann--Whitney~$U$ test. Further extensions would still strengthen the evidence: a
+connections and found the three-band ordering load-robust above 32 connections,
+sampled per-layer application and database CPU, and compared adjacent layers with
+paired permutation and Wilcoxon signed-rank tests on their per-replicate throughput
+ratios. Further extensions would still strengthen the evidence: a
 two-machine cross-run, isolating the load generator on separate hardware, would
 bound observer-interference effects beyond the coordinated-omission-corrected,
 single-host open-loop check already performed here; additional engines and dataset

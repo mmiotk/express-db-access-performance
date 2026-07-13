@@ -70,6 +70,20 @@ cores); all nine values are quoted in the main text.
 
 \input{\tabledir equalcpu}
 
+\section{Application-tier versus end-to-end CPU efficiency}
+\label{sup:cpu}
+Table~\ref{tab:cpu_efficiency} reports, per layer on the deep/nested fetch,
+the median application-process-tree CPU and database-server CPU, the combined
+core-count, and throughput per application-CPU-second and per combined
+(application$+$database) CPU-second. The application-only figure understates the
+compute of layers that delegate more work to the database: \texttt{pg} leads
+application-tier efficiency by roughly $5\times$ over Prisma (3{,}741 vs.\
+740~req per app-CPU-s) but only $1.4\times$ end-to-end (813 vs.\ 596~req per
+combined-CPU-s), because it pushes about 3.6 database cores of work that the
+application-only metric ignores.
+
+\input{\tabledir cpu_efficiency}
+
 \section{Coordinated-omission-corrected open-loop sweep}
 \label{sup:openloop}
 Table~\ref{tab:openloop} gives the full constant-arrival sweep (PostgreSQL,

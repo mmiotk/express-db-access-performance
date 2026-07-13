@@ -130,29 +130,32 @@ variant are planned to bound this further.
 
 \paragraph{Conclusion validity.}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of
-variation and bootstrap 95\% confidence intervals as stability signals and tests
-adjacently ranked layers with the Mann--Whitney~$U$ test and Cliff's~$\delta$
-(Tables~\ref{tab:cv}, \ref{tab:significance}). Two bounds reinforce the ordering:
-the widest spreads, such as $6.55\times$ on the deep/nested fetch, dwarf the
-run-to-run CV (at most 7.6\% on PostgreSQL, \texttt{pg}/write, Table~\ref{tab:cv},
-and 6.6\% on MySQL, \texttt{knex}/write, tabulated in the online supplement; the relative
-median absolute deviation peaks lower still, at 5.4\%, on that same PostgreSQL write
-cell), and the ranking is preserved across the full 1--256 connection sweep
+variation and bootstrap 95\% confidence intervals as stability signals and, because
+the design is a randomized block, compares adjacently ranked layers with
+\emph{paired} tests on their per-replicate throughput ratios (paired sign-flip
+permutation, cross-checked with Wilcoxon signed-rank; Tables~\ref{tab:cv},
+\ref{tab:significance}). Two bounds reinforce the ordering: the widest spreads, such
+as $6.55\times$ on the deep/nested fetch, dwarf the run-to-run CV (at most 7.6\% on
+PostgreSQL, \texttt{pg}/write, Table~\ref{tab:cv}, and 6.6\% on MySQL,
+\texttt{knex}/write, tabulated in the online supplement; the relative median absolute
+deviation peaks lower still, at 5.4\%, on that same PostgreSQL write cell), and the
+three-band ordering holds across the sweep at $\geq32$ connections
 (Fig.~\ref{fig:scaling}). On the deep/nested fetch, six of the seven adjacent pairs
-separate with a large-to-near-maximal effect (Cliff's~$\delta$ between 0.74 and
-1.00, five of the six at the 1.00 maximum) and non-overlapping bootstrap CIs; the
-exception is native \texttt{pg} and Prisma at the top ($\delta = 0.35$, $p = 0.033$,
-not surviving a Bonferroni correction across the seven tests), which a
-pre-specified two one-sided test instead confirms are equivalent within a $\pm5\%$
-margin (ratio $0.985$, 90\% CI $[0.974, 0.998]$), an equivalence claim rather than
-only a failure to reject a difference; we read those two as tied rather than
-ranked. With 25 replicates per cell the tests are conventionally powered: every
-separating adjacent pair reaches $p < 0.001$, surviving the Bonferroni correction,
-with large-to-maximal effect sizes and narrow, non-overlapping bootstrap intervals,
-under randomized order and independent processes. The inference is carried jointly
-by that separation and by spreads one to two orders of magnitude above the
-run-to-run CV. Because each replicate is a freshly booted server process
-with cell order randomized independently every time, these are genuine
-\emph{independent} replicates rather than repeated measures within one process
-lifetime~\cite{kalibera2013rigorous}; more replicates or longer runs would tighten
-the intervals further.
+separate at the permutation-resolution floor ($p \leq 5\times10^{-5}$) with the
+faster layer ahead in every replicate (paired dominance $1.00$, one pair at $0.88$)
+and ratios of at least $1.05$; each survives a Bonferroni correction across the
+seven adjacent-rank comparisons (the confirmatory family). The exception is native \texttt{pg} and
+Prisma at the top, which the paired test does not resolve as different
+(ratio $1.02$, $p = 0.058$) and a paired two-one-sided-tests procedure confirms are
+equivalent within an a-priori $\pm5\%$ margin (90\% CI $[1.004, 1.037]$); we read
+those two as tied rather than ranked. Rather than assert a specific statistical
+power, which would require a prospective effect-size and variance model we did not
+prespecify, we rest the conclusions on effect sizes and interval estimates: the
+separating pairs combine large paired ratios with the permutation floor and
+non-overlapping bootstrap intervals, and the inference is carried jointly by that
+separation and by spreads well above the run-to-run dispersion. Booting a fresh
+process per replicate prevents persistent process state from carrying across
+replicate runs~\cite{kalibera2013rigorous}, but the replicates share one host and
+one campaign; we therefore treat replicate index and measurement order as blocks
+(Section~\ref{sec:methodology}) rather than claiming full independence, and more
+replicates or longer runs would tighten the intervals further.
