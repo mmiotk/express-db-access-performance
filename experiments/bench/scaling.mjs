@@ -28,6 +28,9 @@ const wantEngines = env('ENGINES', 'postgres,mysql').split(',').map((s) => s.tri
 const wantAdapters = env('ADAPTERS', Object.keys(ADAPTERS).join(',')).split(',').map((s) => s.trim());
 
 const SEED_POSTS = cfg.seed.posts;
+// benchmark-insert floor: fan-out seed posts (ids 250001..250006) own comments and
+// must survive resets — same contract as the runner's RESET_FLOOR
+const RESET_FLOOR = Number(env('RESET_FLOOR', SEED_POSTS));
 const rnd = (n) => 1 + Math.floor(Math.random() * n);
 const pathFor = { deep_fetch: () => `/posts/${rnd(SEED_POSTS)}/thread`, point_read: () => `/posts/${rnd(SEED_POSTS)}` };
 
@@ -48,8 +51,8 @@ const run = (base, connections) => new Promise((resolve, reject) => {
   (e, r) => (e ? reject(e) : resolve(r)));
 });
 async function resetWrites(engine) {
-  if (engine === 'postgres') { const c = new pg.Client(cfg.postgres); await c.connect(); await c.query('DELETE FROM posts WHERE id > $1', [SEED_POSTS]); await c.end(); }
-  else { const c = await mysql.createConnection(cfg.mysql); await c.query('DELETE FROM posts WHERE id > ?', [SEED_POSTS]); await c.end(); }
+  if (engine === 'postgres') { const c = new pg.Client(cfg.postgres); await c.connect(); await c.query('DELETE FROM posts WHERE id > $1', [RESET_FLOOR]); await c.end(); }
+  else { const c = await mysql.createConnection(cfg.mysql); await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]); await c.end(); }
 }
 function ensurePrisma(engine) {
   execFileSync('npx', ['prisma', 'generate', `--schema=${join(here, '..', 'prisma', `schema.${engine}.prisma`)}`], { stdio: 'ignore' });

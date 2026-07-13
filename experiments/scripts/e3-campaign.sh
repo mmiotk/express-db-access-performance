@@ -70,6 +70,6 @@ stage fanout env FO_ENGINES=postgres,mysql node scripts/fanout.mjs
 stage equalcpu node scripts/equalcpu.mjs
 
 # S11 pool/connection scaling (1..256 connections, deep fetch)
-stage scaling env REPEATS=3 node bench/scaling.mjs
+stage scaling env REPEATS=3 RESET_FLOOR=300000 node bench/scaling.mjs
 
 echo "===== [$(date '+%F %T')] E3 campaign COMPLETE" | tee -a "$STATUS"
