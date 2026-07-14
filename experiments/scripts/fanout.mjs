@@ -21,9 +21,13 @@ const median = (a) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
 function health(base, tries = 100) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
 function run(base, id, dur) { return new Promise((res, rej) => autocannon({ url: base, connections: CONNECTIONS, duration: dur, requests: [{ method: 'GET', path: `/posts/${id}/thread` }] }, (e, r) => e ? rej(e) : res(r))); }
 
+// FO_LAYERS restricts to a representative subset (review 4, §E6: replicate the
+// fan-out sweep at higher FO_REPS for uncertainty without re-running all 11 layers).
+const FO_LAYERS = process.env.FO_LAYERS ? process.env.FO_LAYERS.split(',') : null;
 const out = [];
 let port = 4200;
 for (const engine of ENGINES) for (const adapter of Object.keys(ADAPTERS)) {
+  if (FO_LAYERS && !FO_LAYERS.includes(adapter)) continue;
   if (!ADAPTERS[adapter].engines.includes(engine)) continue;
   const p = ++port; const base = `http://127.0.0.1:${p}`;
   if (adapter === 'prisma') execSync(`npx prisma generate --schema=prisma/schema.${engine}.prisma`, { stdio: 'ignore' });

@@ -61,12 +61,13 @@ post counts and view sums, and an insert. Seven of the nine layers (all but the 
 against \emph{both} engines under an identical schema, dataset, and pool size;
 two tuned native-driver baselines (prepared-statement variants of \texttt{pg}
 and \texttt{mysql2}) mark what hand-tuned driver use achieves. Every (layer, engine, pattern) combination reports throughput (req/s) and
-closed-loop tail latency (p99, at a 50-connection operating point) jointly, from
-25 independent replicates, with an open-loop tail measurement below saturation.
+saturated client-observed response-time p99 (at a 50-connection operating point) jointly, from
+25 repeated runs, with a utilization-controlled open-loop tail measured below saturation.
 The study separates two estimands: the \emph{default-configuration} effect of
 each layer used idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL}
-contrast that bounds each layer's raw-execution cost against its
-query-generation and hydration strategy. The full harness (adapters, seed data, an
+contrast that bounds the residual difference once every layer executes identical
+SQL, changing query formulation, protocol, preparation, round-trips, and mapping
+together rather than isolating any one. The full harness (adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
 that all layers return \emph{byte-identical} responses on the four
 non-mutating patterns) is released as an open replication
@@ -76,44 +77,47 @@ measurements, and the table/figure-generating scripts:
 v1.3.0 is permanently archived at Zenodo,
 \texttt{https://doi.org/10.5281/zenodo.21359919}.}
 
-Three research questions structure the study:
+Three research questions structure the study, each scoped to the benchmarked
+implementations under the specified operating point:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
-  \item \emph{(overhead):} How large is the throughput and tail-latency overhead of
-        each access layer relative to the native-driver baseline, and how does it
-        vary across the five access patterns?
-  \item \emph{(engine dependence):} Is the relative ordering of access layers
-        consistent across PostgreSQL and MySQL, or is it engine-dependent?
+  \item \emph{(overhead):} How large is the throughput and saturated
+        response-time-p99 overhead of the benchmarked implementations relative to
+        the native-driver baseline, and how does it vary across the five access
+        patterns?
+  \item \emph{(engine dependence):} Does the observed layer ordering transfer
+        across PostgreSQL and MySQL, or is it engine-dependent?
   \item \emph{(consequential patterns):} For which access patterns is the choice of
-        access layer most consequential?
+        implementation most consequential in this configuration?
 \end{enumerate}
 
-This paper makes four contributions. The first two are durable; the third is
-a version-dated snapshot of a fast-moving ecosystem, whereas the design and
-harness outlast the pinned versions:
+This paper makes four contributions. The \textbf{primary} contributions are the
+harness and the benchmark design; the third is a configuration-specific snapshot
+of a fast-moving ecosystem, and the harness and design outlast the pinned versions:
 \begin{itemize}[leftmargin=*]
   \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
-        deterministic seed, a matrix runner with independent replicates and
-        paired request streams, a physical write-state rebuild, a same-SQL
+        deterministic seed, a matrix runner with repeated randomized-block runs and
+        paired request streams, a physical write-state reset, a same-SQL
         control with server-side protocol evidence, a
-        coordinated-omission-corrected open-loop generator, and an automated
+        coordinated-omission-corrected open-loop generator with a
+        utilization-controlled latency mode, and an automated
         \textbf{correctness cross-check} asserting \textbf{byte-identical}
         responses across layers on the four non-mutating patterns
         (Section~\ref{sec:methodology}).
   \item A \textbf{vendor-independent, broad-coverage benchmark design}
         spanning the taxonomy's three tiers (native driver $\to$ query
         builder $\to$ six ORMs), \textbf{dual-engine} (PostgreSQL and MySQL),
-        measured at the \textbf{Express level}, reporting throughput and tail
-        latency \textbf{jointly}, the combination missing from prior art.
-  \item Empirical findings on the pinned versions: two not obvious in advance,
-        that a \textbf{query-engine ORM can tie, and on several patterns lead,
-        the native driver} at a substantial application-CPU premium (quantified
-        by an equal-CPU control, Section~\ref{sec:results}), and that
-        \textbf{whether writes are layer-bound depends on the engine} (visible
-        only in a dual-engine design); and a controlled \textbf{confirmation
-        and quantification} of the expected effects: abstraction cost
-        concentrates in relation-materializing patterns and grows with the
-        fetched graph, and the coarse layer ordering of reads is stable across
-        engines.
+        measured at the \textbf{Express level}, reporting throughput and
+        response-time p99 \textbf{jointly}, the combination missing from prior art.
+  \item \textbf{Configuration-specific observations} on the pinned versions and
+        this host: two not obvious in advance, that the query-engine ORM Prisma
+        \textbf{ties, and on several patterns leads, the native driver} at a
+        substantial application-CPU premium (quantified by an equal-CPU control,
+        Section~\ref{sec:results}), and that \textbf{whether writes are
+        layer-bound depends on the engine} (visible only in a dual-engine design);
+        and a controlled \textbf{confirmation and quantification} of the expected
+        effects: abstraction cost concentrates in relation-materializing patterns
+        and grows with the fetched graph, and the coarse layer ordering of reads is
+        stable across engines.
   \item A practitioner-oriented \textbf{checklist of four pitfalls specific to
         access-layer benchmarking} (Section~\ref{sec:discussion}), surfaced during
         development, several caught by the correctness cross-check and the rest by

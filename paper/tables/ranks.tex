@@ -1,0 +1,26 @@
+% hand-authored: per-layer PG-vs-MySQL ranks backing the correlations (review R4, §8)
+\begin{table}[htbp]
+  \centering
+  \caption{Per-layer throughput rank (1 = fastest) on PostgreSQL versus MySQL for the
+    seven portable layers, backing the rank correlations. On the deep/nested fetch the
+    two engines' orderings are nearly identical (Spearman $\rho=0.96$); on the insert
+    they scramble ($\rho=0.43$), most visibly Prisma, which is fastest on PostgreSQL
+    (rank 1) but sixth on MySQL. This is why the write ordering is reported as
+    engine-dependent.}
+  \label{tab:ranks}
+  \begin{tabular}{l cc cc}
+    \toprule
+    & \multicolumn{2}{c}{Deep fetch} & \multicolumn{2}{c}{Insert} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    Layer & PG & MySQL & PG & MySQL \\
+    \midrule
+    \texttt{knex}      & 2 & 2 & 2 & 2 \\
+    \texttt{drizzle}   & 3 & 3 & 3 & 1 \\
+    \texttt{prisma}    & 1 & 1 & 1 & 6 \\
+    \texttt{sequelize} & 6 & 5 & 5 & 4 \\
+    \texttt{typeorm}   & 4 & 4 & 6 & 5 \\
+    \texttt{objection} & 5 & 6 & 4 & 3 \\
+    \texttt{mikroorm}  & 7 & 7 & 7 & 7 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

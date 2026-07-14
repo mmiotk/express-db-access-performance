@@ -3,8 +3,8 @@
 
 Our goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
 database access layer of an Express.js service \emph{for the purpose of}
-quantifying its performance cost \emph{with respect to} throughput and tail
-latency \emph{from the point of view of} an application developer choosing a layer
+quantifying its performance cost \emph{with respect to} throughput and
+response-time p99 \emph{from the point of view of} an application developer choosing a layer
 \emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. The
 design follows established guidelines for controlled experimentation in software
 engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines}, crossing
@@ -48,6 +48,12 @@ tuned baselines are engine-specific (\texttt{pg}/\texttt{pg-tuned} run only on
 PostgreSQL, \texttt{mysql2}/\texttt{mysql2-tuned} only on MySQL); the other
 seven layers run on both engines, giving $4 + 7\times 2 = 18$
 layer\,$\times$\,engine cells and $18\times 5 = 90$ measured configurations.
+Table~\ref{tab:factors} summarizes which factors are held constant, which vary, and
+which are uncontrolled on this single virtualized host; the uncontrolled factors are
+why we report results for this configuration rather than as general library
+performance.
+
+\input{\tabledir factors}
 
 \begin{table}[htbp]
   \centering
@@ -104,8 +110,8 @@ code its documentation recommends, so a measured difference reflects the SQL
 it generates, its round-trip count, and how it materializes results. One
 asymmetry is inherent to any driver-versus-ORM comparison: the native side's
 idiom is hand-authored SQL, whereas the ORM side's idiom is the library's
-default; the same-SQL control below bounds the raw-execution component of that
-difference. The number of round trips is itself part of what
+default; the same-SQL control below bounds the residual difference once every
+layer runs identical SQL, changing many factors together. The number of round trips is itself part of what
 varies: the native drivers, Knex, and Drizzle issue a two-query deep fetch,
 whereas each ORM's eager-loading strategy selects its own query count and
 join shape. Server-side statement logging captures the exact SQL each layer
@@ -113,11 +119,14 @@ emits, its round-trip count, and \texttt{EXPLAIN} plans for the native
 statements, released with the replication package; Supplement Table~S2
 tabulates the per-endpoint counts, which differ by design: the deep fetch
 takes one query in Sequelize and MikroORM, two in the native drivers, Knex,
-Drizzle, and TypeORM, and four in Prisma and Objection. Supplement Table~S16 and
-the package's \texttt{METHODOLOGY.md} record, per layer, the eager-loading API
-used, its round-trip count, the documented alternative loading strategy we did
-\emph{not} use, and that query logging is disabled with no read-path hooks or
-validation; the six ORMs split both ways on the join-versus-select-in default. A
+Drizzle, and TypeORM, and four in Prisma and Objection. The idiomatic API for each
+layer was fixed by a rule decided \emph{before} measurement---the eager-loading API
+its official documentation presents first for the pinned version---so the treatment
+is a documented choice, not an editorial one; Supplement Table~S16 and the package's
+\texttt{METHODOLOGY.md} record, per layer, that API with its \textbf{documentation
+page and version}, its round-trip count, the documented alternative we did
+\emph{not} use, and that query logging, hooks, and validation are off. The six ORMs
+split both ways on the join-versus-select-in default. A
 loading-strategy sensitivity check (Section~\ref{sec:results}) switches the
 join-default data-mapper ORMs to select-in and finds the idiomatic default the
 faster strategy, while Objection's batched-select-in default is beaten by a join on
@@ -182,7 +191,7 @@ Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1
 load tester issuing requests continuously at fixed concurrency and recording
 a latency histogram; it is a closed-loop (constant-concurrency)
 generator~\cite{schroeder2006open}. We measured each of the 90 configurations
-as 25 \emph{independent replicates}. For each replicate we booted a fresh
+as 25 \emph{repeated runs}. For each replicate we booted a fresh
 server process, opened 50 concurrent connections, ran a fifteen-second
 warm-up pass whose measurements were discarded, and then took one
 twelve-second measured run. The warm-up length follows a separate cold-boot
@@ -273,7 +282,7 @@ driver's (\texttt{pg} or \texttt{mysql2}; the tuned baselines are a separate
 tuned reference, not the spread's anchor) median throughput divided by
 that of the slowest layer on that pattern (native-relative, so comparable
 across patterns even where an ORM exceeds the native driver). We report
-medians over the 25 independent replicates, the coefficient of variation
+medians over the 25 repeated runs, the coefficient of variation
 (CV) as a stability signal, following the practice of reporting central
 tendency and variability rather than a single
 number~\cite{georges2007rigorous} and of using enough replicates to bound
@@ -288,7 +297,14 @@ throughput ratios with a two-sided paired sign-flip permutation test
 ($20{,}000$ permutations, so the smallest attainable $p$ is $1/(20{,}001)$),
 cross-checked with the Wilcoxon signed-rank test. We report the
 geometric-mean paired ratio with a paired bootstrap 95\% CI and the paired
-dominance (fraction of replicates in which the faster layer wins). Because the
+dominance (fraction of replicates in which the faster layer wins). In every test the
+unit is the \emph{run-level} statistic (one throughput or p99 value per repeated
+run, 25 per cell), never the individual request; all confidence intervals are
+\emph{percentile} bootstraps resampling replicate indices (preserving the pairing),
+from a fixed seed (\texttt{mulberry32(0x57a75)}) so every resample is reproducible.
+Because p99 is reported at millisecond resolution and so contains ties, the
+permutation test keeps zero log-ratios and the Wilcoxon test drops zero differences
+with the standard tie correction. Because the
 seven adjacent pairs are defined by the \emph{observed} ranking rather than
 preregistered, we report them as post-hoc adjacent-rank comparisons and treat the
 significances descriptively, applying a Bonferroni correction as a

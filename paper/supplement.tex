@@ -256,4 +256,37 @@ engine-dependence conclusion holds.
 
 \input{\tabledir postreboot}
 
+\section{A reporting checklist for access-layer benchmarks}
+\label{sup:checklist}
+Distilled from the design decisions and the pitfalls this study confronted, the
+following items are the ones an access-layer benchmark should report so that its
+claims can be scoped and reproduced. It is a reporting aid, not a standard.
+\begin{enumerate}
+  \item \textbf{Correctness before timing.} Assert byte-identical responses across
+        layers (final serialized bodies), or state what differs; several defects in
+        this study were caught only this way.
+  \item \textbf{Experimental unit.} Treat the freshly booted run, not the individual
+        request, as the unit; requests within a run are not independent.
+  \item \textbf{Same-host repetition is not environmental replication.} Report how
+        many runs, on how many hosts, over what period; do not call same-host
+        repeats ``independent.''
+  \item \textbf{Idiomatic treatment.} State the exact API, its documentation page and
+        version, the declined alternative, and whether logging, hooks, validation,
+        and identity maps are on.
+  \item \textbf{Latency construct.} Distinguish saturated closed-loop response time
+        (which tracks throughput and queueing) from utilization-controlled or
+        open-loop latency; report the operating point.
+  \item \textbf{Same-SQL / shared-plan control.} Report it as a compound intervention
+        (it changes query formulation, protocol, preparation, round-trips, and
+        mapping together), not a mechanism decomposition.
+  \item \textbf{Resource accounting.} Report application-tier and database CPU
+        separately; throughput per CPU-second, not throughput alone.
+  \item \textbf{Write-state control.} Reset the mutable state between runs and state
+        the durability regime (default versus relaxed).
+  \item \textbf{Provenance.} Pin engine images by digest and dependencies by
+        lockfile; archive raw per-cell records, seeds, and a table-to-record manifest.
+  \item \textbf{Scope.} State the host topology, workload, versions, and dates, and
+        confine claims to them.
+\end{enumerate}
+
 \end{document}

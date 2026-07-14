@@ -1,0 +1,35 @@
+% hand-authored: controlled/varied/uncontrolled factors (review R4, §E2/S7)
+\begin{table}[htbp]
+  \centering
+  \caption{Factors in the benchmark: what is held constant, what varies (the
+    treatments), and what is uncontrolled. The same-SQL control additionally holds
+    the generated SQL and row mapping constant; because it changes query
+    formulation, API, protocol, statement preparation, round-trip structure, and
+    mapping \emph{together}, it bounds the residual difference but does not isolate
+    any single factor. The uncontrolled factors are inherent to a single virtualized
+    host and are the reason results are reported for this configuration, not as
+    general library performance.}
+  \label{tab:factors}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{l l l}
+    \toprule
+    Status & Factor & Detail \\
+    \midrule
+    Held constant & schema, indexes, seed data & identical DDL + deterministic seed, both engines \\
+    & per-replicate request stream & paired PRNG stream, seeded on (endpoint, replicate) \\
+    & connection pool & fixed at ten for every layer \\
+    & response bytes & byte-identical JSON across layers (verified) \\
+    & host, OS, engine versions & one host; pinned July-2026 versions (Supplement Table~S11) \\
+    & warm-up, run duration, cell order & 15\,s warm-up, 12\,s runs, randomized order \\
+    \midrule
+    Varies (treatments) & access layer & 9 idiomatic + 2 tuned implementations \\
+    & database engine & PostgreSQL, MySQL \\
+    & access pattern & point read, range scan, deep fetch, aggregation, insert \\
+    \midrule
+    Uncontrolled & hypervisor neighbours, CPU steal & single virtualized host \\
+    & thermal / frequency scaling & not pinned; bounded by the drift and post-restart checks \\
+    & database cache / kernel history & warm by design; randomized order + fresh boot mitigate \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

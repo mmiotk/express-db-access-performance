@@ -23,11 +23,11 @@ small graphs to \texttt{pg} on large. Point reads and aggregation are the
 opposite case, dominated by connection and parsing cost every layer shares,
 spreading little once every adapter, native drivers included, runs the same raw
 plan. On the controlled same-SQL estimand, the idiomatic deep-fetch spread
-collapses toward parity (Supplement Table~S14), so the wide
-default-configuration deficits lie upstream of raw SQL execution: in each
-layer's query-generation and result-construction path (its default
-eager-loading strategy, query count, and object hydration), which the control
-changes as a bundle rather than isolating one component. MikroORM illustrates
+collapses toward parity (Supplement Table~S14): the between-layer differences
+shrink sharply once every layer runs the shared raw-SQL-and-mapping path, but
+that control changes each layer's eager-loading strategy, query count, wire
+protocol, statement preparation, and object hydration together, so it does not
+localize the cost to any one of them. MikroORM illustrates
 this most starkly, its default path delivering a fifth to a quarter of its own
 same-SQL throughput, while Prisma's raw path is the fastest same-SQL cell on both
 engines; the same control exposes a new low end, Sequelize's raw-SQL facility
@@ -49,8 +49,8 @@ noise of plain \texttt{mysql2}'s text path on most patterns.
 \paragraph{The CPU cost behind parity.}
 Prisma shows that an ORM need not be slow, consistent with evidence that ORM
 cost is highly sensitive to implementation and tuning~\cite{vanzyl2009optimisations}.
-On the deep fetch its compiled query engine is statistically equivalent to the
-native driver (paired ratio $1.02$, permutation $p=0.058$, TOST equivalence
+On the deep fetch its compiled query engine meets a $\pm5\%$ equivalence criterion
+against the native driver (paired ratio $1.02$, permutation $p=0.058$, paired TOST
 within $\pm5\%$; Section~\ref{sec:results}), and it leads outright on the
 keyset range scan, the raw-SQL aggregation, and the point read and deep fetch
 on MySQL (Section~\ref{sec:results}). That parity or leadership is not free: at
@@ -70,7 +70,7 @@ is only modestly less compute-efficient than the native driver. The equal-CPU
 control (Section~\ref{sec:results}) confirms the application-tier trade
 operationally: at an equal one-core application budget Prisma is $4.1\times$
 slower than \texttt{pg} and needs about four cores to approach parity, while
-MikroORM barely moves with more cores, confirming its deficit is a hydration
+MikroORM barely moves with more cores, consistent with a hydration
 cost rather than a parallelism-starved one.
 
 \paragraph{Queueing under load and the open-loop check.}
@@ -102,7 +102,7 @@ layer-bound ORMs (Supplement Table~S3), so the layer-dependence is a property
 of the write path, not of fsync. MySQL inserts, by contrast, remain low and flat
 across all nine layers, a $1.22\times$ spread, the same ``engine floor''
 pattern the relaxed-durability run already showed; what default durability
-newly exposes is the mechanism in the tail: MySQL's p99 sits at 135--155~ms
+newly exposes in the tail: MySQL's p99 sits at 135--155~ms
 across every layer, consistent with the per-commit double flush (redo log,
 then binlog) InnoDB performs on every insert regardless of how the request
 reaches it~\cite{harizopoulos2008oltp}, against 11--37~ms on PostgreSQL.
@@ -179,19 +179,21 @@ and independently verified figures in this space.
 
 \paragraph{Practical guidance.}
 The practical synthesis follows directly from RQ1--RQ3, on the
-default-configuration estimand a practitioner faces. Where a service's hot
+default-configuration estimand a practitioner faces, and applies to the
+benchmarked implementations in this configuration, workload, and host rather
+than to access-layer categories in general. Where a service's hot
 path is dominated by deep/nested fetches, the access layer is consequential,
 and a thin layer (the native driver, a query builder, or a query-engine-based
-ORM such as Prisma) is the safer default \emph{for throughput and tail
-latency}: a heavyweight data-mapper ORM concentrates its largest, growing
+ORM such as Prisma) is the safer default \emph{for throughput and
+response-time p99}: a heavyweight data-mapper ORM concentrates its largest, growing
 penalty on that traffic, so weigh a query-engine ORM's parity or lead against
 its application-tier CPU cost wherever CPU, not throughput, is the
 constrained resource. Where the workload is read-simple (point reads, keyset
 scans) or write-bound, especially on MySQL, whose engine floor for
 single-row inserts dominates layer differences under default durability, a
-full ORM's productivity, type safety, and migration tooling cost little in
-relative throughput and are reasonable grounds for the decision on their
-own. A pragmatic middle path, already
+full ORM's productivity and type safety were not measured here; on throughput
+alone the cost is small in these read-simple patterns, so those unmeasured
+considerations may reasonably decide the choice on their own. A pragmatic middle path, already
 forced onto every layer by our aggregation endpoint, is to keep the ORM for the bulk
 of the application and fall back to raw SQL or the native driver only for
 endpoints that assemble large object graphs; the same-SQL control shows

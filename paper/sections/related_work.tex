@@ -159,8 +159,8 @@ found covers at most two or three of these four properties
 (Table~\ref{tab:prior_art}). This study combines all four: it adds MySQL
 alongside PostgreSQL, spans a representative native-driver-to-ORM
 cross-section rather than the two or three libraries typical of peer-reviewed
-work, is authored by no evaluated vendor, reports throughput and tail latency
-(p99) jointly for every cell, and measures through the Express HTTP layer
+work, is authored by no evaluated vendor, reports throughput and response-time
+p99 jointly for every cell, and measures through the Express HTTP layer
 rather than in-process query timing alone, closing the same engine gap that
 separates access-layer studies from engine-only work
 such as~\cite{salunke2024pgmysql}.
@@ -188,7 +188,7 @@ such as~\cite{salunke2024pgmysql}.
     Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & No (vendor) \\
     IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & No (vendor) \\
     \midrule
-    \textbf{This study} & \textbf{9 idiomatic (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + tail (p99)} & \textbf{Yes} \\
+    \textbf{This study} & \textbf{9 idiomatic (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + response-time p99} & \textbf{Yes} \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}
