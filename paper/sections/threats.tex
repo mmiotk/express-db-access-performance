@@ -52,9 +52,9 @@ documented, idiomatic eager-loading strategy on the deep-fetch endpoint
 (Section~\ref{sec:methodology}). The correctness cross-check has since been
 upgraded to the byte-level comparison described above (Construct validity); in
 its original, key-field-projection form it caught two defects during
-development, a fan-out bug that inflated the \texttt{SUM(views)} aggregate for
-every join-based adapter, and a result-shape parsing defect in one driver
-binding, both fixed before the measurements reported here. Explicit warm-up
+development, both fixed before the measurements reported here
+(Section~\ref{sec:discussion} enumerates the checklist of confounds these and
+later checks were built to catch). Explicit warm-up
 phases per (layer, engine, endpoint) cell, set to exceed the slowest layer's
 measured cold-start stabilization (Section~\ref{sec:methodology}), absorb JIT,
 pool-fill, and plan-cache effects before timing begins, guarding against
@@ -72,9 +72,8 @@ processing order could confound layer identity with position in the run. A
 residual risk is coordinated omission in the load generator, which can
 under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency};
 a native, coordinated-omission-corrected constant-arrival cross-run on the
-deep fetch (Section~\ref{sec:methodology}) confirms the tail ranking and
-shows the data-mapper ORMs saturating earlier still (Section~\ref{sec:results};
-Supplement Table~S6).
+deep fetch (Section~\ref{sec:methodology}) confirms the tail ranking holds
+under that stricter model (Section~\ref{sec:results}; Supplement Table~S6).
 
 \paragraph{External validity.}
 All measurements come from a single schema, a single dataset size, one hardware
@@ -103,11 +102,10 @@ memory-resident, so these results are a hot-cache regime maximizing the
 visibility of layer differences; as a workload becomes I/O-bound (larger than RAM, cold caches),
 every layer increasingly waits on the same storage and the spreads should
 compress toward $1\times$. Second, the deep-fetch object graph is small (a
-post with on average ten comments, at most 25 in the seed), so the headline
-spread is specific to small-graph hydration; the fan-out sweep
-(Section~\ref{sec:results}) shows the spread grows monotonically with graph
-size (to $16\times$ at 500 child rows), so the headline figures are
-conservative in that direction. We mitigate these limitations by pinning every
+post with on average ten comments, at most 25 in the seed); the replicated fan-out
+sweep (Section~\ref{sec:results}) shows the spread is a roughly fixed multiplier from
+0 to 500 child rows, so the headline figure is representative of the range rather
+than specific to one graph size. We mitigate these limitations by pinning every
 dependency version, publishing the deterministic seed and an automated
 environment capture, and releasing the full harness so the matrix can be
 re-run on other hardware or against newer releases. A further limitation is

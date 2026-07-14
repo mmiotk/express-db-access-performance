@@ -10,29 +10,21 @@ throughput and response-time p99 together, addressing the four gaps that
 characterize prior art (Section~\ref{sec:introduction}).
 
 The empirical answer is that the cost of abstraction is concentrated, not
-uniform. It is modest for point reads and for aggregation issued through a
-raw-SQL path, but grows sharply for the deep/nested fetch, where the layer
-must assemble a nested object graph on the application side, and widens
-further as the fetched graph grows larger (Section~\ref{sec:results}). A
-same-SQL control narrows that spread by running identical SQL with identical
-mapping through every layer's raw facility; because that control changes each
-layer's query formulation, API, statement preparation, round-trip structure,
-and result mapping together, it bounds the residual difference but isolates no
-single factor, with MikroORM the starkest case
+uniform: sharpest for the deep/nested fetch that assembles a nested object
+graph application-side, and modest for point reads and for aggregation issued
+through a raw-SQL path (Section~\ref{sec:results}). The same-SQL control
+shows this cost is bounded but not attributable to any single mechanism
 (Section~\ref{sec:results}). Read rankings are stable across the two
-engines, and in this configuration, Prisma shows an ORM
-need not imply large overhead: on the deep fetch it meets a $\pm5\%$ equivalence
-criterion against the native driver and leads outright on several other patterns, at a
-substantial application-CPU premium that an equal-CPU control now measures
-directly rather than infers (Section~\ref{sec:results}). Writes are the exception: MySQL's engine floor makes insert throughput
-nearly layer-independent, while PostgreSQL exposes a wide layer spread even
-under default durability, and unlike every read pattern the write ranking
-does not transfer across engines at all, a caution against generalizing
-single-engine write results, not a durability artifact as a symmetric
-relaxed-durability run confirms (Section~\ref{sec:discussion}). Development
-also surfaced a reusable checklist of four benchmarking pitfalls specific to this
-genre, several caught by the correctness cross-check and the rest by performance
-analysis (Section~\ref{sec:discussion}).
+engines, and Prisma shows that, in this configuration, an ORM need not imply
+large overhead, at a CPU premium the equal-CPU control now quantifies
+directly (Section~\ref{sec:results}). Writes are the exception: unlike every
+read pattern, the write ranking does not transfer across engines at all, a
+caution against generalizing single-engine write results and not a
+durability artifact, as a symmetric relaxed-durability run confirms
+(Section~\ref{sec:discussion}). Development also surfaced a reusable
+checklist of four benchmarking pitfalls specific to this genre, several
+caught by the correctness cross-check and the rest by performance analysis
+(Section~\ref{sec:discussion}).
 
 These findings held under a concurrency sweep (1 to 256 connections, ranking
 load-robust above 32) and under paired permutation and Wilcoxon tests

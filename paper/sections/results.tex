@@ -100,12 +100,10 @@ byte-identical across layers on both engines, while the wire protocols differ
 per layer as enumerated in Section~\ref{sec:methodology}; the honest description
 of this control is therefore \emph{same SQL, protocol disclosed}, not
 \emph{same plan}. The contrast is composite: switching from a layer's idiomatic
-relational-fetch path to the common raw-SQL-and-shared-mapping path changes
-its query strategy, query count, prepared-statement behavior, the raw versus
-ORM API, and result marshalling together, so it isolates none of these
-individually; what it establishes is that the difference is much smaller under
-the shared raw-SQL-and-mapping path; the control changes many factors together
-and does not localize the cost.
+relational-fetch path to the common raw-SQL-and-shared-mapping path changes its
+query strategy, query count, prepared-statement behavior, the raw versus ORM API,
+and result marshalling together, so the residual difference is bounded but no single
+factor is isolated.
 
 On the identical SQL, the deep-fetch native-relative spread collapses from its
 idiomatic $6.55\times$ (PostgreSQL) and $4.50\times$ (MySQL) to $1.47\times$ and
@@ -115,12 +113,9 @@ Sequelize's raw facility
 (\texttt{sequelize.query}), which we attribute to dispatch and marshalling
 overhead in the raw API itself, not SQL execution. MikroORM shows the largest
 strategy gap: its idiomatic path reaches only 0.20 (PostgreSQL) and 0.25 (MySQL) of
-its own same-SQL throughput, a $5.0\times$ and $4.1\times$ idiomatic-to-raw gap. On this
-pattern, the access layer's idiomatic cost reflects its default query strategy,
-round-trip count, and object hydration together with its raw execution; the
-same-SQL control changes these jointly and does not separate them; the fixed-payload Express-plus-JSON
-floor (Section~\ref{sec:methodology}) sits well above every same-SQL cell, so
-the framework floor does not manufacture this collapse.
+its own same-SQL throughput, a $5.0\times$ and $4.1\times$ idiomatic-to-raw gap. The
+fixed-payload Express-plus-JSON floor (Section~\ref{sec:methodology}) sits well above
+every same-SQL cell, so the framework floor does not account for the collapse.
 A loading-strategy sensitivity check (Supplement Table~S18) probes whether these
 deficits are merely a default-strategy artifact. Where the alternative is a
 byte-identical drop-in, switching the join-default data-mapper ORMs (Sequelize,
@@ -206,16 +201,14 @@ is the least, once every layer runs the same raw-SQL plan (the range scan's
 large nominal spread, as above, is driven disproportionately by MikroORM
 alone).
 
-The primary deep-fetch workload uses posts with roughly ten comments on
-average, near the low end of a fan-out sweep across 0, 1, 10, 50, 100, and 500
-comments (PostgreSQL, medians of three replicates) that shows the layer
-spread widening with graph size: $5.9\times$, $5.8\times$, $7.1\times$,
-$9.8\times$, $11.4\times$, and $16.1\times$ respectively; the leader flips
-from Prisma at small graphs (up to 10 comments) to \texttt{pg} at 50 comments
-and above, as hydration cost scales with the number of materialized rows, and
-MySQL shows the same qualitative shape. The deep-fetch spreads reported above
-are therefore conservative: a larger graph would widen the gap between the
-lightest and heaviest layers further.
+The primary deep-fetch workload uses posts with roughly ten comments on average.
+A fan-out sweep across 0, 1, 10, 50, 100, and 500 comments (both engines, medians of
+eight repeated runs) shows the native-relative spread is \emph{roughly constant} with
+graph size---about $5.5$--$6\times$ on PostgreSQL and $4.5$--$5\times$ on MySQL across
+the whole range---so on this schema the deep-fetch deficit behaves as a fixed
+multiplier rather than one that grows with the graph. (An earlier three-run sweep had
+suggested a growing spread; that did not survive replication, so we report the
+fan-out as exploratory.)
 
 \subsection{Tail latency}
 We report the closed-loop p99 for every cell (p50, p90, and p97.5 are in the

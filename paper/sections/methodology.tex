@@ -223,7 +223,7 @@ stream are archived in the replication package. We report the median of the
 25 replicate values; 449 of the 450 dedicated write-endpoint boots in the
 primary campaign completed normally, the exception being knex/PostgreSQL,
 whose replicate-16 boot hit a health-check timeout immediately after the
-physical database rebuild, leaving that cell with 24 of 25 replicates (the
+write-state reset, leaving that cell with 24 of 25 repeated runs (the
 runner records and skips such failures rather than retrying silently). A
 port allocator that skips the ports the databases themselves listen on
 prevents the collision that had cost an earlier replicate its server

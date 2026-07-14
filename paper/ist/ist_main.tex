@@ -62,7 +62,7 @@ default durability.
 \textbf{Results:} For the benchmarked implementations, abstraction cost
 concentrates in relation-materializing patterns: the deep/nested fetch spreads
 $6.5\times$ (PostgreSQL) and $4.5\times$ (MySQL) between the native driver and the
-slowest data-mapper ORM, growing with graph size. A same-SQL control narrows that
+slowest data-mapper ORM. A same-SQL control narrows that
 native-relative spread to at most $1.5\times$; the residual is small, but the
 control changes query formulation, protocol, statement preparation, round-trips,
 and mapping together and isolates no single factor. Read rankings transfer across

@@ -35,11 +35,12 @@ the revised submission build; effective length is recorded in `word-count.pdf`.
 now consistently named a saturated client-observed response-time p99 at the stated
 operating point, and we added a **utilization-controlled open-loop experiment**: each
 layer is offered 50/70/85/95 % of its own saturating throughput, replicated, on both
-engines. [RESULT to be finalized after the run: at matched utilization the large
-saturated-p99 gap between the native driver and the slowest ORM largely closes,
-confirming that the saturated ladder was tracking capacity/queueing, not intrinsic
-tail latency.] The open-loop results are now at least as prominent as the saturated
-p99.
+engines. At 50 % of each layer's own capacity every layer holds p99 near 2–4 ms on
+both engines, and the large saturated gap (native driver 20 ms versus the slowest
+ORM 106 ms) dissolves — confirming the saturated ladder was tracking
+capacity/queueing, not intrinsic tail latency; the tail rises only as a layer nears
+its own capacity. The utilization results are now at least as prominent as the
+saturated p99.
 
 **§6.2 — same-SQL does not identify a mechanism.** Agreed and corrected everywhere.
 The control is now described strictly as a compound intervention that changes query
@@ -68,8 +69,12 @@ separate-host / remote-database topology is named as a scoped future use of the
 instrument rather than claimed. The feasible test of the reviewer's specific worry —
 that Prisma's multi-core engine looks competitive only because the one-core layers
 leave cores idle — is a **multi-worker (node cluster) experiment**: each layer is
-scaled to 1/2/4 workers so every layer can use the spare cores. [RESULT after the
-run.] The single-host topology, and its consequences for the CPU comparison, are
+scaled to 1/2/4 workers so every layer can use the spare cores. The result confirms
+the reviewer's intuition: at one worker the native driver and Prisma are near parity,
+but at four workers the native driver overtakes Prisma by 1.6× on PostgreSQL and 1.4×
+on MySQL, because the single-pool layers scale on the cores Prisma's engine already
+consumed. Prisma's throughput parity is therefore specific to a deployment that leaves
+cores idle. The single-host topology, and its consequences for the CPU comparison, are
 disclosed prominently.
 
 **§6.6 — "25 independent replicates."** Corrected to "25 repeated runs" throughout,
@@ -80,7 +85,8 @@ non-independence paragraphs are retained.
 "the benchmarked implementations in this configuration, workload, and host," and the
 unmeasured productivity/type-safety trade-off is flagged as unmeasured. We added a
 **mixed read/write workload** (interleaved deep-fetch reads and inserts at documented
-mixes) and a **60–120 s longer-run sensitivity** subset. [RESULTS after the run.]
+mixes) and a **60–120 s longer-run sensitivity** subset. Both preserve the read
+ordering, and the 90 s runs reproduce the 12 s medians within 1 %.
 
 **§6.8 — selective/post-hoc statistics.** Every primary layer×engine×pattern cell now
 carries a **95 % bootstrap confidence interval on throughput** in the tables (not
@@ -142,8 +148,12 @@ to check are already implemented as recommended:
 13. **Exact IST word count?** Recomputed (`word-count.pdf`).
 14. **Zenodo archive = submitted version?** Yes; the v1.4.0 tarball is `git archive
     HEAD` of the tagged release.
-15. **Fan-out "robust" with three runs?** Relabelled exploratory and replicated to
-    eight runs; "robust" softened.
+15. **Fan-out "robust" with three runs?** The reviewer was right to doubt it. On
+    replication (all layers, eight runs, both engines) the spread is a **roughly
+    constant** multiplier across 0–500 comments, not the growing one the three-run
+    sweep suggested; we removed the "growing with graph size" claim from the abstract,
+    intro, results, discussion, conclusion, and threats, and report the fan-out as
+    exploratory.
 16. **Uncertainty for the MySQL commit-path percentages?** Reported from the
     wait-event replicates.
 17. **Stable public versions + immutable ids?** Digest-pinned images + lockfile.
