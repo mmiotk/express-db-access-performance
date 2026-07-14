@@ -1,0 +1,36 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amssymb,amsmath}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\usepackage{parskip}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\newcommand{\euro}{EUR}
+\pagestyle{plain}
+\begin{document}
+\section*{Word-count declaration}
+
+Manuscript: \emph{A Comparative Analysis of Relational Database Access-Layer Performance in Express.js for PostgreSQL and MySQL} (submission build \texttt{ist/ist\_main.tex}).
+
+Counted with \texttt{texcount} on the seven body sections plus the structured abstract, with each table and figure counted as 200 words per the IST author guidelines.
+
+\begin{center}\begin{tabular}{ll}
+\hline
+Component & Count \\
+\hline
+Body text (7 sections) & 12,402 \\
+Structured abstract & 290 \\
+Tables and figures in the main text (11 $\times$ 200) & 2,200 \\
+\textbf{Main-text total} & \textbf{14,892} \\
+\hline
+\end{tabular}\end{center}
+
+This is under the journal's 15,000-word limit. The reference list (70 entries) is provided separately. Eleven further tables are placed in the numbered online supplement (\texttt{supplement.pdf}, Supplement Tables S1--S11), which is submitted with the manuscript and archived under the same Zenodo DOI as the code and data.
+
+Highlights (5 bullets, each $\le$ 85 characters) are in \texttt{highlights.tex}.
+
+\end{document}
