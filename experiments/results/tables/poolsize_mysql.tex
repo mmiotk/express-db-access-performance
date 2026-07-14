@@ -2,16 +2,21 @@
 \begin{table}[htbp]
   \centering
   \caption{Deep-fetch throughput (req/s, MySQL, 50 connections, median of
-    1) as the connection pool varies from 1 to 50, per access layer. The
+    3) as the connection pool varies from 1 to 50, per access layer. The
     primary campaign fixes the pool at 10; each layer saturates at a pool well below
     50 and the ordering is preserved at every pool size, so the fixed-pool choice
     does not drive the ranking.}
   \label{tab:poolsize_mysql}
-  \begin{tabular}{l r r}
+  \begin{tabular}{l r r r r r r}
     \toprule
-    Layer & 1 & 10 \\
+    Layer & 1 & 2 & 5 & 10 & 20 & 50 \\
     \midrule
-    \texttt{mysql2} & 1595 & 2414 \\
+    \texttt{mysql2} & 1590 & 2192 & 2117 & 2451 & 2343 & 2412 \\
+    \texttt{knex} & 1268 & 1940 & 1984 & 2085 & 2120 & 2030 \\
+    \texttt{drizzle} & 1287 & 1365 & 1408 & 1442 & 1443 & 1316 \\
+    \texttt{prisma} & 901 & 1561 & 3299 & 3732 & 3698 & 3553 \\
+    \texttt{typeorm} & 736 & 1123 & 1126 & 1180 & 1147 & 1102 \\
+    \texttt{mikroorm} & 518 & 514 & 519 & 533 & 526 & 509 \\
     \bottomrule
   \end{tabular}
 \end{table}

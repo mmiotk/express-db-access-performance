@@ -1,0 +1,546 @@
+[
+  {
+    "engine": "mysql",
+    "adapter": "mysql2",
+    "capacity": 2405,
+    "fraction": 0.5,
+    "offered": 1203,
+    "achieved_med": 1202,
+    "p99_med": 4.6,
+    "p99_samples": [
+      5.4,
+      4.7,
+      4.6,
+      4.3,
+      4.6
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mysql2",
+    "capacity": 2405,
+    "fraction": 0.7,
+    "offered": 1684,
+    "achieved_med": 1682,
+    "p99_med": 6.8,
+    "p99_samples": [
+      5.8,
+      6.8,
+      6.4,
+      9.2,
+      7.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mysql2",
+    "capacity": 2405,
+    "fraction": 0.85,
+    "offered": 2044,
+    "achieved_med": 2041,
+    "p99_med": 10,
+    "p99_samples": [
+      9.6,
+      12.3,
+      9.1,
+      16.5,
+      10
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mysql2",
+    "capacity": 2405,
+    "fraction": 0.95,
+    "offered": 2285,
+    "achieved_med": 2280,
+    "p99_med": 33.2,
+    "p99_samples": [
+      33.2,
+      18.1,
+      48.9,
+      540,
+      26.8
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "knex",
+    "capacity": 2050,
+    "fraction": 0.5,
+    "offered": 1025,
+    "achieved_med": 1024,
+    "p99_med": 2,
+    "p99_samples": [
+      1.9,
+      2.3,
+      2,
+      2.1,
+      2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "knex",
+    "capacity": 2050,
+    "fraction": 0.7,
+    "offered": 1435,
+    "achieved_med": 1434,
+    "p99_med": 2.1,
+    "p99_samples": [
+      1.5,
+      2.1,
+      1.7,
+      3.2,
+      3.4
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "knex",
+    "capacity": 2050,
+    "fraction": 0.85,
+    "offered": 1743,
+    "achieved_med": 1741,
+    "p99_med": 36.2,
+    "p99_samples": [
+      39.1,
+      36.2,
+      30.8,
+      37.9,
+      2.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "knex",
+    "capacity": 2050,
+    "fraction": 0.95,
+    "offered": 1948,
+    "achieved_med": 1943,
+    "p99_med": 97.4,
+    "p99_samples": [
+      95.6,
+      121.3,
+      97.4,
+      355.2,
+      38.4
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "drizzle",
+    "capacity": 1446,
+    "fraction": 0.5,
+    "offered": 723,
+    "achieved_med": 723,
+    "p99_med": 4.2,
+    "p99_samples": [
+      5.4,
+      3.4,
+      4.2,
+      4.4,
+      3.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "drizzle",
+    "capacity": 1446,
+    "fraction": 0.7,
+    "offered": 1012,
+    "achieved_med": 1011,
+    "p99_med": 5.2,
+    "p99_samples": [
+      4.5,
+      5.2,
+      5.2,
+      6.7,
+      6.7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "drizzle",
+    "capacity": 1446,
+    "fraction": 0.85,
+    "offered": 1229,
+    "achieved_med": 1228,
+    "p99_med": 13.1,
+    "p99_samples": [
+      14.6,
+      13.1,
+      16,
+      11.8,
+      12.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "drizzle",
+    "capacity": 1446,
+    "fraction": 0.95,
+    "offered": 1374,
+    "achieved_med": 1372,
+    "p99_med": 25.7,
+    "p99_samples": [
+      37.5,
+      78.4,
+      25.7,
+      17.6,
+      13.1
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "capacity": 3701,
+    "fraction": 0.5,
+    "offered": 1851,
+    "achieved_med": 1849,
+    "p99_med": 3.5,
+    "p99_samples": [
+      3.9,
+      3.3,
+      3.7,
+      3.5,
+      3.4
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "capacity": 3701,
+    "fraction": 0.7,
+    "offered": 2591,
+    "achieved_med": 2586,
+    "p99_med": 6.6,
+    "p99_samples": [
+      8.8,
+      5.5,
+      5.6,
+      8.2,
+      6.6
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "capacity": 3701,
+    "fraction": 0.85,
+    "offered": 3146,
+    "achieved_med": 3137,
+    "p99_med": 15.6,
+    "p99_samples": [
+      15.6,
+      10,
+      31.9,
+      14.3,
+      18.4
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "capacity": 3701,
+    "fraction": 0.95,
+    "offered": 3516,
+    "achieved_med": 3505,
+    "p99_med": 19.4,
+    "p99_samples": [
+      991.6,
+      24.2,
+      15.2,
+      16.9,
+      19.4
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "sequelize",
+    "capacity": 893,
+    "fraction": 0.5,
+    "offered": 447,
+    "achieved_med": 447,
+    "p99_med": 3.1,
+    "p99_samples": [
+      2.5,
+      3.2,
+      3.3,
+      3.1,
+      2.9
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "sequelize",
+    "capacity": 893,
+    "fraction": 0.7,
+    "offered": 625,
+    "achieved_med": 625,
+    "p99_med": 3,
+    "p99_samples": [
+      3,
+      3.1,
+      4.9,
+      3,
+      2.9
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "sequelize",
+    "capacity": 893,
+    "fraction": 0.85,
+    "offered": 759,
+    "achieved_med": 759,
+    "p99_med": 7.1,
+    "p99_samples": [
+      9.1,
+      7.1,
+      16.2,
+      7,
+      6.4
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "sequelize",
+    "capacity": 893,
+    "fraction": 0.95,
+    "offered": 848,
+    "achieved_med": 847,
+    "p99_med": 19,
+    "p99_samples": [
+      12.2,
+      22.6,
+      19,
+      20.2,
+      12.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "typeorm",
+    "capacity": 1170,
+    "fraction": 0.5,
+    "offered": 585,
+    "achieved_med": 585,
+    "p99_med": 2.5,
+    "p99_samples": [
+      2.5,
+      2.5,
+      2.5,
+      2.8,
+      2.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "typeorm",
+    "capacity": 1170,
+    "fraction": 0.7,
+    "offered": 819,
+    "achieved_med": 819,
+    "p99_med": 3.6,
+    "p99_samples": [
+      2.7,
+      4.1,
+      4.1,
+      3.6,
+      2.7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "typeorm",
+    "capacity": 1170,
+    "fraction": 0.85,
+    "offered": 995,
+    "achieved_med": 994,
+    "p99_med": 6.9,
+    "p99_samples": [
+      67.3,
+      6.6,
+      2.6,
+      6.9,
+      11.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "typeorm",
+    "capacity": 1170,
+    "fraction": 0.95,
+    "offered": 1112,
+    "achieved_med": 1111,
+    "p99_med": 17.3,
+    "p99_samples": [
+      17.3,
+      122,
+      48.5,
+      9.2,
+      6.1
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "objection",
+    "capacity": 860,
+    "fraction": 0.5,
+    "offered": 430,
+    "achieved_med": 430,
+    "p99_med": 3.1,
+    "p99_samples": [
+      3.2,
+      3,
+      3.7,
+      3.1,
+      2.7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "objection",
+    "capacity": 860,
+    "fraction": 0.7,
+    "offered": 602,
+    "achieved_med": 602,
+    "p99_med": 3.1,
+    "p99_samples": [
+      4,
+      3.1,
+      3,
+      3,
+      3.3
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "objection",
+    "capacity": 860,
+    "fraction": 0.85,
+    "offered": 731,
+    "achieved_med": 731,
+    "p99_med": 6.5,
+    "p99_samples": [
+      106.6,
+      6.5,
+      3.6,
+      4.7,
+      7.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "objection",
+    "capacity": 860,
+    "fraction": 0.95,
+    "offered": 817,
+    "achieved_med": 816,
+    "p99_med": 26.7,
+    "p99_samples": [
+      97.1,
+      3.7,
+      16.5,
+      26.7,
+      123.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mikroorm",
+    "capacity": 535,
+    "fraction": 0.5,
+    "offered": 268,
+    "achieved_med": 268,
+    "p99_med": 3.7,
+    "p99_samples": [
+      3.5,
+      3.1,
+      3.8,
+      3.9,
+      3.7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mikroorm",
+    "capacity": 535,
+    "fraction": 0.7,
+    "offered": 375,
+    "achieved_med": 375,
+    "p99_med": 3.5,
+    "p99_samples": [
+      3.5,
+      3.5,
+      3.2,
+      4.4,
+      3.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mikroorm",
+    "capacity": 535,
+    "fraction": 0.85,
+    "offered": 455,
+    "achieved_med": 455,
+    "p99_med": 7.4,
+    "p99_samples": [
+      7.4,
+      8.4,
+      4.8,
+      3.6,
+      9.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mikroorm",
+    "capacity": 535,
+    "fraction": 0.95,
+    "offered": 508,
+    "achieved_med": 508,
+    "p99_med": 10.6,
+    "p99_samples": [
+      6.1,
+      13.9,
+      5.9,
+      10.6,
+      11.7
+    ],
+    "timeouts_total": 0
+  }
+]

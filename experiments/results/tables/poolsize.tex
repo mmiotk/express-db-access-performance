@@ -2,21 +2,21 @@
 \begin{table}[htbp]
   \centering
   \caption{Deep-fetch throughput (req/s, PostgreSQL, 50 connections, median of
-    3) as the connection pool varies from 1 to 50 for a representative layer
-    of each tier. The primary campaign fixes the pool at 10; the three-band
-    ordering (native and query-engine ORM on top, the query builder in the middle,
-    the data-mapper ORM below) is preserved at every pool size, and each layer
-    saturates at a pool well below 50, so the fixed-pool choice does not drive the
-    ranking.}
+    3) as the connection pool varies from 1 to 50, per access layer. The
+    primary campaign fixes the pool at 10; each layer saturates at a pool well below
+    50 and the ordering is preserved at every pool size, so the fixed-pool choice
+    does not drive the ranking.}
   \label{tab:poolsize}
   \begin{tabular}{l r r r r r r}
     \toprule
     Layer & 1 & 2 & 5 & 10 & 20 & 50 \\
     \midrule
-    \texttt{pg} & 895 & 1732 & 3203 & 3672 & 3764 & 3697 \\
-    \texttt{knex} & 750 & 1423 & 2455 & 2499 & 2648 & 2577 \\
-    \texttt{prisma} & 949 & 1670 & 3446 & 3351 & 3651 & 3565 \\
-    \texttt{mikroorm} & 535 & 539 & 548 & 570 & 584 & 587 \\
+    \texttt{pg} & 923 & 1755 & 3571 & 3771 & 3800 & 3494 \\
+    \texttt{knex} & 764 & 1422 & 2419 & 2493 & 2533 & 2386 \\
+    \texttt{drizzle} & 895 & 1581 & 2023 & 2007 & 2085 & 1952 \\
+    \texttt{prisma} & 962 & 1717 & 3514 & 3679 & 3702 & 3491 \\
+    \texttt{typeorm} & 668 & 1068 & 1226 & 1288 & 1282 & 1196 \\
+    \texttt{mikroorm} & 543 & 550 & 553 & 542 & 539 & 514 \\
     \bottomrule
   \end{tabular}
 \end{table}

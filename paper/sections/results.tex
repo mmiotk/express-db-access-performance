@@ -139,14 +139,12 @@ Section~\ref{sec:methodology}) is $\rho=0.89$ on the point read, $0.89$ on the
 range scan, $0.96$ on the deep fetch, and $0.89$ on aggregation (Kendall's
 $\tau$ between 0.81 and 0.90 on all four), so a layer's rank on one engine
 tracks its rank on the other for every read pattern.
-The \textbf{insert} ranking is the exception ($\rho=0.43$, $\tau=0.43$;
-Table~\ref{tab:ranks} gives the per-layer ranks that back these correlations). Prisma
+The \textbf{insert} ranking is the exception ($\rho=0.43$, $\tau=0.43$; Supplement
+Table~S26 gives the per-layer ranks that back these correlations). Prisma
 illustrates why: it is the fastest ORM on PostgreSQL inserts (5{,}465~req/s, ahead
 of Objection's 3{,}926) but the second-slowest layer on MySQL inserts (714, ahead
 of only MikroORM's 663), a rank flip a benchmark run on either engine alone would
-not reveal.
-
-\input{\tabledir ranks} Beyond order, the \emph{magnitude} of a layer's cost also depends on the
+not reveal. Beyond order, the \emph{magnitude} of a layer's cost also depends on the
 engine: a blocked permutation test on the paired PostgreSQL-minus-MySQL
 log-throughput difference (Section~\ref{sec:methodology}) finds the
 layer$\times$engine interaction significant on all five patterns (observed
@@ -264,10 +262,18 @@ and sharpens it: the data-mapper ORMs enter unstable queueing with high timeout
 rates as soon as the offered load crosses their capacity, whereas the lightweight
 layers degrade gradually over a wider range. The same open-loop sweep on MySQL
 (Supplement Table~S17) reproduces this pattern---flat sub-saturation tails and
-capacity-crossing collapse---so the saturated-tail ordering is engine-robust. As a
-secondary check, each open-loop cell is a single constant-arrival run, so near-knee
-point values are indicative rather than precise; the flat-then-collapse ordering is
-what reproduces.
+capacity-crossing collapse---so the saturated-tail ordering is engine-robust.
+Crucially, that saturated tail tracks capacity, not intrinsic latency. Offering each
+layer 50/70/85/95\% of \emph{its own} saturating throughput
+(coordinated-omission-corrected, five runs, both engines; Supplement
+Tables~S21--S22), the tails converge: at 50\% utilization every layer holds p99 near
+$2$--$4$~ms on PostgreSQL, regardless of where it sits in the saturated ladder, and
+rises only as it nears its own capacity. At matched utilization the large saturated
+gap (\texttt{pg} 20~ms versus MikroORM 106~ms) therefore largely dissolves; the
+saturated p99 measures queueing at a layer's capacity, not a difference in intrinsic
+response-time tail. The single-rate open-loop cells above are single runs, so
+near-knee point values are indicative; the utilization sweep and the
+flat-then-collapse ordering are what reproduce.
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells
@@ -368,6 +374,15 @@ throughput on a single core (3{,}663, 3{,}277, and 3{,}700~req/s at 1, 2, and 4
 cores), whereas Prisma needs roughly four cores to approach that level (896,
 1{,}726, 3{,}025), $4.1\times$ slower than \texttt{pg} on an equal one-core
 application budget; MikroORM stays low regardless of core count (463, 577, 542).
+The same trade governs a multi-worker deployment. Scaling each layer to one, two,
+and four Express workers (a shared-port \texttt{node} cluster; Supplement
+Table~S23), the single-pool layers scale near-linearly on the otherwise-idle cores
+while Prisma---whose engine already uses several cores at one worker---plateaus:
+\texttt{pg} and Prisma are at parity at one worker (3{,}308 vs.\ 3{,}141~req/s on
+PostgreSQL) but \texttt{pg} overtakes Prisma by $1.6\times$ at four workers
+(10{,}178 vs.\ 6{,}439), and \texttt{mysql2} overtakes Prisma by $1.4\times$ on
+MySQL. Prisma's throughput parity is thus specific to a deployment that leaves cores
+idle; where every layer is scaled out to use them, the native driver leads.
 
 Memory differences are smaller (Table~\ref{tab:resources_main}): the native
 driver, Knex, and Objection are lightest (204--211~MB peak RSS), while the

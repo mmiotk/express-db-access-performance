@@ -256,6 +256,63 @@ engine-dependence conclusion holds.
 
 \input{\tabledir postreboot}
 
+\section{Utilization-controlled tail latency}
+\label{sup:utilization}
+Tables~\ref{tab:utilization} and~\ref{tab:utilization_mysql} give the
+coordinated-omission-corrected p99 on the deep fetch when each layer is offered
+50/70/85/95\% of \emph{its own} saturating throughput (its primary closed-loop
+deep-fetch rate), replicated five times, on both engines. At matched utilization the
+tails are small and similar across layers---for example on PostgreSQL every layer
+holds p99 near 2--4~ms at 50\%---so the wide saturated-p99 ladder in the main text is
+a capacity-and-queueing effect, not a difference in intrinsic tail latency; the tail
+rises only as a layer nears its own capacity. This is the intrinsic-latency companion
+to the saturated primary p99.
+
+\input{\tabledir utilization}
+\input{\tabledir utilization_mysql}
+
+\section{Multi-worker scaling}
+\label{sup:cluster}
+Table~\ref{tab:cluster} scales each of a representative subset to 1, 2, and 4 Express
+workers (a shared-port \texttt{node} cluster) so every layer can use the cores that
+Prisma's in-process engine already consumes at one worker. At one worker the native
+driver and Prisma are near parity; as workers consume the idle cores the
+single-pool layers scale near-linearly and the native driver overtakes Prisma
+($1.6\times$ on PostgreSQL, $1.4\times$ on MySQL at four workers). Prisma's parity is
+therefore specific to a single-worker deployment---the direct test of the
+single-host resource-competition concern.
+
+\input{\tabledir cluster}
+
+\section{Pool-size frontier on MySQL}
+\label{sup:poolsize-mysql}
+Table~\ref{tab:poolsize_mysql} is the MySQL companion to the PostgreSQL pool sweep
+(Supplement Table~S7): deep-fetch throughput as the connection pool varies from 1 to
+50, per layer. Each layer saturates at a pool well below 50 and the ordering is
+preserved at every pool size, so the fixed pool of ten does not drive the ranking on
+either engine.
+
+\input{\tabledir poolsize_mysql}
+
+\section{Mixed read/write workload}
+\label{sup:mixed}
+Table~\ref{tab:mixed} interleaves the deep-fetch read with single-row inserts at
+90:10 and 70:30 read:write, both engines, with a physical write reset per run. The
+layer ordering matches the read ordering and is insensitive to the mix, because the
+deep-fetch read dominates the cost; exploratory.
+
+\input{\tabledir mixed}
+
+\section{Per-layer cross-engine ranks}
+\label{sup:ranks}
+Table~\ref{tab:ranks} gives each portable layer's throughput rank on PostgreSQL
+versus MySQL for the deep fetch and the insert, backing the rank correlations in the
+main text: the deep-fetch orderings are nearly identical ($\rho=0.96$) while the
+insert orderings scramble ($\rho=0.43$), most visibly Prisma (rank 1 on PostgreSQL,
+6 on MySQL).
+
+\input{\tabledir ranks}
+
 \section{A reporting checklist for access-layer benchmarks}
 \label{sup:checklist}
 Distilled from the design decisions and the pitfalls this study confronted, the

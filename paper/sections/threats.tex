@@ -80,14 +80,14 @@ Supplement Table~S6).
 All measurements come from a single schema, a single dataset size, one hardware
 configuration, and a connection pool fixed at ten, against specific engine and
 library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology}). The
-fixed pool makes this an \emph{equal-configuration} comparison, not a
+fixed pool makes this an \emph{equal configured connection limit} comparison, not a
 per-layer-tuned one: it isolates the access layer from pool tuning but does not
-show how fast each layer could be under its own best pool. A pool-size
-sensitivity sweep (Supplement Table~S7) addresses this directly for a
-representative layer of each tier: the three-band ordering (native/query-engine
-ORM, then query builder, then data-mapper ORM) is preserved from a pool of 1 to
-50, and each layer's throughput saturates well below 50, so the fixed-pool
-choice does not drive the ranking. Results may not transfer to larger working
+show how fast each layer could be under its own best pool. A per-layer pool-size
+frontier on both engines (Supplement Tables~S7 and~S24) addresses this directly:
+the ordering is preserved from a pool of 1 to 50, and each layer's throughput
+saturates well below 50, so the fixed-pool choice does not drive the ranking. A
+mixed read/write workload (Supplement Table~S25) likewise preserves the read
+ordering. Results may not transfer to larger working
 sets, other pool sizes, or other engine versions, and library performance ages
 quickly: Prisma's measured version (5.22) embeds the in-process Rust query
 engine our CPU accounting characterizes, whereas the version~7 line announced
@@ -131,14 +131,15 @@ Node.js process, whereas production deployments typically run one worker per
 core (\texttt{cluster}, pm2, or per-pod replicas); under $N$ workers saturating
 all cores, no spare cores remain for Prisma's engine threads, and the
 single-threaded layers' per-core efficiency should dominate, so the
-CPU-for-latency trade we report is a single-process result. A sustained-load
+CPU-for-latency trade we report is a single-process result; the multi-worker case
+is measured separately (Supplement Table~S23). A sustained-load
 check bounds temporal drift: holding three representative layers (native
 \texttt{pg}, Prisma, MikroORM) under ten minutes of continuous deep-fetch load,
 re-run under the final harness, moves throughput by at most $\pm1.4\%$ between
 the first and last three minutes, with the band ordering preserved in every
-single minute (replication package), so the short measured runs are not
-sampling a transient; longer-horizon drift over hours to
-days~\cite{kuffel2025nodejs} remains untested. A two-machine cross-run over a
+single minute, and a 90~s run reproduces the 12~s medians within $1\%$
+(replication package), so the short measured runs are not sampling a transient;
+longer-horizon drift over hours to days~\cite{kuffel2025nodejs} remains untested. A two-machine cross-run over a
 dedicated link, adding real network latency, and a multi-worker variant are
 planned to bound this further.
 
