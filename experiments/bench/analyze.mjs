@@ -1,7 +1,7 @@
 // Post-hoc statistical analysis over results/raw.json (which must carry per-run
 // sample arrays; produced by the current runner). Emits three LaTeX tables:
 //   results/tables/cv_all.tex             — coefficient of variation, layer × pattern
-//   results/tables/significance_deep_fetch.tex — adjacent-layer Cliff's delta + MWU p
+//   results/tables/significance_deep_fetch.tex — adjacent-layer paired ratio + permutation p
 //   results/tables/resources.tex          — per-layer CPU% and peak RSS on the deep fetch
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';

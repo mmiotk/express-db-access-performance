@@ -122,14 +122,10 @@ cells with the three components pinned to disjoint core sets (\texttt{ISO\_}
 run, replication package): the isolated and shared-host medians agree within
 about 2\% (ratios 0.98--1.01 across pg, Prisma, and MikroORM), and the layer
 ordering is unchanged, so same-host contention is not driving the reported
-ranking. As a partial check on whether Prisma's near-native throughput depends on
-spare CPU, we confined the server process to 1, 2, or 4 cores with
-\texttt{taskset}, holding the database and load generator on disjoint cores
-(Supplement Table~S4): the native driver reaches its full
-throughput on a single core, whereas Prisma is $4.1\times$ slower at one core
-and needs about four cores to approach native's level, directly quantifying
-the CPU subsidy behind its near-native cell rather than only inferring it from
-aggregate CPU\% (Section~\ref{sec:results}, Section~\ref{sec:discussion}). The
+ranking. The equal-CPU control (Section~\ref{sec:results}, Supplement Table~S4) confirms
+that Prisma's near-native throughput depends on spare CPU: on an equal one-core
+budget the native driver reaches full throughput while Prisma is $4.1\times$
+slower, quantifying the subsidy rather than inferring it from aggregate CPU\%. The
 same caveat extends to deployment topology: the server runs as a single
 Node.js process, whereas production deployments typically run one worker per
 core (\texttt{cluster}, pm2, or per-pod replicas); under $N$ workers saturating
@@ -151,10 +147,10 @@ Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficien
 variation and bootstrap 95\% confidence intervals as stability signals and, because
 the design is a randomized block, compares adjacently ranked layers with
 \emph{paired} tests on their per-replicate throughput ratios (paired sign-flip
-permutation, cross-checked with Wilcoxon signed-rank; the CV tables (Supplement Tables~S1 and~S9),
-\ref{tab:significance}). Two bounds reinforce the ordering (Section~\ref{sec:results}):
-the widest spreads dwarf the run-to-run CV (at most $7.6\%$ on PostgreSQL,
-Supplement Table~S9, and $6.6\%$ on MySQL, Supplement Table~S1), and the
+permutation, cross-checked with the Wilcoxon signed-rank test;
+Table~\ref{tab:significance}). Two bounds reinforce the ordering
+(Section~\ref{sec:results}): the widest spreads dwarf the run-to-run CV (at most
+$7.6\%$ on PostgreSQL and $6.6\%$ on MySQL; Supplement Tables~S9 and~S1), and the
 three-band ordering holds across
 the concurrency sweep at $\geq32$ connections (Fig.~\ref{fig:scaling}). On the
 deep/nested fetch, six of the seven adjacent pairs separate at the

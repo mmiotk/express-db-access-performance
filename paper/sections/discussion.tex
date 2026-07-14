@@ -135,7 +135,7 @@ insert is not the only write shape: a transactional multi-statement write,
 inserting a post and five comments in one transaction, spreads the
 representative layers only $3.3\times$ (Prisma 2412 down to MikroORM
 740~req/s; Supplement Table~S8), close to the single-row insert and far below
-the $6.6\times$ read spread, because the transaction's single commit amortizes
+the $6.55\times$ read spread, because the transaction's single commit amortizes
 the per-commit flush across six inserts. The layer ordering tracks the
 single-row insert, so the write conclusions extend to that transactional
 pattern for the representative layers measured.

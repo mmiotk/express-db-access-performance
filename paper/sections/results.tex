@@ -123,7 +123,7 @@ with its pipelined query engine; the new low end is Sequelize's raw facility
 (\texttt{sequelize.query}), which we attribute to dispatch and marshalling
 overhead in the raw API itself, not SQL execution. MikroORM shows the largest
 strategy gap: its idiomatic path (571~req/s on PostgreSQL, 535 on MySQL) reaches
-only 0.20 and 0.25 of its own same-SQL throughput (2{,}868 and 2{,}172), a
+only 0.20 and 0.25 of its own same-SQL throughput (2{,}869 and 2{,}172), a
 $5.0\times$ and $4.1\times$ gap between its idiomatic and raw-SQL paths. On this
 pattern, the access layer's idiomatic cost is dominated by what it \emph{chooses to
 do} by default (its query strategy, round-trip count, and object hydration), not
@@ -176,12 +176,12 @@ here are measured under each engine's \emph{default} durability configuration
 tightly clustered across all nine layers (663--809~req/s, a $1.22\times$ spread,
 CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms for every layer (a
 per-commit redo-log and binlog flush), whereas PostgreSQL spreads $3.86\times$
-(\texttt{pg-tuned} 6{,}280 down to MikroORM 1{,}571, CI [3.77--3.98]). A
+(\texttt{pg} 6{,}064 down to MikroORM 1{,}571, CI [3.77--3.98]). A
 default-versus-relaxed comparison ($n=25$ vs.\ $n=10$ medians;
 Supplement Table~S3) shows this is not a durability artifact: at 50
 concurrent connections, group commit amortizes most of the per-commit
 flush cost, so relaxing durability buys at most $14\%$ on PostgreSQL (native;
-roughly $0$--$4\%$ on the layer-bound ORMs, median $+8\%$ across all nine rows)
+under $8\%$ on the layer-bound ORMs, median $+8\%$ across all nine rows)
 and $19$--$24\%$ on MySQL (median $+20\%$); if anything, the engine contrast is
 slightly larger under default durability than under the relaxed configuration
 used elsewhere. On MySQL, insert throughput
@@ -241,7 +241,7 @@ at 2{,}000~req/s (achieving 772, with a third of the issued requests timing
 out: 9{,}992 of 30{,}000), and
 MikroORM collapses at 1{,}000~req/s (achieving 488) and again at 4{,}000
 (achieving 259, with 53{,}315 of 60{,}000 requests timing out). We call a layer's behavior at an offered rate a
-\emph{collapse} when it achieves under half the offered rate with a majority of
+\emph{collapse} when it achieves under half the offered rate with a large share of
 requests timing out. By that criterion the ranking matches the closed-loop result
 and sharpens it: the data-mapper ORMs enter unstable queueing with high timeout
 rates as soon as the offered load crosses their capacity, whereas the lightweight

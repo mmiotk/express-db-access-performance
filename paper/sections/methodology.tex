@@ -224,7 +224,7 @@ configuration (PostgreSQL \texttt{fsync=on}, \texttt{synchronous\_commit=on},
 deliberately relaxes it; a labelled secondary run instead relaxed every one
 of those settings on both engines (10 replicates, write endpoint only) to
 isolate the durability mechanism, compared with the default regime in
-Section~\ref{sec:discussion} (Supplement Table~S4). A fixed-payload
+Section~\ref{sec:discussion} (Supplement Table~S3). A fixed-payload
 \texttt{/baseline} endpoint returning a fixed, seed-realistic thread-shaped
 payload measured the shared Express-plus-serialization floor (bounding
 framework and serialization cost, not the per-request object construction
@@ -297,8 +297,9 @@ sensitive to the exact value within a few percent.
 All measurements were taken on 2026-07-12 and 2026-07-13 on a single host:
 the primary matrix ran overnight across both dates, and the
 order-invariance, durability, same-SQL, open-loop, fan-out, equal-CPU, and
-concurrency-sweep runs followed on 2026-07-13 (Intel Xeon Gold~6140,
-16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0), with the database
+concurrency-sweep runs followed on 2026-07-13 (a virtualized Intel Xeon
+Gold~6140 instance, 16~vCPUs, single NUMA node, 126~GB RAM; Linux~6.17;
+Node.js~24.16.0), with the database
 engines running locally. The pinned versions (Supplement Table~S11) were
 selected and installed on the measurement date, recorded from the lockfile
 and an automated environment capture (replication package), and frozen for
