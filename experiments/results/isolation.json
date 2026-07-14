@@ -1,0 +1,46 @@
+{
+  "db_cores": "0-3",
+  "app_cores": "4-13",
+  "gen_cores": "14-15",
+  "cells": [
+    {
+      "adapter": "pg",
+      "isolated_rps": 3661,
+      "primary_rps": 3741,
+      "ratio": 0.979,
+      "rps_samples": [
+        3612,
+        3661,
+        3670,
+        3664,
+        3655
+      ]
+    },
+    {
+      "adapter": "prisma",
+      "isolated_rps": 3714,
+      "primary_rps": 3685,
+      "ratio": 1.008,
+      "rps_samples": [
+        3630,
+        3714,
+        3676,
+        3719,
+        3733
+      ]
+    },
+    {
+      "adapter": "mikroorm",
+      "isolated_rps": 570,
+      "primary_rps": 571,
+      "ratio": 0.998,
+      "rps_samples": [
+        538,
+        575,
+        586,
+        560,
+        570
+      ]
+    }
+  ]
+}

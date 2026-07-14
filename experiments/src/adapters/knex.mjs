@@ -67,6 +67,17 @@ export default async function createAdapter({ engine, config }) {
       return { id: Number(id) };
     },
 
+    // Transactional multi-statement write (review 6.7): post + comments in one
+    // transaction, through Knex's transaction facility.
+    async createThread({ authorId, title, body, comments }) {
+      return knex.transaction(async (trx) => {
+        const rows = await trx('posts').insert({ author_id: authorId, title, body }, ['id']);
+        const pid = typeof rows[0] === 'object' ? rows[0].id : rows[0];
+        await trx('comments').insert(comments.map((c) => ({ post_id: pid, author_id: c.authorId, body: c.body })));
+        return { post_id: Number(pid), comments: comments.length };
+      });
+    },
+
     poolStats() {
       const p = knex.client?.pool; if (!p) return null;
       return { used: p.numUsed(), free: p.numFree(), pending: p.numPendingAcquires() };

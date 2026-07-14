@@ -117,6 +117,21 @@ app.post('/posts', h(async (req, res) => {
   res.status(201).json(created);
 }));
 
+// 5b. transactional multi-statement write: insert a post and five comments in one
+// transaction (review 6.7). Only adapters implementing createThread serve this.
+const THREAD_COMMENTS = Array.from({ length: 5 }, (_, i) => ({ authorId: 1 + (i % 100), body: `benchmark comment ${i + 1}` }));
+app.post('/threads', h(async (req, res) => {
+  if (typeof db.createThread !== 'function') return res.status(501).json({ error: 'not implemented' });
+  const b = req.body || {};
+  const created = await db.createThread({
+    authorId: Number(b.authorId) || 1,
+    title: b.title || 'benchmark thread',
+    body: b.body || 'lorem ipsum',
+    comments: Array.isArray(b.comments) && b.comments.length ? b.comments : THREAD_COMMENTS,
+  });
+  res.status(201).json(created);
+}));
+
 const server = app.listen(config.port, () => {
   // eslint-disable-next-line no-console
   console.log(`[server] adapter=${db.name} engine=${engine} pool=${config.pool.max} :${config.port}`);

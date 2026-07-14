@@ -69,6 +69,18 @@ export default async function createAdapter({ engine, config }) {
       return { id: n(row.id) };
     },
 
+    // Transactional multi-statement write (review 6.7): post + comments in one
+    // interactive transaction, through Prisma's transaction facility.
+    async createThread({ authorId, title, body, comments }) {
+      return prisma.$transaction(async (tx) => {
+        const post = await tx.post.create({ data: { author_id: BigInt(authorId), title, body } });
+        await tx.comment.createMany({
+          data: comments.map((c) => ({ post_id: post.id, author_id: BigInt(c.authorId), body: c.body })),
+        });
+        return { post_id: n(post.id), comments: comments.length };
+      });
+    },
+
     async close() { await prisma.$disconnect(); },
   };
 }

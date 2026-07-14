@@ -1,0 +1,67 @@
+[
+  {
+    "adapter": "pg",
+    "rps": 2347,
+    "p99": 44,
+    "correct": true,
+    "rps_samples": [
+      2347,
+      2349,
+      2336,
+      2359,
+      2290
+    ]
+  },
+  {
+    "adapter": "knex",
+    "rps": 2029,
+    "p99": 49,
+    "correct": true,
+    "rps_samples": [
+      1981,
+      1978,
+      2057,
+      2029,
+      2068
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "rps": 2412,
+    "p99": 41,
+    "correct": true,
+    "rps_samples": [
+      2389,
+      2410,
+      2412,
+      2430,
+      2440
+    ]
+  },
+  {
+    "adapter": "typeorm",
+    "rps": 1790,
+    "p99": 48,
+    "correct": true,
+    "rps_samples": [
+      1735,
+      1821,
+      1790,
+      1784,
+      1818
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "rps": 740,
+    "p99": 90,
+    "correct": true,
+    "rps_samples": [
+      696,
+      740,
+      740,
+      737,
+      749
+    ]
+  }
+]

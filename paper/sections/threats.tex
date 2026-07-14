@@ -78,9 +78,15 @@ saturating earlier still (Section~\ref{sec:results}; Supplement Table~S6).
 \paragraph{External validity.}
 All measurements come from a single schema, a single dataset size, one hardware
 configuration, and a connection pool fixed at ten, against specific engine and
-library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology});
-results may not transfer to larger working sets, other pool sizes, or other engine
-versions, and library performance ages quickly; a concrete instance is Prisma,
+library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology}). The
+fixed pool makes this an \emph{equal-configuration} comparison, not a
+per-layer-tuned one: it isolates the access layer from pool tuning but does not
+answer how fast each layer could be under its own best pool. A pool-size
+sensitivity sweep (Supplement Table~S7) addresses that directly for a representative
+layer of each tier: the three-band ordering (native/query-engine ORM, then query builder, then data-mapper ORM) is preserved from a pool of 1 to 50 and each
+layer's throughput saturates at a pool well below 50, so the fixed-pool choice does
+not drive the ranking. Results may still not transfer to larger working sets, other
+pool sizes, or other engine versions, and library performance ages quickly; a concrete instance is Prisma,
 whose measured version (5.22) embeds the in-process Rust query engine that our
 CPU accounting characterizes, whereas the version~7 line announced in late 2025
 replaces that engine with a pure-TypeScript client~\cite{prisma7_benchmarks}, so
@@ -105,7 +111,15 @@ capture, and releasing the full harness so the matrix can be re-run on other
 hardware or against newer releases. A further limitation is that the load generator
 and server under test share a host, which is common practice in this genre and
 removes network variance as a confound, though it can understate network-bound
-effects. As a partial check on whether Prisma's near-native throughput depends on
+effects, and process separation on one host is not hardware isolation: the primary
+campaign did not pin the application, database, and generator to disjoint cores, so
+scheduler and shared-cache contention between them is possible (the host is a
+16-vCPU, single-NUMA cloud instance; the environment capture in the replication
+package records governor, NUMA, and affinity). A resource-isolation check re-ran the
+representative deep-fetch cells with the three components pinned to disjoint core
+sets (\texttt{ISO\_} run, replication package): the isolated and shared-host medians
+agree within about 2\% (ratios 0.98--1.01 across pg, Prisma, and MikroORM), and the layer ordering is unchanged, so same-host contention
+is not driving the reported ranking. As a partial check on whether Prisma's near-native throughput depends on
 having spare CPU to spend, we confined the server process to 1, 2, or 4 cores with
 \texttt{taskset} while holding the database and load generator on disjoint cores
 (Supplement Table~S4): the native driver reaches its full throughput on a

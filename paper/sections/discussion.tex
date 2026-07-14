@@ -143,6 +143,14 @@ the underlying database technology modulates the cost of a given mapping strateg
 consistent with earlier quantitative ORM work~\cite{lorenz2017orm}, and the ranking
 itself is engine-specific: unlike every read pattern, the write ranking does not
 transfer across engines (Spearman $\rho = 0.43$ versus $\rho \geq 0.89$ for reads).
+The single-row insert is not the only write shape: a transactional multi-statement
+write, inserting a post and five comments in one transaction, spreads the
+representative layers only $3.3\times$ (Prisma 2412 down to MikroORM 740~req/s;
+Supplement Table~S8), close to the single-row insert and far below the $6.6\times$
+read spread, because the transaction's single commit amortizes the per-commit flush
+across six inserts. The layer ordering tracks the single-row insert, so the write
+conclusions extend to that transactional pattern for the representative layers
+measured.
 
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking.}

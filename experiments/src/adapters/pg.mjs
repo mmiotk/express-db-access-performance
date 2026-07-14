@@ -75,6 +75,24 @@ export default async function createAdapter({ config }) {
       return { id: Number(rows[0].id) };
     },
 
+    // Transactional multi-statement write (review 6.7): insert a post and its
+    // comments in one transaction, through this layer's transaction facility.
+    async createThread({ authorId, title, body, comments }) {
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        const { rows } = await client.query(
+          'INSERT INTO posts(author_id, title, body) VALUES ($1, $2, $3) RETURNING id', [authorId, title, body]);
+        const pid = rows[0].id;
+        for (const c of comments) {
+          await client.query('INSERT INTO comments(post_id, author_id, body) VALUES ($1, $2, $3)', [pid, c.authorId, c.body]);
+        }
+        await client.query('COMMIT');
+        return { post_id: Number(pid), comments: comments.length };
+      } catch (e) { await client.query('ROLLBACK'); throw e; }
+      finally { client.release(); }
+    },
+
     poolStats() {
       return { used: pool.totalCount - pool.idleCount, free: pool.idleCount, pending: pool.waitingCount };
     },

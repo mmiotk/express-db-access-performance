@@ -100,6 +100,17 @@ export default async function createAdapter({ engine, config }) {
       return { id: num(row.id) };
     },
 
+    // Transactional multi-statement write (review 6.7): post + comments in one
+    // transaction, through TypeORM's transaction facility.
+    async createThread({ authorId, title, body, comments }) {
+      return ds.transaction(async (mgr) => {
+        const post = await mgr.getRepository('Post').save({ author_id: authorId, title, body, views: 0, published: true });
+        await mgr.getRepository('Comment').insert(
+          comments.map((c) => ({ post_id: post.id, author_id: c.authorId, body: c.body })));
+        return { post_id: num(post.id), comments: comments.length };
+      });
+    },
+
     poolStats() {
       const d = ds.driver;
       const pgPool = d.master; // postgres driver

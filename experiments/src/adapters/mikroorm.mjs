@@ -110,6 +110,19 @@ export default async function createAdapter({ engine, config }) {
       return { id: num(post.id) };
     },
 
+    // Transactional multi-statement write (review 6.7): post + comments in one
+    // transaction, through MikroORM's unit-of-work transaction facility.
+    async createThread({ authorId, title, body, comments }) {
+      const em = orm.em.fork();
+      return em.transactional(async (tem) => {
+        const post = tem.create(Post, { author: tem.getReference(Author, authorId), title, body, views: 0, published: true });
+        await tem.persistAndFlush(post);
+        for (const c of comments) tem.create(Comment, { post, author: tem.getReference(Author, c.authorId), body: c.body });
+        await tem.flush();
+        return { post_id: num(post.id), comments: comments.length };
+      });
+    },
+
     poolStats() {
       const k = orm.em.getConnection().getKnex?.();
       const p = k?.client?.pool; if (!p) return null;

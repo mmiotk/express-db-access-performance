@@ -1,0 +1,242 @@
+[
+  {
+    "adapter": "pg",
+    "pool": 1,
+    "rps": 895,
+    "rps_samples": [
+      886,
+      895,
+      898
+    ]
+  },
+  {
+    "adapter": "pg",
+    "pool": 2,
+    "rps": 1732,
+    "rps_samples": [
+      1708,
+      1732,
+      1740
+    ]
+  },
+  {
+    "adapter": "pg",
+    "pool": 5,
+    "rps": 3203,
+    "rps_samples": [
+      3146,
+      3213,
+      3203
+    ]
+  },
+  {
+    "adapter": "pg",
+    "pool": 10,
+    "rps": 3672,
+    "rps_samples": [
+      3638,
+      3672,
+      3693
+    ]
+  },
+  {
+    "adapter": "pg",
+    "pool": 20,
+    "rps": 3764,
+    "rps_samples": [
+      3764,
+      3755,
+      3801
+    ]
+  },
+  {
+    "adapter": "pg",
+    "pool": 50,
+    "rps": 3697,
+    "rps_samples": [
+      3714,
+      3697,
+      3690
+    ]
+  },
+  {
+    "adapter": "knex",
+    "pool": 1,
+    "rps": 750,
+    "rps_samples": [
+      744,
+      750,
+      750
+    ]
+  },
+  {
+    "adapter": "knex",
+    "pool": 2,
+    "rps": 1423,
+    "rps_samples": [
+      1379,
+      1425,
+      1423
+    ]
+  },
+  {
+    "adapter": "knex",
+    "pool": 5,
+    "rps": 2455,
+    "rps_samples": [
+      2410,
+      2460,
+      2455
+    ]
+  },
+  {
+    "adapter": "knex",
+    "pool": 10,
+    "rps": 2499,
+    "rps_samples": [
+      2440,
+      2499,
+      2500
+    ]
+  },
+  {
+    "adapter": "knex",
+    "pool": 20,
+    "rps": 2648,
+    "rps_samples": [
+      2627,
+      2684,
+      2648
+    ]
+  },
+  {
+    "adapter": "knex",
+    "pool": 50,
+    "rps": 2577,
+    "rps_samples": [
+      2541,
+      2577,
+      2583
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "pool": 1,
+    "rps": 949,
+    "rps_samples": [
+      941,
+      949,
+      956
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "pool": 2,
+    "rps": 1670,
+    "rps_samples": [
+      1644,
+      1670,
+      1679
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "pool": 5,
+    "rps": 3446,
+    "rps_samples": [
+      3446,
+      3540,
+      3408
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "pool": 10,
+    "rps": 3351,
+    "rps_samples": [
+      3346,
+      3351,
+      3676
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "pool": 20,
+    "rps": 3651,
+    "rps_samples": [
+      3614,
+      3656,
+      3651
+    ]
+  },
+  {
+    "adapter": "prisma",
+    "pool": 50,
+    "rps": 3565,
+    "rps_samples": [
+      3504,
+      3593,
+      3565
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "pool": 1,
+    "rps": 535,
+    "rps_samples": [
+      518,
+      535,
+      551
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "pool": 2,
+    "rps": 539,
+    "rps_samples": [
+      533,
+      539,
+      553
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "pool": 5,
+    "rps": 548,
+    "rps_samples": [
+      527,
+      548,
+      562
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "pool": 10,
+    "rps": 570,
+    "rps_samples": [
+      543,
+      570,
+      584
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "pool": 20,
+    "rps": 584,
+    "rps_samples": [
+      555,
+      584,
+      598
+    ]
+  },
+  {
+    "adapter": "mikroorm",
+    "pool": 50,
+    "rps": 587,
+    "rps_samples": [
+      558,
+      587,
+      599
+    ]
+  }
+]
