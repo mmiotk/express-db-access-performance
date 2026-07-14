@@ -278,7 +278,7 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
 // INDEP mode (P3/P8): each replicate boots a FRESH server per cell and takes one
 // measured run, so replicates are independent processes rather than repeats within
 // one process; cell order is randomized per replicate. Writes results/raw-indep.json
-// (separate from raw.json), with rps_samples holding the N independent replicate
+// (separate from raw.json), with rps_samples holding the N repeated run
 // values for bootstrap CIs and CV.
 async function mainIndep() {
   const REPLICATES = Number(env('REPLICATES', 5));
@@ -354,7 +354,7 @@ async function mainIndep() {
   }
   await writeFile(join(resultsDir, 'traces-sample.json'), JSON.stringify(sample, null, 2));
   await writeFile(join(resultsDir, `${OUT}.json`), JSON.stringify(rows, null, 2));
-  console.log(`\nWrote ${rows.length} rows → results/${OUT}.json (${REPLICATES} independent replicates, order=${ORDER}, paired streams, write-rebuild=${REBUILD_WRITES}, ${DURATION}s runs).`);
+  console.log(`\nWrote ${rows.length} rows → results/${OUT}.json (${REPLICATES} repeated runs, order=${ORDER}, paired streams, write-rebuild=${REBUILD_WRITES}, ${DURATION}s runs).`);
 }
 
 async function main() {

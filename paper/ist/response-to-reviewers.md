@@ -77,9 +77,10 @@ consumed. Prisma's throughput parity is therefore specific to a deployment that 
 cores idle. The single-host topology, and its consequences for the CPU comparison, are
 disclosed prominently.
 
-**§6.6 — "25 independent replicates."** Corrected to "25 repeated runs" throughout,
-including the table captions and the generic build. The manuscript's own
-non-independence paragraphs are retained.
+**§6.6 — "25 independent replicates."** Corrected to "25 repeated runs" throughout —
+the body, the main-text and supplement table captions, the generic build, and the
+table-generating scripts (so a re-run of the pipeline is also clean). The
+manuscript's own non-independence paragraphs are retained.
 
 **§6.7 — narrow workload / broad recommendations.** Recommendations are now scoped to
 "the benchmarked implementations in this configuration, workload, and host," and the
@@ -136,8 +137,8 @@ to check are already implemented as recommended:
 6. **Bootstrap resampling unit?** Replicate index (25 run-level values), seeded.
 7. **p99 tests on 25 run-level values?** Yes.
 8. **Why saturated p99 primary vs replicated open-loop at controlled utilization?**
-   Both are now reported; the utilization-controlled open-loop is the intrinsic-tail
-   evidence.
+   Both are now reported; the utilization-controlled open-loop is the near-intrinsic
+   latency evidence.
 9. **Processes CPU-pinned?** DB/server/generator share the host; the equal-CPU control
    pins the server; single-host is disclosed.
 10. **Steal time / frequency / neighbours?** Uncontrolled on the virtualized host;

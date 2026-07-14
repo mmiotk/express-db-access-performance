@@ -17,13 +17,10 @@ shows this cost is bounded but not attributable to any single mechanism
 (Section~\ref{sec:results}). Read rankings are stable across the two
 engines, and Prisma shows that, in this configuration, an ORM need not imply
 large overhead, at a CPU premium the equal-CPU control now quantifies
-directly (Section~\ref{sec:results}). Writes are the exception: unlike every
-read pattern, the write ranking does not transfer across engines at all, a
-caution against generalizing single-engine write results and not a
-durability artifact, as a symmetric relaxed-durability run confirms
-(Section~\ref{sec:discussion}). Development also surfaced a reusable
-checklist of four benchmarking pitfalls specific to this genre, several
-caught by the correctness cross-check and the rest by performance analysis
+directly (Section~\ref{sec:results}). Writes are the exception: the write ranking
+does not transfer across engines, a caution against generalizing single-engine
+write results (Section~\ref{sec:discussion}). Development also surfaced a reusable
+checklist of four benchmarking pitfalls specific to this genre
 (Section~\ref{sec:discussion}).
 
 These findings held under a concurrency sweep (1 to 256 connections, ranking

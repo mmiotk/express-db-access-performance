@@ -18,7 +18,7 @@ import { config as cfg } from '../src/config.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 const SEED_POSTS = cfg.seed.posts;
 const env = (k, d) => process.env[k] ?? d;
-// OL_ENGINE selects the database engine (review 6.2: the open-loop intrinsic-tail
+// OL_ENGINE selects the database engine (review 6.2: the open-loop saturated-tail
 // companion is now run on BOTH engines, not PostgreSQL only). The native driver
 // differs by engine, so the default layer set adapts.
 const OL_ENGINE = env('OL_ENGINE', 'postgres');

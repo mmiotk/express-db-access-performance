@@ -173,7 +173,7 @@ Direct \texttt{performance\_schema} instrumentation attributes this floor to the
 commit path: the redo-log and binlog flush takes $0.57$--$0.69$~ms per insert,
 $38$--$40\%$ of each insert wall time and nearly identical across the native
 driver, query builder, and slowest ORM. The flush partly overlaps other work, so
-relaxing durability lifts throughput by $17$--$24\%$ rather than by its full
+relaxing durability lifts throughput by $19$--$24\%$ rather than by its full
 wall-time share, but the floor is shared and engine-side, not layer-specific
 (Supplement Table~S19). PostgreSQL, by contrast, spreads $3.86\times$
 (\texttt{pg} 6{,}064 down to MikroORM 1{,}571, CI [3.77--3.98]). A
@@ -204,7 +204,7 @@ alone).
 The primary deep-fetch workload uses posts with roughly ten comments on average.
 A fan-out sweep across 0, 1, 10, 50, 100, and 500 comments (both engines, medians of
 eight repeated runs) shows the native-relative spread is \emph{roughly constant} with
-graph size---about $5.5$--$6\times$ on PostgreSQL and $4.5$--$5\times$ on MySQL across
+graph size---about $5.5$--$6\times$ on PostgreSQL and $3.5$--$4\times$ on MySQL across
 the whole range---so on this schema the deep-fetch deficit behaves as a fixed
 multiplier rather than one that grows with the graph. (An earlier three-run sweep had
 suggested a growing spread; that did not survive replication, so we report the
@@ -256,7 +256,7 @@ rates as soon as the offered load crosses their capacity, whereas the lightweigh
 layers degrade gradually over a wider range. The same open-loop sweep on MySQL
 (Supplement Table~S17) reproduces this pattern---flat sub-saturation tails and
 capacity-crossing collapse---so the saturated-tail ordering is engine-robust.
-Crucially, that saturated tail tracks capacity, not intrinsic latency. Offering each
+That saturated tail tracks capacity, not intrinsic latency. Offering each
 layer 50/70/85/95\% of \emph{its own} saturating throughput
 (coordinated-omission-corrected, five runs, both engines; Supplement
 Tables~S21--S22), the tails converge: at 50\% utilization every layer holds p99 near
@@ -315,25 +315,13 @@ practical tie, and every step below it as both statistically and practically
 supported.
 
 \subsection{Scaling with concurrency}
-Figure~\ref{fig:scaling} sweeps the deep/nested fetch from 1 to 256 connections
-(a separate sweep on PostgreSQL). The coarse three-band ordering, native and
-tuned-native together with Prisma on top, the query builder and the lightweight
-ORM in a middle band, and the data-mapper ORMs below, holds at every operating
-point at or above 32 connections; at 8 connections Prisma's engine is still
-mid-pack (1{,}869~req/s, below Knex's 2{,}438), joining the top band only from
-32 upward. Within the top band, \texttt{pg} and
-\texttt{pg-tuned} lead Prisma at every concurrency from 8 upward (for example, at
-256 connections: \texttt{pg-tuned} 3{,}709, \texttt{pg} 3{,}511, Prisma
-3{,}203), so Prisma's near-native parity at the primary 50-connection operating
-point does not extend to an outright lead at higher concurrency in this sweep.
-At a single connection the ranking differs from the higher-concurrency regime
-(the workload is latency- rather than throughput-bound at that point), and
-Prisma is among the slowest layers there (503~req/s). The lightweight layers
-reach a substantially higher throughput ceiling than the data-mapper ORMs across the
-whole load range, so the RQ1 finding is not an artifact of the single
-50-connection operating point.
-
-\input{\tabledir fig_scaling}
+A concurrency sweep from 1 to 256 connections (Supplement Figure~S1) confirms the
+coarse three-band ordering holds at every operating point above about 32
+connections, and that \texttt{pg}/\texttt{pg-tuned} lead Prisma at every concurrency
+from 8 upward---so Prisma's near-native parity at the 50-connection operating point
+does not extend to an outright lead at higher concurrency. The 50-connection
+operating point sits above the knee for every layer, so the RQ1 finding is not an
+artifact of that single point.
 
 \subsection{Resource footprint}
 Throughput is not the only cost (Table~\ref{tab:resources_main}). Prisma's

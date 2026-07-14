@@ -17,9 +17,10 @@
     Primary   & Closed-loop p99 tail latency, same cells                & Paired permutation, Wilcoxon,      \\
               &                                                         & per-cell bootstrap CI on p99       \\
     \midrule
-    Secondary & Same-SQL (raw-path) contrast                            & Bounds the raw-execution component \\
-    Secondary & Sub-saturation open-loop tail (coordinated-omission     & Intrinsic-tail companion to the    \\
-              & corrected)                                              & saturated primary p99              \\
+    Secondary & Same-SQL (raw-path) contrast                            & Bounds the residual (compound)     \\
+              &                                                         & same-SQL difference                \\
+    Secondary & Sub-saturation open-loop tail (coordinated-omission     & Near-intrinsic latency companion   \\
+              & corrected)                                              & to the saturated primary p99       \\
     Secondary & Layer$\times$engine interaction (per pattern)           & Blocked permutation ($F$ on $D$)   \\
     Secondary & Combined app$+$db CPU efficiency, equal-CPU control     & End-to-end compute view; operational \\
               &                                                         & confirmation of the CPU trade      \\

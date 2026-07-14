@@ -37,7 +37,7 @@ stage durability-default node scripts/set-durability.mjs default || exit 1
 # S2 warm-up curves (PG; fast / engine-threaded / slowest layer) — justifies WARMUP
 stage warmupcurve node scripts/warmupcurve.mjs
 
-# S3 PRIMARY: 25 independent replicates x 18 cells (9+2 layers x engines),
+# S3 PRIMARY: 25 repeated runs x 18 cells (9+2 layers x engines),
 # shuffled cell order, 12s runs, 15s warm-up (exceeds the slowest cold-start
 # stabilization measured by S2: MikroORM 13s), write measured in a dedicated
 # boot after a physical rebuild, DEFAULT durability. THE dataset of the paper.
