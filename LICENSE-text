@@ -2,8 +2,10 @@ Creative Commons Attribution 4.0 International (CC BY 4.0)
 
 Copyright (c) 2026 Mateusz Miotk
 
-The paper text (paper/) and working notes (notes/) in this repository are
-licensed under the Creative Commons Attribution 4.0 International License.
+The paper text (paper/), working notes (notes/), and the measurement datasets
+(experiments/results/, including the raw per-cell JSON and the generated tables)
+in this repository are licensed under the Creative Commons Attribution 4.0
+International License.
 
 You are free to share and adapt the material for any purpose, even commercially,
 provided you give appropriate credit, provide a link to the license, and indicate

@@ -19,12 +19,11 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 
 | Paper label | File | Generator | Input data |
 |---|---|---|---|
-| `tab:point_read` … `tab:write` | `point_read.tex` … `write.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
-| `tab:patterns`, `tab:versions` | inline in `sections/methodology.tex` | hand-authored | — |
-| `tab:cv` | `cv_all.tex` | `bench/analyze.mjs` (`cvTable`, `ENGINE=postgres`) | `results/raw.json` |
+| `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
+| `tab:resources_main` | `resources_main.tex` | `bench/analyze.mjs` (`resourceMainTable`) | `results/raw.json` |
+| `tab:outcomes` | `outcomes.tex` | hand-authored (analysis-plan map) | — |
+| `tab:patterns` | inline in `sections/methodology.tex` | hand-authored | — |
 | `tab:significance` | `significance_deep_fetch.tex` | `bench/analyze.mjs` (`significanceTable`, paired) | `results/raw.json` |
-| `tab:resources` | `resources.tex` | `bench/analyze.mjs` (`resourceTable`) | `results/raw.json` |
-| `tab:sameplan` | `sameplan.tex` | `scripts/sameplan.mjs` | `results/sameplan.json`, `results/raw.json` |
 | `tab:prior_art` | inline in `sections/related_work.tex` | hand-authored | literature search (`notes/related-work-search.md`) |
 | `fig:scaling` | `fig_scaling.tex` | `bench/scaling.mjs` | `results/scaling.json` |
 | `fig:cpu_tradeoff` | `fig_cpu_tradeoff.tex` | `scripts/gen-tables.mjs` | `results/raw.json` |
@@ -39,6 +38,30 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:equalcpu` | S4 | `equalcpu.tex` | `scripts/gen-tables.mjs` | `results/equalcpu.json` |
 | `tab:cpu_efficiency` | S5 | `cpu_efficiency.tex` | `bench/analyze.mjs` (`cpuEfficiencyTable`) | `results/raw.json` |
 | `tab:openloop` | S6 | `openloop.tex` | `scripts/openloop2.mjs` | `results/openloop2.json` |
+| `tab:poolsize` | S7 | `poolsize.tex` | `scripts/gen-tables.mjs` | `results/poolsize.json` |
+| `tab:txn_write` | S8 | `txn_write.tex` | `scripts/gen-tables.mjs` | `results/txn-write.json` |
+| `tab:cv` | S9 | `cv_all.tex` | `bench/analyze.mjs` (`cvTable`, `ENGINE=postgres`) | `results/raw.json` |
+| `tab:resources` | S10 | `resources.tex` | `bench/analyze.mjs` (`resourceTable`) | `results/raw.json` |
+| `tab:versions` | S11 | inline in `supplement.tex` | hand-authored (lockfile) | — |
+| `tab:point_read` | S12 | `point_read.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
+| `tab:range_scan` | S13 | `range_scan.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
+| `tab:sameplan` | S14 | `sameplan.tex` | `scripts/sameplan.mjs` | `results/sameplan.json`, `results/raw.json` |
+| `tab:aggregation` | S15 | `aggregation.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
+| `tab:adapter_choices` | S16 | `adapter_choices.tex` | hand-authored (from `src/adapters/*`, verified) | `METHODOLOGY.md` |
+
+## Per-cell provenance (run id → table cell)
+
+Each record in `results/raw.json` is keyed by `(adapter, engine, endpoint)` and
+carries the full `rps_samples`/`p99_samples` arrays plus the CPU, memory, and pool
+fields for that cell. A table cell — e.g. the deep-fetch PostgreSQL Prisma
+throughput in `tab:deep_fetch` — is the median of the `rps_samples` of the
+`raw.json` record with `adapter="prisma"`, `engine="postgres"`,
+`endpoint="deep_fetch"`; its p99 is the median of that record's `p99_samples`. The
+generators listed above perform exactly this lookup, so any printed number can be
+traced to one raw record. The database schema, index DDL, and effective server
+configuration for both engines are in `schema/db-config.md` (and `schema/*.sql`);
+the per-adapter idiomatic deep-fetch choices are in `METHODOLOGY.md`. The
+statistical estimators are unit-tested in `bench/stats.test.mjs` (`npm test`).
 
 ## Inferential results (`results/analysis2.json`, `results/significance_paired_*.json`)
 

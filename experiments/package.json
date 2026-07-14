@@ -21,7 +21,8 @@
     "env": "node bench/environment.mjs",
     "bench": "node bench/environment.mjs && node bench/runner.mjs",
     "bench:quick": "ADAPTERS=pg,knex,drizzle,prisma ENGINES=postgres DURATION=3 REPEATS=1 node bench/runner.mjs",
-    "sync:tables": "cp results/tables/*.tex ../paper/tables/"
+    "sync:tables": "cp results/tables/*.tex ../paper/tables/",
+    "test": "node --test 'bench/*.test.mjs'"
   },
   "dependencies": {
     "@mikro-orm/core": "^6.4.0",

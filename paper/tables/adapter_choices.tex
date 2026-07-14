@@ -1,0 +1,31 @@
+% hand-authored — idiomatic deep-fetch choice per access layer (see experiments/METHODOLOGY.md)
+\begin{table}[htbp]
+  \centering
+  \caption{Idiomatic deep-fetch implementation per access layer: the eager-loading
+    API actually used, the SQL round trips it issues (measured from server-side
+    statement logging for the portable layers; by construction for the native
+    variants), the documented alternative loading strategy we did \emph{not} use,
+    and the query-logging state. Query logging is disabled everywhere; no lifecycle
+    hooks or validation run on the read path (details in the replication package's
+    \texttt{METHODOLOGY.md}).}
+  \label{tab:adapter_choices}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{l l c l c}
+    \toprule
+    Layer & Deep-fetch API & Round-trips & Alternative not used & Logging \\
+    \midrule
+    \texttt{pg}           & hand-written JOIN $\times 2$        & 2 & n/a (hand-written SQL)                 & off \\
+    \texttt{mysql2}       & hand-written JOIN $\times 2$        & 2 & n/a (hand-written SQL)                 & off \\
+    \texttt{pg-tuned}     & named-prepared JOIN $\times 2$      & 2 & n/a (hand-written SQL)                 & off \\
+    \texttt{mysql2-tuned} & \texttt{execute()} JOIN $\times 2$  & 2 & n/a (hand-written SQL)                 & off \\
+    \texttt{knex}         & builder \texttt{.join()} $\times 2$ & 2 & n/a (hand-written SQL)                 & off \\
+    \texttt{drizzle}      & builder \texttt{.innerJoin()} $\times 2$ & 2 & relational query API (\texttt{db.query}) & off \\
+    \texttt{prisma}       & \texttt{include:}                   & 4 & \texttt{relationLoadStrategy:\,'join'} & off \\
+    \texttt{sequelize}    & \texttt{include:} (\texttt{separate:false}) & 1 & \texttt{separate:true} (select-in)  & off \\
+    \texttt{typeorm}      & \texttt{relations:}                 & 2 & \texttt{relationLoadStrategy:\,'query'} & off \\
+    \texttt{objection}    & \texttt{.withGraphFetched()}        & 4 & \texttt{.withGraphJoined()}            & off \\
+    \texttt{mikroorm}     & \texttt{populate:}                  & 1 & \texttt{strategy:\,'select-in'}        & off \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

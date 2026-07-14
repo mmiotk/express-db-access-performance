@@ -193,4 +193,19 @@ reports the ranking and the leading figures.
 
 \input{\tabledir aggregation}
 
+\section{Idiomatic deep-fetch choices per access layer}
+\label{sup:adapter-choices}
+Table~\ref{tab:adapter_choices} documents, for each access layer, the exact
+eager-loading API used on the deep/nested fetch, the number of SQL round trips it
+issues, the documented alternative loading strategy we did \emph{not} use, and the
+query-logging state. Every layer uses its documented default (idiomatic) path;
+query logging is disabled and verified on all eleven adapters, and no lifecycle
+hooks or validation run on the read path. The six data-mapper and ORM layers split
+both ways on the join-versus-select-in default: Sequelize, TypeORM, and MikroORM
+default to a single join, while Prisma and Objection default to separate batched
+queries, so a loading-strategy sensitivity check probes both directions. Full
+per-adapter detail is in the replication package's \texttt{METHODOLOGY.md}.
+
+\input{\tabledir adapter_choices}
+
 \end{document}

@@ -119,7 +119,13 @@ public, commercial, or not-for-profit sectors.
 During the preparation of this work the author used a large language model (Claude,
 Anthropic) to assist with drafting and editing the manuscript and with implementing
 and analyzing the benchmark harness. After using this tool, the author reviewed and
-edited the content as needed and takes full responsibility for the content.
+edited the content as needed and takes full responsibility for the content. All
+AI-assisted code was verified: the statistical estimators carry unit tests against
+hand-computed values and known closed-form properties
+(\texttt{bench/stats.test.mjs}), every reported table cell traces to a raw per-cell
+record through a committed generator (\texttt{MANIFEST.md}), and the byte-level
+correctness cross-check independently confirms that all layers return identical
+responses before any timing is trusted.
 
 \printbibliography
 
