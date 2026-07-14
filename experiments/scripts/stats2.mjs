@@ -78,25 +78,46 @@ for (const ep of PATTERNS) for (const e of ['postgres', 'mysql']) {
   console.log(`(2) spread ${ep}/${e}: ${spread.toFixed(2)}x [${lo.toFixed(2)}, ${hi.toFixed(2)}] (vs ${slowest.adapter})`);
 }
 
-// ---------- (3) p99: per-cell CIs + PAIRED adjacent-pair tests (deep fetch, PG) -
-{
-  const cells = ORD.filter((a) => g(a, 'deep_fetch', 'postgres'))
-    .map((a) => ({ a, r: g(a, 'deep_fetch', 'postgres') }))
-    .sort((x, y) => y.r.rps - x.r.rps);
-  out.p99 = cells.map(({ a, r }) => {
+// ---------- (3) p99 inference for EVERY pattern x engine (review 6.9/8) ---------
+// Per-cell bootstrap CI on the per-replicate p99, plus PAIRED permutation +
+// Wilcoxon adjacent-pair tests on the ranked p99 ladder. The tail is co-primary
+// with throughput, so it gets the same paired treatment, not just deep_fetch/PG.
+out.p99 = {};
+out.p99Pairs = {};
+for (const e of ['postgres', 'mysql']) for (const ep of PATTERNS) {
+  const cells = ORD.filter((a) => g(a, ep, e))
+    .map((a) => ({ a, r: g(a, ep, e) }))
+    .filter((x) => x.r && x.r.p99_samples)
+    .sort((x, y) => median(x.r.p99_samples) - median(y.r.p99_samples)); // ascending: fastest tail first
+  const key = `${ep}/${e}`;
+  out.p99[key] = cells.map(({ a, r }) => {
     const s = r.p99_samples;
     const [lo, hi] = bootCI(() => median(resample(s)));
     return { adapter: a, p99: median(s), ci95: [+lo.toFixed(1), +hi.toFixed(1)], nRequestsApprox: Math.round(r.rps * r.duration), errors: r.errors, timeouts: r.timeouts, non2xx: r.non2xx };
   });
-  out.p99Pairs = [];
+  const pairs = [];
   for (let i = 0; i + 1 < cells.length; i++) {
-    // p99 is higher (worse) for the slower layer B; test B_p99 > A_p99 pairwise
-    const A = cells[i].r.p99_samples, Bb = cells[i + 1].r.p99_samples;
-    const n = Math.min(A.length, Bb.length);
-    const perm = pairedPermutation(Bb.slice(0, n), A.slice(0, n), { B: 20000, rand });
-    out.p99Pairs.push({ pair: `${cells[i + 1].a} vs ${cells[i].a}`, medSlower: median(Bb), medFaster: median(A), ratio: +geomMeanRatio(Bb.slice(0, n), A.slice(0, n)).toFixed(2), paired_perm_p: perm.p });
+    // slower-tail layer is B (higher p99); test B_p99 > A_p99 pairwise on log-ratios
+    const B = cells[i + 1].r.p99_samples, A = cells[i].r.p99_samples;
+    const n = Math.min(A.length, B.length);
+    const perm = pairedPermutation(B.slice(0, n), A.slice(0, n), { B: 20000, rand });
+    const wil = wilcoxonSignedRank(B.slice(0, n), A.slice(0, n));
+    pairs.push({ pair: `${cells[i + 1].a}>${cells[i].a}`, ratio: +geomMeanRatio(B.slice(0, n), A.slice(0, n)).toFixed(2), paired_perm_p: perm.p, wilcoxon_p: +wil.p.toFixed(4) });
   }
-  console.log(`(3) p99 deep/PG (median [95% CI]): ` + out.p99.map((x) => `${x.adapter} ${x.p99}[${x.ci95}]`).join('  '));
+  out.p99Pairs[key] = pairs;
+}
+// console: deep/PG ladder + how many adjacent p99 pairs separate per pattern/engine
+console.log(`(3) p99 deep/PG (median [95% CI]): ` + out.p99['deep_fetch/postgres'].map((x) => `${x.adapter} ${x.p99}[${x.ci95}]`).join('  '));
+for (const e of ['postgres', 'mysql']) for (const ep of PATTERNS) {
+  const pr = out.p99Pairs[`${ep}/${e}`];
+  const sig = pr.filter((p) => p.paired_perm_p < 0.05).length;
+  console.log(`    p99 ${ep}/${e}: ${sig}/${pr.length} adjacent pairs separate (p<0.05)`);
+}
+// all-zero error attestation across the primary matrix
+{
+  const tot = rows.reduce((s, r) => ({ e: s.e + (r.errors || 0), t: s.t + (r.timeouts || 0), n: s.n + (r.non2xx || 0) }), { e: 0, t: 0, n: 0 });
+  out.primaryErrors = { errors: tot.e, timeouts: tot.t, non2xx: tot.n, cells: rows.length };
+  console.log(`    primary matrix errors/timeouts/non2xx: ${tot.e}/${tot.t}/${tot.n} across ${rows.length} cells`);
 }
 
 // ---------- (4) RQ2: rank agreement (descriptive) + BLOCKED interaction test ----

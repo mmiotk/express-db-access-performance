@@ -236,7 +236,13 @@ so a heavyweight ORM's nested-fetch penalty is visible not only in mean capacity
 but in the saturated tail, a quantity single-metric, throughput-only vendor
 benchmarks omit. Each per-run p99 is computed by autocannon's HdrHistogram
 (sub-millisecond resolution, reported to the millisecond) over roughly
-\texttt{throughput}~$\times$~12~s completed requests.
+\texttt{throughput}~$\times$~12~s completed requests. The tail differences carry
+the same paired inference as throughput: on the deep fetch six of the seven
+adjacent p99 pairs separate under the paired permutation test with narrow
+per-replicate bootstrap 95\% CIs (the ladder above, replication package), and
+across the read patterns five to six of seven separate on each engine. On MySQL
+inserts, by contrast, no adjacent p99 pair separates (every layer at 135--155~ms),
+the tail counterpart of the throughput engine floor.
 
 These closed-loop p99 values come from a constant-concurrency generator. To
 check that the tail ranking is not an artifact of that model, we drove the
@@ -267,10 +273,17 @@ at most $7.6\%$ (\texttt{pg}, insert; Supplement Table~S9), and across the 40
 MySQL cells at most $6.6\%$ (Knex, insert; Supplement Table~S1); the
 largest relative median absolute deviation is $5.4\%$ (\texttt{pg}, insert,
 PostgreSQL). These maxima are well below the between-layer spreads reported
-above (up to $6.55\times$). One cell, Knex/PostgreSQL/insert, has $n=24$ rather
-than 25, the one write boot in the primary campaign that failed its
-post-rebuild health check (Section~\ref{sec:methodology}). A separate order-randomization check (forward versus reversed cell order,
-$n=5$ each, insert endpoint) found no detectable history effect
+above (up to $6.55\times$). Every measured request in the primary matrix
+succeeded: HTTP errors, connection-acquisition timeouts, and non-2xx responses
+were zero across all 90 cells' measurement windows (nonzero timeouts arise only
+in the deliberate open-loop overload runs below). One cell,
+Knex/PostgreSQL/insert, has $n=24$ rather than 25, the one write boot in the
+primary campaign that failed its post-rebuild health check
+(Section~\ref{sec:methodology}); the tabulated adjacent-pair tests are on the
+deep fetch, where every cell has the full 25 replicates, so this write cell does
+not enter them. A
+separate order-randomization check (forward versus reversed cell order, $n=5$
+each, insert endpoint) found no detectable history effect
 (Section~\ref{sec:methodology}).
 
 To confirm that neighboring ranks are not measurement artifacts, we compare
