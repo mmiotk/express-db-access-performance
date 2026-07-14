@@ -153,8 +153,9 @@ the design is a randomized block, compares adjacently ranked layers with
 \emph{paired} tests on their per-replicate throughput ratios (paired sign-flip
 permutation, cross-checked with Wilcoxon signed-rank; the CV tables (Supplement Tables~S1 and~S9),
 \ref{tab:significance}). Two bounds reinforce the ordering (Section~\ref{sec:results}):
-the widest spreads dwarf the run-to-run CV (at most $7.6\%$ on PostgreSQL and
-$6.6\%$ on MySQL, Supplement Table~S9), and the three-band ordering holds across
+the widest spreads dwarf the run-to-run CV (at most $7.6\%$ on PostgreSQL,
+Supplement Table~S9, and $6.6\%$ on MySQL, Supplement Table~S1), and the
+three-band ordering holds across
 the concurrency sweep at $\geq32$ connections (Fig.~\ref{fig:scaling}). On the
 deep/nested fetch, six of the seven adjacent pairs separate at the
 permutation-resolution floor with the faster layer ahead in nearly every
