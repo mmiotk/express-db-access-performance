@@ -30,11 +30,9 @@ under default durability, and unlike every read pattern the write ranking
 does not transfer across engines at all, a caution against generalizing
 single-engine write results, not a durability artifact as a symmetric
 relaxed-durability run confirms (Section~\ref{sec:discussion}). Development
-also surfaced a reusable checklist of benchmarking pitfalls (aggregation
-fan-out, \texttt{OFFSET}-versus-keyset pagination, write-workload
-contamination, and query-formulation confounds), several caught by the
-correctness cross-check and the rest by performance analysis
-(Section~\ref{sec:discussion}).
+also surfaced a reusable checklist of four benchmarking pitfalls specific to this
+genre, several caught by the correctness cross-check and the rest by performance
+analysis (Section~\ref{sec:discussion}).
 
 These findings held under a concurrency sweep (1 to 256 connections, ranking
 load-robust above 32) and under paired permutation and Wilcoxon tests

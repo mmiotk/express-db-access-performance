@@ -128,8 +128,9 @@ representative layers only $3.3\times$ (Prisma 2412 down to MikroORM
 740~req/s; Supplement Table~S8), close to the single-row insert and far below
 the widest read spread, because the transaction's single commit amortizes
 the per-commit flush across six inserts. The layer ordering tracks the
-single-row insert, so the write conclusions extend to that transactional
-pattern for the representative layers measured.
+single-row insert, except for a \texttt{pg}/Prisma swap at the top (both within a
+few percent on this pattern), so the write conclusions extend to that
+transactional pattern for the representative layers measured.
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking.}
 Reaching the figures above meant confronting four confounds that would

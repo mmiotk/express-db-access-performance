@@ -104,8 +104,8 @@ code its documentation recommends, so a measured difference reflects the SQL
 it generates, its round-trip count, and how it materializes results. One
 asymmetry is inherent to any driver-versus-ORM comparison: the native side's
 idiom is hand-authored SQL, whereas the ORM side's idiom is the library's
-default; the same-SQL control below quantifies how much of the difference
-that choice accounts for. The number of round trips is itself part of what
+default; the same-SQL control below bounds the raw-execution component of that
+difference. The number of round trips is itself part of what
 varies: the native drivers, Knex, and Drizzle issue a two-query deep fetch,
 whereas each ORM's eager-loading strategy selects its own query count and
 join shape. Server-side statement logging captures the exact SQL each layer
@@ -119,8 +119,9 @@ used, its round-trip count, the documented alternative loading strategy we did
 \emph{not} use, and that query logging is disabled with no read-path hooks or
 validation; the six ORMs split both ways on the join-versus-select-in default. A
 loading-strategy sensitivity check (Section~\ref{sec:results}) switches the
-join-default data-mapper ORMs to select-in, finding the idiomatic default the
-faster strategy wherever the alternative is a byte-identical drop-in. To separate a layer's
+join-default data-mapper ORMs to select-in and finds the idiomatic default the
+faster strategy, while Objection's batched-select-in default is beaten by a join on
+MySQL, wherever the alternative is a byte-identical drop-in. To separate a layer's
 execution machinery from its strategy choice, every adapter also implements a
 \emph{same-SQL control}: identical two-statement deep-fetch SQL (and, per
 engine, identical \texttt{EXPLAIN} plans) with identical row mapping,
@@ -289,8 +290,8 @@ cross-checked with the Wilcoxon signed-rank test. We report the
 geometric-mean paired ratio with a paired bootstrap 95\% CI and the paired
 dominance (fraction of replicates in which the faster layer wins). Because the
 seven adjacent pairs are defined by the \emph{observed} ranking rather than
-preregistered, we report them as planned pairwise contrasts along that ranking
-and treat the significances descriptively, applying a Bonferroni correction as a
+preregistered, we report them as post-hoc adjacent-rank comparisons and treat the
+significances descriptively, applying a Bonferroni correction as a
 conservatism check rather than claiming a confirmatory family. For the
 pg--Prisma pair we additionally report a paired two-one-sided-tests (TOST)
 equivalence result against a $\pm5\%$ margin on the log-ratio (justified below).

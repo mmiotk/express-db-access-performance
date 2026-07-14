@@ -10,7 +10,7 @@ the raw-execution component rather than a decomposition that isolates mechanisms
 We also ran the four targeted experiments the review pointed toward. All section and
 table references below are to the revised submission build (`ist/ist_main.tex`); a
 numbered online supplement (Supplement Tables S1–S20) accompanies it. Effective
-main-text length is 14,989 words, under the 15,000 limit (`word-count.pdf`).
+main-text length is 14,996 words, under the 15,000 limit (`word-count.pdf`).
 
 ## Overarching change: claim less, decisively
 
@@ -191,7 +191,7 @@ provenance, and the byte-identical correctness cross-check).
     script (`MANIFEST.md` maps every cell).
 19. **AI-assistance verification?** Byte-identical correctness cross-check,
     unit-tested estimators, and independent hand-recomputation of key statistics.
-20. **Effective word count?** 14,989 (`word-count.pdf`), under the 15,000 limit.
+20. **Effective word count?** 14,996 (`word-count.pdf`), under the 15,000 limit.
 
 We believe the paper now claims exactly what its design supports, backed by four new
 experiments and a fully unit-tested, provenance-tracked artifact. We thank the

@@ -247,7 +247,12 @@ restart of both database engines, a representative deep-fetch subset re-measured
 eight days after the primary campaign. The layer ranking reproduces on both engines
 (\texttt{pg}~$>$~Prisma~$\gg$~MikroORM on PostgreSQL; Prisma~$>$~\texttt{mysql2}~$\gg$~MikroORM
 on MySQL); absolute throughput is $3$--$23\%$ lower, the day-to-day host drift the
-paper's relative analysis is designed to absorb.
+paper's relative analysis is designed to absorb. Because PostgreSQL and MySQL cells
+are not measured simultaneously, this drift is non-uniform across engines (3\% on
+\texttt{mysql2}, 13\% on \texttt{pg}, 23\% on MikroORM/PostgreSQL), so the
+cross-engine interaction ratios could in principle carry some residual drift; they
+are far larger than 23\% (reads $1.0$--$1.6$, writes $2.4$--$7.7$), so the
+engine-dependence conclusion holds.
 
 \input{\tabledir postreboot}
 

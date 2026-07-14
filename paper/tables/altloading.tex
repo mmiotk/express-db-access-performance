@@ -12,7 +12,11 @@
     deficit \emph{is} a default-strategy choice. \texttt{typeorm} is omitted (its
     query strategy errors on the ordered nested \texttt{findOne} in the pinned
     version, itself a portability caveat), as is Objection on PostgreSQL, where
-    \texttt{withGraphJoined} did not return a byte-identical result.}
+    \texttt{withGraphJoined} did not return a byte-identical result. The idiomatic
+    column is re-measured in the same paired run (five replicates) as its
+    alternative, so its absolute values differ from Table~\ref{tab:deep_fetch} by
+    day-to-day drift; the idiomatic-versus-alternative ratio is the comparison of
+    interest.}
   \label{tab:altloading}
   \begin{tabular}{l l r r r r}
     \toprule

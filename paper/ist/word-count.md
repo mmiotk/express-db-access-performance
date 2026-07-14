@@ -8,10 +8,10 @@ with each table and figure counted as 200 words per the IST author guidelines.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 12,893 |
-| Structured abstract | 296 |
+| Body text (7 sections) | 12,898 |
+| Structured abstract | 298 |
 | Tables and figures in the main text (9 × 200) | 1,800 |
-| **Main-text total** | **14,989** |
+| **Main-text total** | **14,996** |
 
 This is under the journal's 15,000-word limit. The reference list (70 entries) is
 provided separately. Twenty tables are placed in the numbered online

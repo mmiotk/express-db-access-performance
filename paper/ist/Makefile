@@ -26,6 +26,8 @@ package: pdf
 	    -e 's|\.\./references|references|g' $(MAIN).tex > _package/$(MAIN).tex
 	@for f in ../sections/*.tex; do cp "$$f" "_package/sections_$$(basename $$f)"; done
 	@for f in ../tables/*.tex;   do cp "$$f" "_package/tables_$$(basename $$f)";   done
+	cp $(MAIN).pdf _package/
+	cp ../supplement.pdf _package/supplement.pdf
 	@cd _package && zip -qr ../ist-submission.zip . -x '*.DS_Store'
 	@echo "Self-contained sources: paper/ist/_package/  ->  ist-submission.zip"
 
