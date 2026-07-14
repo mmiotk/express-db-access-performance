@@ -122,4 +122,44 @@ transactional write.
 
 \input{\tabledir txn_write}
 
+\section{Dispersion on PostgreSQL}
+\label{sup:cv-pg}
+Table~\ref{tab:cv} gives the full per-layer, per-pattern coefficient of variation
+of throughput on PostgreSQL across the 25 independent replicates (maximum 7.6\%,
+\texttt{pg}/insert), the companion to the MySQL table in Section~S1.
+
+\input{\tabledir cv_all}
+
+\section{Resource footprint}
+\label{sup:resources}
+Table~\ref{tab:resources} gives the per-layer application-process CPU (median \%
+of one logical core) and peak resident memory on the deep/nested fetch
+(PostgreSQL), the detail behind the CPU trade-off discussed in the main text
+(Prisma $\approx498\%$, the other layers $\approx100\%$; peak RSS 204--271~MB).
+
+\input{\tabledir resources}
+
+\section{Pinned versions}
+\label{sup:versions}
+Table~\ref{tab:versions} lists the pinned versions of every evaluated access layer
+and tool, recorded from the lockfile on the measurement date.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Pinned versions of the evaluated access layers and tooling.}
+  \label{tab:versions}
+  \begin{tabular}{l l l l}
+    \toprule
+    Layer / tool & Version & Layer / tool & Version \\
+    \midrule
+    \texttt{pg}         & 8.22.0  & \texttt{sequelize}      & 6.37.8 \\
+    \texttt{mysql2}     & 3.22.5  & \texttt{typeorm}        & 0.3.30 \\
+    \texttt{knex}       & 3.3.0   & \texttt{objection}      & 3.1.5  \\
+    \texttt{drizzle-orm}& 0.36.4  & \texttt{@mikro-orm/core}& 6.6.15 \\
+    \texttt{@prisma/client} & 5.22.0 & \texttt{express}     & 4.22.2 \\
+    \texttt{autocannon} & 7.15.0  & PostgreSQL / MySQL      & 18.4 / 9.7.1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \end{document}

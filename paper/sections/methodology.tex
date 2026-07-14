@@ -7,18 +7,17 @@ quantifying its performance cost \emph{with respect to} throughput and tail
 latency \emph{from the point of view of} an application developer choosing a layer
 \emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. The
 design follows established guidelines for controlled experimentation in software
-engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines} and crosses the
-seven portable access layers with both engines and all five access patterns, plus
-the two engine-specific native drivers and their two tuned counterparts,
-\texttt{pg-tuned} and \texttt{mysql2-tuned} (an eleven-layer taxonomy: nine idiomatic
-layers and two tuned lower-bound baselines); the complete rationale, including the
-pitfalls each control guards against, is distributed with the replication package
-(\texttt{METHODOLOGY.md}). The design targets two distinct estimands, kept separate
-throughout: RQ1--RQ3 (Section~\ref{sec:results}) answer the
-\emph{default-configuration} estimand, the cost a practitioner incurs from each layer
-used idiomatically with its documented defaults, while the same-SQL control
-introduced below answers a \emph{decomposition} estimand, what remains once every
-layer executes identical SQL.
+engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines}, crossing
+seven portable access layers with both engines and all five patterns, plus two
+engine-specific native drivers and their tuned counterparts \texttt{pg-tuned}
+and \texttt{mysql2-tuned} (eleven layers: nine idiomatic, two tuned
+lower-bound baselines); the full rationale, including the pitfalls each
+control guards against, is distributed with the replication package
+(\texttt{METHODOLOGY.md}). Two estimands are kept separate throughout:
+RQ1--RQ3 (Section~\ref{sec:results}) answer the \emph{default-configuration}
+estimand, the cost a practitioner incurs from each layer used idiomatically,
+while the same-SQL control below answers a \emph{decomposition} estimand, what
+remains once every layer executes identical SQL.
 
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels spanning the
@@ -28,25 +27,25 @@ counterparts \texttt{pg-tuned} (named prepared statements reused across calls) a
 \texttt{execute()}), included as engine-specific lower-bound baselines rather than
 idiomatic treatments; the query builder Knex; and the ORMs Drizzle (a lightweight,
 query-builder-style ORM), Prisma, Sequelize, TypeORM, Objection, and MikroORM. We
-classify a library by its dominant interface rather than by its self-description:
-native drivers expose SQL and the wire protocol directly, query builders assemble
-SQL programmatically, and ORMs map rows to objects and manage associations; Drizzle
-sits at the query-builder end of the ORM range and Objection layers an ORM over
-Knex, which the results bear out. The nine idiomatic layers cover the taxonomy's
-three tiers but are a representative cross-section, not an exhaustive catalogue;
-other libraries (for example Kysely, Slonik, and pg-promise) are omitted. Vendor
-independence here means authorship: no evaluated library's maintainers were
-involved in the study and none was invited to inspect the adapters. It does not
-remove the consequential choices any benchmark author makes, which libraries to
-include, what counts as idiomatic use, the schema and endpoints, the pool size, and
-what tuning is allowed; we disclose these throughout and release the harness so each
-can be inspected and varied. The \emph{engine} has two levels, PostgreSQL~18.4
-and MySQL~9.7.1. The \emph{access pattern} has five levels, realized as HTTP
-endpoints (Table~\ref{tab:patterns}). The four native and tuned baselines are
-engine-specific (\texttt{pg}/\texttt{pg-tuned} run only on PostgreSQL,
-\texttt{mysql2}/\texttt{mysql2-tuned} only on MySQL); the other seven layers run on
-both engines, giving $4 + 7\times 2 = 18$ layer\,$\times$\,engine cells and
-$18\times 5 = 90$ measured configurations.
+classify a library by its dominant interface, not its self-description: native
+drivers expose SQL and the wire protocol directly, query builders assemble SQL
+programmatically, and ORMs map rows to objects and manage associations;
+Drizzle sits at the query-builder end of the ORM range and Objection layers an
+ORM over Knex, which the results bear out. The nine idiomatic layers cover the
+taxonomy's three tiers but are a representative cross-section, not an
+exhaustive catalogue; other libraries (for example Kysely, Slonik, and
+pg-promise) are omitted. Vendor independence here means authorship only: no
+evaluated library's maintainers were involved or invited to inspect the
+adapters. It does not remove the consequential choices any benchmark author
+makes (which libraries to include, what counts as idiomatic use, the schema
+and endpoints, the pool size, allowed tuning); we disclose these throughout
+and release the harness for inspection. The \emph{engine} has two levels,
+PostgreSQL~18.4 and MySQL~9.7.1. The \emph{access pattern} has five levels,
+realized as HTTP endpoints (Table~\ref{tab:patterns}). The four native and
+tuned baselines are engine-specific (\texttt{pg}/\texttt{pg-tuned} run only on
+PostgreSQL, \texttt{mysql2}/\texttt{mysql2-tuned} only on MySQL); the other
+seven layers run on both engines, giving $4 + 7\times 2 = 18$
+layer\,$\times$\,engine cells and $18\times 5 = 90$ measured configurations.
 
 \begin{table}[htbp]
   \centering
@@ -67,255 +66,249 @@ $18\times 5 = 90$ measured configurations.
 
 \subsection{Objects: schema, workload, and data}
 The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts}
-$1\!-\!*$ \texttt{comments} $*\!-\!1$ \texttt{authors}), which exercises a
-one-to-many relationship and a two-hop join for the deep fetch while remaining
-small enough to reason about. The five endpoints map onto the canonical access
-patterns a CRUD service issues~\cite{cooper2010ycsb}: a primary-key point read; a newest-first
-\emph{keyset} page (\texttt{WHERE id < cursor ORDER BY id DESC LIMIT}~$n$, using
-the primary-key index rather than a large \texttt{OFFSET}); a deep/nested fetch
-that returns a post together with its author and every comment, each with its own
-comment-author; a per-author aggregation (post count, comment count, total views);
-and a single-row insert. The database is loaded from a deterministic seed
-(2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments) by the native driver,
-independently of any layer under test, so that every engine receives byte-identical
-data. The working set fits in memory, so measurements reflect access-layer cost
-rather than storage latency; once memory-resident, per-request
-instruction and logging cost dominate execution rather than disk
-I/O~\cite{harizopoulos2008oltp}. Every request draws its target identifier uniformly
-at random from the full seeded range (posts $1$--$100{,}000$, authors
-$1$--$2{,}000$), so the load spreads across the whole working set rather than
-repeatedly hitting one hot record, and the read
-endpoints measure warm access-layer cost. A skewed, production-like key distribution
-is a planned variant (Section~\ref{sec:threats}).
+$1\!-\!*$ \texttt{comments} $*\!-\!1$ \texttt{authors}), exercising a
+one-to-many relationship and a two-hop join for the deep fetch while
+remaining small enough to reason about. The five endpoints map onto
+canonical CRUD access patterns~\cite{cooper2010ycsb}: a primary-key point
+read; a newest-first \emph{keyset} page (\texttt{WHERE id < cursor ORDER BY
+id DESC LIMIT}~$n$, using the primary-key index rather than a large
+\texttt{OFFSET}); a deep/nested fetch returning a post with its author and
+every comment, each with its own comment-author; a per-author aggregation
+(post count, comment count, total views); and a single-row insert. The
+database is loaded from a deterministic seed (2{,}000 authors, 100{,}000
+posts, 1{,}000{,}000 comments) by the native driver, independently of any
+layer under test, so every engine receives byte-identical data. The working
+set fits in memory, so measurements reflect access-layer cost rather than
+storage latency; once memory-resident, per-request instruction and logging
+cost dominate over disk I/O~\cite{harizopoulos2008oltp}. Every request draws
+its target identifier uniformly at random from the full seeded range (posts
+$1$--$100{,}000$, authors $1$--$2{,}000$), so load spreads across the whole
+working set rather than repeatedly hitting one hot record, and the read
+endpoints measure warm access-layer cost. A skewed, production-like key
+distribution is a planned variant (Section~\ref{sec:threats}).
 
 \subsection{The adapter contract and N+1 control}
-Every access layer implements the same factory interface (five query methods plus
-a teardown), so the Express server and the load runner are layer-agnostic. Each
-adapter returns an \emph{identical result shape}, and each uses that layer's
-\emph{recommended idiomatic} mechanism to avoid the N+1 query problem on the deep
-fetch: a hand-written join for the native drivers, the Knex query builder, and the
-query-builder-style Drizzle (the tuned baselines reuse the native drivers' join
-unchanged), and relation eager loading (\texttt{include}, \texttt{withGraphFetched},
-\texttt{populate}, or \texttt{relations}) for the data-mapper ORMs. The comparison is
-therefore one of \emph{idiomatic usage} rather than of a single fixed query plan:
-each layer runs the code its documentation recommends, so a measured difference
-reflects the access layer together with the SQL it generates, its round-trip count,
-and how it materializes results. One asymmetry is inherent to any driver-versus-ORM
-comparison: the native side's idiom is hand-authored SQL, whereas the ORM side's
-idiom is the library's default; the same-SQL control below quantifies how much of
-the difference that choice accounts for. The number of round trips is itself part of
-what varies: the native drivers, Knex, and Drizzle issue a two-query deep fetch,
-whereas each ORM's eager-loading strategy selects its own query count and join
-shape. Server-side statement logging captures the exact SQL each layer emits, its
-round-trip count, and \texttt{EXPLAIN} plans for the native statements; these are
-released with the replication package, and Supplement Table~S2 tabulates the
-per-endpoint counts. They differ by design: the deep fetch takes one query in
-Sequelize and MikroORM, two in the native drivers, Knex, Drizzle, and TypeORM, and
-four in Prisma and Objection. To separate a layer's execution machinery from its
-strategy choice, every adapter also implements a \emph{same-SQL control}: identical
-two-statement deep-fetch SQL (and, per engine, identical \texttt{EXPLAIN} plans)
-with identical row mapping, executed through the layer's raw-SQL
-facility, mirroring the aggregation control (results in Section~\ref{sec:results}).
-Server-side statement capture, synchronized to a request marker so connection
-handshakes are excluded, confirms the two control statements are byte-identical
-across every layer on both engines; what differs is the wire protocol each driver
-negotiates for them: on PostgreSQL every layer uses the extended protocol with
-server-side prepared statements except MikroORM, which falls back to the simple
-protocol with client-side literal inlining, and on MySQL every layer uses the text
-protocol except \texttt{mysql2-tuned} and Prisma, which use the binary protocol with
-server-side prepared statements. To guarantee that no adapter gains an unfair
-advantage by silently returning less, or by issuing N+1 queries, an automated
-cross-check (\texttt{bench/verify.mjs}) funnels every adapter's rows through shared
-canonical constructors and asserts full JSON byte equality against the
-native-driver baseline, on both engines, across 12 probes per adapter spanning the
-four non-mutating patterns and the same-SQL control, before any timing is collected.
-This check caught two defects during development (a fan-out aggregation bug
-and a driver result-shape mismatch; see Section~\ref{sec:discussion}).
-
+Every access layer implements the same factory interface (five query methods
+plus a teardown), so the Express server and the load runner are
+layer-agnostic. Each adapter returns an \emph{identical result shape}, and
+each uses that layer's \emph{recommended idiomatic} mechanism to avoid the N+1
+query problem on the deep fetch: a hand-written join for the native drivers,
+the Knex query builder, and the query-builder-style Drizzle (the tuned
+baselines reuse the native drivers' join unchanged), and relation eager
+loading (\texttt{include}, \texttt{withGraphFetched}, \texttt{populate}, or
+\texttt{relations}) for the data-mapper ORMs. The comparison is therefore one
+of \emph{idiomatic usage}, not a single fixed query plan: each layer runs the
+code its documentation recommends, so a measured difference reflects the SQL
+it generates, its round-trip count, and how it materializes results. One
+asymmetry is inherent to any driver-versus-ORM comparison: the native side's
+idiom is hand-authored SQL, whereas the ORM side's idiom is the library's
+default; the same-SQL control below quantifies how much of the difference
+that choice accounts for. The number of round trips is itself part of what
+varies: the native drivers, Knex, and Drizzle issue a two-query deep fetch,
+whereas each ORM's eager-loading strategy selects its own query count and
+join shape. Server-side statement logging captures the exact SQL each layer
+emits, its round-trip count, and \texttt{EXPLAIN} plans for the native
+statements, released with the replication package; Supplement Table~S2
+tabulates the per-endpoint counts, which differ by design: the deep fetch
+takes one query in Sequelize and MikroORM, two in the native drivers, Knex,
+Drizzle, and TypeORM, and four in Prisma and Objection. To separate a layer's
+execution machinery from its strategy choice, every adapter also implements a
+\emph{same-SQL control}: identical two-statement deep-fetch SQL (and, per
+engine, identical \texttt{EXPLAIN} plans) with identical row mapping,
+executed through the layer's raw-SQL facility, mirroring the aggregation
+control (results in Section~\ref{sec:results}). Server-side statement
+capture, synchronized to a request marker so connection handshakes are
+excluded, confirms the two control statements are byte-identical across
+every layer on both engines; what differs is the wire protocol each driver
+negotiates for them: on PostgreSQL every layer uses the extended protocol
+with server-side prepared statements except MikroORM, which falls back to
+the simple protocol with client-side literal inlining, and on MySQL every
+layer uses the text protocol except \texttt{mysql2-tuned} and Prisma, which
+use the binary protocol with server-side prepared statements. To guarantee
+no adapter gains an unfair advantage by silently returning less, or by
+issuing N+1 queries, an automated cross-check (\texttt{bench/verify.mjs})
+funnels every adapter's rows through shared canonical constructors and
+asserts full JSON byte equality against the native-driver baseline, on both
+engines, across 12 probes per adapter spanning the four non-mutating
+patterns and the same-SQL control, before any timing is collected. This
+check caught two defects during development (a fan-out aggregation bug and a
+driver result-shape mismatch; see Section~\ref{sec:discussion}).
 
 \subsection{Controls}
-Four controls isolate the access layer as the only variable. \emph{(i)~Pool size}
-is fixed at ten connections for every adapter, so the comparison measures
-access-layer overhead rather than pool tuning, itself a known web-application
-performance factor and a recurring concern in database-backed
-services~\cite{gupta2017pooling,laigner2021microservices}; for Prisma, whose default pool is
-otherwise derived from the core count, this is pinned explicitly through the
-\texttt{connection\_limit} URL parameter. Because the load generator opens 50
-concurrent connections against this ten-connection pool, roughly forty in-flight
-requests are always waiting in each library's connection-acquisition queue; that
-queueing path is deliberately part of what we measure, since it is what a
-loaded production service exercises, and it is held structurally identical (same
-pool size, same demand) across layers. A 200~ms connection-pool sampler corroborated
+Four controls isolate the access layer as the only variable.
+\emph{(i)~Pool size} is fixed at ten connections for every adapter, so the
+comparison measures access-layer overhead rather than pool tuning, a known
+web-application performance factor~\cite{gupta2017pooling,laigner2021microservices};
+for Prisma, whose default pool is otherwise derived from core count, this is
+pinned explicitly via the \texttt{connection\_limit} URL parameter. Because
+the load generator opens 50 concurrent connections against this
+ten-connection pool, roughly forty in-flight requests are always waiting in
+each library's connection-acquisition queue; this queueing path is
+deliberately part of what we measure, since it is what a loaded production
+service exercises, and it is held structurally identical (same pool size,
+same demand) across layers. A 200~ms connection-pool sampler corroborated
 this on the deep fetch: the native PostgreSQL cell ran with its
-ten-connection pool fully occupied (mean utilization $\approx 10$ of 10) and up to
-39--40 requests pending at once, evidence of the connection-acquisition queue
-rather than an assumption about it. \emph{(ii)~Identical query
-semantics}: each endpoint issues the same logical query across layers; the
-aggregation, in particular, uses a single correlated-subquery formulation
-everywhere (the documented raw-SQL path), so that endpoint measures layer
-overhead on an identical plan rather than differences in generated SQL.
-\emph{(iii)~Write isolation}: because the insert endpoint mutates the dataset, every
-cell resets it before warm-up and before every measured run, not merely once per
-cell; the write endpoint is additionally measured in its own dedicated server boot,
-taken after the database's physical state is rebuilt rather than merely emptied by
-row deletion (PostgreSQL: drop and recreate the database from a seeded template;
-MySQL: delete the benchmark rows, rebuild the table with \texttt{OPTIMIZE TABLE},
-and re-pin \texttt{AUTO\_INCREMENT}), so sequences, physical layout, and purge state
-cannot drift across replicates or leak between adapters. \emph{(iv)~Observer
-separation}: the HTTP load generator runs in a process separate from the server.
+ten-connection pool fully occupied (mean utilization $\approx 10$ of 10) and
+a mean of about 32 requests pending in the acquisition queue (peaks of
+39--40), evidence of queueing rather than an assumption about it.
+\emph{(ii)~Identical query semantics}: each endpoint issues the same logical
+query across layers; aggregation, in particular, uses a single
+correlated-subquery formulation everywhere (the documented raw-SQL path), so
+that endpoint measures layer overhead on an identical plan, not differences
+in generated SQL. \emph{(iii)~Write isolation}: because the insert endpoint
+mutates the dataset, every cell resets it before warm-up and before every
+measured run, not merely once per cell; the write endpoint is additionally
+measured in its own dedicated server boot, taken after the database's
+physical state is rebuilt rather than merely emptied by row deletion
+(PostgreSQL: drop and recreate the database from a seeded template; MySQL:
+delete the benchmark rows, rebuild the table with \texttt{OPTIMIZE TABLE},
+and re-pin \texttt{AUTO\_INCREMENT}), so sequences, physical layout, and
+purge state cannot drift across replicates or leak between adapters.
+\emph{(iv)~Observer separation}: the HTTP load generator runs in a process
+separate from the server.
 
 \subsection{Measurement procedure}
-Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1 load
-tester that issues requests continuously at a fixed concurrency and records a
-latency histogram; it is a closed-loop (constant-concurrency)
-generator~\cite{schroeder2006open}. We measured each of the 90 configurations as 25
-\emph{independent replicates}. For each replicate we booted a fresh server process,
-opened 50 concurrent connections, ran a fifteen-second warm-up pass whose
-measurements were discarded, and then took one twelve-second measured run. The
-warm-up length follows a separate cold-boot measurement that logged per-second
-throughput from server start for a fast, a middling, and the slowest PostgreSQL
-layer: every layer reached and sustained at least 95\% of its steady-state
-throughput within 12~s of a cold boot (Prisma by 5~s, the native driver by 9~s,
-MikroORM, the slowest, by 12~s), so the fifteen-second warm-up begins each
-measurement past that ramp (absorbing JIT compilation,
+Load was generated with \texttt{autocannon}~\cite{autocannon}, an HTTP/1.1
+load tester issuing requests continuously at fixed concurrency and recording
+a latency histogram; it is a closed-loop (constant-concurrency)
+generator~\cite{schroeder2006open}. We measured each of the 90 configurations
+as 25 \emph{independent replicates}. For each replicate we booted a fresh
+server process, opened 50 concurrent connections, ran a fifteen-second
+warm-up pass whose measurements were discarded, and then took one
+twelve-second measured run. The warm-up length follows a separate cold-boot
+measurement logging per-second throughput from server start for a fast, a
+middling, and the slowest PostgreSQL layer: every layer reached and
+sustained at least 95\% of steady-state throughput within 12~s (Prisma by
+5~s, the native driver by 9~s, MikroORM, the slowest, by 12~s), so the
+warm-up begins measurement past that ramp, absorbing JIT compilation,
 connection-pool fill, and query-plan caching, since managed runtimes do not
-always reach a stable steady state promptly~\cite{barrett2017warmup}); the
-few-percent residual fluctuation around the plateau is bounded separately by the
-sustained-load check in Section~\ref{sec:threats}. The experimental unit is the freshly booted server run for one (layer, engine,
-endpoint) cell in one replicate; the individual HTTP requests within a run are
-subsamples, not independent units. Booting a fresh process per replicate prevents
-persistent application-process state (JIT state, pool contents, heap) from carrying
-across replicate runs, rather than guaranteeing full statistical independence:
-all runs share one host and one short campaign, so replicate index and measurement
-order are treated as blocking factors, not as sources of independence. Cell order
-was reshuffled independently within each replicate; a forward-versus-reversed-order
-check on the write endpoint (5 replicates per direction) found no detectable history
-effect (reversed-to-forward throughput ratio across all 18 cells: 0.970--1.021,
-median 1.004), supporting the shuffled design.
-Within a replicate, every layer and engine is driven by the identical request-id
-sequence, generated by a PRNG seeded from the (endpoint, replicate) pair alone; this
-paired-stream design removes between-layer sampling noise as a confound, and the
-first ids of every stream are archived in the replication package. We report the
-median of the 25 replicate values; 449 of the 450 dedicated write-endpoint boots in
-the primary campaign completed normally, the exception being knex/PostgreSQL, whose
-replicate-16 boot hit a health-check timeout immediately after the physical database
-rebuild, leaving that cell with 24 of 25 replicates (the runner records and skips
-such failures rather than retrying silently). A port allocator that skips the ports
-the databases themselves listen on prevents the collision that had cost an earlier
-replicate its server process. Each replicate yields throughput (requests per second)
-and latency percentiles p50, p90, p97.5, and p99. During the measured runs we
-sampled server CPU utilization and peak resident memory from \texttt{/proc} over the
-full process tree (parent plus descendants, so an in-process engine or a spawned
-helper cannot escape the measurement), with database and load-generator CPU sampled
-separately for comparison; a \texttt{perf\_hooks} GC observer (event count, total
-pause time) and the 200~ms connection-pool sampler mentioned above ran inside the
-server and were polled through a \texttt{/stats} endpoint after each run. Inserts were measured under
-each engine's \emph{default} durability configuration (PostgreSQL
-\texttt{fsync=on}, \texttt{synchronous\_commit=on}, \texttt{full\_page\_writes=on};
-MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1},
-\texttt{log\_bin=ON}), the regime a deployment runs unless an operator deliberately
-relaxes it; a labelled secondary run instead relaxed every one of those settings on
-both engines (10 replicates, write endpoint only) to isolate the durability
-mechanism, compared with the default regime in Section~\ref{sec:discussion}
-(Supplement Table~S4). A fixed-payload \texttt{/baseline} endpoint returning a
-fixed, seed-realistic thread-shaped payload measured the shared
-Express-plus-serialization floor (it bounds framework and serialization cost, not
-the per-request object construction each layer performs): 10{,}909 (PostgreSQL
-server) and 10{,}921 (MySQL server) req/s on this host, roughly $3\times$ the
-fastest deep-fetch cell, so the framework floor leaves the between-layer spreads
-visible rather than compressing them. The hardware and software environment was captured automatically into the
-replication package. To characterize behavior under load, we additionally swept the
-deep/nested fetch (the most layer-sensitive pattern) across connection counts from 1
-to 256 for every layer and engine, since throughput and contention scale
-non-linearly with concurrency~\cite{yu2014concurrency}; a separate equal-CPU-budget
-control, confining the server process to 1, 2, or 4 cores, attributes part of that
-scaling directly to CPU (Section~\ref{sec:results}). A native, \texttt{undici}-based
-constant-arrival generator drove the deep fetch under a fixed offered rate
-(250--4{,}000~req/s) rather than fixed concurrency, measuring every latency from the
-request's intended send time and clipping timed-out requests into the distribution
-at their cutoff; this coordinated-omission-corrected
-design~\cite{tene2015latency,krishnamachari2026stats} validates the closed-loop tail results independently
-(Section~\ref{sec:results}).
+always reach a stable steady state promptly~\cite{barrett2017warmup}. The
+few-percent residual fluctuation around the plateau is bounded separately by
+the sustained-load check in Section~\ref{sec:threats}. The experimental unit
+is the freshly booted server run for one (layer, engine, endpoint) cell in
+one replicate; individual HTTP requests within a run are subsamples, not
+independent units. Booting a fresh process per replicate prevents persistent
+application-process state (JIT state, pool contents, heap) from carrying
+across replicates, though it does not guarantee full statistical
+independence: all runs share one host and one short campaign, so replicate
+index and measurement order are treated as blocking factors, not sources of
+independence. Cell order was reshuffled independently within each replicate;
+a forward-versus-reversed-order check on the write endpoint (5 replicates
+per direction) found no detectable history effect (reversed-to-forward
+throughput ratio across all 18 cells: 0.970--1.021, median 1.004),
+supporting the shuffled design. Within a replicate, every layer and engine
+is driven by the identical request-id sequence, generated by a PRNG seeded
+from the (endpoint, replicate) pair; this paired-stream design removes
+between-layer sampling noise as a confound, and the first ids of every
+stream are archived in the replication package. We report the median of the
+25 replicate values; 449 of the 450 dedicated write-endpoint boots in the
+primary campaign completed normally, the exception being knex/PostgreSQL,
+whose replicate-16 boot hit a health-check timeout immediately after the
+physical database rebuild, leaving that cell with 24 of 25 replicates (the
+runner records and skips such failures rather than retrying silently). A
+port allocator that skips the ports the databases themselves listen on
+prevents the collision that had cost an earlier replicate its server
+process. Each replicate yields throughput (requests per second) and latency
+percentiles p50, p90, p97.5, and p99. During measured runs we sampled server
+CPU utilization and peak resident memory from \texttt{/proc} over the full
+process tree (parent plus descendants, so an in-process engine or spawned
+helper cannot escape measurement), with database and load-generator CPU
+sampled separately for comparison; a \texttt{perf\_hooks} GC observer (event
+count, total pause time) and the 200~ms connection-pool sampler ran inside
+the server, polled through a \texttt{/stats} endpoint after each run.
+Inserts were measured under each engine's \emph{default} durability
+configuration (PostgreSQL \texttt{fsync=on}, \texttt{synchronous\_commit=on},
+\texttt{full\_page\_writes=on}; MySQL
+\texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1},
+\texttt{log\_bin=ON}), the regime a deployment runs unless an operator
+deliberately relaxes it; a labelled secondary run instead relaxed every one
+of those settings on both engines (10 replicates, write endpoint only) to
+isolate the durability mechanism, compared with the default regime in
+Section~\ref{sec:discussion} (Supplement Table~S4). A fixed-payload
+\texttt{/baseline} endpoint returning a fixed, seed-realistic thread-shaped
+payload measured the shared Express-plus-serialization floor (bounding
+framework and serialization cost, not the per-request object construction
+each layer performs): 10{,}909 (PostgreSQL server) and 10{,}921 (MySQL
+server) req/s, roughly $3\times$ the fastest deep-fetch cell, so the
+framework floor leaves between-layer spreads visible rather than compressing
+them. The hardware and software environment was captured automatically into
+the replication package. To characterize behavior under load, we swept the
+deep/nested fetch (the most layer-sensitive pattern) across connection
+counts from 1 to 256 for every layer and engine, since throughput and
+contention scale non-linearly with concurrency~\cite{yu2014concurrency}; a
+separate equal-CPU-budget control, confining the server process to 1, 2, or
+4 cores, attributes part of that scaling directly to CPU
+(Section~\ref{sec:results}). A native, \texttt{undici}-based constant-arrival
+generator drove the deep fetch under a fixed offered rate
+(250--4{,}000~req/s) rather than fixed concurrency, measuring latency from
+each request's intended send time and clipping timed-out requests into the
+distribution at their cutoff; this coordinated-omission-corrected
+design~\cite{tene2015latency,krishnamachari2026stats} independently
+validates the closed-loop tail results (Section~\ref{sec:results}).
 
 \subsection{Analysis}
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
-differences across layers within an engine. We quantify a pattern's sensitivity to
-the access layer by its \emph{spread}: the ratio of the idiomatic native driver's
-(\texttt{pg} or \texttt{mysql2}; the tuned baselines are a separate lower-bound
-reference, not the spread's anchor) median throughput to that of the slowest layer
-on that pattern (native-relative, so it is comparable across patterns even where one
-ORM exceeds the native driver). We report medians over the 25 independent
-replicates, the coefficient of variation (CV) across them as a stability signal,
-following the practice of reporting central tendency and variability rather than a
-single number~\cite{georges2007rigorous} and of using enough replicates to bound
-variance~\cite{laaber2019microbenchmarking} (Section~\ref{sec:results}), and a
-bootstrap 95\% confidence interval for the median. The design is a randomized
-block: within each replicate every layer runs the identical request stream, so
-two layers' throughput samples are matched by replicate and must be compared with
-\emph{paired} tests. To test whether adjacently ranked layers are distinguishable
-rather than an artifact of measurement noise, we compare each adjacent pair on the
-deep/nested fetch on their per-replicate throughput ratios with a two-sided paired
-sign-flip permutation test ($20{,}000$ permutations, so the smallest attainable
-$p$ is $1/(20{,}001)$), cross-checked with the Wilcoxon signed-rank test, and
-report the geometric-mean paired ratio with a paired bootstrap 95\% CI and the
-paired dominance (fraction of replicates in which the faster layer wins); this is
-confirmatory analysis over the seven adjacent-rank comparisons (the confirmatory family), to
-which we apply a Bonferroni correction. For the pg--Prisma pair we additionally
-report a paired two-one-sided-tests (TOST) equivalence result against an a-priori
-$\pm5\%$ margin on the log-ratio (justified below). The layer$\times$engine
-interaction is tested per pattern with a blocked permutation test: for each layer
-and replicate we form the paired PostgreSQL-minus-MySQL log-throughput difference
-and permute layer labels within each replicate block ($20{,}000$ permutations),
-which tests whether the engine effect varies across layers with replicate held as
-the block. Rank agreement across engines (Spearman, Kendall) is reported
-descriptively over the seven evaluated portable layers, which are the systems under
-study, not a sample from a population; we therefore do not attach population
-confidence intervals to those correlations. Reporting nonparametric tests with
-standardized effect sizes follows recommended practice for randomized performance
-experiments in software engineering~\cite{arcuri2014hitchhiker,cliff1993dominance}.
-We treat comparisons of widely separated layers as descriptive, not as additional
-confirmatory hypotheses. The $\pm5\%$ equivalence margin was chosen a priori as a
-practical-significance threshold (a throughput difference under $5\%$ is below this
-study's own run-to-run variability, CV $\leq 7.6\%$) and is reported as a chosen,
-not a preregistered, margin; the equivalence conclusion is not sensitive to the
-exact value within a few percent.
+differences across layers within an engine. We quantify a pattern's
+sensitivity to the access layer by its \emph{spread}: the idiomatic native
+driver's (\texttt{pg} or \texttt{mysql2}; the tuned baselines are a separate
+lower-bound reference, not the spread's anchor) median throughput divided by
+that of the slowest layer on that pattern (native-relative, so comparable
+across patterns even where an ORM exceeds the native driver). We report
+medians over the 25 independent replicates, the coefficient of variation
+(CV) as a stability signal, following the practice of reporting central
+tendency and variability rather than a single
+number~\cite{georges2007rigorous} and of using enough replicates to bound
+variance~\cite{laaber2019microbenchmarking} (Section~\ref{sec:results}), and
+a bootstrap 95\% CI for the median. The design is a randomized block: within
+each replicate every layer runs the identical request stream, so two
+layers' throughput samples are matched by replicate and must be compared
+with \emph{paired} tests. To test whether adjacently ranked layers are
+distinguishable rather than an artifact of measurement noise, we compare
+each adjacent pair on the deep/nested fetch on their per-replicate
+throughput ratios with a two-sided paired sign-flip permutation test
+($20{,}000$ permutations, so the smallest attainable $p$ is $1/(20{,}001)$),
+cross-checked with the Wilcoxon signed-rank test. We report the
+geometric-mean paired ratio with a paired bootstrap 95\% CI and the paired
+dominance (fraction of replicates in which the faster layer wins); this is
+confirmatory analysis over the seven adjacent-rank comparisons (the
+confirmatory family), to which we apply a Bonferroni correction. For the
+pg--Prisma pair we additionally report a paired two-one-sided-tests (TOST)
+equivalence result against an a-priori $\pm5\%$ margin on the log-ratio
+(justified below). The layer$\times$engine interaction is tested per
+pattern with a blocked permutation test: for each layer and replicate we
+form the paired PostgreSQL-minus-MySQL log-throughput difference and permute
+layer labels within each replicate block ($20{,}000$ permutations), testing
+whether the engine effect varies across layers with replicate held as the
+block. Rank agreement across engines (Spearman, Kendall) is reported
+descriptively over the seven evaluated portable layers, the systems under
+study rather than a sample from a population, so we do not attach population
+confidence intervals to those correlations. Reporting nonparametric tests
+with standardized effect sizes follows recommended practice for randomized
+performance experiments in software
+engineering~\cite{arcuri2014hitchhiker,cliff1993dominance}. We treat
+comparisons of widely separated layers as descriptive, not as additional
+confirmatory hypotheses. The $\pm5\%$ equivalence margin was chosen a priori
+as a practical-significance threshold (a throughput difference under $5\%$
+is below this study's own run-to-run variability, CV $\leq 7.6\%$), reported
+as a chosen, not a preregistered, margin; the equivalence conclusion is not
+sensitive to the exact value within a few percent.
 
 \subsection{Experimental setup}
-All measurements were taken on 2026-07-12 and 2026-07-13 on a single host: the
-primary matrix ran overnight across both dates, and the order-invariance,
-durability, same-SQL, open-loop, fan-out, equal-CPU, and concurrency-sweep runs
-followed on 2026-07-13, on the same host
-(Intel Xeon Gold~6140, 16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0), with the
-database engines running locally. The pinned versions (Table~\ref{tab:versions})
-are the versions selected and installed on the measurement date, recorded from the
-lockfile and an automated environment capture (replication package), and frozen for
-the study, since access-layer performance is version-sensitive; later point releases
-(for example Node.js~24.17.0) are deliberately excluded. We pin Express~4 rather
-than Express~5; the framework version is shared by every cell, so to first order it
-shifts the common request-handling floor rather than the between-layer comparison,
-though we cannot rule out that a different framework version interacts with a
-layer's scheduling or serialization, and re-running the harness on Express~5 is a
-one-line change. These are the pinned versions (Table~\ref{tab:versions}) that the reported
-numbers characterize, and re-running the harness on newer releases is a one-command
-operation.
-
-\begin{table}[htbp]
-  \centering
-  \caption{Pinned versions of the evaluated access layers and tooling.}
-  \label{tab:versions}
-  \begin{tabular}{l l l l}
-    \toprule
-    Layer / tool & Version & Layer / tool & Version \\
-    \midrule
-    \texttt{pg}         & 8.22.0  & \texttt{sequelize}      & 6.37.8 \\
-    \texttt{mysql2}     & 3.22.5  & \texttt{typeorm}        & 0.3.30 \\
-    \texttt{knex}       & 3.3.0   & \texttt{objection}      & 3.1.5  \\
-    \texttt{drizzle-orm}& 0.36.4  & \texttt{@mikro-orm/core}& 6.6.15 \\
-    \texttt{@prisma/client} & 5.22.0 & \texttt{express}     & 4.22.2 \\
-    \texttt{autocannon} & 7.15.0  & PostgreSQL / MySQL      & 18.4 / 9.7.1 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+All measurements were taken on 2026-07-12 and 2026-07-13 on a single host:
+the primary matrix ran overnight across both dates, and the
+order-invariance, durability, same-SQL, open-loop, fan-out, equal-CPU, and
+concurrency-sweep runs followed on 2026-07-13 (Intel Xeon Gold~6140,
+16~cores, 126~GB RAM; Linux~6.17; Node.js~24.16.0), with the database
+engines running locally. The pinned versions (Supplement Table~S11) were
+selected and installed on the measurement date, recorded from the lockfile
+and an automated environment capture (replication package), and frozen for
+the study, since access-layer performance is version-sensitive; later point
+releases (for example Node.js~24.17.0) are deliberately excluded. We pin
+Express~4 rather than Express~5; since the framework version is shared by
+every cell, it shifts the common request-handling floor rather than the
+between-layer comparison to first order, though a different framework
+version could interact with a layer's scheduling or serialization, and
+re-running the harness on Express~5 is a one-line change.
 
 \subsection{Replication package}
 The harness (the Express application, the adapter contract, all nine idiomatic

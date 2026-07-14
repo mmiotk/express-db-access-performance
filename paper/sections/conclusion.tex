@@ -1,55 +1,50 @@
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-We set out to replace vendor-benchmark claims with a vendor-independent, reproducible
-comparison of relational database access layers in Express.js. Our harness serves
-an identical application through a representative taxonomy (native drivers, a query
-builder, and six ORMs) across PostgreSQL and MySQL, over five access patterns,
-and reports throughput and tail latency together, addressing the four gaps that
+This paper set out to replace vendor-benchmark claims with a
+vendor-independent, reproducible comparison of relational database access
+layers in Express.js, serving an identical application through a
+representative taxonomy (native drivers, a query builder, and six ORMs)
+across PostgreSQL and MySQL, over five access patterns, and reporting
+throughput and tail latency together, addressing the four gaps that
 characterize prior art (Section~\ref{sec:introduction}).
 
-The empirical answer is that the cost of abstraction is concentrated, not uniform.
-It is modest for point reads and for aggregation issued through a raw-SQL path, but
-it grows sharply, up to $6.55\times$ on PostgreSQL and $4.50\times$ on MySQL, for the
-deep/nested fetch, where the layer must assemble a nested object graph on the
-application side; a fan-out sweep shows that spread growing further still as the
-fetched graph grows larger. A same-SQL
-control bounds the raw-execution component: executing the identical two-statement
-SQL through every layer's raw-SQL facility collapses the nine execution paths to
-within $1.76\times$ of one another on PostgreSQL and $2.21\times$ on MySQL, so most
-of the deep-fetch cost lies upstream of raw SQL execution, in each layer's default
-query-generation and result-construction path (MikroORM alone shows a
-$5.0\times$/$4.1\times$ gap between its idiomatic and raw-SQL paths). Read rankings are stable across the two engines
-(Spearman $\rho \geq 0.89$ on every read pattern), and a competitively fast modern
-ORM, Prisma, shows that ``ORM'' need not imply large overhead: on the deep fetch it
-is now formally equivalent to the native driver (TOST equivalence at $\pm5\%$), and
-it leads outright on several other patterns, at roughly five times the CPU of every
-other layer ($498\%$), a subsidy an equal-CPU control now measures directly rather
-than infers (native throughput on one core; Prisma needs about four to approach it).
-Writes are the exception, and are now measured under each engine's default
-durability rather than a relaxed one: MySQL's engine floor makes insert throughput
-nearly layer-independent ($1.22\times$), while PostgreSQL exposes a $3.86\times$
-layer spread even with \texttt{fsync} on, and unlike every read pattern the write
-ranking does not transfer across engines at all, a caution
-against generalizing single-engine write results that a symmetric
-relaxed-durability run confirms is not a durability artifact. Beyond these
-findings, development surfaced a reusable checklist of benchmarking pitfalls
-(aggregation fan-out, \texttt{OFFSET}-versus-keyset pagination, write-workload
-contamination, and query-formulation confounds) that silently distort naive
-access-layer benchmarks; several were caught by the correctness cross-check, the
-rest by performance analysis.
+The empirical answer is that the cost of abstraction is concentrated, not
+uniform. It is modest for point reads and for aggregation issued through a
+raw-SQL path, but grows sharply for the deep/nested fetch, where the layer
+must assemble a nested object graph on the application side, and widens
+further as the fetched graph grows larger (Section~\ref{sec:results}). A
+same-SQL control shows that most of this cost lies upstream of raw SQL
+execution, in each layer's default query-generation and result-construction
+path rather than in its execution engine, with MikroORM the starkest case
+(Section~\ref{sec:results}). Read rankings are stable across the two
+engines, and a competitively fast modern ORM, Prisma, shows that ``ORM''
+need not imply large overhead: on the deep fetch it is formally equivalent
+to the native driver and leads outright on several other patterns, at a
+substantial application-CPU premium that an equal-CPU control now measures
+directly rather than infers (Section~\ref{sec:results}). Writes are the exception: MySQL's engine floor makes insert throughput
+nearly layer-independent, while PostgreSQL exposes a wide layer spread even
+under default durability, and unlike every read pattern the write ranking
+does not transfer across engines at all, a caution against generalizing
+single-engine write results, not a durability artifact as a symmetric
+relaxed-durability run confirms (Section~\ref{sec:discussion}). Development
+also surfaced a reusable checklist of benchmarking pitfalls (aggregation
+fan-out, \texttt{OFFSET}-versus-keyset pagination, write-workload
+contamination, and query-formulation confounds), several caught by the
+correctness cross-check and the rest by performance analysis
+(Section~\ref{sec:discussion}).
 
-Beyond the single 50-connection operating point, we swept concurrency from 1 to 256
-connections and found the three-band ordering load-robust above 32 connections,
-sampled per-layer application and database CPU, and compared adjacent layers with
-paired permutation and Wilcoxon signed-rank tests on their per-replicate throughput
-ratios. Further extensions would still strengthen the evidence: a
-two-machine cross-run, isolating the load generator on separate hardware, would
-bound observer-interference effects beyond the coordinated-omission-corrected,
-single-host open-loop check already performed here; additional engines and dataset
-sizes would widen external validity; and a dedicated study of the N+1 penalty (naive
-versus eager loading per ORM) and of cold-start latency would deepen the practical
-guidance. The complete replication package (harness, seed, adapters, and analysis)
-is released under open licenses so that these extensions, and independent re-runs on
-current library versions, are straightforward, addressing the repeatability gap
+These findings held under a concurrency sweep (1 to 256 connections, ranking
+load-robust above 32) and under paired permutation and Wilcoxon tests
+confirming adjacent-layer separation (Section~\ref{sec:results}). Further
+extensions would strengthen the evidence: a two-machine cross-run isolating
+the load generator would bound observer-interference effects beyond the
+open-loop check already performed here; additional engines and dataset
+sizes would widen external validity; and a dedicated study of the N+1
+penalty and of cold-start latency would deepen the practical guidance.
+Beyond these specific findings, the durable contribution is the harness
+itself: a vendor-independent, dual-engine instrument with a correctness
+cross-check and a same-SQL decomposition control, released under open
+licenses so that these extensions, and independent re-runs against current
+library versions, are straightforward, addressing the repeatability gap
 widely documented in computer-systems research~\cite{collberg2016repeatability}.

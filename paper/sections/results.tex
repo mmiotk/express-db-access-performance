@@ -2,23 +2,22 @@
 \label{sec:results}
 
 The tables below report throughput (requests per second, higher is better) and
-tail latency (p99, milliseconds, lower is better) per access layer and engine, one
-table per access pattern. All numbers come from the run described in
-Section~\ref{sec:methodology} (seed of 2{,}000 authors, 100{,}000 posts and
-1{,}000{,}000 comments; 50 concurrent connections; median of 25 independent
-replicates, each a freshly booted server process; connection pool fixed at ten;
-inserts measured under each engine's default durability configuration). Each
-native driver is reported both idiomatically (\texttt{pg}, \texttt{mysql2}) and
-with reusable prepared statements (\texttt{pg-tuned}, \texttt{mysql2-tuned}); the
-tuned rows are a practitioner-oriented lower bound on what the wire protocol
-allows under this workload, not a ceiling every idiomatic layer could reach
-without code changes. Absolute throughput is hardware-specific;
-the comparison of interest is \emph{relative} across layers within an engine. Two
-estimands recur below: the \emph{default-configuration (idiomatic) effect}, what a
-practitioner gets from each layer used as documented (the primary estimand behind
+tail latency (p99, milliseconds, lower is better) per access layer and engine,
+one table per access pattern. All numbers come from the run described in
+Section~\ref{sec:methodology}: 25 independent replicates per cell, each a
+freshly booted server process, pool fixed at ten, inserts under each engine's
+default durability configuration. Each native driver is reported both
+idiomatically (\texttt{pg}, \texttt{mysql2}) and with reusable prepared
+statements (\texttt{pg-tuned}, \texttt{mysql2-tuned}); the tuned rows are a
+practitioner-oriented lower bound on what the wire protocol allows under this
+workload, not a ceiling every idiomatic layer could reach without code
+changes. Absolute throughput is hardware-specific, so the comparison of
+interest is \emph{relative} across layers within an engine
+(Section~\ref{sec:methodology}). Two estimands recur below: the
+\emph{default-configuration (idiomatic) effect} (the primary estimand behind
 RQ1--RQ3, realized in the five tables above), and the \emph{same-SQL effect},
-what remains when every layer executes identical SQL with identical row mapping
-(Table~\ref{tab:sameplan}); the two are reported separately below.
+what remains when every layer executes identical SQL with identical row
+mapping (Table~\ref{tab:sameplan}); the two are reported separately below.
 
 % One combined table per access pattern: throughput (req/s) and tail latency (p99)
 % side by side, per access layer and engine. \tabledir is set by each main file
@@ -39,7 +38,7 @@ keyset range scan on both engines, aggregation on both engines, the point read o
 MySQL, and the deep fetch on MySQL (Tables~\ref{tab:point_read},
 \ref{tab:range_scan}, \ref{tab:deep_fetch}, \ref{tab:aggregation}). It does so at
 roughly five times the application-side CPU of every other layer ($498\%$ on the
-deep fetch; Table~\ref{tab:resources}), so the finding is a CPU-for-throughput
+deep fetch; Supplement Table~S10), so the finding is a CPU-for-throughput
 trade, not a free win. The remaining PostgreSQL deep fetch is close enough
 between \texttt{pg} and Prisma to need a formal equivalence test (below). The
 cost of abstraction remains strongly \emph{pattern}- and, now visibly,
@@ -54,9 +53,7 @@ is within noise of idiomatic \texttt{mysql2} on the point read, range scan,
 aggregation, and insert (differences of at most $0.8\%$), except on the deep
 fetch, where it reaches 2{,}436~req/s against \texttt{mysql2}'s 2{,}405: the
 binary protocol and server-side prepared statements (wire-protocol evidence
-below) pay off only once a request issues more than one round trip. The tuned
-rows now measure directly what a caveat previously assumed; the gap is small on
-this workload.
+below) pay off only once a request issues more than one round trip.
 
 On the \textbf{point read}, PostgreSQL ranges from \texttt{pg-tuned}'s 6{,}851
 down to MikroORM's 2{,}185~req/s; the native-relative spread (\texttt{pg}'s
@@ -71,8 +68,7 @@ measured: $6.55\times$ on PostgreSQL (\texttt{pg} 3{,}741 down to MikroORM's
 571~req/s; CI [6.46--6.65]) and $4.50\times$ on MySQL (\texttt{mysql2} 2{,}405
 down to MikroORM's 535; CI [4.41--4.59]). Prisma sits close behind \texttt{pg} on
 PostgreSQL (3{,}685) and ahead of \texttt{mysql2} on MySQL (3{,}701,
-$54\%$ above native). The PostgreSQL gap between \texttt{pg} and Prisma is small
-enough to need a formal test. Because every layer runs the identical
+$54\%$ above native). Because every layer runs the identical
 per-replicate request stream, the comparison is paired (Section~\ref{sec:methodology});
 \texttt{pg} is faster in 16 of 25 replicates, by a geometric-mean ratio of
 $1.02$ (paired 95\% CI [1.00--1.04]; Table~\ref{tab:significance}), a difference
@@ -111,12 +107,12 @@ its raw-SQL facility, as the aggregation endpoint already does
 byte-identical across layers on both engines, while the wire protocols differ
 per layer as enumerated in Section~\ref{sec:methodology}; the honest description
 of this control is therefore \emph{same SQL, protocol disclosed}, not
-\emph{same plan}. The contrast is a composite one: switching from a layer's
-idiomatic relational-fetch path to the common raw-SQL-and-shared-mapping path
-changes its query strategy, query count, prepared-statement behavior, the raw
-versus ORM API, and result marshalling together, so it does not isolate any one of
-these; what it does establish is that the raw-execution component is small and the
-idiomatic overhead lies upstream of it.
+\emph{same plan}. The contrast is composite: switching from a layer's idiomatic
+relational-fetch path to the common raw-SQL-and-shared-mapping path changes
+its query strategy, query count, prepared-statement behavior, the raw versus
+ORM API, and result marshalling together, so it isolates none of these
+individually; what it establishes is that the raw-execution component is
+small and the idiomatic overhead lies upstream of it.
 
 On the identical SQL, the deep-fetch spread collapses to a max/min ratio
 (across the nine layers; the idiomatic spreads above are native-relative, whose
@@ -131,34 +127,31 @@ only 0.20 and 0.25 of its own same-SQL throughput (2{,}868 and 2{,}172), a
 $5.0\times$ and $4.1\times$ gap between its idiomatic and raw-SQL paths. On this
 pattern, the access layer's idiomatic cost is dominated by what it \emph{chooses to
 do} by default (its query strategy, round-trip count, and object hydration), not
-by the speed of its raw SQL execution; a fixed-payload
-Express-plus-JSON floor of 10{,}909~req/s (PostgreSQL server) and 10{,}921
-(MySQL server; Section~\ref{sec:methodology}) sits well above every same-SQL
-cell, so the framework floor does not manufacture this collapse.
+by the speed of its raw SQL execution; the fixed-payload Express-plus-JSON
+floor (Section~\ref{sec:methodology}) sits well above every same-SQL cell, so
+the framework floor does not manufacture this collapse.
 
 \input{\tabledir sameplan}
 
 \subsection{RQ2: engine dependence of the ranking}
 The relative ordering of access layers is largely, but not uniformly, stable
-across engines. As a descriptive measure of agreement between the PostgreSQL and
-MySQL orderings of the seven portable layers (these seven are the evaluated
-systems, not a sample from a population, so we report the statistic descriptively
-rather than as an interval estimate), the Spearman rank correlation is
-$\rho=0.89$ on the point read, $0.89$ on the range scan, $0.96$ on the deep fetch,
-and $0.89$ on aggregation (Kendall's $\tau$ between 0.81 and 0.90 on all four), so
-a layer's rank on one engine tracks its rank on the other for every read pattern.
+across engines. The Spearman rank correlation between the PostgreSQL and MySQL orderings of
+the seven portable layers (reported descriptively, since these seven are the
+evaluated systems rather than a sample from a population;
+Section~\ref{sec:methodology}) is $\rho=0.89$ on the point read, $0.89$ on the
+range scan, $0.96$ on the deep fetch, and $0.89$ on aggregation (Kendall's
+$\tau$ between 0.81 and 0.90 on all four), so a layer's rank on one engine
+tracks its rank on the other for every read pattern.
 The \textbf{insert} ranking is the exception ($\rho=0.43$, $\tau=0.43$). Prisma
 illustrates why: it is the fastest ORM on PostgreSQL inserts (5{,}465~req/s, ahead
 of Objection's 3{,}926) but the second-slowest layer on MySQL inserts (714, ahead
 of only MikroORM's 663), a rank flip a benchmark run on either engine alone would
-not reveal. Beyond order, the \emph{magnitude} of a layer's cost also depends on
-the engine: for each portable layer and replicate we formed the paired
-PostgreSQL-minus-MySQL log-throughput difference and tested, in a randomized-block
-model with replicate as the block, whether that engine effect varies across layers
-(a blocked permutation test that shuffles layer labels within each replicate,
-$20{,}000$ permutations). The layer$\times$engine interaction is significant on all
-five patterns ($p \leq 5\times10^{-5}$, the permutation-resolution floor, in each
-case), so single-engine results are not portable in degree even where they are
+not reveal. Beyond order, the \emph{magnitude} of a layer's cost also depends on the
+engine: a blocked permutation test on the paired PostgreSQL-minus-MySQL
+log-throughput difference (Section~\ref{sec:methodology}) finds the
+layer$\times$engine interaction significant on all five patterns ($p \leq
+5\times10^{-5}$, the permutation-resolution floor, in each case), so
+single-engine results are not portable in degree even where they are
 portable in order.
 
 Prisma's engine-dependent lead is visible on the \textbf{keyset range
@@ -207,21 +200,20 @@ $4.43\times$, $2.36\times$, $1.42\times$); only the insert moves, from third
 place on PostgreSQL to last on MySQL ($1.22\times$): the pattern where MySQL's
 engine floor, not the access layer, sets the ceiling (RQ2 above). The
 deep/nested fetch is the most consequential pattern on both engines; aggregation
-is the least, once every layer runs the same raw-SQL plan. The range
-scan's large nominal spread is driven disproportionately by one layer,
-MikroORM, rather than rising gradually across the taxonomy the way the deep
-fetch does.
+is the least, once every layer runs the same raw-SQL plan (the range scan's
+large nominal spread, as above, is driven disproportionately by MikroORM
+alone).
 
 The primary deep-fetch workload uses posts with roughly ten comments on
-average. A fan-out sweep across 0, 1, 10, 50, 100, and 500 comments
-(PostgreSQL, medians of three replicates) shows the layer spread widening with
-graph size: $5.9\times$, $5.8\times$, $7.1\times$, $9.8\times$, $11.4\times$, and
-$16.1\times$ respectively, and the leader flips from Prisma at small graphs (up
-to 10 comments) to \texttt{pg} at 50 comments and above, as hydration cost
-scales with the number of materialized rows; MySQL shows the same qualitative
-shape. The primary workload's ten-comment graph sits near this range's low end,
-so the deep-fetch spreads reported above are conservative: a larger graph would
-widen the gap between the lightest and heaviest layers further.
+average, near the low end of a fan-out sweep across 0, 1, 10, 50, 100, and 500
+comments (PostgreSQL, medians of three replicates) that shows the layer
+spread widening with graph size: $5.9\times$, $5.8\times$, $7.1\times$,
+$9.8\times$, $11.4\times$, and $16.1\times$ respectively; the leader flips
+from Prisma at small graphs (up to 10 comments) to \texttt{pg} at 50 comments
+and above, as hydration cost scales with the number of materialized rows, and
+MySQL shows the same qualitative shape. The deep-fetch spreads reported above
+are therefore conservative: a larger graph would widen the gap between the
+lightest and heaviest layers further.
 
 \subsection{Tail latency}
 We report p99 for every pattern (the tail metric that governs perceived latency
@@ -234,12 +226,11 @@ not only in mean capacity but in the tail under load, a quantity single-metric,
 throughput-only vendor benchmarks omit.
 
 These closed-loop p99 values come from a constant-concurrency generator. To
-check that the tail ranking is not an artifact of that model, we drove
-the deep/nested fetch on PostgreSQL under a constant offered request rate
-with a coordinated-omission-corrected open-loop harness (a native
-\texttt{undici}-based generator; latency measured from each request's intended
-send time, with timed-out requests, a 10~s hard cap, clipped into the
-distribution; full sweep in Supplement Table~S6). Below saturation the corrected tails
+check that the tail ranking is not an artifact of that model, we drove the
+deep/nested fetch on PostgreSQL under the coordinated-omission-corrected
+open-loop harness described in Section~\ref{sec:methodology} (timed-out
+requests, a 10~s hard cap, clipped into the distribution; full sweep in
+Supplement Table~S6). Below saturation the corrected tails
 are flat and small: \texttt{pg} and Prisma hold p99 at 2--4~ms up to
 2{,}000~req/s, both sustaining the full offered rate, and Knex's p99 is still
 only 33~ms at 2{,}000. Beyond each layer's capacity the tail collapses rather
@@ -259,26 +250,22 @@ layers degrade gradually over a wider range.
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells
 the coefficient of variation of throughput over the 25 independent replicates is
-at most $7.6\%$ (\texttt{pg}, insert; Table~\ref{tab:cv}), and across the 40
+at most $7.6\%$ (\texttt{pg}, insert; Supplement Table~S9), and across the 40
 MySQL cells at most $6.6\%$ (Knex, insert; Supplement Table~S1); the
 largest relative median absolute deviation is $5.4\%$ (\texttt{pg}, insert,
 PostgreSQL). These maxima are well below the between-layer spreads reported
 above (up to $6.55\times$). One cell, Knex/PostgreSQL/insert, has $n=24$ rather
-than 25: one dedicated write-boot process failed its post-rebuild health check
-and was recorded and skipped rather than retried, so 449 of the 450 write boots
-in the primary campaign succeeded. A separate check varied the order in which
-cells were measured (forward versus reversed, $n=5$ each, insert endpoint): the
-reversed-to-forward throughput ratio across all 18 cells ranges from 0.970 to
-1.021 (median 1.004), so we find no detectable history effect from the
-randomized-order protocol.
+than 25, the one write boot in the primary campaign that failed its
+post-rebuild health check (Section~\ref{sec:methodology}). A separate order-randomization check (forward versus reversed cell order,
+$n=5$ each, insert endpoint) found no detectable history effect
+(Section~\ref{sec:methodology}).
 
-To confirm that neighboring ranks are not measurement artifacts, we compare each
-adjacently ranked pair on the deep/nested fetch \emph{pairwise}: because every
-layer runs the identical per-replicate request stream, we test the per-replicate
-throughput ratios with a two-sided paired sign-flip permutation test
-($20{,}000$ permutations) and report the geometric-mean paired ratio with a
-paired bootstrap 95\% CI and the paired dominance (Table~\ref{tab:significance});
-the Wilcoxon signed-rank test agrees throughout (replication package). Six of the
+To confirm that neighboring ranks are not measurement artifacts, we compare
+each adjacently ranked pair on the deep/nested fetch \emph{pairwise} with the
+paired permutation test described in Section~\ref{sec:methodology}, reporting
+the geometric-mean paired ratio, a paired bootstrap 95\% CI, and the paired
+dominance (Table~\ref{tab:significance}); the Wilcoxon signed-rank test agrees
+throughout (replication package). Six of the
 seven adjacent pairs separate at the permutation-resolution floor
 ($p \leq 5\times10^{-5}$) with the faster layer ahead in every one of the 25
 replicates (dominance $1.00$, except objection\,$>$\,sequelize at $0.88$), all
@@ -314,7 +301,7 @@ whole load range, so the RQ1 finding is not an artifact of the single
 \input{\tabledir fig_scaling}
 
 \subsection{Resource footprint}
-Throughput is not the only cost (Table~\ref{tab:resources}). Prisma's
+Throughput is not the only cost (Supplement Table~S10). Prisma's
 near-native or leading throughput on several patterns comes at a much higher CPU
 cost: measured at the \emph{same} ten-connection pool as every other layer, its
 Node.js process draws $498\%$ (about five cores) on the deep fetch against the
@@ -352,7 +339,5 @@ and matters when sizing horizontally scaled deployments, where per-instance
 resource use governs how many replicas a given load
 requires~\cite{vaquero2011scaling}.
 
-\input{\tabledir cv_all}
 \input{\tabledir significance_deep_fetch}
-\input{\tabledir resources}
 \input{\tabledir fig_cpu_tradeoff}
