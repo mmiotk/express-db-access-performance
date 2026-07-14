@@ -96,7 +96,9 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
     const win = winFraction(a, b);
     const perm = pairedPermutation(a, b, { B: PERM_B, rand });
     const wil = wilcoxonSignedRank(a, b);
-    const pStr = perm.p <= 1 / (PERM_B + 1) ? `$\\leq$${(1 / (PERM_B + 1)).toExponential(0)}` : perm.p.toFixed(4);
+    // At the resolution floor the observed statistic beat every permutation, so
+    // p = 1/(B+1) exactly (not an upper bound); print that value, else the estimate.
+    const pStr = perm.p <= 1 / (PERM_B + 1) ? `$5.0{\\times}10^{-5}$` : perm.p.toFixed(4);
     pairedRows.push({ engine, endpoint, pair: `${A.a}>${B.a}`, ratio: +ratio.toFixed(3),
       ratioCI: [+rlo.toFixed(3), +rhi.toFixed(3)], winFraction: +win.toFixed(2),
       perm_p: perm.p, wilcoxon_p: +wil.p.toFixed(4), cliffs_delta_unpaired: +cliffsDelta(a, b).toFixed(2) });
@@ -111,8 +113,10 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
     on their per-replicate throughput ratios: median throughput (req/s) with
     bootstrap 95\\% CI, the geometric-mean paired ratio A$/$B with a paired bootstrap
     95\\% CI, paired dominance (fraction of replicates in which A exceeds B), and the
-    two-sided paired sign-flip permutation $p$ (${PERM_B} permutations; the
-    Wilcoxon signed-rank test agrees, replication package).}
+    two-sided paired sign-flip permutation $p$ (${PERM_B} permutations; a value
+    of $5.0{\\times}10^{-5}$ is the resolution floor $1/(B{+}1)=1/20{,}001$, i.e.
+    the observed statistic exceeded every permutation; the Wilcoxon signed-rank
+    test agrees, replication package).}
   \\label{tab:significance}
   \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l r r r r r}

@@ -14,9 +14,11 @@ uniform. It is modest for point reads and for aggregation issued through a
 raw-SQL path, but grows sharply for the deep/nested fetch, where the layer
 must assemble a nested object graph on the application side, and widens
 further as the fetched graph grows larger (Section~\ref{sec:results}). A
-same-SQL control shows that most of this cost lies upstream of raw SQL
-execution, in each layer's default query-generation and result-construction
-path rather than in its execution engine, with MikroORM the starkest case
+same-SQL control narrows that spread and so bounds the raw-execution
+component: the idiomatic cost is dominated by each layer's whole
+query-generation and result-construction path rather than by the speed of its
+raw SQL execution, with MikroORM the starkest case; the control changes those
+factors together and does not isolate any one of them
 (Section~\ref{sec:results}). Read rankings are stable across the two
 engines, and a competitively fast modern ORM, Prisma, shows that ``ORM''
 need not imply large overhead: on the deep fetch it is formally equivalent
@@ -44,7 +46,7 @@ sizes would widen external validity; and a dedicated study of the N+1
 penalty and of cold-start latency would deepen the practical guidance.
 Beyond these specific findings, the durable contribution is the harness
 itself: a vendor-independent, dual-engine instrument with a correctness
-cross-check and a same-SQL decomposition control, released under open
+cross-check and a same-SQL contrast control, released under open
 licenses so that these extensions, and independent re-runs against current
 library versions, are straightforward, addressing the repeatability gap
 widely documented in computer-systems research~\cite{collberg2016repeatability}.

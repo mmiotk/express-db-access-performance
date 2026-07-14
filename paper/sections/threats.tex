@@ -154,12 +154,14 @@ $7.6\%$ on PostgreSQL and $6.6\%$ on MySQL; Supplement Tables~S9 and~S1), and th
 three-band ordering holds across
 the concurrency sweep at $\geq32$ connections (Fig.~\ref{fig:scaling}). On the
 deep/nested fetch, six of the seven adjacent pairs separate at the
-permutation-resolution floor with the faster layer ahead in nearly every
-replicate, each surviving a Bonferroni correction across the confirmatory
-family (Table~\ref{tab:significance}); the exception, native \texttt{pg} and
-Prisma at the top, is not resolved as different by the paired test and is
-confirmed equivalent by a paired TOST procedure within an a-priori $\pm5\%$
-margin, so we read those two as tied rather than ranked. Rather than assert a
+permutation-resolution floor ($p = 1/20{,}001$) with the faster layer ahead in
+nearly every replicate, each surviving a Bonferroni correction across the seven
+planned pairwise contrasts (which are read along the observed ranking, so we
+treat their significances descriptively; Table~\ref{tab:significance}); the
+exception, native \texttt{pg} and Prisma at the top, is not resolved as
+different by the paired test and is confirmed equivalent by a paired TOST
+procedure within a $\pm5\%$ margin, so we read those two as tied rather than
+ranked. Rather than assert a
 specific statistical power, which would require a prospective effect-size and
 variance model we did not prespecify, we rest the conclusions on effect sizes
 and interval estimates: the separating pairs combine large paired ratios with

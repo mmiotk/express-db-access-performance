@@ -25,24 +25,25 @@ In practice, the most visible performance comparisons are \emph{vendor
 benchmarks}: plentiful but narrow, published by the maintainers of the
 compared products, confined almost exclusively to PostgreSQL, and settling on
 a single metric family rather than reporting throughput and the tail together
-(Section~\ref{sec:related} reviews these in detail). None reports the p99
-behavior that dominates perceived performance under
-load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is
+(Section~\ref{sec:related} reviews these in detail). We found none that
+reports the p99 tail behavior that is widely held to matter for user-perceived
+latency under load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is
 sparser still, limited to at most three ORMs, confined to PostgreSQL, and,
 where it benchmarks PostgreSQL against MySQL directly, holding the access
 layer fixed rather than varying it~\cite{colley2018orm,prisma_rawsql_2025,
 orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql} (Section~\ref{sec:related}
 surveys each).
 
-Taken together, this leaves a gap along four axes: (1)~no access-layer
-comparison includes MySQL, and no PostgreSQL/MySQL benchmark varies the
-access layer; (2)~no vendor-independent study spans the taxonomy broadly,
-since the broad-coverage comparisons are vendor-authored and academic work
-covers at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm};
-(3)~throughput and the p99 tail are never reported jointly, the sole vendor
-suite that pairs throughput with a percentile stopping at a single P95 at one
-load point~\cite{drizzle_benchmarks}; and (4)~no access-layer comparison
-measures client-observed performance through a production HTTP framework:
+Taken together, in the sources we searched (Section~\ref{sec:related}) this
+leaves a gap along four axes: (1)~no access-layer comparison we found includes
+MySQL, and no PostgreSQL/MySQL benchmark varies the access layer; (2)~no
+vendor-independent study spans the taxonomy broadly, since the broad-coverage
+comparisons are vendor-authored and academic work covers at most three
+libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~we found none that
+reports throughput and the p99 tail jointly, the sole vendor suite that pairs
+throughput with a percentile stopping at a single P95 at one load
+point~\cite{drizzle_benchmarks}; and (4)~none measures client-observed
+performance through an HTTP framework:
 academic studies instrument query execution inside the application
 process~\cite{zhadko2025orm}, and the Express-based work that does measure the
 request round trip compares runtime optimizations on a single stack rather
@@ -59,12 +60,13 @@ every comment (each with its own comment-author), a per-author aggregation of
 post counts and view sums, and an insert. Seven of the nine layers (all but the two engine-specific native drivers) run
 against \emph{both} engines under an identical schema, dataset, and pool size;
 two tuned native-driver baselines (prepared-statement variants of \texttt{pg}
-and \texttt{mysql2}) bound what hand-tuned driver use achieves. Every (layer, engine, pattern) combination reports throughput (req/s) and tail
-latency (p99) jointly, from 25 independent replicates. The study separates
-two estimands: the \emph{default-configuration} effect of each layer used
-idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL} effect isolating
-each layer's execution machinery from its query-generation and hydration
-strategy. The full harness (adapters, seed data, an
+and \texttt{mysql2}) mark what hand-tuned driver use achieves. Every (layer, engine, pattern) combination reports throughput (req/s) and
+closed-loop tail latency (p99, at a 50-connection operating point) jointly, from
+25 independent replicates, with an open-loop tail measurement below saturation.
+The study separates two estimands: the \emph{default-configuration} effect of
+each layer used idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL}
+contrast that bounds each layer's raw-execution cost against its
+query-generation and hydration strategy. The full harness (adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
 that all layers return \emph{byte-identical} responses on the four
 non-mutating patterns) is released as an open replication

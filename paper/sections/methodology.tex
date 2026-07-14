@@ -11,20 +11,22 @@ engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines}, crossing
 seven portable access layers with both engines and all five patterns, plus two
 engine-specific native drivers and their tuned counterparts \texttt{pg-tuned}
 and \texttt{mysql2-tuned} (eleven layers: nine idiomatic, two tuned
-lower-bound baselines); the full rationale, including the pitfalls each
+reference baselines); the full rationale, including the pitfalls each
 control guards against, is distributed with the replication package
 (\texttt{METHODOLOGY.md}). Two estimands are kept separate throughout:
 RQ1--RQ3 (Section~\ref{sec:results}) answer the \emph{default-configuration}
 estimand, the cost a practitioner incurs from each layer used idiomatically,
-while the same-SQL control below answers a \emph{decomposition} estimand, what
-remains once every layer executes identical SQL.
+while the same-SQL control below answers a \emph{same-SQL (raw-path)} estimand,
+what remains once every layer executes identical SQL through its raw facility.
+The latter is a compound contrast, not a mechanism-isolating decomposition
+(Section~\ref{sec:results}).
 
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels spanning the
 taxonomy: the native drivers \texttt{pg} and \texttt{mysql2}, their tuned
 counterparts \texttt{pg-tuned} (named prepared statements reused across calls) and
 \texttt{mysql2-tuned} (the binary protocol with server-side prepared statements via
-\texttt{execute()}), included as engine-specific lower-bound baselines rather than
+\texttt{execute()}), included as engine-specific tuned reference baselines rather than
 idiomatic treatments; the query builder Knex; and the ORMs Drizzle (a lightweight,
 query-builder-style ORM), Prisma, Sequelize, TypeORM, Objection, and MikroORM. We
 classify a library by its dominant interface, not its self-description: native
@@ -251,7 +253,7 @@ Because absolute throughput is hardware-specific, we analyze \emph{relative}
 differences across layers within an engine. We quantify a pattern's
 sensitivity to the access layer by its \emph{spread}: the idiomatic native
 driver's (\texttt{pg} or \texttt{mysql2}; the tuned baselines are a separate
-lower-bound reference, not the spread's anchor) median throughput divided by
+tuned reference, not the spread's anchor) median throughput divided by
 that of the slowest layer on that pattern (native-relative, so comparable
 across patterns even where an ORM exceeds the native driver). We report
 medians over the 25 independent replicates, the coefficient of variation
@@ -269,17 +271,21 @@ throughput ratios with a two-sided paired sign-flip permutation test
 ($20{,}000$ permutations, so the smallest attainable $p$ is $1/(20{,}001)$),
 cross-checked with the Wilcoxon signed-rank test. We report the
 geometric-mean paired ratio with a paired bootstrap 95\% CI and the paired
-dominance (fraction of replicates in which the faster layer wins); this is
-confirmatory analysis over the seven adjacent-rank comparisons (the
-confirmatory family), to which we apply a Bonferroni correction. For the
+dominance (fraction of replicates in which the faster layer wins). Because the
+seven adjacent pairs are defined by the \emph{observed} ranking rather than
+preregistered, we report them as planned pairwise contrasts along that ranking
+and treat the significances descriptively, applying a Bonferroni correction as a
+conservatism check rather than claiming a confirmatory family. For the
 pg--Prisma pair we additionally report a paired two-one-sided-tests (TOST)
-equivalence result against an a-priori $\pm5\%$ margin on the log-ratio
-(justified below). The layer$\times$engine interaction is tested per
-pattern with a blocked permutation test: for each layer and replicate we
-form the paired PostgreSQL-minus-MySQL log-throughput difference and permute
-layer labels within each replicate block ($20{,}000$ permutations), testing
-whether the engine effect varies across layers with replicate held as the
-block. Rank agreement across engines (Spearman, Kendall) is reported
+equivalence result against a $\pm5\%$ margin on the log-ratio (justified below).
+The layer$\times$engine interaction is tested per pattern with a blocked
+permutation test: for each layer and replicate we form the paired
+PostgreSQL-minus-MySQL log-throughput difference $D_{\ell,i}$ and, under the null
+of no interaction, permute the layer labels of $\{D_{\ell,i}\}$ \emph{within}
+each replicate $i$ ($20{,}000$ permutations); the test statistic is the
+between-layer $F$ of a randomized-block ANOVA on $D$ with replicate as the
+block, and within-block label exchangeability holds under the null because the
+$D_{\ell,i}$ share replicate $i$'s conditions. Rank agreement across engines (Spearman, Kendall) is reported
 descriptively over the seven evaluated portable layers, the systems under
 study rather than a sample from a population, so we do not attach population
 confidence intervals to those correlations. Reporting nonparametric tests
@@ -287,11 +293,14 @@ with standardized effect sizes follows recommended practice for randomized
 performance experiments in software
 engineering~\cite{arcuri2014hitchhiker,cliff1993dominance}. We treat
 comparisons of widely separated layers as descriptive, not as additional
-confirmatory hypotheses. The $\pm5\%$ equivalence margin was chosen a priori
-as a practical-significance threshold (a throughput difference under $5\%$
-is below this study's own run-to-run variability, CV $\leq 7.6\%$), reported
-as a chosen, not a preregistered, margin; the equivalence conclusion is not
-sensitive to the exact value within a few percent.
+confirmatory hypotheses. The $\pm5\%$ equivalence margin is a
+deployment-relevance threshold: a throughput difference under $5\%$ would not
+change a capacity-planning decision such as the number of application instances
+provisioned for a target load, and it is comfortably within the run-to-run and
+day-to-day variation typical of a virtualized host (for reference, this study's
+own run-to-run CV reaches $7.6\%$). We chose it before the analysis but did not
+preregister it, and the equivalence conclusion is not sensitive to the exact
+value within a few percent.
 
 \subsection{Experimental setup}
 All measurements were taken on 2026-07-12 and 2026-07-13 on a single host:

@@ -69,8 +69,9 @@ JavaScript}, leaving the Node.js ecosystem, and Express in particular, without
 an academic baseline for the better part of a decade. Three recent studies partially address this: one, in \emph{Procedia
 Computer Science}, compares Prisma against optimized raw SQL over eight query
 patterns on a containerized PostgreSQL setup~\cite{prisma_rawsql_2025} (cited
-for its methodology; its headline speedup figures were not reproducible in
-our own setup, so we do not build on them); a second compares Prisma, TypeORM,
+for its methodology; because the library versions, hardware, workload, and
+harness differ from ours, we do not build on its absolute speedup figures rather
+than dispute them); a second compares Prisma, TypeORM,
 and Sequelize across four relation types, also on PostgreSQL, by response
 time, memory, and CPU~\cite{orm_compare_jcct_2025}; and the most recent
 instruments the same three ORMs on PostgreSQL inside a NestJS service, timing
@@ -192,5 +193,5 @@ such as~\cite{salunke2024pgmysql}.
   \end{tabular}
   \end{adjustbox}
   \vspace{4pt}
-  {\raggedright\footnotesize $^\dagger$Cited for its methodology only; we could not reproduce the reported speedup figures in our own setup.\par}
+  {\raggedright\footnotesize $^\dagger$Cited for its methodology only; its absolute speedup figures are not comparable to ours given the differing versions, hardware, workload, and harness.\par}
 \end{table}

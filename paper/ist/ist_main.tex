@@ -47,26 +47,28 @@ mappers, or ORMs), yet practitioners choose between them largely on vendor
 benchmarks that are fragmented, PostgreSQL-only, and rarely report the tail
 (p99).
 \textbf{Objective:} We quantify, reproducibly and independently of the evaluated
-vendors, the access layer's performance cost across layer, engine, and access
-pattern, and decompose it into SQL execution versus mapping strategy.
+vendors, the whole-stack cost of the access layer across layer, engine, and
+pattern, and contrast idiomatic use with a same-SQL control.
 \textbf{Methods:} An identical Express application is served through nine
 idiomatic access layers (two native drivers, a query builder, and six ORMs) and
 two tuned native baselines, over five access patterns, against PostgreSQL and
-MySQL. We report throughput and tail latency (p99) jointly from 25 independent
-replicates per cell; an automated cross-check verifies byte-identical responses
+MySQL. We report throughput and closed-loop tail latency (p99) jointly from 25
+replicates per cell at a 50-connection operating point, with an open-loop tail
+below saturation; an automated cross-check verifies byte-identical responses
 across layers before measurement, and inserts run under the engines' default
 durability from a physically rebuilt state.
 \textbf{Results:} Abstraction cost concentrates in relation-materializing
 patterns: the deep/nested fetch spreads $6.5\times$ (PostgreSQL) and $4.5\times$
 (MySQL) between the native driver and the heaviest data-mapper ORM, growing with
-the size of the fetched graph. A same-SQL control collapses the spread to at
-most $2.2\times$: most of the deficit lies upstream of raw SQL execution, in each
-layer's query-generation and result-construction path (its default eager-loading
-strategy, query count, and object hydration). Read rankings transfer
-across engines (Spearman $\rho \geq 0.89$); the write ranking does not
-($\rho = 0.43$): under default durability, inserts are engine-bound on MySQL yet
-layer-dependent on PostgreSQL. Prisma matches or leads native throughput on
-several patterns at roughly five times the CPU of every other layer.
+graph size. A same-SQL control narrows the spread to at most
+$2.2\times$, bounding the raw-execution component: the idiomatic deficit lies in
+each layer's query-generation and result-construction path, which the control
+changes as a bundle and does not isolate. Read rankings transfer across engines
+(Spearman $\rho \geq 0.89$); the write ranking does not ($\rho = 0.43$): under
+default durability, inserts are bound by a shared MySQL-side cost yet
+layer-dependent on PostgreSQL. At that operating point Prisma matches or leads
+native throughput on several patterns, at roughly five times the application CPU
+of the others.
 \textbf{Conclusion:} The choice of access layer matters most where the layer must
 assemble a nested object graph; a reproducible harness and a checklist of
 benchmarking pitfalls specific to this genre are released as a replication package.

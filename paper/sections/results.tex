@@ -9,9 +9,9 @@ freshly booted server process, pool fixed at ten, inserts under each engine's
 default durability configuration. Each native driver is reported both
 idiomatically (\texttt{pg}, \texttt{mysql2}) and with reusable prepared
 statements (\texttt{pg-tuned}, \texttt{mysql2-tuned}); the tuned rows are a
-practitioner-oriented lower bound on what the wire protocol allows under this
-workload, not a ceiling every idiomatic layer could reach without code
-changes. Absolute throughput is hardware-specific, so the comparison of
+practitioner-tuned reference marking the throughput ceiling hand-tuned driver
+use reaches under this workload, not a level every idiomatic layer attains
+without code changes. Absolute throughput is hardware-specific, so the comparison of
 interest is \emph{relative} across layers within an engine
 (Section~\ref{sec:methodology}). Two estimands recur below: the
 \emph{default-configuration (idiomatic) effect} (the primary estimand behind
@@ -149,10 +149,13 @@ of only MikroORM's 663), a rank flip a benchmark run on either engine alone woul
 not reveal. Beyond order, the \emph{magnitude} of a layer's cost also depends on the
 engine: a blocked permutation test on the paired PostgreSQL-minus-MySQL
 log-throughput difference (Section~\ref{sec:methodology}) finds the
-layer$\times$engine interaction significant on all five patterns ($p \leq
-5\times10^{-5}$, the permutation-resolution floor, in each case), so
-single-engine results are not portable in degree even where they are
-portable in order.
+layer$\times$engine interaction significant on all five patterns (observed
+statistic above every one of the $20{,}000$ permutations, so
+$p = 1/20{,}001 \approx 5\times10^{-5}$ in each case). The interaction is not only
+significant but, on writes, large: the per-layer cross-engine
+(PostgreSQL$/$MySQL) throughput ratio spans a narrow $1.0$--$1.6$ on the reads but
+a wide $2.4$--$7.7$ on the insert, so single-engine results are not portable in
+degree, most sharply for writes, even where they are portable in order.
 
 Prisma's engine-dependent lead is visible on the \textbf{keyset range
 scan} (Table~\ref{tab:range_scan}): it leads on both engines (3{,}963 on
@@ -174,8 +177,9 @@ where the durability regime matters to that claim. All headline write numbers
 here are measured under each engine's \emph{default} durability configuration
 (Section~\ref{sec:methodology}). On MySQL, insert throughput is low and
 tightly clustered across all nine layers (663--809~req/s, a $1.22\times$ spread,
-CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms for every layer (a
-per-commit redo-log and binlog flush), whereas PostgreSQL spreads $3.86\times$
+CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms for every layer
+(consistent with a shared MySQL-side commit cost; Section~\ref{sec:discussion}),
+whereas PostgreSQL spreads $3.86\times$
 (\texttt{pg} 6{,}064 down to MikroORM 1{,}571, CI [3.77--3.98]). A
 default-versus-relaxed comparison ($n=25$ vs.\ $n=10$ medians;
 Supplement Table~S3) shows this is not a durability artifact: at 50
@@ -216,14 +220,23 @@ are therefore conservative: a larger graph would widen the gap between the
 lightest and heaviest layers further.
 
 \subsection{Tail latency}
-We report p99 for every pattern (the tail metric that governs perceived latency
-under load); p50, p90, and p97.5 are in the replication package. Tail latency
-tracks throughput: on the deep/nested fetch, PostgreSQL's p99 ladder runs
-\texttt{pg} 20, Prisma 18, Knex 27, Drizzle 31, TypeORM 45, Objection 55,
-Sequelize 60, and MikroORM 106~ms (Table~\ref{tab:deep_fetch}), the same order as
-the throughput ranking, so a heavyweight ORM's nested-fetch penalty is visible
-not only in mean capacity but in the tail under load, a quantity single-metric,
-throughput-only vendor benchmarks omit.
+We report the closed-loop p99 for every cell (p50, p90, and p97.5 are in the
+replication package). These p99 values are measured at the primary operating
+point, 50 concurrent connections against a ten-connection pool, so the layer is
+at or beyond its pool capacity and the tail includes connection-acquisition
+queueing (the pool sampler measures a mean of about 32 requests waiting;
+Section~\ref{sec:methodology}). This is the tail a deployment sees when the
+service is driven to saturation against a fixed pool, not an estimate of
+intrinsic per-request latency; the open-loop experiment below reports the
+sub-saturation tail. Under saturation, tail latency tracks throughput: on the
+deep/nested fetch, PostgreSQL's p99 ladder runs \texttt{pg} 20, Prisma 18,
+Knex 27, Drizzle 31, TypeORM 45, Objection 55, Sequelize 60, and MikroORM
+106~ms (Table~\ref{tab:deep_fetch}), the same order as the throughput ranking,
+so a heavyweight ORM's nested-fetch penalty is visible not only in mean capacity
+but in the saturated tail, a quantity single-metric, throughput-only vendor
+benchmarks omit. Each per-run p99 is computed by autocannon's HdrHistogram
+(sub-millisecond resolution, reported to the millisecond) over roughly
+\texttt{throughput}~$\times$~12~s completed requests.
 
 These closed-loop p99 values come from a constant-concurrency generator. To
 check that the tail ranking is not an artifact of that model, we drove the
@@ -265,13 +278,16 @@ each adjacently ranked pair on the deep/nested fetch \emph{pairwise} with the
 paired permutation test described in Section~\ref{sec:methodology}, reporting
 the geometric-mean paired ratio, a paired bootstrap 95\% CI, and the paired
 dominance (Table~\ref{tab:significance}); the Wilcoxon signed-rank test agrees
-throughout (replication package). Six of the
-seven adjacent pairs separate at the permutation-resolution floor
-($p \leq 5\times10^{-5}$) with the faster layer ahead in every one of the 25
-replicates (dominance $1.00$, except objection\,$>$\,sequelize at $0.88$), all
-with ratios at least $1.05$. This is confirmatory analysis over the seven
-adjacent-rank comparisons (the confirmatory family), and every one of the six
-survives a Bonferroni correction across the family. The seventh, the top pair \texttt{pg} and
+throughout (replication package). Six of the seven adjacent pairs separate with
+the observed statistic above every one of the $20{,}000$ permutations
+($p = 1/20{,}001 \approx 5\times10^{-5}$) and the faster layer ahead in every one
+of the 25 replicates (dominance $1.00$, except objection\,$>$\,sequelize at
+$0.88$), all with ratios at least $1.05$. Because the seven pairs are the
+adjacent ranks of the \emph{observed} ordering rather than a preregistered set,
+we report these as planned pairwise contrasts along the ranking and treat the
+significances descriptively; a Bonferroni correction across the seven leaves all
+six far below any conventional threshold, so the reading is robust to that
+caveat. The seventh, the top pair \texttt{pg} and
 Prisma, is the exception treated above: pg leads in 16 of 25 replicates by a
 geometric-mean ratio of $1.02$ (95\% CI [1.00--1.04]), which the paired
 permutation test does not resolve as significant ($p=0.058$) and the paired TOST
