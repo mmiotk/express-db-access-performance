@@ -117,9 +117,10 @@ Drizzle, and TypeORM, and four in Prisma and Objection. Supplement Table~S16 and
 the package's \texttt{METHODOLOGY.md} record, per layer, the eager-loading API
 used, its round-trip count, the documented alternative loading strategy we did
 \emph{not} use, and that query logging is disabled with no read-path hooks or
-validation; the six ORMs split both ways on the join-versus-select-in default,
-which a loading-strategy sensitivity check (Section~\ref{sec:results}) exercises in
-both directions. To separate a layer's
+validation; the six ORMs split both ways on the join-versus-select-in default. A
+loading-strategy sensitivity check (Section~\ref{sec:results}) switches the
+join-default data-mapper ORMs to select-in, finding the idiomatic default the
+faster strategy wherever the alternative is a byte-identical drop-in. To separate a layer's
 execution machinery from its strategy choice, every adapter also implements a
 \emph{same-SQL control}: identical two-statement deep-fetch SQL (and, per
 engine, identical \texttt{EXPLAIN} plans) with identical row mapping,

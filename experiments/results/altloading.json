@@ -1,0 +1,68 @@
+[
+  {
+    "engine": "postgres",
+    "adapter": "sequelize",
+    "direction": "join->select-in",
+    "identical": true,
+    "idiomatic_rps": 897,
+    "alt_rps": 668,
+    "ratio": 0.745
+  },
+  {
+    "engine": "postgres",
+    "adapter": "typeorm",
+    "direction": "join->select-in",
+    "identical": false,
+    "reason": "alt endpoint status 500"
+  },
+  {
+    "engine": "postgres",
+    "adapter": "mikroorm",
+    "direction": "join->select-in",
+    "identical": true,
+    "idiomatic_rps": 421,
+    "alt_rps": 296,
+    "ratio": 0.703
+  },
+  {
+    "engine": "postgres",
+    "adapter": "objection",
+    "direction": "select-in->join",
+    "identical": false,
+    "reason": "response not byte-identical"
+  },
+  {
+    "engine": "mysql",
+    "adapter": "sequelize",
+    "direction": "join->select-in",
+    "identical": true,
+    "idiomatic_rps": 788,
+    "alt_rps": 590,
+    "ratio": 0.749
+  },
+  {
+    "engine": "mysql",
+    "adapter": "typeorm",
+    "direction": "join->select-in",
+    "identical": false,
+    "reason": "alt endpoint status 500"
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mikroorm",
+    "direction": "join->select-in",
+    "identical": true,
+    "idiomatic_rps": 423,
+    "alt_rps": 289,
+    "ratio": 0.683
+  },
+  {
+    "engine": "mysql",
+    "adapter": "objection",
+    "direction": "select-in->join",
+    "identical": true,
+    "idiomatic_rps": 802,
+    "alt_rps": 1277,
+    "ratio": 1.592
+  }
+]

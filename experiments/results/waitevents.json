@@ -1,0 +1,68 @@
+{
+  "mysql": [
+    {
+      "adapter": "mysql2",
+      "inserts": 4000,
+      "errors": 0,
+      "rps": 670,
+      "wall_ms": 5971,
+      "redo_ms": 646,
+      "binlog_ms": 1708,
+      "flush_ms": 2353,
+      "per_insert_wall_ms": 1.493,
+      "per_insert_flush_ms": 0.588,
+      "flush_share": 0.394
+    },
+    {
+      "adapter": "knex",
+      "inserts": 4000,
+      "errors": 0,
+      "rps": 671,
+      "wall_ms": 5958,
+      "redo_ms": 639,
+      "binlog_ms": 1644,
+      "flush_ms": 2283,
+      "per_insert_wall_ms": 1.489,
+      "per_insert_flush_ms": 0.571,
+      "flush_share": 0.383
+    },
+    {
+      "adapter": "mikroorm",
+      "inserts": 4000,
+      "errors": 0,
+      "rps": 588,
+      "wall_ms": 6797,
+      "redo_ms": 755,
+      "binlog_ms": 1989,
+      "flush_ms": 2744,
+      "per_insert_wall_ms": 1.699,
+      "per_insert_flush_ms": 0.686,
+      "flush_share": 0.404
+    }
+  ],
+  "mysql_relaxed": [
+    {
+      "adapter": "mysql2",
+      "durability": "relaxed",
+      "inserts": 4000,
+      "rps": 787,
+      "per_insert_wall_ms": 1.27,
+      "per_insert_flush_ms": 0.011,
+      "flush_share": 0.009
+    }
+  ],
+  "postgres": [
+    {
+      "adapter": "pg",
+      "inserts": 4000,
+      "rps": 4557,
+      "per_insert_wall_ms": 0.219
+    },
+    {
+      "adapter": "mikroorm",
+      "inserts": 4000,
+      "rps": 1153,
+      "per_insert_wall_ms": 0.868
+    }
+  ]
+}

@@ -11,7 +11,11 @@ ENGINE=mysql    node bench/analyze.mjs   # cv_mysql copied from cv_all under ENG
 node scripts/stats2.mjs               # inferential JSON (results/analysis2.json)
 node scripts/gen-tables.mjs           # durability, equalcpu, cpu trade-off
 node scripts/sameplan.mjs             # (re-measures same-SQL; or use results/sameplan.json)
-node scripts/openloop2.mjs            # (re-measures open loop)
+OL_ENGINE=postgres node scripts/openloop2.mjs   # open loop (PostgreSQL, Table S6)
+OL_ENGINE=mysql    node scripts/openloop2.mjs   # open loop (MySQL);  gen-openloop-mysql.mjs -> S17
+node scripts/altloading.mjs           # alt eager-loading sensitivity (S18)
+node scripts/waitevents.mjs           # MySQL insert commit-flush wait events (S19; root perf_schema)
+# after ./scripts/db-local.sh stop && start:  node scripts/postreboot.mjs; gen-postreboot.mjs -> S20
 npm run sync:tables                   # copy results/tables/*.tex -> ../paper/tables/
 ```
 
@@ -48,6 +52,10 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:sameplan` | S14 | `sameplan.tex` | `scripts/sameplan.mjs` | `results/sameplan.json`, `results/raw.json` |
 | `tab:aggregation` | S15 | `aggregation.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
 | `tab:adapter_choices` | S16 | `adapter_choices.tex` | hand-authored (from `src/adapters/*`, verified) | `METHODOLOGY.md` |
+| `tab:openloop_mysql` | S17 | `openloop_mysql.tex` | `scripts/gen-openloop-mysql.mjs` | `results/openloop2.mysql.json` |
+| `tab:altloading` | S18 | `altloading.tex` | `scripts/altloading.mjs` | `results/altloading.json` |
+| `tab:waitevents` | S19 | `waitevents.tex` | `scripts/waitevents.mjs` | `results/waitevents.json` |
+| `tab:postreboot` | S20 | `postreboot.tex` | `scripts/gen-postreboot.mjs` | `results/postreboot.json` |
 
 ## Per-cell provenance (run id → table cell)
 

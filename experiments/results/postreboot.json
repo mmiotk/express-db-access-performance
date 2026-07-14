@@ -1,0 +1,44 @@
+[
+  {
+    "engine": "postgres",
+    "adapter": "pg",
+    "deep_rps": 3270.5,
+    "primary_deep_rps": 3741,
+    "ratio": 0.874
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "deep_rps": 3211,
+    "primary_deep_rps": 3685,
+    "ratio": 0.871
+  },
+  {
+    "engine": "postgres",
+    "adapter": "mikroorm",
+    "deep_rps": 437.5,
+    "primary_deep_rps": 571,
+    "ratio": 0.766
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mysql2",
+    "deep_rps": 2331,
+    "primary_deep_rps": 2405,
+    "ratio": 0.969
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "deep_rps": 3161,
+    "primary_deep_rps": 3701,
+    "ratio": 0.854
+  },
+  {
+    "engine": "mysql",
+    "adapter": "mikroorm",
+    "deep_rps": 430.5,
+    "primary_deep_rps": 535,
+    "ratio": 0.805
+  }
+]

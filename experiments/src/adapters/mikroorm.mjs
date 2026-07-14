@@ -75,6 +75,17 @@ export default async function createAdapter({ engine, config }) {
       });
       return post ? canonThread(post, post.author, post.comments.getItems()) : null;
     },
+    // Alternative eager-loading strategy (review 6.3): the select-in strategy
+    // instead of the default joined populate.
+    async getThreadAlt(id) {
+      const em = orm.em.fork();
+      const post = await em.findOne(Post, { id }, {
+        populate: ['author', 'comments', 'comments.author'],
+        strategy: 'select-in',
+        orderBy: { comments: { id: 'ASC' } },
+      });
+      return post ? canonThread(post, post.author, post.comments.getItems()) : null;
+    },
 
     // Same-plan control: identical SQL + identical mapping via the connection's
     // raw execute (fork mirrors this adapter's per-request idiom).

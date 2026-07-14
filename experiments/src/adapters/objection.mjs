@@ -52,6 +52,14 @@ export default async function createAdapter({ engine, config }) {
         .modifiers({ orderById: (b) => b.orderBy('comments.id') });
       return post ? canonThread(post, post.author, post.comments || []) : null;
     },
+    // Alternative eager-loading strategy (review 6.3): a single join
+    // (withGraphJoined) instead of the default batched withGraphFetched.
+    async getThreadAlt(id) {
+      const post = await Post.query().findById(id)
+        .withGraphJoined('[author, comments(orderById).author]')
+        .modifiers({ orderById: (b) => b.orderBy('comments.id') });
+      return post ? canonThread(post, post.author, post.comments || []) : null;
+    },
 
     // Same-plan control: identical SQL + identical mapping via the underlying knex.
     async getThreadRaw(id) {

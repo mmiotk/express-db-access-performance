@@ -78,6 +78,16 @@ app.get('/posts/:id/thread-raw', h(async (req, res) => {
   res.json(thread);
 }));
 
+// Deep fetch under the layer's ALTERNATIVE eager-loading strategy (review 6.3
+// sensitivity): only adapters implementing getThreadAlt (the ORMs with a documented
+// join<->select-in choice) serve this; the others return 501.
+app.get('/posts/:id/thread-alt', h(async (req, res) => {
+  if (typeof db.getThreadAlt !== 'function') return res.status(501).json({ error: 'not implemented' });
+  const thread = await db.getThreadAlt(Number(req.params.id));
+  if (!thread) return res.status(404).json({ error: 'not found' });
+  res.json(thread);
+}));
+
 // 0. no-DB baseline: a fixed, representative thread-shaped payload (post + author +
 //    10 comments, seed-realistic field sizes). Measures the Express + JSON floor of
 //    the request round trip with the database untouched.

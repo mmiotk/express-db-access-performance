@@ -54,6 +54,21 @@ export default async function createAdapter({ engine, config }) {
       const j = post.toJSON();
       return canonThread(j, j.author, j.comments || []);
     },
+    // Alternative eager-loading strategy (review 6.3): select-in instead of the
+    // idiomatic single join (`separate: true` issues a separate batched query for
+    // the comments association).
+    async getThreadAlt(id) {
+      const post = await Post.findByPk(id, {
+        include: [
+          { model: Author, as: 'author' },
+          { model: Comment, as: 'comments', separate: true, order: [['id', 'ASC']],
+            include: [{ model: Author, as: 'author' }] },
+        ],
+      });
+      if (!post) return null;
+      const j = post.toJSON();
+      return canonThread(j, j.author, j.comments || []);
+    },
 
     // Same-plan control: identical SQL + identical mapping via sequelize.query.
     async getThreadRaw(id) {

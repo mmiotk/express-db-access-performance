@@ -71,6 +71,17 @@ export default async function createAdapter({ engine, config }) {
       });
       return post ? canonThread(post, post.author, post.comments || []) : null;
     },
+    // Alternative eager-loading strategy (review 6.3): the query (select-in)
+    // strategy instead of the default join.
+    async getThreadAlt(id) {
+      const post = await posts.findOne({
+        where: { id },
+        relations: { author: true, comments: { author: true } },
+        relationLoadStrategy: 'query',
+        order: { comments: { id: 'ASC' } },
+      });
+      return post ? canonThread(post, post.author, post.comments || []) : null;
+    },
 
     // Same-plan control: identical SQL + identical mapping via ds.query.
     async getThreadRaw(id) {

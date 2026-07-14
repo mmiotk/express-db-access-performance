@@ -41,23 +41,18 @@ between \texttt{pg} and Prisma to need a formal equivalence test (below). The
 cost of abstraction remains strongly \emph{pattern}- and, now visibly,
 \emph{engine}-dependent.
 
-The tuned baselines sharpen what ``native'' means as a ceiling. On
-PostgreSQL, \texttt{pg-tuned} tops both the point read (6{,}851 vs.\
-\texttt{pg}'s 6{,}695~req/s) and the insert (6{,}280 vs.\ 6{,}064), and raises the
-deep-fetch ceiling slightly further (3{,}813 vs.\ 3{,}741); reusable prepared
-statements are worth a few percent on PostgreSQL. On MySQL, \texttt{mysql2-tuned}
-is within noise of idiomatic \texttt{mysql2} on the point read, range scan,
-aggregation, and insert (differences of at most $0.8\%$), except on the deep
-fetch, where it reaches 2{,}436~req/s against \texttt{mysql2}'s 2{,}405: the
-binary protocol and server-side prepared statements (wire-protocol evidence
-below) pay off only once a request issues more than one round trip.
+The tuned baselines sharpen what ``native'' means as a ceiling. On PostgreSQL,
+\texttt{pg-tuned} edges idiomatic \texttt{pg} on the point read, insert, and deep
+fetch, a few percent from reusable prepared statements. On MySQL,
+\texttt{mysql2-tuned} is within noise of idiomatic \texttt{mysql2} on every pattern
+(at most $0.8\%$) except the deep fetch, where the binary protocol and server-side
+prepared statements (wire-protocol evidence below) pay off only once a request
+issues more than one round trip.
 
-On the \textbf{point read}, PostgreSQL ranges from \texttt{pg-tuned}'s 6{,}851
-down to MikroORM's 2{,}185~req/s; the native-relative spread (\texttt{pg}'s
-idiomatic 6{,}695 divided by the slowest layer) is $3.06\times$ (95\% CI
-[2.97--3.16]). MySQL's spread is smaller, $2.36\times$ (\texttt{mysql2} 4{,}337
-down to MikroORM 1{,}839; CI [2.31--2.42]), but MySQL's fastest layer is not the
-native driver: Prisma leads at 5{,}993~req/s, $38\%$ above \texttt{mysql2}.
+On the \textbf{point read}, the native-relative spread is $3.06\times$ on
+PostgreSQL (95\% CI [2.97--3.16]) and a smaller $2.36\times$ on MySQL (CI
+[2.31--2.42]); MySQL's fastest layer is not the native driver but Prisma, $38\%$
+above \texttt{mysql2} (Supplement Table~S12).
 
 On the \textbf{deep/nested fetch} (the pattern that assembles a post, its author,
 and all comments with their authors), the native-relative spread is the widest
@@ -110,22 +105,27 @@ ORM API, and result marshalling together, so it isolates none of these
 individually; what it establishes is that the raw-execution component is
 small and the idiomatic overhead lies upstream of it.
 
-On the identical SQL, the deep-fetch spread collapses to a max/min ratio
-(across the nine layers; the idiomatic spreads above are native-relative, whose
-max/min counterparts are $6.7\times$ and $6.9\times$) of $1.76\times$ on PostgreSQL (top: Prisma's raw path at 4{,}342~req/s;
-bottom: Sequelize's raw facility at 2{,}472) and $2.21\times$ on MySQL (Prisma
-4{,}220; Sequelize 1{,}912). Prisma's raw path leads on both engines, consistent
-with its pipelined query engine; the new low end is Sequelize's raw facility
+On the identical SQL, the deep-fetch nine-layer max/min spread collapses to
+$1.76\times$ on PostgreSQL and $2.21\times$ on MySQL (Supplement Table~S14),
+against native-relative idiomatic counterparts of $6.7\times$ and $6.9\times$. Prisma's raw path leads on both
+engines, consistent with its pipelined query engine; the new low end is
+Sequelize's raw facility
 (\texttt{sequelize.query}), which we attribute to dispatch and marshalling
 overhead in the raw API itself, not SQL execution. MikroORM shows the largest
-strategy gap: its idiomatic path (571~req/s on PostgreSQL, 535 on MySQL) reaches
-only 0.20 and 0.25 of its own same-SQL throughput (2{,}869 and 2{,}172), a
-$5.0\times$ and $4.1\times$ gap between its idiomatic and raw-SQL paths. On this
+strategy gap: its idiomatic path reaches only 0.20 (PostgreSQL) and 0.25 (MySQL) of
+its own same-SQL throughput, a $5.0\times$ and $4.1\times$ idiomatic-to-raw gap. On this
 pattern, the access layer's idiomatic cost is dominated by what it \emph{chooses to
 do} by default (its query strategy, round-trip count, and object hydration), not
 by the speed of its raw SQL execution; the fixed-payload Express-plus-JSON
 floor (Section~\ref{sec:methodology}) sits well above every same-SQL cell, so
 the framework floor does not manufacture this collapse.
+A loading-strategy sensitivity check (Supplement Table~S18) probes whether these
+deficits are merely a default-strategy artifact. Where the alternative is a
+byte-identical drop-in, switching the join-default data-mapper ORMs (Sequelize,
+MikroORM) to select-in makes them slower ($0.68$--$0.75\times$), so their deficit is
+intrinsic; conversely, Objection's batched-select-in default is $1.6\times$ slower
+than a single join on MySQL, so part of \emph{its} deficit there is a strategy
+choice rather than an intrinsic cost.
 
 
 \subsection{RQ2: engine dependence of the ranking}
@@ -172,18 +172,18 @@ where the durability regime matters to that claim. All headline write numbers
 here are measured under each engine's \emph{default} durability configuration
 (Section~\ref{sec:methodology}). On MySQL, insert throughput is low and
 tightly clustered across all nine layers (663--809~req/s, a $1.22\times$ spread,
-CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms for every layer
-(consistent with a shared MySQL-side commit cost; Section~\ref{sec:discussion}),
-whereas PostgreSQL spreads $3.86\times$
+CI [1.20--1.24]; Table~\ref{tab:write}) and its p99 sits at roughly 135--155~ms for every layer.
+Direct \texttt{performance\_schema} instrumentation attributes this floor to the
+commit path: the redo-log and binlog flush takes $0.57$--$0.69$~ms per insert,
+$38$--$40\%$ of each insert and nearly identical across the native driver, query
+builder, and slowest ORM, and relaxing durability removes it (Supplement
+Table~S19). PostgreSQL, by contrast, spreads $3.86\times$
 (\texttt{pg} 6{,}064 down to MikroORM 1{,}571, CI [3.77--3.98]). A
-default-versus-relaxed comparison ($n=25$ vs.\ $n=10$ medians;
-Supplement Table~S3) shows this is not a durability artifact: at 50
-concurrent connections, group commit amortizes most of the per-commit
-flush cost, so relaxing durability buys at most $14\%$ on PostgreSQL (native;
-under $8\%$ on the layer-bound ORMs, median $+8\%$ across all nine rows)
-and $19$--$24\%$ on MySQL (median $+20\%$); if anything, the engine contrast is
-slightly larger under default durability than under the relaxed configuration
-used elsewhere. On MySQL, insert throughput
+default-versus-relaxed comparison (Supplement Table~S3) shows this is not a
+durability artifact: at 50 concurrent connections group commit amortizes most of
+the per-commit flush, so relaxing durability buys at most $14\%$ on PostgreSQL and
+$19$--$24\%$ on MySQL, and the engine contrast is, if anything, slightly larger
+under default durability. On MySQL, insert throughput
 is therefore governed mainly by the engine rather than the access layer; on
 PostgreSQL the access layer remains the larger factor. Which layer is
 fastest, however, does not transfer between the two: the ranking, not just the
@@ -248,27 +248,25 @@ Supplement Table~S6). Below saturation the corrected tails
 are flat and small: \texttt{pg} and Prisma hold p99 at 2--4~ms up to
 2{,}000~req/s, both sustaining the full offered rate, and Knex's p99 is still
 only 33~ms at 2{,}000. Beyond each layer's capacity the tail collapses rather
-than degrading gracefully: at the 4{,}000~req/s tier, \texttt{pg} achieves
-3{,}697 of the offered requests with a corrected p99 of 1.20~s, Prisma achieves
-3{,}501 (2.11~s), and Knex achieves 2{,}448 (9.4~s); Sequelize already collapses
-at 2{,}000~req/s (achieving 772, with a third of the issued requests timing
-out: 9{,}992 of 30{,}000), and
-MikroORM collapses at 1{,}000~req/s (achieving 488) and again at 4{,}000
-(achieving 259, with 53{,}315 of 60{,}000 requests timing out). We call a layer's behavior at an offered rate a
+than degrading gracefully: at the 4{,}000~req/s tier \texttt{pg} and Prisma still
+clear most requests (corrected p99 $1.2$--$2.1$~s) while Knex reaches 9.4~s, and
+the data-mapper ORMs collapse far earlier---Sequelize at 2{,}000~req/s and MikroORM
+at 1{,}000, each shedding a large share of requests to timeout (Supplement
+Table~S6). We call a layer's behavior at an offered rate a
 \emph{collapse} when it achieves under half the offered rate with a large share of
 requests timing out. By that criterion the ranking matches the closed-loop result
 and sharpens it: the data-mapper ORMs enter unstable queueing with high timeout
 rates as soon as the offered load crosses their capacity, whereas the lightweight
-layers degrade gradually over a wider range.
+layers degrade gradually over a wider range. The same open-loop sweep on MySQL
+(Supplement Table~S17) reproduces this pattern---flat sub-saturation tails and
+capacity-crossing collapse---so the intrinsic-tail ordering is engine-robust.
 
 \subsection{Measurement stability and significance}
 The rankings above rest on stable measurements. Across the 40 PostgreSQL cells
 the coefficient of variation of throughput over the 25 independent replicates is
 at most $7.6\%$ (\texttt{pg}, insert; Supplement Table~S9), and across the 40
-MySQL cells at most $6.6\%$ (Knex, insert; Supplement Table~S1); the
-largest relative median absolute deviation is $5.4\%$ (\texttt{pg}, insert,
-PostgreSQL). These maxima are well below the between-layer spreads reported
-above. Every measured request in the primary matrix
+MySQL cells at most $6.6\%$ (Knex, insert; Supplement Table~S1), well below the
+between-layer spreads reported above. Every measured request in the primary matrix
 succeeded: HTTP errors, connection-acquisition timeouts, and non-2xx responses
 were zero across all 90 cells' measurement windows (nonzero timeouts arise only
 in the deliberate open-loop overload runs below). One cell,
@@ -279,7 +277,13 @@ deep fetch, where every cell has the full 25 replicates, so this write cell does
 not enter them. A
 separate order-randomization check (forward versus reversed cell order, $n=5$
 each, insert endpoint) found no detectable history effect
-(Section~\ref{sec:methodology}).
+(Section~\ref{sec:methodology}). As an environmental-robustness check we restarted
+both database engines (cold buffer pools, fresh connections) and re-measured a
+representative deep-fetch subset (\texttt{pg}/\texttt{mysql2}, Prisma, MikroORM):
+the layer ranking reproduced the primary campaign on both engines, with absolute
+throughput $3$--$23\%$ lower eight days later (larger on PostgreSQL), the
+day-to-day host drift the relative analysis is designed to absorb (Supplement
+Table~S20).
 
 To confirm that neighboring ranks are not measurement artifacts, we compare
 each adjacently ranked pair on the deep/nested fetch \emph{pairwise} with the

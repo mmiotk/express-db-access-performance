@@ -203,9 +203,52 @@ query logging is disabled and verified on all eleven adapters, and no lifecycle
 hooks or validation run on the read path. The six data-mapper and ORM layers split
 both ways on the join-versus-select-in default: Sequelize, TypeORM, and MikroORM
 default to a single join, while Prisma and Objection default to separate batched
-queries, so a loading-strategy sensitivity check probes both directions. Full
-per-adapter detail is in the replication package's \texttt{METHODOLOGY.md}.
+queries. The loading-strategy sensitivity check reported in the main text
+(Table~\ref{tab:altloading}) switches the join-default layers to select-in where
+that alternative is a byte-identical drop-in. Full per-adapter detail is in the
+replication package's \texttt{METHODOLOGY.md}.
 
 \input{\tabledir adapter_choices}
+
+\section{Open-loop tail latency on MySQL}
+\label{sup:openloop-mysql}
+Table~\ref{tab:openloop_mysql} is the MySQL companion to the PostgreSQL open-loop
+sweep (Supplement Table~S6): coordinated-omission-corrected p99 on the deep/nested
+fetch at a constant offered rate. The sub-saturation tail is flat and small on
+both engines, and each layer collapses once the offered rate crosses its capacity,
+so the intrinsic-tail ordering holds on MySQL as on PostgreSQL.
+
+\input{\tabledir openloop_mysql}
+
+\section{Alternative eager-loading sensitivity}
+\label{sup:altloading}
+Table~\ref{tab:altloading} reports the loading-strategy sensitivity check: for the
+data-mapper ORMs whose alternative strategy is a byte-identical drop-in, idiomatic
+deep-fetch throughput versus the alternative, on both engines. Both endpoints were
+verified to return byte-identical responses before timing.
+
+\input{\tabledir altloading}
+
+\section{MySQL insert commit-flush mechanism}
+\label{sup:waitevents}
+Table~\ref{tab:waitevents} gives the direct \texttt{performance\_schema} evidence
+behind the MySQL insert bottleneck: sampling the redo-log and binary-log flush wait
+instruments around a fixed insert workload at default durability, the flush is a
+shared engine floor---similar per-insert across the native driver, query builder,
+and ORM despite their very different read performance---and relaxing durability
+removes it.
+
+\input{\tabledir waitevents}
+
+\section{Post-restart environmental-robustness check}
+\label{sup:postreboot}
+Table~\ref{tab:postreboot} reports the environmental-robustness check: after a full
+restart of both database engines, a representative deep-fetch subset re-measured
+eight days after the primary campaign. The layer ranking reproduces on both engines
+(\texttt{pg}~$>$~Prisma~$\gg$~MikroORM on PostgreSQL; Prisma~$>$~\texttt{mysql2}~$\gg$~MikroORM
+on MySQL); absolute throughput is $3$--$23\%$ lower, the day-to-day host drift the
+paper's relative analysis is designed to absorb.
+
+\input{\tabledir postreboot}
 
 \end{document}
