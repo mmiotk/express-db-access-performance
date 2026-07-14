@@ -12,204 +12,165 @@
 \newcommand{\euro}{EUR}
 \pagestyle{plain}
 \begin{document}
-\section*{Response to Reviewer (Revision Round 3)}
+\section*{Response to Reviewer (Revision Round 4)}
 
-We thank the reviewer for a detailed and constructive report on the full manuscript. The recurring theme across review rounds has been that several statements were stronger than our design supports. We have taken that seriously and made a deliberate, paper-wide change of stance: \textbf{we claim less, and we claim it once.} The paper's spine is now \emph{whole-stack idiomatic performance under a stated operating point}, with the same-SQL control presented as a \textbf{contrast that bounds} the raw-execution component rather than a decomposition that isolates mechanisms. We also ran the four targeted experiments the review pointed toward. All section and table references below are to the revised submission build (\texttt{ist/ist\_main.tex}); a numbered online supplement (Supplement Tables S1--S20) accompanies it. Effective main-text length is 14,996 words, under the 15,000 limit (\texttt{word-count.pdf}).
+We thank the reviewer for a rigorous and constructive report. The review's central observation --- that several interpretations exceeded what a single-host, saturated, single-implementation design identifies, and that this concern has recurred --- is correct, and we have addressed it structurally rather than cosmetically. The governing change this round is a \textbf{reposition}: the paper is now presented as a \emph{reproducible benchmark instrument and a configuration-specific comparison}, not as a generalized ranking of database libraries. Single host, idiomatic-choice, and the saturated operating point are now \textbf{declared scope}, and the harness, its controls, and a benchmarking-pitfalls checklist are the primary contributions. We also ran the feasible experiments the review pointed toward. Section and table references are to the revised submission build; effective length is recorded in \texttt{word-count.pdf}.
 
-\section*{Overarching change: claim less, decisively}
+\section*{The reposition (addresses the recurring "claims exceed design")}
 
-Wherever the manuscript previously suggested that the same-SQL control \emph{decomposes} the deficit or that "most of the cost lies upstream," it now states that the control \textbf{changes query generation, hydration, protocol, and mapping together as a bundle and isolates none of them individually}; it \emph{bounds} the raw-execution component. This wording is now consistent across both abstracts, the Introduction, the Methodology estimand naming (renamed "same-SQL (raw-path) estimand \ldots{} a compound contrast, not a mechanism-isolating decomposition"), Results, Discussion, and Conclusion.
+\begin{itemize}
+  \item \textbf{Title, Objective, RQs, contributions recast.} The title now reads *"A
+\end{itemize}
+
+Reproducible Benchmark \ldots{} A Configuration-Specific Comparison on PostgreSQL and MySQL."\emph{ The Objective leads with the harness ("the harness, not a generalized ranking, is the contribution"). Each RQ is scoped to "the benchmarked implementations under the specified operating point." The contributions list the instrument, the design, and the checklist as }\emph{primary}*; the empirical findings are labelled configuration-specific.
+
+\begin{itemize}
+  \item \textbf{We propagated the fixes uniformly.} The recurrence was partly mechanical: prior
+\end{itemize}
+
+rounds fixed a phrase in one place but not others, so the paper contradicted itself. We swept every occurrence. There are now \textbf{zero} instances of "independent replicate(s)" (the runs are "repeated randomized-block runs"; the paper already conceded non-independence, so this removes a self-contradiction), the primary p99 is called "saturated client-observed response-time p99" throughout, and the same-SQL control is described only as a compound intervention.
 
 \section*{Major concerns}
 
-\textbf{\S{}6.1 --- same-SQL framing overclaimed.} Corrected as above. The estimand is now a compound contrast; Results and Discussion state explicitly that it does not attribute the deficit to any single component (Results \S{}"Same-SQL control"; Methodology \S{}"Analysis").
+\textbf{\S{}6.1 --- saturated p99 is a saturation outcome, not intrinsic tail.} Agreed. It is now consistently named a saturated client-observed response-time p99 at the stated operating point, and we added a \textbf{utilization-controlled open-loop experiment}: each layer is offered 50/70/85/95 \% of its own saturating throughput, replicated, on both engines. At 50 \% of each layer's own capacity every layer holds p99 near 2--4 ms on both engines, and the large saturated gap (native driver 20 ms versus the slowest ORM 106 ms) dissolves --- confirming the saturated ladder was tracking capacity/queueing, not intrinsic tail latency; the tail rises only as a layer nears its own capacity. The utilization results are now at least as prominent as the saturated p99.
 
-\textbf{\S{}6.2 --- p99 was under-qualified.} The primary p99 is now framed throughout as \textbf{saturated closed-loop tail latency at a 50-connection operating point against a ten-connection pool}, which includes connection-acquisition queueing (Abstract; Introduction; Methodology; Results \S{}"Tail latency"). As the intrinsic-tail companion we added a \textbf{coordinated-omission-corrected open-loop} measurement, and in this round extended it to \textbf{both engines} (new experiment; Supplement Table S17): the sub-saturation corrected tail is flat and small and each layer collapses once the offered rate crosses its capacity on MySQL as on PostgreSQL, so the intrinsic-tail ordering is engine-robust.
+\textbf{\S{}6.2 --- same-SQL does not identify a mechanism.} Agreed and corrected everywhere. The control is now described strictly as a compound intervention that changes query formulation, API, protocol, statement preparation, round-trip structure, and mapping \emph{together} and isolates no single factor; the residual is not called "raw-execution cost" unqualified. A new \textbf{controlled/uncontrolled factor table} makes explicit what the control holds constant and what it changes together.
 
-\textbf{\S{}6.3 --- "idiomatic" was underspecified.} We added a consolidated \texttt{experiments/METHODOLOGY.md} and a compact \textbf{Supplement Table S16} documenting, per adapter: the exact eager-loading API used on the deep fetch, its round-trip count, the documented alternative loading strategy we did \emph{not} use, and confirmation that query logging is disabled with no read-path hooks or validation (verified against source). We also ran an \textbf{alternative eager-loading sensitivity experiment} (Supplement Table S18): where the alternative is a byte-identical drop-in, switching the join-default data-mapper ORMs (Sequelize, MikroORM) to select-in makes them \emph{slower} (0.68--0.75$\times$), so their deficit is intrinsic rather than a poor default; conversely, Objection's batched-select-in default is 1.6$\times$ slower than a single join on MySQL, so part of \emph{its} deficit there is a strategy choice. TypeORM's query strategy errors on the ordered nested \texttt{findOne} in the pinned version and is disclosed as a portability caveat rather than measured.
+\textbf{\S{}6.3 --- "idiomatic" is subjective.} We added a \textbf{pre-specified selection protocol}, fixed before measurement: the eager-loading API each library's official documentation presents first for the pinned version, with logging/hooks/validation off. The exact API, \textbf{documentation page, and pinned version} for each layer are tabulated (\texttt{METHODOLOGY.md}, Supplement Table S16). We did not invite maintainers to review the adapters; that is now disclosed as an explicit limitation. The alternative loading strategy is measured where it is a byte-identical drop-in; the native, query-builder, and Prisma layers have no second loading strategy to offer (their SQL is fixed), so "strongest alternative for every layer" is satisfied where feasible.
 
-\textbf{\S{}6.4 --- practical recommendations too broad.} Recommendations are scoped to layer class and access pattern and bounded by the operating point; we removed unconditional phrasings.
+\textbf{\S{}6.4 --- equal pool $\ne$ equal resource.} We renamed the estimand "equal configured connection limit" and added a \textbf{per-layer pool-size frontier} on both engines (throughput versus pool size, 1--50) so the fixed-pool choice is shown not to drive the ranking.
 
-\textbf{\S{}6.5 --- Prisma mechanism conflated observation and inference.} We now separate the \textbf{observation} (Prisma draws \textasciitilde{}5$\times$ the application CPU at the fixed ten-connection pool; its ranking changes with concurrency) from the \textbf{documentation fact} (in-process multi-threaded query engine) from \textbf{inference}; the abstract CPU statement is qualified "at that operating point."
+\textbf{\S{}6.5 --- single-host interference.} We do not have a second machine, so a separate-host / remote-database topology is named as a scoped future use of the instrument rather than claimed. The feasible test of the reviewer's specific worry --- that Prisma's multi-core engine looks competitive only because the one-core layers leave cores idle --- is a \textbf{multi-worker (node cluster) experiment}: each layer is scaled to 1/2/4 workers so every layer can use the spare cores. The result confirms the reviewer's intuition: at one worker the native driver and Prisma are near parity, but at four workers the native driver overtakes Prisma by 1.6$\times$ on PostgreSQL and 1.4$\times$ on MySQL, because the single-pool layers scale on the cores Prisma's engine already consumed. Prisma's throughput parity is therefore specific to a deployment that leaves cores idle. The single-host topology, and its consequences for the CPU comparison, are disclosed prominently.
 
-\textbf{\S{}6.6 --- MySQL insert mechanism asserted without direct evidence.} We ran the \textbf{performance\_schema commit-flush experiment} (new; Supplement Table S19). Sampling the redo-log and binary-log flush wait instruments during the insert workload at default durability, the flush takes 0.57--0.69 ms per insert (38--40\% of each insert) and is \textbf{nearly identical across the native driver, query builder, and slowest ORM} --- a shared engine floor --- and relaxing durability removes it and lifts throughput. The manuscript's "consistent with a shared MySQL-side commit cost" is now \emph{directly measured} (Results \S{}"RQ2"; Supplement \S{}"MySQL insert commit-flush mechanism").
+\textbf{\S{}6.6 --- "25 independent replicates."} Corrected to "25 repeated runs" throughout, including the table captions and the generic build. The manuscript's own non-independence paragraphs are retained.
 
-\textbf{\S{}6.7 --- temporal concentration of measurements.} We added a \textbf{post-restart robustness check} (new; Supplement Table S20): after restarting both database engines (cold buffer pools, fresh connections) we re-measured a representative deep-fetch subset eight days after the primary campaign. The layer ranking reproduces on both engines; absolute throughput is 3--23\% lower, which is the day-to-day host drift that our \emph{relative} analysis is designed to absorb. We disclose this is a single host, so it checks temporal robustness, not cross-machine generalization.
+\textbf{\S{}6.7 --- narrow workload / broad recommendations.} Recommendations are now scoped to "the benchmarked implementations in this configuration, workload, and host," and the unmeasured productivity/type-safety trade-off is flagged as unmeasured. We added a \textbf{mixed read/write workload} (interleaved deep-fetch reads and inserts at documented mixes) and a \textbf{60--120 s longer-run sensitivity} subset. Both preserve the read ordering, and the 90 s runs reproduce the 12 s medians within 1 \%.
 
-\textbf{\S{}6.8 --- CPU/equal-CPU evidence belonged in the main text.} We added a compact main-text \textbf{resource-footprint table} (Table 5: per-layer application CPU, database CPU, combined req/CPU-second, and peak RSS on the deep fetch), with the equal-CPU one-core headline in its caption; the fuller per-metric tables remain in the supplement. To stay within the length limit we moved four secondary tables (two read patterns, aggregation, and the same-SQL control) to the supplement.
+\textbf{\S{}6.8 --- selective/post-hoc statistics.} Every primary layer$\times$engine$\times$pattern cell now carries a \textbf{95 \% bootstrap confidence interval on throughput} in the tables (not only medians and selected adjacent tests). The single-run open-loop and three-run fan-out are \textbf{replicated} (open-loop to five, fan-out to eight runs) and the fan-out, durability, loading-strategy, and open-loop analyses are explicitly labelled exploratory. The adjacent-rank tests were already labelled post-hoc.
 
-\section*{Statistics (\S{}8)}
+\textbf{\S{}6.9 --- the interaction p is uninformative.} We now read the interaction through its \textbf{effect size} (per-layer cross-engine throughput ratio, narrow 1.0--1.6 on reads, wide 2.4--7.7 on writes) and note that the floor p conveys little about magnitude; a \textbf{per-layer PG-vs-MySQL rank table} now backs the correlations (Prisma flips from rank 1 on PostgreSQL to rank 6 on MySQL for inserts).
 
-\begin{itemize}
-  \item \textbf{p99 inference beyond the deep fetch.} We extended paired inference to **all
-\end{itemize}
+\textbf{\S{}6.10 --- novelty.} We call the literature review a \emph{structured related-work search} (not systematic), scope the novelty to the searched databases and dates, and archive the search strings.
 
-five patterns $\times$ both engines** (per-cell bootstrap CIs and paired permutation/Wilcoxon on adjacent p99 pairs). Six of seven adjacent deep-fetch p99 pairs separate; five to six of seven separate across the reads on each engine; on MySQL inserts no adjacent p99 pair separates --- the tail counterpart of the throughput engine floor (Results \S{}"Tail latency").
+\section*{What was already correct (verified, not changed)}
 
-\begin{itemize}
-  \item \textbf{Adjacent-rank tests.} These are defined by the \emph{observed} ranking and were not
-\end{itemize}
-
-preregistered; we now call them \textbf{planned pairwise contrasts on the observed ranking, reported descriptively}, with Bonferroni retained only as a conservatism note.
+We note, in case it saves the reviewer time, that several items the review asked us to check are already implemented as recommended:
 
 \begin{itemize}
-  \item \textbf{Permutation resolution.} Corrected to \textbf{p = 1/20,001 $\approx$ 5.0$\times$10$^{-5}$} (an equality
+  \item \textbf{p99 test unit} is the run-level statistic (25 per cell), never the individual
 \end{itemize}
 
-at the resolution floor, none exceeded), in the text and the regenerated table.
+request; the paper and code (\texttt{stats2.mjs}) both use run-level values.
 
 \begin{itemize}
-  \item \textbf{TOST margin.} Now justified by \textbf{deployment relevance} (a <5\% difference does
+  \item \textbf{Bootstrap} is a \textbf{percentile} bootstrap resampling \textbf{replicate indices}
 \end{itemize}
 
-not change instance-count/capacity planning), with the CV corroboration demoted.
+(preserving pairing), from a \textbf{fixed seed} (\texttt{mulberry32(0x57a75)}); this is now stated in the methodology.
 
 \begin{itemize}
-  \item \textbf{Interaction test.} We report the interpretable effect (per-layer cross-engine
+  \item \textbf{Docker images} are pinned by immutable \texttt{@sha256} digest; \textbf{dependencies} by a
 \end{itemize}
 
-ratio ranges) alongside the blocked-permutation p, and state the statistic (randomized-block F on per-(layer,replicate) log-differences) and the within-replicate-block exchangeability assumption.
+committed lockfile.
 
 \begin{itemize}
-  \item \textbf{Primary vs secondary outcomes.} We added an \textbf{outcomes table} (Table 6)
+  \item All six \textbf{declarations} (structured abstract, CRediT, competing interest, funding,
 \end{itemize}
 
-separating the primary confirmatory outcomes (throughput, closed-loop p99) from secondary/exploratory controls.
+data availability with the Zenodo DOI, generative-AI) are present.
 
 \begin{itemize}
-  \item \textbf{Error/timeout attestation.} We state that HTTP errors, connection-acquisition
+  \item The \textbf{author name} is consistent ("Miotk") throughout; there is no "Miotka".
 \end{itemize}
-
-timeouts, and non-2xx responses were \textbf{zero across all 90 primary cells}; nonzero timeouts appear only in the deliberate open-loop overload runs.
-
-\section*{Minor points (\S{}7)}
-
-We adopted the wording changes: softened "production HTTP framework," "premiere," and "dominates perceived performance"; clarified the tuned baselines as a "practitioner-tuned reference / throughput ceiling" rather than a "lower bound"; reported the p99 sample size ($\approx$ throughput $\times$ 12 s completed requests, via autocannon's HdrHistogram, sub-millisecond, ms-rounded); clarified the knex/PostgreSQL/insert n=24 cell (the tabulated adjacent-pair tests are on the deep fetch, where every cell has the full 25 replicates); and de-duplicated recurring numbers flagged as repetitive. On the title we kept "for PostgreSQL and MySQL"; we are happy to add "at the HTTP level" if the editor prefers. On prior Prisma figures, we now state that absolute speedups are \textbf{not comparable given differing versions, hardware, workload, and harness}, rather than "not reproducible." Novelty claims (\S{}10) are scoped to "in the sources we searched."
-
-\section*{Artifact (\S{}9)}
-
-The replication package now includes: explicit \texttt{LICENSE-code} (MIT) and \texttt{LICENSE-text} (CC-BY 4.0, extended to the datasets); \texttt{schema/db-config.md} documenting the effective server configuration and schema/index DDL for both engines; the raw per-cell and open-loop JSON (not only aggregated tables); an extended \texttt{MANIFEST.md} with a run-id $\to$ table-cell provenance note; refreshed \texttt{checksums.sha256}; and \textbf{unit tests for every statistical estimator} (\texttt{bench/stats.test.mjs}, 19 cases, \texttt{npm test}) against hand-computed values and closed-form properties. The generative-AI declaration now includes an \textbf{AI-assisted-code verification} paragraph (unit-tested estimators, cell-level provenance, and the byte-identical correctness cross-check).
 
 \section*{Point-by-point answers to the reviewer's questions}
 
 \begin{enumerate}
-  \item \textbf{Adjacency / $\pm$5\% margin fixed a priori?} Yes, chosen before analysis but not
+  \item \textbf{Idiomatic selection rule?} Pre-specified before measurement: the first
 \end{enumerate}
 
-preregistered; relabelled as planned contrasts reported descriptively. Repo history is available.
+eager-loading API in each library's official guide for the pinned version; documented with page and version (Supplement Table S16, \texttt{METHODOLOGY.md}).
 
 \begin{enumerate}
-  \item \textbf{Blocked-interaction statistic and exchangeability?} Randomized-block F on the
+  \item \textbf{Maintainer/expert review?} No; disclosed as a limitation.
+  \item \textbf{Equivalent tracking/hooks/validation/lifecycle?} Library defaults, disabled or
 \end{enumerate}
 
-per-(layer,replicate) PostgreSQL-minus-MySQL log-throughput differences; layer labels are exchangeable within each replicate block under the no-interaction null.
+request-scoped on the read path; documented per adapter.
 
 \begin{enumerate}
-  \item \textbf{Is $\pm$5\% CV-derived?} No --- it is a deployment-relevance threshold
+  \item \textbf{Same-SQL mappers identical machine code?} Source-level equivalent, not identical
 \end{enumerate}
 
-(instance-count/capacity planning); the CV is only corroborative.
+code paths; this is exactly why the control is a compound intervention.
 
 \begin{enumerate}
-  \item \textbf{p99 sample size and instrument?} Each p99 is over $\approx$ throughput $\times$ 12 s
+  \item \textbf{Prepared-statement caches over fresh processes?} A fresh process per run means a
 \end{enumerate}
 
-completed requests, from autocannon's HdrHistogram (sub-ms, reported ms-rounded).
+cold statement cache each run; the tuned baselines reuse within a run.
 
 \begin{enumerate}
-  \item \textbf{Errors/timeouts in the primary matrix?} Zero non-2xx, errors, and timeouts
+  \item \textbf{Bootstrap resampling unit?} Replicate index (25 run-level values), seeded.
+  \item \textbf{p99 tests on 25 run-level values?} Yes.
+  \item \textbf{Why saturated p99 primary vs replicated open-loop at controlled utilization?}
 \end{enumerate}
 
-across all 90 cells (fields confirmed and now stated).
+Both are now reported; the utilization-controlled open-loop is the intrinsic-tail evidence.
 
 \begin{enumerate}
-  \item \textbf{What does byte-equality compare?} The final serialized JSON response bodies
+  \item \textbf{Processes CPU-pinned?} DB/server/generator share the host; the equal-CPU control
 \end{enumerate}
 
-(\texttt{bench/verify.mjs}); status codes and health are checked; headers are not compared.
+pins the server; single-host is disclosed.
 
 \begin{enumerate}
-  \item \textbf{Serialization determinism?} TZ=UTC, ISO-8601 dates, numeric coercion,
+  \item \textbf{Steal time / frequency / neighbours?} Uncontrolled on the virtualized host;
 \end{enumerate}
 
-BigInt$\to$Number, canonical key order (\texttt{src/adapters/\_canon.mjs}).
+disclosed; the drift, post-restart, and longer-run checks bound their effect.
 
 \begin{enumerate}
-  \item \textbf{Insert semantics across layers?} Single autocommit \texttt{INSERT \ldots{} RETURNING id}
+  \item \textbf{Load generator co-located every run?} Yes (single host); disclosed.
+  \item \textbf{Buffer pools / OS caches between cells?} Warm by design; randomized order and
 \end{enumerate}
 
-(pg) / \texttt{insertId} (mysql2) with identical return semantics; the transactional variant uses one transaction (\texttt{createThread}).
+fresh boot; the post-restart check confirms the cold-start ranking.
 
 \begin{enumerate}
-  \item \textbf{What do the tuned baselines change?} They reuse prepared statements per pooled
+  \item \textbf{Exact IST word count?} Recomputed (\texttt{word-count.pdf}).
+  \item \textbf{Zenodo archive = submitted version?} Yes; the v1.4.0 tarball is `git archive
 \end{enumerate}
 
-connection; otherwise identical.
+HEAD` of the tagged release.
 
 \begin{enumerate}
-  \item \textbf{Cache/buffer state across cells?} Buffer pools are warm by design
+  \item \textbf{Fan-out "robust" with three runs?} The reviewer was right to doubt it. On
 \end{enumerate}
 
-(memory-resident seed); randomized cell order and a fresh server boot per replicate mitigate carryover; the new post-restart check (S20) confirms the ranking survives a cold start.
+replication (all layers, eight runs, both engines) the spread is a \textbf{roughly constant} multiplier across 0--500 comments, not the growing one the three-run sweep suggested; we removed the "growing with graph size" claim from the abstract, intro, results, discussion, conclusion, and threats, and report the fan-out as exploratory.
 
 \begin{enumerate}
-  \item \textbf{MySQL insert ceiling mechanism?} Now directly measured via performance\_schema
+  \item \textbf{Uncertainty for the MySQL commit-path percentages?} Reported from the
 \end{enumerate}
 
-(S19): a shared redo-log/binlog commit flush.
+wait-event replicates.
 
 \begin{enumerate}
-  \item \textbf{Prisma lead mechanism?} Observation ($\approx$5$\times$ CPU, concurrency-dependent) plus the
+  \item \textbf{Stable public versions + immutable ids?} Digest-pinned images + lockfile.
+  \item \textbf{Miotk or Miotka?} Miotk everywhere (verified).
+  \item \textbf{AI generate/modify adapters or stats code?} Assisted; verified by the
 \end{enumerate}
 
-documented in-process engine; pipelining is labelled inference.
+byte-identical cross-check and unit tests; disclosed.
 
 \begin{enumerate}
-  \item \textbf{ORM defaults (tracking/hooks/validation)?} Library defaults, disabled or
+  \item \textbf{Raw logs reconstruct failed/excluded runs (knex n=24)?} Yes; raw JSON, partial
 \end{enumerate}
 
-request-scoped on the read path; documented per adapter (S16, METHODOLOGY.md).
+files, and status logs are archived.
 
-\begin{enumerate}
-  \item \textbf{Were maintainers consulted?} No, deliberately, to preserve independence;
-\end{enumerate}
-
-disclosed as a limitation, with the artifact open for scrutiny.
-
-\begin{enumerate}
-  \item \textbf{Was logging disabled?} Yes, disabled and verified at runtime on all eleven
-\end{enumerate}
-
-adapters (S16).
-
-\begin{enumerate}
-  \item \textbf{What does the equal-CPU control pin?} The server process (\texttt{taskset}), with the
-\end{enumerate}
-
-database and load generator on disjoint cores.
-
-\begin{enumerate}
-  \item \textbf{Does combined CPU include the generator / I/O wait?} The load generator is
-\end{enumerate}
-
-excluded; kernel and I/O-wait are not separately isolated, now disclosed.
-
-\begin{enumerate}
-  \item \textbf{Are all table cells regenerable?} Yes, each from raw JSON via a committed
-\end{enumerate}
-
-script (\texttt{MANIFEST.md} maps every cell).
-
-\begin{enumerate}
-  \item \textbf{AI-assistance verification?} Byte-identical correctness cross-check,
-\end{enumerate}
-
-unit-tested estimators, and independent hand-recomputation of key statistics.
-
-\begin{enumerate}
-  \item \textbf{Effective word count?} 14,996 (\texttt{word-count.pdf}), under the 15,000 limit.
-\end{enumerate}
-
-We believe the paper now claims exactly what its design supports, backed by four new experiments and a fully unit-tested, provenance-tracked artifact. We thank the reviewer for pushing it to this point.
+We believe the repositioned paper claims exactly what a single-host benchmark identifies, backed by new experiments and a fully documented, provenance-tracked instrument, and we thank the reviewer for pressing it to this point.
 
 \end{document}

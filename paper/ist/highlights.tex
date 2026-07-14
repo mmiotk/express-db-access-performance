@@ -7,9 +7,9 @@
 \noindent\textbf{Highlights}
 \begin{itemize}[leftmargin=1.5em,nosep]
   \item Nine idiomatic layers plus tuned native baselines on PostgreSQL and MySQL
-  \item Deep-fetch spread of 6.5x collapses to 2.2x when layers run identical SQL
-  \item Prisma matches or leads native throughput at five times the CPU of other layers
-  \item Read rankings transfer across engines; write rankings do not under default fsync
+  \item Deep-fetch spread of 6.5x narrows to 1.5x under a same-SQL control
+  \item Prisma's native-throughput parity holds at 5x CPU but reverses under scaling
+  \item Saturated tail-latency gaps largely dissolve at matched utilization
   \item Open harness verifies byte-identical responses across layers before measuring
 \end{itemize}
 \end{document}

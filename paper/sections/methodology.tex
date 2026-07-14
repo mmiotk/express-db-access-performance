@@ -240,7 +240,10 @@ configuration (PostgreSQL \texttt{fsync=on}, \texttt{synchronous\_commit=on},
 \texttt{full\_page\_writes=on}; MySQL
 \texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1},
 \texttt{log\_bin=ON}), the regime a deployment runs unless an operator
-deliberately relaxes it; a labelled secondary run instead relaxed every one
+deliberately relaxes it. Each insert is an autocommit single-statement
+\texttt{INSERT} under each engine's default isolation level (PostgreSQL Read
+Committed, MySQL Repeatable Read); the transactional variant wraps a post and its
+five comments in one transaction. A labelled secondary run instead relaxed every one
 of those settings on both engines (10 replicates, write endpoint only) to
 isolate the durability mechanism, compared with the default regime in
 Section~\ref{sec:discussion} (Supplement Table~S3). A fixed-payload

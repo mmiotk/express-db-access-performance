@@ -32,16 +32,9 @@ differences between layers are therefore attributable to how each layer reaches 
 identical response, not to what is returned. Writes are the one endpoint that
 mutates state, and the reported finding uses each engine's \emph{default},
 vendor-standard durability configuration (Section~\ref{sec:methodology}), not a
-configuration we relaxed ourselves, so the reported write spreads (Table~\ref{tab:write})
-and the roughly $7.5\times$ native-driver gap between engines (809 MySQL vs.\
-6{,}064 PostgreSQL req/s) describe a standard deployment rather than a tuning
-choice of ours. A labelled secondary run relaxes every durability setting on
-both engines symmetrically, including MySQL's binlog sync (an earlier check
-had left that one MySQL setting at its default, an asymmetry that did not
-affect the primary, default-durability result reported here but could have
-affected that secondary comparison specifically); under the symmetric relaxed
-regime throughput rises on both engines, but the cross-engine gap is, if
-anything, slightly larger than under defaults, so it is not an artifact of
+configuration we relaxed ourselves, so the write spreads (Table~\ref{tab:write})
+describe a standard deployment rather than a tuning choice of ours; a symmetric
+relaxed-durability secondary confirms the cross-engine gap is not an artifact of
 either durability configuration (Section~\ref{sec:discussion}, Supplement
 Table~S3).
 
