@@ -46,9 +46,9 @@ spectrum of access layers (native drivers, query builders, and object-relational
 mappers, or ORMs), yet practitioners choose between them largely on vendor
 benchmarks that are fragmented, PostgreSQL-only, and rarely report the tail
 (p99).
-\textbf{Objective:} We quantify, reproducibly and independently of the evaluated
-vendors, the whole-stack cost of the access layer across layer, engine, and
-pattern, and contrast idiomatic use with a same-SQL control.
+\textbf{Objective:} We quantify, reproducibly and vendor-independently, the
+whole-stack cost of the access layer across layer, engine, and pattern, and
+contrast idiomatic use with a same-SQL control.
 \textbf{Methods:} An identical Express application is served through nine
 idiomatic access layers (two native drivers, a query builder, and six ORMs) and
 two tuned native baselines, over five access patterns, against PostgreSQL and

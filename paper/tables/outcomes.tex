@@ -1,0 +1,32 @@
+% hand-authored: maps outcomes to their analysis role (review R3 §8)
+\begin{table}[htbp]
+  \centering
+  \caption{Outcomes and their analysis role. The primary outcomes carry the
+    paired inference and the research-question claims; the secondary and
+    exploratory outcomes are reported descriptively as controls and sensitivity
+    analyses that bound or contextualize the primary results, and are not treated
+    as additional confirmatory hypotheses.}
+  \label{tab:outcomes}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{l l l}
+    \toprule
+    Role & Outcome & Analysis \\
+    \midrule
+    Primary   & Throughput (req/s), 5 patterns $\times$ 2 engines,      & Paired permutation, Wilcoxon,      \\
+              & idiomatic layers, 50-connection operating point         & bootstrap median CI; spread \& rank \\
+    Primary   & Closed-loop p99 tail latency, same cells                & Paired permutation, Wilcoxon,      \\
+              &                                                         & per-cell bootstrap CI on p99       \\
+    \midrule
+    Secondary & Same-SQL (raw-path) contrast                            & Bounds the raw-execution component \\
+    Secondary & Sub-saturation open-loop tail (coordinated-omission     & Intrinsic-tail companion to the    \\
+              & corrected)                                              & saturated primary p99              \\
+    Secondary & Layer$\times$engine interaction (per pattern)           & Blocked permutation ($F$ on $D$)   \\
+    Secondary & Combined app$+$db CPU efficiency, equal-CPU control     & End-to-end compute view; operational \\
+              &                                                         & confirmation of the CPU trade      \\
+    \midrule
+    Explor.   & Aggregation fan-out; OFFSET vs.\ keyset; pool-size      & Descriptive; pitfall illustration  \\
+              & sweep; durability \& isolation sensitivity; RSS         & and robustness checks              \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

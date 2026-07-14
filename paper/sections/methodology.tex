@@ -249,6 +249,15 @@ design~\cite{tene2015latency,krishnamachari2026stats} independently
 validates the closed-loop tail results (Section~\ref{sec:results}).
 
 \subsection{Analysis}
+We separate a small set of \emph{primary} outcomes, which carry the paired
+inference and the research-question claims, from \emph{secondary} and
+\emph{exploratory} outcomes, which are reported descriptively as controls and
+sensitivity analyses (Table~\ref{tab:outcomes}). The primary outcomes are
+throughput and the closed-loop p99 tail on the five patterns against both engines
+at the fixed operating point; everything else bounds or contextualizes them.
+
+\input{\tabledir outcomes}
+
 Because absolute throughput is hardware-specific, we analyze \emph{relative}
 differences across layers within an engine. We quantify a pattern's
 sensitivity to the access layer by its \emph{spread}: the idiomatic native

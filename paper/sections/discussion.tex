@@ -13,38 +13,30 @@ requires the access layer to hydrate rows into objects and resolve associations
 (the object-relational impedance mismatch~\cite{ireland2009impedance} made
 concrete), not merely to issue SQL, and this is where the data-mapper ORMs,
 Sequelize, TypeORM, Objection, and especially MikroORM, are most expensive,
-trailing the native \texttt{pg} driver by up to $6.55\times$ on PostgreSQL and
-$4.50\times$ on MySQL, the widest spreads in the study, with the tail showing the
-same pattern (Table~\ref{tab:deep_fetch}, Section~\ref{sec:results}). A team
-whose hot path assembles nested object graphs therefore pays the largest
+trailing the native driver by the widest spreads in the study, with the tail
+showing the same pattern (Table~\ref{tab:deep_fetch}, Section~\ref{sec:results}).
+A team whose hot path assembles nested object graphs therefore pays the largest
 abstraction cost on its highest-value traffic, a cost that grows, not shrinks,
 with graph size: the fan-out sweep (Section~\ref{sec:results}) shows the spread
-widening monotonically from $5.9\times$ at zero comments to $16.1\times$ at 500,
-with the leader flipping from Prisma on small graphs to \texttt{pg} from 50
-comments on; the primary workload's roughly ten-comment graph sits near the low
-end of that range. Point reads and aggregation are the opposite case, dominated
-by connection and parsing cost every layer shares, spreading only
-$3.06\times$/$2.36\times$ and $1.86\times$/$1.42\times$ respectively once every
-adapter, native drivers included, runs the same raw correlated-subquery plan,
-though Prisma's raw-SQL path still beats the slowest layer, Objection, by
-$2.09\times$ (PostgreSQL) to $2.49\times$ (MySQL). On the controlled same-SQL
-estimand, the idiomatic deep-fetch spread collapses to $1.76\times$ on
-PostgreSQL and $2.21\times$ on MySQL (Table~\ref{tab:sameplan}), so the wide
+widening monotonically with comment count, the leader flipping from Prisma on
+small graphs to \texttt{pg} on large. Point reads and aggregation are the
+opposite case, dominated by connection and parsing cost every layer shares,
+spreading little once every adapter, native drivers included, runs the same raw
+plan. On the controlled same-SQL estimand, the idiomatic deep-fetch spread
+collapses toward parity (Supplement Table~S14), so the wide
 default-configuration deficits lie upstream of raw SQL execution: in each
 layer's query-generation and result-construction path (its default
 eager-loading strategy, query count, and object hydration), which the control
 changes as a bundle rather than isolating one component. MikroORM illustrates
-this most starkly, its default path delivering only 0.20 of its own same-SQL
-throughput on PostgreSQL and 0.25 on MySQL, while Prisma's raw path is the
-fastest same-SQL cell on both engines; the same control exposes a new low end,
-Sequelize's raw-SQL facility (\texttt{sequelize.query}), evidence of dispatch
-and marshalling overhead in its raw API rather than in query strategy.
-Round-trip count alone does not set throughput: Prisma and Objection both issue
-four deep-fetch queries (Supplement Table~S2), yet sit at opposite ends of the
-default-configuration ranking, while Knex and Drizzle sit in a consistent
-middle ground on every pattern (never fastest, never among the slowest
-data-mapper ORMs), which is what a query builder and a non-data-mapper,
-lightweight ORM should deliver.
+this most starkly, its default path delivering a fifth to a quarter of its own
+same-SQL throughput, while Prisma's raw path is the fastest same-SQL cell on both
+engines; the same control exposes a new low end, Sequelize's raw-SQL facility
+(\texttt{sequelize.query}), evidence of dispatch and marshalling overhead in its
+raw API rather than in query strategy. Round-trip count alone does not set
+throughput: Prisma and Objection both issue four deep-fetch queries (Supplement
+Table~S2), yet sit at opposite ends of the default-configuration ranking, while
+Knex and Drizzle sit in a consistent middle ground on every pattern, which is
+what a query builder and a lightweight ORM should deliver.
 
 \paragraph{Same SQL, different wire protocols.}
 Server-side capture confirms the same-SQL collapse is not a protocol artifact:
@@ -63,15 +55,14 @@ within $\pm5\%$; Section~\ref{sec:results}), and it leads outright on the
 keyset range scan, the raw-SQL aggregation, and the point read and deep fetch
 on MySQL (Section~\ref{sec:results}). That parity or leadership is not free: at
 the \emph{same} ten-connection pool, Prisma's process draws roughly five times
-the application-side CPU of every other layer on the deep fetch ($498\%$;
-Supplement Table~S10, Figure~\ref{fig:cpu_tradeoff}), trading CPU for
+the application-side CPU of every other layer on the deep fetch
+(Figure~\ref{fig:cpu_tradeoff}), trading CPU for
 latency~\cite{bonvoisin2024orm}, a cost a throughput-only benchmark would miss.
 How large that cost is depends on which CPU one counts: by
 \emph{application}-tier CPU the efficiency ranking inverts sharply, but the
 native driver pushes about 3.6 database cores of join work that figure ignores;
 counting \emph{combined} application and database CPU per request narrows
-\texttt{pg}'s advantage to about $1.4\times$ ($813$ vs.\ $596$ req per
-combined-CPU-second; Supplement Table~S5). The honest reading is therefore
+\texttt{pg}'s advantage to about $1.4\times$ (Section~\ref{sec:results}). The honest reading is therefore
 tier-specific: Prisma spends several times the application CPU of the other
 layers, which matters directly when the application container's CPU is the
 budgeted resource (a shared host, a per-core billing model), yet end-to-end it
@@ -135,7 +126,7 @@ insert is not the only write shape: a transactional multi-statement write,
 inserting a post and five comments in one transaction, spreads the
 representative layers only $3.3\times$ (Prisma 2412 down to MikroORM
 740~req/s; Supplement Table~S8), close to the single-row insert and far below
-the $6.55\times$ read spread, because the transaction's single commit amortizes
+the widest read spread, because the transaction's single commit amortizes
 the per-commit flush across six inserts. The layer ordering tracks the
 single-row insert, so the write conclusions extend to that transactional
 pattern for the representative layers measured.

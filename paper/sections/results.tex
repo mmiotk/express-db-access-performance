@@ -17,17 +17,14 @@ interest is \emph{relative} across layers within an engine
 \emph{default-configuration (idiomatic) effect} (the primary estimand behind
 RQ1--RQ3, realized in the five tables above), and the \emph{same-SQL effect},
 what remains when every layer executes identical SQL with identical row
-mapping (Table~\ref{tab:sameplan}); the two are reported separately below.
+mapping (Supplement Table~S14); the two are reported separately below.
 
 % One combined table per access pattern: throughput (req/s) and tail latency (p99)
 % side by side, per access layer and engine. \tabledir is set by each main file
 % (tables/ for the generic build in paper/, ../tables/ for the IST build in
 % paper/ist/), so this shared section resolves the path without relying on TEXINPUTS.
 % (p50/p90 are in the replication package's raw results.)
-\input{\tabledir point_read}
-\input{\tabledir range_scan}
 \input{\tabledir deep_fetch}
-\input{\tabledir aggregation}
 \input{\tabledir write}
 
 \subsection{RQ1: overhead relative to the native baseline}
@@ -35,8 +32,8 @@ The native \texttt{pg} driver, or its tuned counterpart, leads only on the
 PostgreSQL point read and insert. On every other pattern-engine combination,
 Prisma leads outright, including over the tuned native baseline: the
 keyset range scan on both engines, aggregation on both engines, the point read on
-MySQL, and the deep fetch on MySQL (Tables~\ref{tab:point_read},
-\ref{tab:range_scan}, \ref{tab:deep_fetch}, \ref{tab:aggregation}). It does so at
+MySQL, and the deep fetch on MySQL (Table~\ref{tab:deep_fetch},
+Supplement Table~S15 for aggregation, and Supplement Tables~S12--S13 for the reads). It does so at
 roughly five times the application-side CPU of every other layer ($498\%$ on the
 deep fetch; Supplement Table~S10), so the finding is a CPU-for-throughput
 trade, not a free win. The remaining PostgreSQL deep fetch is close enough
@@ -79,9 +76,8 @@ confirms the two are equivalent (ratio $1.02$, 90\% CI [1.004--1.037], inside th
 $\pm5\%$ band), and Prisma's p99 is the lower of the two (18~ms vs.\ 20~ms). We
 therefore read the top of the PostgreSQL deep-fetch ranking as a practical tie.
 Knex (2{,}491 / 2{,}050) and the lightweight ORM Drizzle (2{,}080 / 1{,}446)
-remain competitive on both engines, whereas the data-mapper ORMs trail by up to
-$6.55\times$ on PostgreSQL: TypeORM, Sequelize, Objection, and especially
-MikroORM.
+remain competitive on both engines, whereas the data-mapper ORMs (TypeORM,
+Sequelize, Objection, and especially MikroORM) trail furthest.
 
 \textbf{Aggregation} overhead shrinks once every layer is forced onto the same
 raw correlated-subquery plan, but Prisma leads it outright on both engines,
@@ -103,7 +99,7 @@ the raw-execution component, we re-measured the deep fetch under a
 \emph{same-SQL control}: every layer executes identical two-statement SQL (and,
 per engine, identical \texttt{EXPLAIN} plans) with identical row mapping through
 its raw-SQL facility, as the aggregation endpoint already does
-(Table~\ref{tab:sameplan}). Server-side capture confirms the statement text is
+(Supplement Table~S14). Server-side capture confirms the statement text is
 byte-identical across layers on both engines, while the wire protocols differ
 per layer as enumerated in Section~\ref{sec:methodology}; the honest description
 of this control is therefore \emph{same SQL, protocol disclosed}, not
@@ -131,7 +127,6 @@ by the speed of its raw SQL execution; the fixed-payload Express-plus-JSON
 floor (Section~\ref{sec:methodology}) sits well above every same-SQL cell, so
 the framework floor does not manufacture this collapse.
 
-\input{\tabledir sameplan}
 
 \subsection{RQ2: engine dependence of the ranking}
 The relative ordering of access layers is largely, but not uniformly, stable
@@ -158,7 +153,7 @@ a wide $2.4$--$7.7$ on the insert, so single-engine results are not portable in
 degree, most sharply for writes, even where they are portable in order.
 
 Prisma's engine-dependent lead is visible on the \textbf{keyset range
-scan} (Table~\ref{tab:range_scan}): it leads on both engines (3{,}963 on
+scan} (Supplement Table~S13): it leads on both engines (3{,}963 on
 PostgreSQL, 3{,}936 on MySQL), ahead of \texttt{pg-tuned} (3{,}811), \texttt{pg}
 (3{,}782), and \texttt{mysql2} (3{,}231). The native-relative spread is
 $4.89\times$ on PostgreSQL (CI [4.80--4.99]) and $4.43\times$ on MySQL (CI
@@ -330,7 +325,7 @@ whole load range, so the RQ1 finding is not an artifact of the single
 \input{\tabledir fig_scaling}
 
 \subsection{Resource footprint}
-Throughput is not the only cost (Supplement Table~S10). Prisma's
+Throughput is not the only cost (Table~\ref{tab:resources_main}). Prisma's
 near-native or leading throughput on several patterns comes at a much higher CPU
 cost: measured at the \emph{same} ten-connection pool as every other layer, its
 Node.js process draws $498\%$ (about five cores) on the deep fetch against the
@@ -339,34 +334,35 @@ multi-threaded query engine in-process (Section~\ref{sec:methodology}), a
 property of the layer rather than of a larger connection pool; the multiplier
 is pattern-dependent (Prisma's aggregation cell draws only $\approx200\%$).
 
+\input{\tabledir resources_main}
+
 Normalizing throughput by CPU cost makes the trade explicit, but the normalization
 must be read at the right tier. Counting only \emph{application}-process CPU on the
-deep fetch, requests per CPU-second are \texttt{pg} 3{,}741 down to Prisma 740 and
-MikroORM 571, so Prisma ranks second-to-last. That figure understates the compute
-of layers that push work to the database, however: \texttt{pg}'s hand-written join
-drives about 3.6 database cores while Prisma's engine keeps more work in the
-application tier (Supplement Table~S5). Counting \emph{combined} application-plus-database
-CPU per completed request, \texttt{pg}'s efficiency advantage over Prisma shrinks
-from about $5\times$ (3{,}741 vs.\ 740~req per application-CPU-second) to about
-$1.4\times$ (813 vs.\ 596~req per combined-CPU-second); Prisma remains among the
-least efficient layers end-to-end, but the gap is a small multiple, not a large
-one. The application-tier reading is the one that matters when the application
-container's CPU is the budgeted resource; the combined reading is the end-to-end
-compute view. An equal-CPU control corroborates the application-tier trade
-operationally: confining the server process with \texttt{taskset} to 1, 2, or 4
-cores (database and load generator pinned to disjoint cores; Supplement
-Table~S4), \texttt{pg} reaches its full deep-fetch throughput on a single
-core (3{,}663, 3{,}277, and 3{,}700~req/s at 1, 2, and 4 cores), whereas Prisma
-needs roughly four cores to approach that level (896, 1{,}726, 3{,}025),
-$4.1\times$ slower than \texttt{pg} on an equal one-core application budget;
-MikroORM stays low regardless of core count (463, 577, 542).
+deep fetch, requests per CPU-second are \texttt{pg} 3{,}741 down to Prisma 740, so
+Prisma ranks second-to-last. That figure understates the compute of layers that
+push work to the database, however: \texttt{pg}'s hand-written join drives about
+3.6 database cores while Prisma's engine keeps more work in the application tier.
+Counting \emph{combined} application-plus-database CPU per completed request
+(Table~\ref{tab:resources_main}), \texttt{pg}'s efficiency advantage over Prisma
+shrinks from about $5\times$ to about $1.4\times$ (813 vs.\ 596~req per
+combined-CPU-second); Prisma remains among the least efficient layers end-to-end,
+but the gap is a small multiple, not a large one. The application-tier reading is
+the one that matters when the application container's CPU is the budgeted resource;
+the combined reading is the end-to-end compute view. An equal-CPU control
+corroborates the application-tier trade operationally: confining the server process
+with \texttt{taskset} to 1, 2, or 4 cores (database and load generator pinned to
+disjoint cores; Supplement Table~S4), \texttt{pg} reaches its full deep-fetch
+throughput on a single core (3{,}663, 3{,}277, and 3{,}700~req/s at 1, 2, and 4
+cores), whereas Prisma needs roughly four cores to approach that level (896,
+1{,}726, 3{,}025), $4.1\times$ slower than \texttt{pg} on an equal one-core
+application budget; MikroORM stays low regardless of core count (463, 577, 542).
 
-Memory differences are smaller. The native driver, Knex, and Objection are
-lightest (204--211~MB peak RSS), while the remaining layers use more
-(248--271~MB). Resource cost, like throughput, is pattern- and layer-specific,
-and matters when sizing horizontally scaled deployments, where per-instance
-resource use governs how many replicas a given load
-requires~\cite{vaquero2011scaling}.
+Memory differences are smaller (Table~\ref{tab:resources_main}): the native
+driver, Knex, and Objection are lightest (204--211~MB peak RSS), while the
+remaining layers use more (248--271~MB). Resource cost, like throughput, is
+pattern- and layer-specific, and matters when sizing horizontally scaled
+deployments, where per-instance resource use governs how many replicas a given
+load requires~\cite{vaquero2011scaling}.
 
 \input{\tabledir significance_deep_fetch}
 \input{\tabledir fig_cpu_tradeoff}

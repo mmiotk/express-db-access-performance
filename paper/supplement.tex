@@ -162,4 +162,35 @@ and tool, recorded from the lockfile on the measurement date.
   \end{tabular}
 \end{table}
 
+\section{Per-pattern detail: the read patterns}
+\label{sup:reads}
+The two cheapest read patterns show the smallest between-layer spread and are
+summarized in the main text; their full throughput and p99 tables are given here.
+Table~\ref{tab:point_read} reports the point read (primary-key lookup) and
+Table~\ref{tab:range_scan} the keyset range scan, each by access layer and engine.
+The consequential patterns (deep/nested fetch, aggregation, insert) are tabulated
+in the main text.
+
+\input{\tabledir point_read}
+\input{\tabledir range_scan}
+
+\section{Same-SQL control: full table}
+\label{sup:sameplan}
+Table~\ref{tab:sameplan} gives the full same-SQL (raw-path) control on the deep
+fetch for both engines: throughput when every layer executes the identical
+control statement (verified byte-identical by server-side capture). The main text
+reports the resulting collapse toward parity and interprets it as a bound on the
+raw-execution component of the idiomatic deficit.
+
+\input{\tabledir sameplan}
+
+\section{Per-pattern detail: aggregation}
+\label{sup:aggregation}
+Table~\ref{tab:aggregation} gives the full aggregation-pattern throughput and p99
+by access layer and engine. RQ3 finds aggregation the least layer-sensitive
+pattern once every layer runs the same raw correlated-subquery plan; the main text
+reports the ranking and the leading figures.
+
+\input{\tabledir aggregation}
+
 \end{document}
