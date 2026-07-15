@@ -46,8 +46,8 @@ saturated p99.
 The control is now described strictly as a compound intervention that changes query
 formulation, API, protocol, statement preparation, round-trip structure, and mapping
 *together* and isolates no single factor; the residual is not called "raw-execution
-cost" unqualified. A new **controlled/uncontrolled factor table** makes explicit what
-the control holds constant and what it changes together.
+cost" unqualified. A new **controlled/uncontrolled factor table** (now Supplement Table S27) makes
+explicit what the control holds constant and what it changes together.
 
 **§6.3 — "idiomatic" is subjective.** We added a **pre-specified selection protocol**,
 fixed before measurement: the eager-loading API each library's official documentation
@@ -105,6 +105,17 @@ rank 1 on PostgreSQL to rank 6 on MySQL for inserts).
 **§6.10 — novelty.** We call the literature review a *structured related-work search*
 (not systematic), scope the novelty to the searched databases and dates, and archive
 the search strings.
+
+**§11 — length and repetition.** Addressed. The five conclusions the review found
+restated across sections are now stated once, in the results, and cross-referenced
+elsewhere; the secondary access patterns (point read, keyset range scan) and every
+secondary experiment are now in the numbered online supplement, leaving only the
+primary factorial, the same-SQL and equal-CPU controls, and the utilization result as
+main-text floats; the controlled/uncontrolled factor table also moved to the supplement
+(Table S27); and five peripheral citations (general NoSQL and OLTP-benchmark context)
+were dropped, taking the reference list from 70 to 65. Counting references and floats
+per the IST guide, the main text is now 14,848 words, within the 15,000-word limit
+(`word-count.pdf`).
 
 ## What was already correct (verified, not changed)
 
