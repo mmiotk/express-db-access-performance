@@ -6,16 +6,15 @@ every non-trivial service built on it eventually reaches a relational database
 through some \emph{access layer}. The choice is not settled by the language or
 the framework: access layers trade raw performance for ergonomics,
 compile-time type safety, and protection from pitfalls such as the N+1 query
-problem, where a naively written nested fetch silently issues one query per
-parent row instead of one query for the whole result graph~\cite{chen2014orm},
+problem, where a naive nested fetch silently issues one query per
+parent row instead of one for the whole result graph~\cite{chen2014orm},
 a pervasive anti-pattern in real-world database-backed applications
 (Section~\ref{sec:related}).
 Native drivers expose the wire protocol directly (\texttt{pg} for PostgreSQL,
 \texttt{mysql2} for MySQL); query builders assemble SQL programmatically
 (Knex); and object-relational mappers (ORMs) map rows to objects and manage
 relationships automatically, following patterns such as Data Mapper and Active
-Record~\cite{fowler2002patterns} (the lightweight ORM Drizzle, together with
-Prisma, Sequelize, TypeORM, Objection, and MikroORM). Node.js back-end
+Record~\cite{fowler2002patterns}. Node.js back-end
 performance under load is itself a recognized empirical
 topic~\cite{chaniotis2015nodejs,kuffel2025nodejs,carmo2024backend}, but that
 literature treats the runtime and web framework as the unit of comparison
@@ -24,40 +23,38 @@ rather than varying the database access layer.
 In practice, the most visible performance comparisons are \emph{vendor
 benchmarks}: plentiful but narrow, published by the maintainers of the
 compared products, confined almost exclusively to PostgreSQL, and settling on
-a single metric family rather than reporting throughput and the tail together
-(Section~\ref{sec:related} reviews these in detail). We found none that
-reports the p99 tail behavior that is widely held to matter for user-perceived
-latency under load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is
-sparser still, limited to at most three ORMs, confined to PostgreSQL, and,
-where it benchmarks PostgreSQL against MySQL directly, holding the access
-layer fixed rather than varying it~\cite{colley2018orm,prisma_rawsql_2025,
+a single metric family rather than reporting throughput and the tail together.
+We found none that reports the p99 tail behavior that is widely held to matter
+for user-perceived latency under load~\cite{dean2013tail,fruth2022tail}. The
+peer-reviewed literature is sparser still, limited to at most three ORMs,
+confined to PostgreSQL, and, where it benchmarks PostgreSQL against MySQL
+directly, holding the access layer fixed rather than varying
+it~\cite{colley2018orm,prisma_rawsql_2025,
 orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql} (Section~\ref{sec:related}
 surveys each).
 
-Taken together, in the sources we searched (Section~\ref{sec:related}) this
-leaves a gap along four axes: (1)~no access-layer comparison we found includes
-MySQL, and no PostgreSQL/MySQL benchmark varies the access layer; (2)~no
-vendor-independent study spans the taxonomy broadly, since the broad-coverage
-comparisons are vendor-authored and academic work covers at most three
+In the sources we searched (Section~\ref{sec:related}) this leaves a gap along
+four axes: (1)~no access-layer comparison we found includes MySQL, and no
+PostgreSQL/MySQL benchmark varies the access layer; (2)~no vendor-independent
+study spans the taxonomy broadly, since the broad-coverage comparisons are
+vendor-authored and academic work covers at most three
 libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~we found none that
 reports throughput and the p99 tail jointly, the sole vendor suite that pairs
 throughput with a percentile stopping at a single P95 at one load
 point~\cite{drizzle_benchmarks}; and (4)~none measures client-observed
-performance through an HTTP framework:
-academic studies instrument query execution inside the application
-process~\cite{zhadko2025orm}, and the Express-based work that does measure the
-request round trip compares runtime optimizations on a single stack rather
-than access layers~\cite{imamsakti2025async}.
+performance through an HTTP framework, academic studies instrumenting query
+execution inside the application process~\cite{zhadko2025orm} and the
+Express-based work that measures the round trip comparing runtime
+optimizations on a single stack rather than access
+layers~\cite{imamsakti2025async}.
 
 This paper addresses that gap with a single, vendor-independent benchmark: we
 serve an \emph{identical} Express application through all nine access layers
-(two native drivers, the Knex query builder, and six ORMs: Drizzle, Prisma,
-Sequelize, TypeORM, Objection, and MikroORM) over five access patterns chosen
-to span common CRUD operations, not sampled from a measured production
-workload: a point read by primary key, a keyset range scan over the most
-recent rows, a deep/nested fetch materializing a post with its author and
-every comment (each with its own comment-author), a per-author aggregation of
-post counts and view sums, and an insert. Seven of the nine layers (all but the two engine-specific native drivers) run
+(two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
+Objection, MikroORM) over five CRUD-spanning access patterns rather than a
+measured production workload (point read, keyset range scan, deep/nested
+fetch, per-author aggregation, and insert; Section~\ref{sec:methodology}).
+Seven of the nine layers (all but the two engine-specific native drivers) run
 against \emph{both} engines under an identical schema, dataset, and pool size;
 two tuned native-driver baselines (prepared-statement variants of \texttt{pg}
 and \texttt{mysql2}) mark what hand-tuned driver use achieves. Every (layer, engine, pattern) combination reports throughput (req/s) and
@@ -111,21 +108,13 @@ of a fast-moving ecosystem, and the harness and design outlast the pinned versio
   \item \textbf{Configuration-specific observations} on the pinned versions and
         this host: two not obvious in advance, that the query-engine ORM Prisma
         \textbf{ties, and on several patterns leads, the native driver} at a
-        substantial application-CPU premium (quantified by an equal-CPU control,
-        Section~\ref{sec:results}), and that \textbf{whether writes are
-        layer-bound depends on the engine} (visible only in a dual-engine design);
-        and a controlled \textbf{confirmation and quantification} of the expected
-        effects: abstraction cost concentrates in relation-materializing patterns,
-        and the coarse layer ordering of reads is stable across engines.
+        substantial application-CPU premium (Section~\ref{sec:results}), and that
+        \textbf{whether writes are layer-bound depends on the engine} (visible
+        only in a dual-engine design); and a controlled \textbf{confirmation}
+        that abstraction cost concentrates in relation-materializing patterns
+        while the coarse read ordering is stable across engines.
   \item A practitioner-oriented \textbf{checklist of four pitfalls specific to
         access-layer benchmarking} (Section~\ref{sec:discussion}), surfaced during
         development, several caught by the correctness cross-check and the rest by
         performance analysis.
 \end{itemize}
-
-The remainder of the paper surveys related work in more detail
-(Section~\ref{sec:related}), details the benchmark design
-(Section~\ref{sec:methodology}), reports results per research question
-(Section~\ref{sec:results}), discusses their implications
-(Section~\ref{sec:discussion}) alongside threats to validity
-(Section~\ref{sec:threats}), and concludes (Section~\ref{sec:conclusion}).

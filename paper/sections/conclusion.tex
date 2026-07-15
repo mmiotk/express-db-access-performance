@@ -1,39 +1,37 @@
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-This paper set out to replace vendor-benchmark claims with a
-vendor-independent, reproducible comparison of relational database access
-layers in Express.js, serving an identical application through a
-representative taxonomy (native drivers, a query builder, and six ORMs)
-across PostgreSQL and MySQL, over five access patterns, and reporting
-throughput and response-time p99 together, addressing the four gaps that
-characterize prior art (Section~\ref{sec:introduction}).
+This paper replaces vendor-benchmark claims with a vendor-independent,
+reproducible comparison of relational database access layers in Express.js,
+serving an identical application through a representative taxonomy (native
+drivers, a query builder, and six ORMs) across PostgreSQL and MySQL, over
+five access patterns, reporting throughput and response-time p99 together
+(Section~\ref{sec:introduction}).
 
-The empirical answer is that the cost of abstraction is concentrated, not
-uniform: sharpest for the deep/nested fetch that assembles a nested object
-graph application-side, and modest for point reads and for aggregation issued
-through a raw-SQL path (Section~\ref{sec:results}). The same-SQL control
-shows this cost is bounded but not attributable to any single mechanism
-(Section~\ref{sec:results}). Read rankings are stable across the two
-engines, and Prisma shows that, in this configuration, an ORM need not imply
-large overhead, at a CPU premium the equal-CPU control now quantifies
-directly (Section~\ref{sec:results}). Writes are the exception: the write ranking
-does not transfer across engines, a caution against generalizing single-engine
-write results (Section~\ref{sec:discussion}). Development also surfaced a reusable
+The cost of abstraction is concentrated, not uniform: sharpest for the
+deep/nested fetch that assembles a nested object graph application-side, and
+modest for point reads and aggregation issued through a raw-SQL path
+(Section~\ref{sec:results}). The same-SQL control shows this cost is bounded
+but not attributable to any single mechanism (Section~\ref{sec:results}). Read
+rankings are stable across the two engines, and Prisma shows that, in this
+configuration, an ORM need not imply large overhead, at a CPU premium the
+equal-CPU control now quantifies directly (Section~\ref{sec:results}). Writes
+are the exception: the write ranking does not transfer across engines, a
+caution against generalizing single-engine write results
+(Section~\ref{sec:discussion}). Development also surfaced a reusable
 checklist of four benchmarking pitfalls specific to this genre
 (Section~\ref{sec:discussion}).
 
-These findings held under a concurrency sweep (1 to 256 connections, ranking
-load-robust above 32) and under paired permutation and Wilcoxon tests
-confirming adjacent-layer separation (Section~\ref{sec:results}). Further
-extensions would strengthen the evidence: a two-machine cross-run isolating
-the load generator would bound observer-interference effects beyond the
-open-loop check already performed here; additional engines and dataset
-sizes would widen external validity; and a dedicated study of the N+1
-penalty and of cold-start latency would deepen the practical guidance.
-Beyond these specific findings, the durable contribution is the harness
-itself: a vendor-independent, dual-engine instrument with a correctness
-cross-check and a same-SQL contrast control, released under open
-licenses so that these extensions, and independent re-runs against current
-library versions, are straightforward, addressing the repeatability gap
-widely documented in computer-systems research~\cite{collberg2016repeatability}.
+These findings held under a concurrency sweep (1 to 256 connections) and under
+paired permutation and Wilcoxon tests confirming adjacent-layer separation
+(Section~\ref{sec:results}). Further extensions would deepen the evidence: a
+two-machine cross-run isolating the load generator would bound
+observer-interference effects beyond the open-loop check performed here;
+additional engines and dataset sizes would widen external validity; and a
+dedicated study of the N+1 penalty and of cold-start latency would sharpen the
+practical guidance. Beyond these findings, the durable contribution is the
+harness itself: a vendor-independent, dual-engine instrument with a correctness
+cross-check and a same-SQL contrast control, released under open licenses so
+that these extensions, and independent re-runs against current library
+versions, are straightforward, addressing the repeatability gap widely
+documented in computer-systems research~\cite{collberg2016repeatability}.
