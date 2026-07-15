@@ -4,14 +4,22 @@
 We organize prior work along four axes on which our study differs from it
 (taxonomy coverage, engine coverage, whether throughput and tail latency are
 reported jointly, and vendor independence), summarized in
-Table~\ref{tab:prior_art}. We located this work with a structured search of the
-ACM Digital Library, IEEE Xplore, Scopus, and Google Scholar for combinations of
-\emph{ORM}, \emph{query builder}, \emph{database access layer}, \emph{Node.js},
-\emph{Express}, \emph{PostgreSQL}, and \emph{MySQL} with \emph{benchmark},
-\emph{performance}, \emph{throughput}, and \emph{latency} (2006--July 2026),
-followed by citation chaining, retaining empirical comparisons of relational
-access layers or engines and excluding non-empirical or non-relational
-studies.
+Table~\ref{tab:prior_art}. We located this work with a structured scoping
+search (not a systematic review) of the ACM Digital Library, IEEE Xplore,
+Scopus, and Google Scholar, run in July~2026 over titles, abstracts, and
+keywords. The query crossed an access-layer set (\emph{ORM}, ``object-relational
+mapping'', ``query builder'', ``database access layer'', and the seven library
+names) with a context set (\emph{Node.js}, \emph{Express}, \emph{JavaScript},
+\emph{TypeScript}), an engine set (\emph{PostgreSQL}, \emph{MySQL},
+``relational database''), and a measurement set (\emph{benchmark},
+\emph{performance}, \emph{throughput}, \emph{latency}), restricted to
+2006--July~2026 and followed by backward and forward citation chaining from the
+closest hits. We retained empirical comparisons of relational access layers or
+engines and excluded non-empirical, non-relational, and single-library studies.
+The exact query strings, per-source search dates, and screening decisions are
+archived with the replication package (\texttt{notes/related-work-search.md});
+because this is a scoping rather than an exhaustive search, we scope every
+resulting gap claim to the sources searched.
 
 \subsection{Object-relational mapping and the access-layer spectrum}
 Access layers exist to bridge the object-relational impedance mismatch between

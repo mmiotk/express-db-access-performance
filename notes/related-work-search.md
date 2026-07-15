@@ -32,6 +32,34 @@ Cross the access-layer terms with the measurement terms:
 - measurement terms: `benchmark`, `performance`, `throughput`, `latency`,
   `tail latency`, `p99`
 
+## Composed queries and search dates
+
+All four sources were searched in July 2026 over title/abstract/keyword fields,
+adapting the boolean below to each engine's syntax:
+
+    ("ORM" OR "object-relational mapping" OR "query builder"
+        OR "database access layer" OR Prisma OR Drizzle OR TypeORM
+        OR Sequelize OR Objection OR MikroORM OR Knex)
+    AND ("Node.js" OR Express OR JavaScript OR TypeScript)
+    AND (PostgreSQL OR MySQL OR "relational database")
+    AND (benchmark OR performance OR throughput OR latency)
+
+A parallel engine-only query dropped the access-layer clause and required
+(PostgreSQL AND MySQL) to catch dual-engine comparisons that hold the access
+layer fixed. Google Scholar, which does not handle long boolean queries reliably,
+was searched with the shorter phrases `Node.js ORM benchmark PostgreSQL MySQL`
+and `Express database access layer performance`, plus backward/forward citation
+chaining from the closest hits.
+
+## Coverage note
+
+This is a scoping search: the composed queries and citation chaining were run to
+saturation (no new eligible relational-access-layer comparison appearing), not
+with formal identified/screened/included record counts. The eligible works that
+survived screening are exactly those cited in Section 2 and Table 3. Accordingly
+the positioning is stated as "not identified in the sources searched," never as a
+proof of non-existence.
+
 ## Screening
 
 Retained: empirical performance comparisons of relational database access layers,

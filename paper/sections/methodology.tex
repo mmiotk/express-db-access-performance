@@ -79,10 +79,13 @@ every comment, each with its own comment-author; and the aggregation reports
 post count, comment count, and total views per author. The
 database is loaded from a deterministic seed (2{,}000 authors, 100{,}000
 posts, 1{,}000{,}000 comments) by the native driver, independently of any
-layer under test, so every engine receives byte-identical data. The working
-set fits in memory, so measurements reflect access-layer cost rather than
-storage latency, per-request instruction and logging cost dominating over
-disk I/O~\cite{harizopoulos2008oltp}. Every request draws its target identifier
+layer under test, so every engine receives the same seed \emph{data payload}
+(byte-identical row values); the on-disk physical representation, index
+layout, and collation naturally differ between the two engines. The working
+set fits in memory, so the measurements emphasize the access layer's
+per-request instruction, protocol, and mapping cost with disk-read latency
+largely removed; engine-side query execution, buffer management, locking, and
+logging remain part of every measurement~\cite{harizopoulos2008oltp}. Every request draws its target identifier
 uniformly at random from the full seeded range (posts $1$--$100{,}000$, authors
 $1$--$2{,}000$), so load spreads across the whole working set rather than
 repeatedly hitting one hot record, and the read endpoints measure warm
@@ -304,13 +307,16 @@ intervals to those correlations. Reporting nonparametric tests
 with standardized effect sizes follows recommended practice for randomized
 performance experiments in software
 engineering~\cite{arcuri2014hitchhiker,cliff1993dominance}. The $\pm5\%$
-equivalence margin is a deployment-relevance threshold: a throughput difference
-under $5\%$ would not change a capacity-planning decision (for example, how many
-application instances to provision for a target load), and it is comfortably
-within the run-to-run and day-to-day variation typical of a virtualized host
-(for reference, this study's own run-to-run CV reaches $7.6\%$). We chose it
-before the analysis but did not preregister it, and the equivalence conclusion
-is not sensitive to the exact value within a few percent.
+equivalence margin is an author-selected smallest effect of practical interest
+for \emph{this} study, not a general engineering threshold: at modest
+deployment scale a throughput difference under $5\%$ would not change a
+capacity-planning decision (for example, how many application instances to
+provision for a target load), and it is within the run-to-run and day-to-day
+variation typical of a virtualized host (this study's own run-to-run CV reaches
+$7.6\%$); at very large scale even $5\%$ can correspond to many machines, so the
+margin should be reset per deployment. We chose it before the analysis but did
+not preregister it, and the equivalence conclusion is not sensitive to the exact
+value within a few percent.
 
 \subsection{Experimental setup}
 All measurements were taken on 2026-07-12 and 2026-07-13 on a single host:

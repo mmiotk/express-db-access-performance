@@ -24,8 +24,9 @@ In practice, the most visible performance comparisons are \emph{vendor
 benchmarks}: plentiful but narrow, published by the maintainers of the
 compared products, confined almost exclusively to PostgreSQL, and settling on
 a single metric family rather than reporting throughput and the tail together.
-We found none that reports the p99 tail behavior that is widely held to matter
-for user-perceived latency under load~\cite{dean2013tail,fruth2022tail}. The
+In the sources searched, we did not identify one reporting the p99 tail
+behavior that is widely held to matter for user-perceived latency under
+load~\cite{dean2013tail,fruth2022tail}. The
 peer-reviewed literature is sparser still, limited to at most three ORMs,
 confined to PostgreSQL, and, where it benchmarks PostgreSQL against MySQL
 directly, holding the access layer fixed rather than varying
@@ -38,11 +39,11 @@ four axes: (1)~no access-layer comparison we found includes MySQL, and no
 PostgreSQL/MySQL benchmark varies the access layer; (2)~no vendor-independent
 study spans the taxonomy broadly, since the broad-coverage comparisons are
 vendor-authored and academic work covers at most three
-libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~we found none that
-reports throughput and the p99 tail jointly, the sole vendor suite that pairs
+libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~we did not identify one
+reporting throughput and the p99 tail jointly, the sole vendor suite that pairs
 throughput with a percentile stopping at a single P95 at one load
-point~\cite{drizzle_benchmarks}; and (4)~none measures client-observed
-performance through an HTTP framework, academic studies instrumenting query
+point~\cite{drizzle_benchmarks}; and (4)~none of the located studies measures
+client-observed performance through an HTTP framework, academic studies instrumenting query
 execution inside the application process~\cite{zhadko2025orm} and the
 Express-based work that measures the round trip comparing runtime
 optimizations on a single stack rather than access
