@@ -9,9 +9,24 @@ import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
-  process.env.DATABASE_URL = (await import('../config.mjs')).connectionUrl(engine);
+  const c = engine === 'postgres' ? config.postgres : config.mysql;
   const { PrismaClient } = await import('@prisma/client');
-  const prisma = new PrismaClient();
+  // Prisma 7 is Rust-free: the runtime connects through an official JS driver
+  // adapter (pg for PostgreSQL, mariadb for MySQL — Prisma ships no mysql2
+  // adapter), with the pool pinned to the shared size (Prisma would otherwise
+  // default to num_cpus*2+1, silently giving it a larger pool).
+  let adapter;
+  if (engine === 'postgres') {
+    const { PrismaPg } = await import('@prisma/adapter-pg');
+    // Force the session to UTC so Prisma reads TIMESTAMPTZ with an unambiguous
+    // +00 offset (matches the native pg baseline; otherwise the driver mislabels
+    // the server-local rendering as UTC — a 2 h shift the cross-check catches).
+    adapter = new PrismaPg({ host: c.host, port: c.port, user: c.user, password: c.password, database: c.database, max: config.pool.max, options: '-c timezone=UTC' });
+  } else {
+    const { PrismaMariaDb } = await import('@prisma/adapter-mariadb');
+    adapter = new PrismaMariaDb({ host: c.host, port: c.port, user: c.user, password: c.password, database: c.database, connectionLimit: config.pool.max });
+  }
+  const prisma = new PrismaClient({ adapter });
 
   const n = (v) => (typeof v === 'bigint' ? Number(v) : v);
   const post = (p) => (p ? { ...p, id: n(p.id), author_id: n(p.author_id) } : p);

@@ -11,7 +11,7 @@ const Author = new EntitySchema({
     id: { type: 'bigint', primary: true },
     name: { type: 'string' }, email: { type: 'string' },
     created_at: { type: 'Date', nullable: true },
-    posts: { kind: '1:m', entity: 'Post', mappedBy: 'author' },
+    posts: { kind: '1:m', entity: () => Post, mappedBy: 'author' },
   },
 });
 const Post = new EntitySchema({
@@ -21,8 +21,8 @@ const Post = new EntitySchema({
     title: { type: 'string' }, body: { type: 'text' },
     views: { type: 'integer' }, published: { type: 'boolean' },
     created_at: { type: 'Date', nullable: true },
-    author: { kind: 'm:1', entity: 'Author', fieldName: 'author_id' },
-    comments: { kind: '1:m', entity: 'Comment', mappedBy: 'post' },
+    author: { kind: 'm:1', entity: () => Author, fieldName: 'author_id' },
+    comments: { kind: '1:m', entity: () => Comment, mappedBy: 'post' },
   },
 });
 const Comment = new EntitySchema({
@@ -30,8 +30,8 @@ const Comment = new EntitySchema({
   properties: {
     id: { type: 'bigint', primary: true },
     body: { type: 'text' }, created_at: { type: 'Date', nullable: true },
-    post: { kind: 'm:1', entity: 'Post', fieldName: 'post_id' },
-    author: { kind: 'm:1', entity: 'Author', fieldName: 'author_id' },
+    post: { kind: 'm:1', entity: () => Post, fieldName: 'post_id' },
+    author: { kind: 'm:1', entity: () => Author, fieldName: 'author_id' },
   },
 });
 
