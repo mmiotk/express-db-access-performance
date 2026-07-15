@@ -19,6 +19,24 @@ the cost a practitioner incurs from each layer used idiomatically, and a
 identical SQL through its raw facility, a compound contrast rather than a
 mechanism-isolating decomposition (Section~\ref{sec:results}).
 
+A fixed concurrency imposes equal \emph{demand} on layers of unequal capacity
+and therefore drives them to unequal \emph{utilization}, so the
+performance-difference question (RQ1) is characterized under three operating
+conditions rather than one privileged point.
+\emph{Equal external demand} is the saturated closed-loop matrix, where every
+layer receives the identical request stream at a fixed 50-connection load
+(Section~\ref{sec:results}).
+\emph{Equal utilization} is the coordinated-omission-corrected open-loop sweep,
+where each layer is offered a fixed fraction (50/70/85/95\%) of its \emph{own}
+saturating throughput. An
+\emph{equal compute budget} is the equal-CPU control, where the server is
+confined to a fixed number of cores. These conditions answer different questions
+and need not agree: the saturated condition measures capacity under overload, the
+matched-utilization condition the near-intrinsic per-request latency, and the
+equal-budget condition the compute cost of the same work. Treating any one as
+\emph{the} operating point would conflate these, so we report all three and say
+which each result speaks to.
+
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels spanning the
 taxonomy: the native drivers \texttt{pg} and \texttt{mysql2}, their tuned

@@ -78,10 +78,11 @@ v1.4.1 is permanently archived at Zenodo,
 Three research questions structure the study, each scoped to the benchmarked
 implementations under the specified operating point:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
-  \item \emph{(overhead):} How large is the throughput and saturated
-        response-time-p99 overhead of the benchmarked implementations relative to
-        the native-driver baseline, and how does it vary across the five access
-        patterns?
+  \item \emph{(performance difference):} How large is the throughput and
+        response-time-p99 \emph{difference} of the benchmarked implementations
+        relative to the native-driver baseline, how does it vary across the five
+        access patterns, and how does it depend on the operating condition:
+        equal external demand, equal utilization, or an equal compute budget?
   \item \emph{(engine dependence):} Does the observed layer ordering transfer
         across PostgreSQL and MySQL, or is it engine-dependent?
   \item \emph{(consequential patterns):} For which access patterns is the choice of

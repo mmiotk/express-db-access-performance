@@ -43,11 +43,12 @@ Rewrite the setup paragraph with the R5 facts:
 - Refresh the versions table (supplement `tab:versions`, S11) + `METHODOLOGY.md:34-44`
   per-layer doc-URL+version from the new lockfile; `schema/db-config.md`.
 
-## Estimand restructure — Stage 3 (full)
-- methodology.tex:15-20 + intro: NAME the three estimands — **equal external demand**
-  (saturated matrix), **equal utilization** (utilization sweep), **equal resource budget**
-  (equal-CPU) — and map each experiment to one; keep default-config vs same-SQL as an
-  orthogonal axis.
+## Estimand restructure — Stage 3
+- ✅ NAMED the three operating conditions (equal external demand / equal utilization /
+  equal compute budget) in methodology.tex (after the two-estimand paragraph) and
+  mapped each to its experiment; ✅ RQ1 reworded "overhead"->"performance difference"
+  + names the three conditions (introduction.tex); ✅ results.tex RQ1 heading updated.
+- STILL TODO (number-dependent):
 - Elevate matched-utilization (S21/S22) to **co-primary in the MAIN text** + a
   utilization-vs-p99 figure; state it as the near-intrinsic-latency result.
 - Demote saturated p99 to **overload/queueing behavior**; propagate the caveat already at
