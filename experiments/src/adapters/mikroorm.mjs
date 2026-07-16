@@ -117,7 +117,7 @@ export default async function createAdapter({ engine, config }) {
     async createPost({ authorId, title, body }) {
       const em = orm.em.fork();
       const post = em.create(Post, { author: em.getReference(Author, authorId), title, body, views: 0, published: true });
-      await em.persistAndFlush(post);
+      em.persist(post); await em.flush();
       return { id: num(post.id) };
     },
 
@@ -127,7 +127,7 @@ export default async function createAdapter({ engine, config }) {
       const em = orm.em.fork();
       return em.transactional(async (tem) => {
         const post = tem.create(Post, { author: tem.getReference(Author, authorId), title, body, views: 0, published: true });
-        await tem.persistAndFlush(post);
+        tem.persist(post); await tem.flush();
         for (const c of comments) tem.create(Comment, { post, author: tem.getReference(Author, c.authorId), body: c.body });
         await tem.flush();
         return { post_id: num(post.id), comments: comments.length };
