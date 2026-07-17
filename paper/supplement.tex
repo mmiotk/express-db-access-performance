@@ -81,11 +81,13 @@ Table~\ref{tab:cpu_efficiency} reports, per layer on the deep/nested fetch,
 the median application-process-tree CPU and database-server CPU, the combined
 core-count, and throughput per application-CPU-second and per combined
 (application$+$database) CPU-second. The application-only figure understates the
-compute of layers that delegate more work to the database: \texttt{pg} leads
-application-tier efficiency by roughly $5\times$ over Prisma (3{,}741 vs.\
-740~req per app-CPU-s) but only $1.4\times$ end-to-end (813 vs.\ 596~req per
-combined-CPU-s), because it pushes about 3.6 database cores of work that the
-application-only metric ignores.
+compute of layers that delegate more work to the database, but on the current
+versions the application-only and combined figures largely agree, because no
+layer draws more than about one application core: \texttt{mysql2} leads
+application-tier efficiency by about $3.8\times$ over Prisma (2{,}269 vs.\
+604~req per app-CPU-s) and by $3.3\times$ end-to-end (1{,}254 vs.\ 384~req per
+combined-CPU-s). There is no CPU-for-throughput trade of the kind an earlier
+version of this study reported.
 
 \input{\tabledir cpu_efficiency}
 
@@ -138,7 +140,7 @@ of throughput on PostgreSQL across the 25 repeated runs (maximum 7.6\%,
 Table~\ref{tab:resources} gives the per-layer application-process CPU (median \%
 of one logical core) and peak resident memory on the deep/nested fetch
 (PostgreSQL), the detail behind the CPU trade-off discussed in the main text
-(Prisma $\approx498\%$, the other layers $\approx100\%$; peak RSS 204--271~MB).
+(all layers $\approx100$--$110\%$ of one core; peak RSS 204--271~MB).
 
 \input{\tabledir resources}
 
@@ -156,13 +158,22 @@ and tool, recorded from the lockfile on the measurement date.
     Layer / tool & Version & Layer / tool & Version \\
     \midrule
     \texttt{pg}         & 8.22.0  & \texttt{sequelize}      & 6.37.8 \\
-    \texttt{mysql2}     & 3.22.5  & \texttt{typeorm}        & 0.3.30 \\
+    \texttt{mysql2}     & 3.23.0  & \texttt{typeorm}        & 1.1.0  \\
     \texttt{knex}       & 3.3.0   & \texttt{objection}      & 3.1.5  \\
-    \texttt{drizzle-orm}& 0.36.4  & \texttt{@mikro-orm/core}& 6.6.15 \\
-    \texttt{@prisma/client} & 5.22.0 & \texttt{express}     & 4.22.2 \\
-    \texttt{autocannon} & 7.15.0  & PostgreSQL / MySQL      & 18.4 / 9.7.1 \\
+    \texttt{drizzle-orm}& 0.45.2  & \texttt{@mikro-orm/core}& 7.1.6  \\
+    \texttt{@prisma/client} & 7.8.0 & \texttt{express}     & 5.2.1  \\
+    \texttt{autocannon} & 8.0.0   & Node.js                 & 24.18.0 \\
+    PostgreSQL          & 18.4    & MySQL                   & 9.7.1  \\
     \bottomrule
   \end{tabular}
+
+  \vspace{2pt}
+  \footnotesize Pinned to the latest stable release compatible with the harness
+  adapter contract at the freeze date (2026-07-15); Sequelize's version-7 line is
+  a prerelease, so the 6.x stable line is used. Prisma~7 is Rust-free and connects
+  through an official JS driver adapter (\texttt{@prisma/adapter-pg} for PostgreSQL,
+  \texttt{@prisma/adapter-mariadb} with the \texttt{mariadb} 3.5.3 driver for MySQL,
+  as Prisma ships no \texttt{mysql2} adapter).
 \end{table}
 
 \section{Per-pattern detail: the read patterns}

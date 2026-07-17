@@ -107,14 +107,18 @@ of a fast-moving ecosystem, and the harness and design outlast the pinned versio
         builder $\to$ six ORMs), \textbf{dual-engine} (PostgreSQL and MySQL),
         measured at the \textbf{Express level}, reporting throughput and
         response-time p99 \textbf{jointly}, the combination missing from prior art.
-  \item \textbf{Configuration-specific observations} on the pinned versions and
-        this host: two not obvious in advance, that the query-engine ORM Prisma
-        \textbf{ties, and on several patterns leads, the native driver} at a
-        substantial application-CPU premium (Section~\ref{sec:results}), and that
-        \textbf{whether writes are layer-bound depends on the engine} (visible
-        only in a dual-engine design); and a controlled \textbf{confirmation}
-        that abstraction cost concentrates in relation-materializing patterns
-        while the coarse read ordering is stable across engines.
+  \item \textbf{Configuration-specific observations} on the current library
+        versions and this host: that no layer is multi-core-bound and the native
+        driver leads on essentially every pattern, the idiomatic
+        implementation-and-strategy difference concentrating in
+        relation-materializing patterns; that read rankings transfer across
+        engines while aggregation and writes transfer only moderately (visible
+        only in a dual-engine design); and, as direct evidence that such rankings
+        are \textbf{perishable}, that a headline finding of an earlier version of
+        this study --- the query-engine ORM Prisma tying the native driver at
+        roughly five cores of CPU --- \textbf{did not survive} re-running the same
+        harness against Prisma's Rust-free successor, which draws about one core
+        and sits mid-pack (Section~\ref{sec:results}).
   \item A practitioner-oriented \textbf{checklist of four pitfalls specific to
         access-layer benchmarking} (Section~\ref{sec:discussion}), surfaced during
         development, several caught by the correctness cross-check and the rest by

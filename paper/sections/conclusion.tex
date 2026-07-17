@@ -8,19 +8,23 @@ drivers, a query builder, and six ORMs) across PostgreSQL and MySQL, over
 five access patterns, reporting throughput and response-time p99 together
 (Section~\ref{sec:introduction}).
 
-The cost of abstraction is concentrated, not uniform: sharpest for the
-deep/nested fetch that assembles a nested object graph application-side, and
-modest for point reads and aggregation issued through a raw-SQL path
-(Section~\ref{sec:results}). The same-SQL control shows this cost is bounded
-but not attributable to any single mechanism (Section~\ref{sec:results}). Read
-rankings are stable across the two engines, and Prisma shows that, in this
-configuration, an ORM need not imply large overhead, at a CPU premium the
-equal-CPU control now quantifies directly (Section~\ref{sec:results}). Writes
-are the exception: the write ranking does not transfer across engines, a
-caution against generalizing single-engine write results
-(Section~\ref{sec:discussion}). Development also surfaced a reusable
-checklist of four benchmarking pitfalls specific to this genre
-(Section~\ref{sec:discussion}).
+The idiomatic implementation-and-strategy difference is concentrated, not
+uniform: sharpest for the deep/nested fetch that assembles a nested object graph
+application-side, and modest for point reads and aggregation
+(Section~\ref{sec:results}). The same-SQL control shows this difference is
+bounded but not attributable to any single mechanism, and that the idiomatic
+eager-loading strategy drives most of it (Section~\ref{sec:results}). On the
+current library versions no layer is multi-core-bound and the native driver
+leads on essentially every pattern; read rankings transfer across the two
+engines while aggregation and writes transfer only moderately, a caution against
+generalizing single-engine results (Section~\ref{sec:discussion}). That
+access-layer rankings are perishable is, here, not a hypothesis but a measured
+result: a headline of an earlier version of this study, the query-engine ORM
+Prisma tying the native driver at roughly five cores of CPU, did not survive
+re-running the same harness against Prisma's Rust-free successor. Development
+also surfaced a reusable checklist of benchmarking pitfalls specific to this
+genre, one of them, a fast-but-wrong write path that passed the read-level
+cross-check, added by this very re-run (Section~\ref{sec:discussion}).
 
 These findings held under a concurrency sweep (1 to 256 connections) and under
 paired permutation and Wilcoxon tests confirming adjacent-layer separation
@@ -32,6 +36,7 @@ dedicated study of the N+1 penalty and of cold-start latency would sharpen the
 practical guidance. Beyond these findings, the durable contribution is the
 harness itself: a vendor-independent, dual-engine instrument with a correctness
 cross-check and a same-SQL contrast control, released under open licenses so
-that these extensions, and independent re-runs against current library
-versions, are straightforward, addressing the repeatability gap widely
+that these extensions, and independent re-runs against future library
+versions (like the one this revision performed against Prisma~7), are
+straightforward, addressing the repeatability gap widely
 documented in computer-systems research~\cite{collberg2016repeatability}.

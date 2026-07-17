@@ -5,10 +5,10 @@
     \texttt{POST /threads}, which inserts a post and five comments in a single
     transaction, on PostgreSQL under default durability (50 connections, median of
     5). A representative layer of each tier is shown; the full matrix is left
-    to future work. Between-layer spread is $3.3	imes$ (Prisma 2412 down to
-    MikroORM 740), well below the $6.55	imes$ read spread, and the ordering tracks
-    the single-row insert, so the write conclusions extend to a multi-statement
-    transactional write.}
+    to future work. Between-layer spread is $3.7\times$ (\texttt{pg} 2718 down to
+    Prisma 733, now the slowest), well below the $7.15\times$ read spread, and the
+    ordering tracks the single-row insert, so the write conclusions extend to a
+    multi-statement transactional write.}
   \label{tab:txn_write}
   \begin{tabular}{l r r}
     \toprule

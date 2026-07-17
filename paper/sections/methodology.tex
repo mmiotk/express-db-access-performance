@@ -337,21 +337,24 @@ not preregister it, and the equivalence conclusion is not sensitive to the exact
 value within a few percent.
 
 \subsection{Experimental setup}
-All measurements were taken on 2026-07-12 and 2026-07-13 on a single host:
-the primary matrix ran overnight across both dates, and the
-order-invariance, durability, same-SQL, open-loop, fan-out, equal-CPU, and
-concurrency-sweep runs followed on 2026-07-13 (a virtualized Intel Xeon
-Gold~6140 instance, 16~vCPUs, single NUMA node, 126~GB RAM; Linux~6.17;
-Node.js~24.16.0), with the database
-engines running locally. The pinned versions (Supplement Table~S11) were
-selected and installed on the measurement date, recorded from the lockfile
-and an automated environment capture (replication package), and frozen for
-the study, since access-layer performance is version-sensitive; later point
-releases (for example Node.js~24.17.0) are deliberately excluded. We pin
-Express~4 rather than Express~5; since it is shared by every cell, it shifts
-the common request-handling floor rather than the between-layer comparison to
-first order, though a different version could interact with a layer's
-scheduling, and re-running the harness on Express~5 is a one-line change.
+All measurements were taken on 2026-07-16 and 2026-07-17 on a single host: the
+primary matrix ran overnight, and the order-invariance, durability, same-SQL,
+open-loop, fan-out, equal-CPU, concurrency-sweep, utilization, pool-size,
+cluster, mixed-workload, wait-event, and post-restart runs followed (a
+virtualized Intel Xeon Gold~6140 instance, 16~vCPUs, single NUMA node, 126~GB
+RAM; Linux~6.17; Node.js~24.18.0; Express~5), with the database engines
+(PostgreSQL~18.4, MySQL~9.7.1) running locally. Each library is pinned to the
+\emph{latest stable release compatible with the harness adapter contract} as of
+the freeze date (2026-07-15), recorded from the committed lockfile and an
+automated environment capture (Supplement Table~S11); a library is pinned to an
+earlier release only where the latest stable breaks the contract or the
+byte-equivalence cross-check, and any such deviation is documented per layer.
+Only Sequelize invokes this exception: its version-7 line is a prerelease, so the
+current 6.x stable line is used. Prereleases and unreleased point versions are
+otherwise excluded. Because access-layer performance is version-sensitive, this
+pins a dated snapshot rather than a permanent ranking, exactly one headline of
+which a superseded pin produced and a re-freeze retired
+(Section~\ref{sec:results}).
 
 \subsection{Replication package}
 The harness --- the Express application, the adapter contract, all nine
