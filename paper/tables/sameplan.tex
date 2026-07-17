@@ -9,8 +9,9 @@
     layer's idiomatic relational-fetch path and the common raw-SQL path, a composite
     of query strategy, query count, protocol, the raw versus ORM API, and result
     marshalling and hydration changed together; the residual native-relative same-SQL
-    spread ($1.47\times$ on PostgreSQL,
-    $1.27\times$ on MySQL) bounds that compound difference without isolating any single factor.}
+    spread ($1.68\times$ on PostgreSQL,
+    $2.01\times$ on MySQL) bounds that compound difference without
+    isolating any single factor.}
   \label{tab:sameplan}
   \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l r r r r r r}
@@ -19,15 +20,15 @@
     \cmidrule(lr){2-4}\cmidrule(lr){5-7}
     Layer & idiom. & same-SQL & ratio & idiom. & same-SQL & ratio \\
     \midrule
-    \texttt{pg} & 3741 & 3643 & 1.03 & -- & -- & -- \\
-    \texttt{mysql2} & -- & -- & -- & 2405 & 2419 & 0.99 \\
-    \texttt{knex} & 2491 & 2906 & 0.86 & 2050 & 2305 & 0.89 \\
-    \texttt{drizzle} & 2080 & 3446 & 0.60 & 1446 & 2105 & 0.69 \\
-    \texttt{prisma} & 3685 & 4342 & 0.85 & 3701 & 4220 & 0.88 \\
-    \texttt{sequelize} & 989 & 2472 & 0.40 & 893 & 1912 & 0.47 \\
-    \texttt{typeorm} & 1327 & 2974 & 0.45 & 1170 & 2517 & 0.46 \\
-    \texttt{objection} & 1037 & 2845 & 0.36 & 860 & 2243 & 0.38 \\
-    \texttt{mikroorm} & 571 & 2869 & 0.20 & 535 & 2172 & 0.25 \\
+    \texttt{pg} & 3687 & 3625 & 1.02 & -- & -- & -- \\
+    \texttt{mysql2} & -- & -- & -- & 2382 & 2427 & 0.98 \\
+    \texttt{knex} & 2487 & 2926 & 0.85 & 2007 & 2245 & 0.89 \\
+    \texttt{drizzle} & 1865 & 3237 & 0.58 & 1318 & 2008 & 0.66 \\
+    \texttt{prisma} & 1186 & 2155 & 0.55 & 634 & 1206 & 0.53 \\
+    \texttt{sequelize} & 991 & 2436 & 0.41 & 886 & 1903 & 0.47 \\
+    \texttt{typeorm} & 1204 & 3170 & 0.38 & 1017 & 2267 & 0.45 \\
+    \texttt{objection} & 1028 & 2831 & 0.36 & 834 & 2310 & 0.36 \\
+    \texttt{mikroorm} & 516 & 3239 & 0.16 & 480 & 2453 & 0.20 \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

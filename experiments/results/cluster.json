@@ -3,192 +3,192 @@
     "engine": "postgres",
     "adapter": "pg",
     "workers": 1,
-    "rps_med": 3308,
-    "p99_med": 21,
+    "rps_med": 3299,
+    "p99_med": 18,
     "rps_samples": [
-      3270,
-      3315,
-      3308
+      3299,
+      3299,
+      3223
     ]
   },
   {
     "engine": "postgres",
     "adapter": "pg",
     "workers": 2,
-    "rps_med": 6554,
-    "p99_med": 12,
+    "rps_med": 4055,
+    "p99_med": 19,
     "rps_samples": [
-      6554,
-      6580,
-      6528
+      4053,
+      4055,
+      4062
     ]
   },
   {
     "engine": "postgres",
     "adapter": "pg",
     "workers": 4,
-    "rps_med": 10178,
-    "p99_med": 10,
+    "rps_med": 3961,
+    "p99_med": 26,
     "rps_samples": [
-      9830,
-      10178,
-      10306
+      3914,
+      3961,
+      3979
     ]
   },
   {
     "engine": "postgres",
     "adapter": "prisma",
     "workers": 1,
-    "rps_med": 3141,
+    "rps_med": 1117,
+    "p99_med": 54,
+    "rps_samples": [
+      1111,
+      1138,
+      1117
+    ]
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "workers": 2,
+    "rps_med": 2275,
+    "p99_med": 28,
+    "rps_samples": [
+      2235,
+      2285,
+      2275
+    ]
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "workers": 4,
+    "rps_med": 4449,
     "p99_med": 20,
     "rps_samples": [
-      3141,
-      3084,
-      3188
-    ]
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "workers": 2,
-    "rps_med": 5861,
-    "p99_med": 13,
-    "rps_samples": [
-      5850,
-      5861,
-      5894
-    ]
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "workers": 4,
-    "rps_med": 6439,
-    "p99_med": 14,
-    "rps_samples": [
-      6341,
-      6439,
-      6469
+      4362,
+      4473,
+      4449
     ]
   },
   {
     "engine": "postgres",
     "adapter": "mikroorm",
     "workers": 1,
-    "rps_med": 431,
-    "p99_med": 262,
+    "rps_med": 435,
+    "p99_med": 181,
     "rps_samples": [
-      401,
-      431,
-      445
+      423,
+      435,
+      443
     ]
   },
   {
     "engine": "postgres",
     "adapter": "mikroorm",
     "workers": 2,
-    "rps_med": 869,
-    "p99_med": 74,
+    "rps_med": 898,
+    "p99_med": 70,
     "rps_samples": [
-      814,
-      869,
-      876
+      859,
+      898,
+      902
     ]
   },
   {
     "engine": "postgres",
     "adapter": "mikroorm",
     "workers": 4,
-    "rps_med": 1748,
-    "p99_med": 44,
+    "rps_med": 1773,
+    "p99_med": 40,
     "rps_samples": [
-      1694,
-      1748,
-      1782
+      1693,
+      1773,
+      1810
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mysql2",
     "workers": 1,
-    "rps_med": 2126,
-    "p99_med": 32,
+    "rps_med": 2327,
+    "p99_med": 29,
     "rps_samples": [
-      2100,
-      2126,
-      2154
+      2298,
+      2327,
+      2336
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mysql2",
     "workers": 2,
-    "rps_med": 4559,
-    "p99_med": 17,
+    "rps_med": 4698,
+    "p99_med": 16,
     "rps_samples": [
-      4564,
-      4450,
-      4559
+      4610,
+      4698,
+      4709
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mysql2",
     "workers": 4,
-    "rps_med": 8890,
-    "p99_med": 12,
+    "rps_med": 8883,
+    "p99_med": 11,
     "rps_samples": [
-      8794,
-      9015,
-      8890
+      8716,
+      8883,
+      8933
     ]
   },
   {
     "engine": "mysql",
     "adapter": "prisma",
     "workers": 1,
-    "rps_med": 3184,
-    "p99_med": 20,
+    "rps_med": 591,
+    "p99_med": 96,
     "rps_samples": [
-      3158,
-      3200,
-      3184
+      591,
+      597,
+      588
     ]
   },
   {
     "engine": "mysql",
     "adapter": "prisma",
     "workers": 2,
-    "rps_med": 5742,
-    "p99_med": 13,
+    "rps_med": 1167,
+    "p99_med": 51,
     "rps_samples": [
-      5720,
-      5742,
-      5797
+      1144,
+      1167,
+      1245
     ]
   },
   {
     "engine": "mysql",
     "adapter": "prisma",
     "workers": 4,
-    "rps_med": 6152,
-    "p99_med": 15,
+    "rps_med": 2427,
+    "p99_med": 27,
     "rps_samples": [
-      6080,
-      6152,
-      6174
+      2415,
+      2427,
+      2478
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mikroorm",
     "workers": 1,
-    "rps_med": 436,
-    "p99_med": 250,
+    "rps_med": 418,
+    "p99_med": 211,
     "rps_samples": [
-      432,
-      436,
-      446
+      404,
+      418,
+      425
     ]
   },
   {
@@ -196,23 +196,23 @@
     "adapter": "mikroorm",
     "workers": 2,
     "rps_med": 851,
-    "p99_med": 82,
+    "p99_med": 70,
     "rps_samples": [
-      840,
+      811,
       851,
-      868
+      862
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mikroorm",
     "workers": 4,
-    "rps_med": 1706,
-    "p99_med": 44,
+    "rps_med": 1624,
+    "p99_med": 42,
     "rps_samples": [
-      1672,
-      1714,
-      1706
+      1548,
+      1624,
+      1651
     ]
   }
 ]

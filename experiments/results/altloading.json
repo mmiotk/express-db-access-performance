@@ -4,9 +4,9 @@
     "adapter": "sequelize",
     "direction": "join->select-in",
     "identical": true,
-    "idiomatic_rps": 897,
-    "alt_rps": 668,
-    "ratio": 0.745
+    "idiomatic_rps": 915,
+    "alt_rps": 690,
+    "ratio": 0.754
   },
   {
     "engine": "postgres",
@@ -20,9 +20,9 @@
     "adapter": "mikroorm",
     "direction": "join->select-in",
     "identical": true,
-    "idiomatic_rps": 421,
-    "alt_rps": 296,
-    "ratio": 0.703
+    "idiomatic_rps": 447,
+    "alt_rps": 357,
+    "ratio": 0.799
   },
   {
     "engine": "postgres",
@@ -36,9 +36,9 @@
     "adapter": "sequelize",
     "direction": "join->select-in",
     "identical": true,
-    "idiomatic_rps": 788,
-    "alt_rps": 590,
-    "ratio": 0.749
+    "idiomatic_rps": 830,
+    "alt_rps": 602,
+    "ratio": 0.725
   },
   {
     "engine": "mysql",
@@ -52,17 +52,17 @@
     "adapter": "mikroorm",
     "direction": "join->select-in",
     "identical": true,
-    "idiomatic_rps": 423,
-    "alt_rps": 289,
-    "ratio": 0.683
+    "idiomatic_rps": 420,
+    "alt_rps": 324,
+    "ratio": 0.771
   },
   {
     "engine": "mysql",
     "adapter": "objection",
     "direction": "select-in->join",
     "identical": true,
-    "idiomatic_rps": 802,
-    "alt_rps": 1277,
-    "ratio": 1.592
+    "idiomatic_rps": 820,
+    "alt_rps": 1301,
+    "ratio": 1.587
   }
 ]

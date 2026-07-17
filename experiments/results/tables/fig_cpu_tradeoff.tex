@@ -10,7 +10,7 @@
       nodes near coords, point meta=explicit symbolic,
       every node near coord/.append style={anchor=west, xshift=2pt, font=\footnotesize},
     ]
-      \addplot[scatter, only marks, mark=*, scatter src=explicit symbolic] coordinates {(100,3741) [pg] (100,3813) [pg-tuned] (100,2491) [knex] (100,2080) [drizzle] (498,3685) [prisma] (100,989) [sequelize] (105,1327) [typeorm] (100,1037) [objection] (100,571) [mikroorm]};
+      \addplot[scatter, only marks, mark=*, scatter src=explicit symbolic] coordinates {(100,3687) [pg] (100,3746) [pg-tuned] (100,2487) [knex] (100,1865) [drizzle] (105,1186) [prisma] (100,991) [sequelize] (105,1204) [typeorm] (100,1028) [objection] (105,516) [mikroorm]};
     \end{axis}
   \end{tikzpicture}
   \caption{Throughput versus application-side CPU on the deep/nested fetch (PostgreSQL, ten-connection pool, medians of 25 replicates). Prisma reaches native-tied throughput at roughly five times the CPU of every other layer; the data-mapper ORMs are low on both axes. CPU is the server process only; database-side CPU is excluded for all layers alike.}

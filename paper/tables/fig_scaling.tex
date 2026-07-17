@@ -6,27 +6,27 @@
       ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
       legend columns=2,legend cell align=left,font=\small,grid=both,
       title={Deep/nested fetch scaling on PostgreSQL}]
-    \addplot+[mark=*] coordinates {(1,714) (8,3261) (32,3615) (64,3583) (128,3605) (256,3511)};
+    \addplot+[mark=*] coordinates {(1,729) (8,3293) (32,3717) (64,3636) (128,3590) (256,3556)};
     \addlegendentry{pg}
-    \addplot+[mark=square*] coordinates {(1,1020) (8,3749) (32,3882) (64,3852) (128,3809) (256,3709)};
+    \addplot+[mark=square*] coordinates {(1,1017) (8,3753) (32,3899) (64,3852) (128,3815) (256,3688)};
     \addlegendentry{pg-tuned}
-    \addplot+[mark=triangle*] coordinates {(1,656) (8,2438) (32,2535) (64,2531) (128,2460) (256,2357)};
+    \addplot+[mark=triangle*] coordinates {(1,663) (8,2408) (32,2540) (64,2523) (128,2451) (256,2412)};
     \addlegendentry{knex}
-    \addplot+[mark=diamond*] coordinates {(1,609) (8,1959) (32,2095) (64,1990) (128,1987) (256,1985)};
+    \addplot+[mark=diamond*] coordinates {(1,596) (8,1790) (32,1935) (64,1933) (128,1867) (256,1792)};
     \addlegendentry{drizzle}
-    \addplot+[mark=o] coordinates {(1,503) (8,1869) (32,3099) (64,3248) (128,3196) (256,3203)};
+    \addplot+[mark=o] coordinates {(1,684) (8,1133) (32,1183) (64,1148) (128,1150) (256,1118)};
     \addlegendentry{prisma}
-    \addplot+[mark=square] coordinates {(1,545) (8,1000) (32,1028) (64,992) (128,985) (256,970)};
+    \addplot+[mark=square] coordinates {(1,599) (8,1002) (32,1042) (64,1030) (128,1013) (256,964)};
     \addlegendentry{sequelize}
-    \addplot+[mark=triangle] coordinates {(1,444) (8,1252) (32,1315) (64,1307) (128,1271) (256,1234)};
+    \addplot+[mark=triangle] coordinates {(1,530) (8,1227) (32,1279) (64,1253) (128,1224) (256,1205)};
     \addlegendentry{typeorm}
-    \addplot+[mark=x] coordinates {(1,569) (8,1050) (32,1051) (64,1042) (128,1021) (256,851)};
+    \addplot+[mark=x] coordinates {(1,724) (8,1072) (32,1099) (64,1057) (128,1014) (256,955)};
     \addlegendentry{objection}
-    \addplot+[mark=+] coordinates {(1,336) (8,576) (32,585) (64,574) (128,540) (256,530)};
+    \addplot+[mark=+] coordinates {(1,321) (8,494) (32,513) (64,513) (128,497) (256,458)};
     \addlegendentry{mikroorm}
   \end{axis}
   \end{tikzpicture}
   \caption{Throughput of each access layer on the deep/nested fetch as concurrency
-    increases (postgres). The three-band ordering (native and tuned-native with Prisma on top, query builder and lightweight ORM in the middle, data-mapper ORMs below) holds at 32 connections and above; at 1 and 8 connections Prisma is mid-pack (see the main-text results).}
+    increases (postgres). The three-band ordering holds at 32 connections and above; at low concurrency (1 and 8 connections) Prisma is mid-pack.}
   \label{fig:scaling}
 \end{figure}

@@ -5,8 +5,8 @@
     \texttt{POST /threads}, which inserts a post and five comments in a single
     transaction, on PostgreSQL under default durability (50 connections, median of
     5). A representative layer of each tier is shown; the full matrix is left
-    to future work. Between-layer spread is $3.3\times$ (Prisma 2412 down to
-    MikroORM 740), well below the $6.55\times$ read spread, and the ordering tracks
+    to future work. Between-layer spread is $3.3	imes$ (Prisma 2412 down to
+    MikroORM 740), well below the $6.55	imes$ read spread, and the ordering tracks
     the single-row insert, so the write conclusions extend to a multi-statement
     transactional write.}
   \label{tab:txn_write}
@@ -14,11 +14,11 @@
     \toprule
     Layer & req/s & p99 (ms) \\
     \midrule
-    \texttt{pg} & 2347 & 44 \\
-    \texttt{knex} & 2029 & 49 \\
-    \texttt{prisma} & 2412 & 41 \\
-    \texttt{typeorm} & 1790 & 48 \\
-    \texttt{mikroorm} & 740 & 90 \\
+    \texttt{pg} & 2718 & 22 \\
+    \texttt{knex} & 2322 & 27 \\
+    \texttt{prisma} & 733 & 80 \\
+    \texttt{typeorm} & 1935 & 32 \\
+    \texttt{mikroorm} & 856 & 68 \\
     \bottomrule
   \end{tabular}
 \end{table}

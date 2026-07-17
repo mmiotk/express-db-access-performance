@@ -3,224 +3,224 @@
     "engine": "postgres",
     "adapter": "pg",
     "mix": "90:10",
-    "rps_med": 4203,
-    "p99_med": 17,
+    "rps_med": 4236,
+    "p99_med": 19,
     "rps_samples": [
-      4203,
-      4140,
-      4198,
-      4236,
-      4317
+      4122,
+      4343,
+      4371,
+      4175,
+      4236
     ]
   },
   {
     "engine": "postgres",
     "adapter": "pg",
     "mix": "70:30",
-    "rps_med": 4223,
-    "p99_med": 17,
-    "rps_samples": [
-      4294,
-      4299,
-      4219,
-      4210,
-      4223
-    ]
-  },
-  {
-    "engine": "postgres",
-    "adapter": "knex",
-    "mix": "90:10",
-    "rps_med": 2920,
-    "p99_med": 24,
-    "rps_samples": [
-      2944,
-      2815,
-      2890,
-      2920,
-      2933
-    ]
-  },
-  {
-    "engine": "postgres",
-    "adapter": "knex",
-    "mix": "70:30",
-    "rps_med": 2889,
-    "p99_med": 24,
-    "rps_samples": [
-      2861,
-      2893,
-      2893,
-      2885,
-      2889
-    ]
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "mix": "90:10",
-    "rps_med": 3954,
-    "p99_med": 17,
-    "rps_samples": [
-      3973,
-      3973,
-      3954,
-      3935,
-      3901
-    ]
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "mix": "70:30",
-    "rps_med": 3903,
+    "rps_med": 4347,
     "p99_med": 18,
     "rps_samples": [
-      3903,
-      3928,
-      3802,
-      3951,
-      3835
+      4347,
+      4256,
+      4374,
+      4360,
+      4314
+    ]
+  },
+  {
+    "engine": "postgres",
+    "adapter": "knex",
+    "mix": "90:10",
+    "rps_med": 3024,
+    "p99_med": 26,
+    "rps_samples": [
+      2844,
+      3067,
+      3024,
+      3098,
+      2915
+    ]
+  },
+  {
+    "engine": "postgres",
+    "adapter": "knex",
+    "mix": "70:30",
+    "rps_med": 2993,
+    "p99_med": 26,
+    "rps_samples": [
+      2993,
+      2627,
+      3015,
+      2994,
+      2954
+    ]
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "mix": "90:10",
+    "rps_med": 1504,
+    "p99_med": 55,
+    "rps_samples": [
+      1472,
+      1504,
+      1530,
+      1490,
+      1523
+    ]
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "mix": "70:30",
+    "rps_med": 1409,
+    "p99_med": 58,
+    "rps_samples": [
+      1507,
+      1499,
+      1368,
+      1406,
+      1409
     ]
   },
   {
     "engine": "postgres",
     "adapter": "mikroorm",
     "mix": "90:10",
-    "rps_med": 668,
-    "p99_med": 96,
+    "rps_med": 676,
+    "p99_med": 103,
     "rps_samples": [
-      635,
-      654,
-      668,
-      680,
-      677
+      646,
+      649,
+      687,
+      696,
+      676
     ]
   },
   {
     "engine": "postgres",
     "adapter": "mikroorm",
     "mix": "70:30",
-    "rps_med": 681,
-    "p99_med": 96,
+    "rps_med": 705,
+    "p99_med": 99,
     "rps_samples": [
-      681,
-      680,
-      683,
-      683,
-      679
+      703,
+      691,
+      705,
+      710,
+      706
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mysql2",
     "mix": "90:10",
-    "rps_med": 2481,
-    "p99_med": 38,
+    "rps_med": 2283,
+    "p99_med": 44,
     "rps_samples": [
-      2467,
-      2481,
-      2494,
-      2414,
-      2495
+      2318,
+      2131,
+      2283,
+      2364,
+      2205
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mysql2",
     "mix": "70:30",
-    "rps_med": 2568,
-    "p99_med": 34,
+    "rps_med": 2505,
+    "p99_med": 47,
     "rps_samples": [
-      2602,
-      2583,
-      2568,
-      2542,
-      2522
+      2191,
+      2505,
+      2506,
+      2534,
+      2459
     ]
   },
   {
     "engine": "mysql",
     "adapter": "knex",
     "mix": "90:10",
-    "rps_med": 2259,
-    "p99_med": 35,
+    "rps_med": 2275,
+    "p99_med": 37,
     "rps_samples": [
-      2227,
-      2251,
-      2259,
-      2280,
-      2281
+      2232,
+      2243,
+      2275,
+      2285,
+      2320
     ]
   },
   {
     "engine": "mysql",
     "adapter": "knex",
     "mix": "70:30",
-    "rps_med": 2249,
-    "p99_med": 35,
-    "rps_samples": [
-      2253,
-      2215,
-      2249,
-      2252,
-      2233
-    ]
-  },
-  {
-    "engine": "mysql",
-    "adapter": "prisma",
-    "mix": "90:10",
-    "rps_med": 2625,
-    "p99_med": 33,
-    "rps_samples": [
-      2586,
-      2615,
-      2648,
-      2625,
-      2638
-    ]
-  },
-  {
-    "engine": "mysql",
-    "adapter": "prisma",
-    "mix": "70:30",
-    "rps_med": 2633,
+    "rps_med": 2232,
     "p99_med": 40,
     "rps_samples": [
-      2633,
-      2648,
-      2641,
-      2561,
-      2289
+      2197,
+      2263,
+      2171,
+      2243,
+      2232
+    ]
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "mix": "90:10",
+    "rps_med": 718,
+    "p99_med": 114,
+    "rps_samples": [
+      701,
+      708,
+      718,
+      718,
+      720
+    ]
+  },
+  {
+    "engine": "mysql",
+    "adapter": "prisma",
+    "mix": "70:30",
+    "rps_med": 729,
+    "p99_med": 103,
+    "rps_samples": [
+      657,
+      695,
+      729,
+      732,
+      733
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mikroorm",
     "mix": "90:10",
-    "rps_med": 603,
-    "p99_med": 115,
+    "rps_med": 626,
+    "p99_med": 109,
     "rps_samples": [
-      579,
-      613,
-      624,
-      582,
-      603
+      593,
+      618,
+      626,
+      627,
+      636
     ]
   },
   {
     "engine": "mysql",
     "adapter": "mikroorm",
     "mix": "70:30",
-    "rps_med": 635,
-    "p99_med": 102,
+    "rps_med": 639,
+    "p99_med": 105,
     "rps_samples": [
-      562,
-      633,
-      635,
-      643,
-      636
+      641,
+      641,
+      630,
+      639,
+      634
     ]
   }
 ]

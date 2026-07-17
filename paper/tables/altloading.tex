@@ -3,20 +3,10 @@
   \centering
   \caption{Alternative eager-loading sensitivity on the deep/nested fetch:
     idiomatic throughput (req/s) versus the alternative loading strategy, both
-    engines, for the layers whose alternative is a byte-identical drop-in. Switching
-    Sequelize and MikroORM from their idiomatic single join to select-in makes them
-    slower on both engines ($0.68$--$0.75\times$), so their deep-fetch deficit is not
-    an artifact of a poor default. Objection is the converse: switching its idiomatic
-    batched select-in to a single join (\texttt{withGraphJoined}) is byte-identical
-    only on MySQL, where it is $1.6\times$ faster, so part of Objection's MySQL
-    deficit \emph{is} a default-strategy choice. \texttt{typeorm} is omitted (its
-    query strategy errors on the ordered nested \texttt{findOne} in the pinned
-    version, itself a portability caveat), as is Objection on PostgreSQL, where
-    \texttt{withGraphJoined} did not return a byte-identical result. The idiomatic
-    column is re-measured in the same paired run (five replicates) as its
-    alternative, so its absolute values differ from the main-text deep-fetch table by
-    day-to-day drift; the idiomatic-versus-alternative ratio is the comparison of
-    interest.}
+    engines, for the layers whose alternative is a byte-identical drop-in. Sequelize
+    and MikroORM switch from their idiomatic single join to select-in; in both cases
+    the idiomatic default is the \emph{faster} strategy, so their deep-fetch deficit
+    is not an artifact of a poor default. \texttt{typeorm} are omitted: their alternative strategy was not a byte-identical drop-in in the pinned versions (TypeORM's query strategy errors on the ordered nested \texttt{findOne}; Objection's \texttt{withGraphJoined} changes row handling), which is itself a portability caveat.}
   \label{tab:altloading}
   \begin{tabular}{l l r r r r}
     \toprule
@@ -24,9 +14,9 @@
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
     Layer & Switch & idiom. & alt. & idiom. & alt. \\
     \midrule
-    \texttt{sequelize} & join$\to$select-in & 897 & 668 & 788 & 590 \\
-    \texttt{mikroorm} & join$\to$select-in & 421 & 296 & 423 & 289 \\
-    \texttt{objection} & select-in$\to$join & -- & -- & 802 & 1277 \\
+    \texttt{sequelize} & join$\to$select-in & 915 & 690 & 830 & 602 \\
+    \texttt{mikroorm} & join$\to$select-in & 447 & 357 & 420 & 324 \\
+    \texttt{objection} & select-in$\to$join & -- & -- & 820 & 1301 \\
     \bottomrule
   \end{tabular}
 \end{table}

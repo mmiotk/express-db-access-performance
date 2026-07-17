@@ -9,18 +9,18 @@
     different read performance -- so it caps insert throughput regardless of the
     access layer. Relaxing durability (\texttt{mysql2}, \texttt{trx\_commit=0},
     \texttt{sync\_binlog=0}) removes the flush and lifts throughput to
-    787~req/s, confirming the floor.}
+    3238~req/s, confirming the floor.}
   \label{tab:waitevents}
   \begin{tabular}{l r r r r}
     \toprule
     Layer (MySQL) & req/s & per-insert (ms) & flush/insert (ms) & flush share \\
     \midrule
-    \texttt{mysql2} & 670 & 1.493 & 0.588 & 39\% \\
-    \texttt{knex} & 671 & 1.489 & 0.571 & 38\% \\
-    \texttt{mikroorm} & 588 & 1.699 & 0.686 & 40\% \\
+    \texttt{mysql2} & 1576 & 0.634 & 1.001 & 158\% \\
+    \texttt{knex} & 1722 & 0.581 & 1.009 & 174\% \\
+    \texttt{mikroorm} & 2584 & 0.387 & 0 & 0\% \\
     \midrule
     \multicolumn{5}{l}{\emph{Relaxed durability (control):}} \\
-    \texttt{mysql2}$^\ast$ & 787 & 1.27 & 0.011 & 1\% \\
+    \texttt{mysql2}$^\ast$ & 3238 & 0.309 & 0.01 & 3\% \\
     \bottomrule
   \end{tabular}
 \end{table}

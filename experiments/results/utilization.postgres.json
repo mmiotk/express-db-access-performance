@@ -2,135 +2,186 @@
   {
     "engine": "postgres",
     "adapter": "pg",
-    "capacity": 3741,
+    "capacity": 3687,
     "fraction": 0.5,
-    "offered": 1871,
-    "achieved_med": 1868,
-    "p99_med": 2.1,
+    "offered": 1844,
+    "achieved_med": 1841,
+    "p99_med": 3.9,
     "p99_samples": [
-      3.1,
-      2.6,
-      2.1,
-      2.1,
-      2.1
+      4.2,
+      4.1,
+      3.9,
+      2.4,
+      2.5
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
     "adapter": "pg",
-    "capacity": 3741,
+    "capacity": 3687,
     "fraction": 0.7,
-    "offered": 2619,
-    "achieved_med": 2614,
-    "p99_med": 4.6,
+    "offered": 2581,
+    "achieved_med": 2576,
+    "p99_med": 3.1,
     "p99_samples": [
-      4.6,
-      7.2,
-      4,
-      4,
-      4.9
+      2.9,
+      3.2,
+      3,
+      3.1,
+      3.1
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
     "adapter": "pg",
-    "capacity": 3741,
+    "capacity": 3687,
     "fraction": 0.85,
-    "offered": 3180,
-    "achieved_med": 3171,
-    "p99_med": 18,
+    "offered": 3134,
+    "achieved_med": 3127,
+    "p99_med": 4,
     "p99_samples": [
-      8,
-      42.1,
-      18,
-      10.3,
-      24
+      3.9,
+      3.9,
+      4,
+      4.2,
+      4.1
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
     "adapter": "pg",
-    "capacity": 3741,
+    "capacity": 3687,
     "fraction": 0.95,
-    "offered": 3554,
-    "achieved_med": 3537,
-    "p99_med": 83,
+    "offered": 3503,
+    "achieved_med": 3494,
+    "p99_med": 5.9,
     "p99_samples": [
-      132.6,
-      504.9,
-      55.8,
-      83,
-      12.7
+      5.2,
+      6.4,
+      6,
+      5.9,
+      5
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
     "adapter": "knex",
-    "capacity": 2491,
+    "capacity": 2487,
     "fraction": 0.5,
-    "offered": 1246,
-    "achieved_med": 1245,
-    "p99_med": 2.3,
+    "offered": 1244,
+    "achieved_med": 1243,
+    "p99_med": 2.4,
     "p99_samples": [
-      3.2,
       2.3,
       2.2,
-      2.3,
-      2.3
+      2.4,
+      2.5,
+      4.3
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
     "adapter": "knex",
-    "capacity": 2491,
+    "capacity": 2487,
     "fraction": 0.7,
-    "offered": 1744,
-    "achieved_med": 1742,
-    "p99_med": 4.9,
+    "offered": 1741,
+    "achieved_med": 1739,
+    "p99_med": 3.2,
     "p99_samples": [
-      6.5,
-      4.9,
+      3.2,
+      3.1,
+      3.4,
+      3.2,
+      3.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "knex",
+    "capacity": 2487,
+    "fraction": 0.85,
+    "offered": 2114,
+    "achieved_med": 2110,
+    "p99_med": 3.5,
+    "p99_samples": [
+      3.5,
+      3.4,
+      3.5,
+      63.9,
+      31.1
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "knex",
+    "capacity": 2487,
+    "fraction": 0.95,
+    "offered": 2363,
+    "achieved_med": 2357,
+    "p99_med": 54,
+    "p99_samples": [
+      4.2,
+      58.5,
+      144.7,
+      54,
+      21.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "drizzle",
+    "capacity": 1865,
+    "fraction": 0.5,
+    "offered": 933,
+    "achieved_med": 932,
+    "p99_med": 3.8,
+    "p99_samples": [
       4.4,
-      5.2,
+      2.9,
+      2.5,
+      4.3,
+      3.8
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "drizzle",
+    "capacity": 1865,
+    "fraction": 0.7,
+    "offered": 1306,
+    "achieved_med": 1305,
+    "p99_med": 8.8,
+    "p99_samples": [
+      3,
+      10,
+      10.6,
+      8.8,
       2.8
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
-    "adapter": "knex",
-    "capacity": 2491,
+    "adapter": "drizzle",
+    "capacity": 1865,
     "fraction": 0.85,
-    "offered": 2117,
-    "achieved_med": 2113,
-    "p99_med": 25.3,
+    "offered": 1585,
+    "achieved_med": 1583,
+    "p99_med": 30.9,
     "p99_samples": [
-      143.6,
-      17.4,
-      119.3,
-      25.3,
-      15.3
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "knex",
-    "capacity": 2491,
-    "fraction": 0.95,
-    "offered": 2366,
-    "achieved_med": 2361,
-    "p99_med": 26.2,
-    "p99_samples": [
-      66.2,
-      26.2,
-      40.9,
-      14.2,
+      35.2,
+      30.9,
+      76.3,
+      4.6,
       14.5
     ],
     "timeouts_total": 0
@@ -138,390 +189,305 @@
   {
     "engine": "postgres",
     "adapter": "drizzle",
-    "capacity": 2080,
+    "capacity": 1865,
+    "fraction": 0.95,
+    "offered": 1772,
+    "achieved_med": 1770,
+    "p99_med": 7.4,
+    "p99_samples": [
+      7.4,
+      4.1,
+      73,
+      5.3,
+      38.7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "capacity": 1186,
     "fraction": 0.5,
-    "offered": 1040,
-    "achieved_med": 1039,
+    "offered": 593,
+    "achieved_med": 593,
+    "p99_med": 4.2,
+    "p99_samples": [
+      5.3,
+      4.7,
+      3.9,
+      4.2,
+      4.1
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "capacity": 1186,
+    "fraction": 0.7,
+    "offered": 830,
+    "achieved_med": 830,
+    "p99_med": 7.8,
+    "p99_samples": [
+      8,
+      6.6,
+      11.7,
+      7.8,
+      7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "capacity": 1186,
+    "fraction": 0.85,
+    "offered": 1008,
+    "achieved_med": 1007,
+    "p99_med": 18.8,
+    "p99_samples": [
+      18.4,
+      65.7,
+      57.7,
+      13.7,
+      18.8
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "prisma",
+    "capacity": 1186,
+    "fraction": 0.95,
+    "offered": 1127,
+    "achieved_med": 1126,
+    "p99_med": 77.5,
+    "p99_samples": [
+      63.7,
+      70.3,
+      432.8,
+      77.5,
+      92.7
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "sequelize",
+    "capacity": 991,
+    "fraction": 0.5,
+    "offered": 496,
+    "achieved_med": 496,
     "p99_med": 2.5,
     "p99_samples": [
+      2.9,
       2.6,
       2.5,
       2.4,
-      2.5,
-      2.3
+      2.4
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
-    "adapter": "drizzle",
-    "capacity": 2080,
+    "adapter": "sequelize",
+    "capacity": 991,
     "fraction": 0.7,
-    "offered": 1456,
-    "achieved_med": 1455,
-    "p99_med": 2.9,
+    "offered": 694,
+    "achieved_med": 694,
+    "p99_med": 4.3,
     "p99_samples": [
-      3,
-      7.1,
+      4.5,
       2.8,
-      2.9,
-      2.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "drizzle",
-    "capacity": 2080,
-    "fraction": 0.85,
-    "offered": 1768,
-    "achieved_med": 1765,
-    "p99_med": 18.4,
-    "p99_samples": [
-      18.4,
-      19.2,
-      178.7,
-      13.6,
+      4.3,
+      3.5,
       12
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
-    "adapter": "drizzle",
-    "capacity": 2080,
-    "fraction": 0.95,
-    "offered": 1976,
-    "achieved_med": 1973,
-    "p99_med": 15.9,
-    "p99_samples": [
-      176.2,
-      14.6,
-      11.6,
-      188.3,
-      15.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "capacity": 3685,
-    "fraction": 0.5,
-    "offered": 1843,
-    "achieved_med": 1840,
-    "p99_med": 3.4,
-    "p99_samples": [
-      3.2,
-      3.1,
-      3.7,
-      3.4,
-      3.6
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "capacity": 3685,
-    "fraction": 0.7,
-    "offered": 2580,
-    "achieved_med": 2575,
-    "p99_med": 6.9,
-    "p99_samples": [
-      15.4,
-      5.3,
-      8.9,
-      6.7,
-      6.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "capacity": 3685,
+    "adapter": "sequelize",
+    "capacity": 991,
     "fraction": 0.85,
-    "offered": 3132,
-    "achieved_med": 3124,
-    "p99_med": 11.7,
-    "p99_samples": [
-      15.2,
-      11.7,
-      18.9,
-      8.2,
-      10.5
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "prisma",
-    "capacity": 3685,
-    "fraction": 0.95,
-    "offered": 3501,
-    "achieved_med": 3490,
-    "p99_med": 16.3,
-    "p99_samples": [
-      426.3,
-      13.8,
-      16,
-      16.3,
-      77.1
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "sequelize",
-    "capacity": 989,
-    "fraction": 0.5,
-    "offered": 495,
-    "achieved_med": 495,
-    "p99_med": 2.9,
-    "p99_samples": [
-      2.5,
-      2.4,
-      2.9,
-      3,
-      2.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "sequelize",
-    "capacity": 989,
-    "fraction": 0.7,
-    "offered": 692,
-    "achieved_med": 692,
-    "p99_med": 3,
-    "p99_samples": [
-      3.4,
-      2.7,
-      5.6,
-      2.6,
-      3
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "sequelize",
-    "capacity": 989,
-    "fraction": 0.85,
-    "offered": 841,
+    "offered": 842,
     "achieved_med": 841,
-    "p99_med": 8,
+    "p99_med": 7.7,
     "p99_samples": [
-      8,
-      11.3,
-      11.5,
-      6.8,
-      7.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "sequelize",
-    "capacity": 989,
-    "fraction": 0.95,
-    "offered": 940,
-    "achieved_med": 939,
-    "p99_med": 12.7,
-    "p99_samples": [
-      16.2,
-      12.7,
-      12.6,
-      16.1,
-      8.5
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "typeorm",
-    "capacity": 1327,
-    "fraction": 0.5,
-    "offered": 664,
-    "achieved_med": 664,
-    "p99_med": 3.2,
-    "p99_samples": [
-      3.9,
-      3.6,
-      3.1,
-      3.1,
-      3.2
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "typeorm",
-    "capacity": 1327,
-    "fraction": 0.7,
-    "offered": 929,
-    "achieved_med": 929,
-    "p99_med": 4.2,
-    "p99_samples": [
-      4.2,
-      8.9,
-      4.3,
-      3.9,
-      3.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "typeorm",
-    "capacity": 1327,
-    "fraction": 0.85,
-    "offered": 1128,
-    "achieved_med": 1127,
-    "p99_med": 17.3,
-    "p99_samples": [
-      25.9,
-      13.2,
-      17.3,
-      12.1,
-      18.3
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "typeorm",
-    "capacity": 1327,
-    "fraction": 0.95,
-    "offered": 1261,
-    "achieved_med": 1259,
-    "p99_med": 27,
-    "p99_samples": [
-      17.3,
-      59.9,
-      12.5,
-      53.3,
-      27
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "objection",
-    "capacity": 1037,
-    "fraction": 0.5,
-    "offered": 519,
-    "achieved_med": 519,
-    "p99_med": 3,
-    "p99_samples": [
-      2.7,
-      3,
-      3.1,
-      3,
-      2.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "objection",
-    "capacity": 1037,
-    "fraction": 0.7,
-    "offered": 726,
-    "achieved_med": 726,
-    "p99_med": 3.3,
-    "p99_samples": [
-      3.6,
-      3,
-      3.3,
-      3.1,
-      3.9
-    ],
-    "timeouts_total": 0
-  },
-  {
-    "engine": "postgres",
-    "adapter": "objection",
-    "capacity": 1037,
-    "fraction": 0.85,
-    "offered": 881,
-    "achieved_med": 881,
-    "p99_med": 7.2,
-    "p99_samples": [
-      4.9,
-      6.9,
-      7.2,
-      32.8,
+      11.9,
+      4,
+      15.4,
+      5.5,
       7.7
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
-    "adapter": "objection",
-    "capacity": 1037,
+    "adapter": "sequelize",
+    "capacity": 991,
     "fraction": 0.95,
-    "offered": 985,
-    "achieved_med": 984,
-    "p99_med": 17.2,
+    "offered": 941,
+    "achieved_med": 940,
+    "p99_med": 11.8,
     "p99_samples": [
-      26.7,
-      21.3,
-      10.1,
-      8.2,
-      17.2
+      11.8,
+      33.5,
+      9.8,
+      18.6,
+      10.4
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
-    "adapter": "mikroorm",
-    "capacity": 571,
+    "adapter": "typeorm",
+    "capacity": 1204,
     "fraction": 0.5,
-    "offered": 286,
-    "achieved_med": 286,
-    "p99_med": 3.4,
+    "offered": 602,
+    "achieved_med": 602,
+    "p99_med": 3.1,
     "p99_samples": [
-      3.5,
-      3.5,
-      3.3,
-      3.3,
-      3.4
+      4.1,
+      3.9,
+      3,
+      2.9,
+      3.1
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
-    "adapter": "mikroorm",
-    "capacity": 571,
+    "adapter": "typeorm",
+    "capacity": 1204,
     "fraction": 0.7,
-    "offered": 400,
-    "achieved_med": 400,
+    "offered": 843,
+    "achieved_med": 843,
     "p99_med": 3.7,
     "p99_samples": [
       3.7,
-      3.8,
-      3.7,
-      3.8,
-      3.7
+      3.5,
+      6.3,
+      4,
+      3.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "typeorm",
+    "capacity": 1204,
+    "fraction": 0.85,
+    "offered": 1023,
+    "achieved_med": 1022,
+    "p99_med": 7.9,
+    "p99_samples": [
+      15.3,
+      5.2,
+      7.9,
+      7.7,
+      18.5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "typeorm",
+    "capacity": 1204,
+    "fraction": 0.95,
+    "offered": 1144,
+    "achieved_med": 1142,
+    "p99_med": 37.1,
+    "p99_samples": [
+      60.2,
+      19.8,
+      37.1,
+      57.3,
+      19.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "objection",
+    "capacity": 1028,
+    "fraction": 0.5,
+    "offered": 514,
+    "achieved_med": 514,
+    "p99_med": 3.1,
+    "p99_samples": [
+      3.1,
+      3.2,
+      3.1,
+      3,
+      2.9
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "objection",
+    "capacity": 1028,
+    "fraction": 0.7,
+    "offered": 720,
+    "achieved_med": 720,
+    "p99_med": 3.1,
+    "p99_samples": [
+      3,
+      3,
+      8.8,
+      3.4,
+      3.1
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "objection",
+    "capacity": 1028,
+    "fraction": 0.85,
+    "offered": 874,
+    "achieved_med": 874,
+    "p99_med": 6.2,
+    "p99_samples": [
+      8.7,
+      6.2,
+      5.7,
+      19.2,
+      5.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "objection",
+    "capacity": 1028,
+    "fraction": 0.95,
+    "offered": 977,
+    "achieved_med": 971,
+    "p99_med": 284.6,
+    "p99_samples": [
+      50.8,
+      284.6,
+      81,
+      313.5,
+      447.8
     ],
     "timeouts_total": 0
   },
   {
     "engine": "postgres",
     "adapter": "mikroorm",
-    "capacity": 571,
-    "fraction": 0.85,
-    "offered": 485,
-    "achieved_med": 485,
-    "p99_med": 4.3,
+    "capacity": 516,
+    "fraction": 0.5,
+    "offered": 258,
+    "achieved_med": 258,
+    "p99_med": 3.9,
     "p99_samples": [
+      5,
+      4.2,
+      3.8,
       3.7,
-      4.3,
-      11,
-      4.5,
       3.9
     ],
     "timeouts_total": 0
@@ -529,17 +495,51 @@
   {
     "engine": "postgres",
     "adapter": "mikroorm",
-    "capacity": 571,
-    "fraction": 0.95,
-    "offered": 542,
-    "achieved_med": 542,
-    "p99_med": 7.7,
+    "capacity": 516,
+    "fraction": 0.7,
+    "offered": 361,
+    "achieved_med": 361,
+    "p99_med": 4.9,
     "p99_samples": [
-      7.7,
-      6.1,
-      7.4,
-      19.3,
-      18.1
+      4.3,
+      4.9,
+      5.1,
+      4.2,
+      5
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "mikroorm",
+    "capacity": 516,
+    "fraction": 0.85,
+    "offered": 439,
+    "achieved_med": 439,
+    "p99_med": 5.5,
+    "p99_samples": [
+      6.3,
+      6.5,
+      5.5,
+      5.3,
+      5.2
+    ],
+    "timeouts_total": 0
+  },
+  {
+    "engine": "postgres",
+    "adapter": "mikroorm",
+    "capacity": 516,
+    "fraction": 0.95,
+    "offered": 490,
+    "achieved_med": 490,
+    "p99_med": 7.5,
+    "p99_samples": [
+      8,
+      7.1,
+      29.3,
+      5.5,
+      7.5
     ],
     "timeouts_total": 0
   }

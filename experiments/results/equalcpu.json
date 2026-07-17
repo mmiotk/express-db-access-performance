@@ -3,99 +3,99 @@
     "adapter": "pg",
     "cores": "1core",
     "mask": "4",
-    "rps": 3663,
+    "rps": 3689,
     "rps_samples": [
-      3456,
-      3663,
-      3672
+      3506,
+      3689,
+      3724
     ]
   },
   {
     "adapter": "pg",
     "cores": "2core",
     "mask": "4-5",
-    "rps": 3277,
+    "rps": 3688,
     "rps_samples": [
-      3545,
-      3257,
-      3277
+      3627,
+      3688,
+      3698
     ]
   },
   {
     "adapter": "pg",
     "cores": "4core",
     "mask": "4-7",
-    "rps": 3700,
+    "rps": 3687,
     "rps_samples": [
-      3636,
-      3700,
-      3722
+      3632,
+      3687,
+      3692
     ]
   },
   {
     "adapter": "prisma",
     "cores": "1core",
     "mask": "4",
-    "rps": 896,
+    "rps": 1079,
     "rps_samples": [
-      845,
-      906,
-      896
+      930,
+      1097,
+      1079
     ]
   },
   {
     "adapter": "prisma",
     "cores": "2core",
     "mask": "4-5",
-    "rps": 1726,
+    "rps": 1052,
     "rps_samples": [
-      1656,
-      1729,
-      1726
+      1049,
+      1103,
+      1052
     ]
   },
   {
     "adapter": "prisma",
     "cores": "4core",
     "mask": "4-7",
-    "rps": 3025,
+    "rps": 1219,
     "rps_samples": [
-      2960,
-      3040,
-      3025
+      1115,
+      1219,
+      1231
     ]
   },
   {
     "adapter": "mikroorm",
     "cores": "1core",
     "mask": "4",
-    "rps": 463,
+    "rps": 446,
     "rps_samples": [
-      410,
-      463,
-      516
+      382,
+      446,
+      487
     ]
   },
   {
     "adapter": "mikroorm",
     "cores": "2core",
     "mask": "4-5",
-    "rps": 577,
+    "rps": 495,
     "rps_samples": [
-      539,
-      577,
-      595
+      448,
+      495,
+      518
     ]
   },
   {
     "adapter": "mikroorm",
     "cores": "4core",
     "mask": "4-7",
-    "rps": 542,
+    "rps": 522,
     "rps_samples": [
-      526,
-      567,
-      542
+      483,
+      522,
+      535
     ]
   }
 ]
