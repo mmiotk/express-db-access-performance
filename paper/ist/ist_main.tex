@@ -61,7 +61,7 @@ cross-check verifies byte-identical responses before measurement.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between the native driver and the slowest
-ORM, narrowing to $1.68\times$ and $2.03\times$ once every layer runs identical
+ORM, narrowing to $1.68\times$ and $2.01\times$ once every layer runs identical
 SQL: a compound control showing the idiomatic eager-loading strategy drives most
 of it, isolating no single factor. Read rankings transfer across engines
 (Spearman $\rho \geq 0.86$); aggregation and writes transfer only moderately

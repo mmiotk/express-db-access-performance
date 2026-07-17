@@ -2,7 +2,7 @@
 \begin{table}[htbp]
   \centering
   \caption{Paired comparison of adjacently ranked access layers on the deep/nested
-    fetch (MySQL), over the 25 repeated runs. Because
+    fetch (PostgreSQL), over the 25 repeated runs. Because
     every layer runs the identical per-replicate request stream, layers are compared
     on their per-replicate throughput ratios: median throughput (req/s) with
     bootstrap 95\% CI, the geometric-mean paired ratio A$/$B with a paired bootstrap
@@ -17,13 +17,13 @@
     \toprule
     Comparison (A $>$ B) & med.\ A [95\% CI] & med.\ B [95\% CI] & ratio A$/$B [95\% CI] & dom. & perm.\ $p$ \\
     \midrule
-    mysql2 $>$ knex & 2382~[2357--2451] & 2007~[1989--2031] & 1.19~[1.18--1.20] & 1.00 & $5.0{\times}10^{-5}$ \\
-    knex $>$ drizzle & 2007~[1989--2031] & 1318~[1305--1336] & 1.53~[1.51--1.55] & 1.00 & $5.0{\times}10^{-5}$ \\
-    drizzle $>$ typeorm & 1318~[1300--1336] & 1017~[987--1029] & 1.30~[1.28--1.32] & 1.00 & $5.0{\times}10^{-5}$ \\
-    typeorm $>$ sequelize & 1017~[987--1029] & 886~[868--898] & 1.15~[1.13--1.16] & 1.00 & $5.0{\times}10^{-5}$ \\
-    sequelize $>$ objection & 886~[868--898] & 834~[828--855] & 1.05~[1.03--1.07] & 0.88 & 0.0001 \\
-    objection $>$ prisma & 834~[828--855] & 634~[618--641] & 1.33~[1.31--1.36] & 1.00 & $5.0{\times}10^{-5}$ \\
-    prisma $>$ mikroorm & 634~[618--644] & 480~[476--488] & 1.31~[1.29--1.33] & 1.00 & $5.0{\times}10^{-5}$ \\
+    pg $>$ knex & 3687~[3602--3737] & 2487~[2465--2505] & 1.48~[1.46--1.50] & 1.00 & $5.0{\times}10^{-5}$ \\
+    knex $>$ drizzle & 2487~[2465--2505] & 1865~[1837--1875] & 1.33~[1.31--1.35] & 1.00 & $5.0{\times}10^{-5}$ \\
+    drizzle $>$ typeorm & 1865~[1837--1878] & 1204~[1188--1223] & 1.54~[1.52--1.56] & 1.00 & $5.0{\times}10^{-5}$ \\
+    typeorm $>$ prisma & 1204~[1188--1223] & 1186~[1160--1203] & 1.02~[1.00--1.03] & 0.64 & 0.0230 \\
+    prisma $>$ objection & 1186~[1160--1203] & 1028~[1020--1037] & 1.15~[1.13--1.18] & 1.00 & $5.0{\times}10^{-5}$ \\
+    objection $>$ sequelize & 1028~[1020--1037] & 991~[977--998] & 1.04~[1.03--1.05] & 0.88 & $5.0{\times}10^{-5}$ \\
+    sequelize $>$ mikroorm & 991~[977--998] & 516~[499--525] & 1.93~[1.90--1.97] & 1.00 & $5.0{\times}10^{-5}$ \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

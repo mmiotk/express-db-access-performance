@@ -22,14 +22,15 @@ numbered online supplement (`supplement.pdf`, Supplement Tables S1–S27 and Sup
 Figure S1), which is submitted with the manuscript and archived under the same Zenodo
 DOI as the code and data; supplement floats are not part of the main-text count.
 
-In this revision (round 4) the manuscript was repositioned as a reproducible benchmark
+In this revision (round 5) the entire benchmark was re-run on the latest stable
+library versions (Prisma 7, Express 5, etc.); the manuscript was repositioned as a reproducible benchmark
 and a configuration-specific comparison; the body prose was cut by roughly 1,800 words
 to remove repeated conclusions and filler (the five recurring findings are now stated
 once, in the results section, and cross-referenced elsewhere); the secondary access
 patterns (point read, keyset range scan) were reduced to lean summaries with their full
 tables in the supplement; the controlled/varied/uncontrolled factor table was moved to
 the supplement (Table S27); and five peripheral citations (general NoSQL and OLTP
-benchmark context) were dropped, taking the reference list from 70 to 65 entries. Six
+benchmark context) were dropped, taking the reference list from 70 to 62 entries. Six
 single-host experiments added earlier in the round (utilization-controlled open-loop,
 multi-worker cluster, per-layer pool frontier on both engines, mixed read/write,
 replicated fan-out, and a longer-run sensitivity check) remain as Supplement Tables

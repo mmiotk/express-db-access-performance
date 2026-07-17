@@ -201,8 +201,9 @@ replicates, though not full independence: all runs share one host and one short
 campaign, so replicate index and measurement order are treated as blocking
 factors. Cell order was reshuffled independently within each replicate; a
 forward-versus-reversed-order check on the write endpoint (5 replicates per
-direction) found no detectable history effect (reversed-to-forward throughput
-ratio across all 18 cells: 0.970--1.021, median 1.004). Within a replicate, every
+direction) found no detectable history effect on the read cells (reversed-to-forward
+ratio 0.977--1.280, median 1.012; the wide tail is confined to the noisy MySQL
+inserts, where five replicates cannot separate order from write noise). Within a replicate, every
 layer and engine is driven by the identical request-id sequence from a PRNG
 seeded on the (endpoint, replicate) pair; this paired-stream design removes
 between-layer sampling noise as a confound, and the first ids of every stream are
@@ -310,7 +311,8 @@ for \emph{this} study, not a general engineering threshold: at modest deployment
 scale a sub-$5\%$ throughput difference would not change a capacity-planning
 decision (for example, how many application instances to provision for a target
 load) and is within the run-to-run and day-to-day variation typical of a
-virtualized host (this study's own run-to-run CV reaches $7.6\%$); at very large
+virtualized host (this study's own run-to-run CV reaches $15.9\%$ on the noisiest MySQL-insert
+cell, within $4.0\%$ on the reads); at very large
 scale even $5\%$ can correspond to many machines, so the margin should be reset
 per deployment. We chose it before the analysis but did not preregister it, and
 the equivalence conclusion is not sensitive to the exact value within a few

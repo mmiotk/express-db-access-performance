@@ -78,7 +78,7 @@ isolated.
 
 On the identical SQL, the deep-fetch native-relative spread collapses from its
 idiomatic $7.15\times$ (PostgreSQL) and $4.96\times$ (MySQL) to $1.68\times$ and
-$2.03\times$ (Supplement Table~S14). Most of the idiomatic spread is therefore
+$2.01\times$ (Supplement Table~S14). Most of the idiomatic spread is therefore
 the eager-loading \emph{strategy}, not the execution machinery: on the raw path
 Drizzle rises from 1{,}865 to 3{,}237~req/s, Prisma from 1{,}186 to 2{,}155, and
 Knex from 2{,}487 to 2{,}926 on PostgreSQL, so layers that trail on the idiomatic
@@ -204,9 +204,10 @@ flat-then-collapse ordering are what reproduce.
 
 \subsection{Measurement stability and significance}
 Across the 25 repeated runs the coefficient of variation of deep-fetch throughput
---- the pattern that carries the pairwise tests --- is at most $3.8\%$ on either
+--- the pattern that carries the pairwise tests --- is at most $4.0\%$ on either
 engine (Supplement Tables~S1 and~S9), well below the between-layer spreads above;
-dispersion is larger only on the insert (up to $6.6\%$ on MySQL). Every measured
+dispersion is larger only on the insert, where the MySQL cells are the noisiest,
+bimodal under group-commit batching (up to $15.9\%$). Every measured
 request in the primary matrix succeeded: HTTP errors, connection-acquisition
 timeouts, and non-2xx responses were zero across all 90 cells' measurement
 windows (nonzero timeouts arise only in the deliberate open-loop overload runs
