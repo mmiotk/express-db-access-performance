@@ -6,54 +6,53 @@ categories~\cite{cook1979quasi,wohlin2012experimentation}.
 
 \paragraph{Construct validity.}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
-(p99) measured at the Express endpoint, not query-execution time at the
-driver or database boundary --- deliberate, since it captures the full
-request round trip a deployed service incurs, including Express routing and
-JSON serialization, but it means the overhead we attribute to the \emph{access
-layer} may partly reflect these surrounding costs. We control for this by holding
-those costs near-constant: every adapter satisfies a documented \emph{adapter
-contract} and funnels its rows through shared canonical constructors (a fixed
-field set, key order, and value typing, under a fixed \texttt{TZ=UTC}), and an
-automated cross-check (\texttt{bench/verify.mjs}) asserted full JSON byte
-equality against the native-driver baseline, on both engines, across the four
-non-mutating patterns before any timing run (Section~\ref{sec:methodology}).
-During development that check caught a defect: PostgreSQL's schema declared
-\texttt{created\_at} as a timezone-naive timestamp although the column is
-\texttt{timestamptz}, so Drizzle's PostgreSQL responses carried instants
-shifted by the host's UTC offset --- invisible to throughput and to any
-coarser equivalence check; it was fixed (\texttt{withTimezone: true}) before
-the campaign reported here. The fixed-payload baseline floor sits well above
-the fastest measured cell (Section~\ref{sec:methodology}), so the framework
-floor compresses, rather than manufactures, between-layer differences, which
-are therefore attributable to how each layer reaches an identical response,
-not to what is returned. Writes are the one endpoint that mutates state; the
-reported finding uses each engine's \emph{default}, vendor-standard
-durability configuration (Section~\ref{sec:methodology}), not one we relaxed
-ourselves, so the write spreads (Table~\ref{tab:write}) describe a standard
-deployment rather than a tuning choice; a symmetric relaxed-durability
-secondary confirms the cross-engine gap is not an artifact of either
-configuration (Section~\ref{sec:discussion}, Supplement Table~S3).
+(p99) at the Express endpoint, not query-execution time at the driver or
+database boundary --- deliberate, since it captures the full request round trip
+a deployed service incurs (Express routing, JSON serialization), though the
+overhead we attribute to the \emph{access layer} may partly reflect these
+surrounding costs. We hold them near-constant: every adapter satisfies a
+documented \emph{adapter contract} and funnels its rows through shared canonical
+constructors (a fixed field set, key order, and value typing, under
+\texttt{TZ=UTC}), and the automated cross-check (\texttt{bench/verify.mjs})
+asserted full JSON byte equality against the native-driver baseline, on both
+engines, across the four non-mutating patterns before any timing run
+(Section~\ref{sec:methodology}). During development that check caught a defect:
+PostgreSQL's schema declared \texttt{created\_at} as a timezone-naive timestamp
+although the column is \texttt{timestamptz}, so Drizzle's PostgreSQL responses
+carried instants shifted by the host's UTC offset --- invisible to throughput
+and to any coarser equivalence check; it was fixed (\texttt{withTimezone: true})
+before the campaign reported here. The fixed-payload baseline floor sits well
+above the fastest measured cell (Section~\ref{sec:methodology}), so the framework
+floor compresses, rather than manufactures, between-layer differences, which are
+therefore attributable to how each layer reaches an identical response, not to
+what is returned. Writes are the one endpoint that mutates state; the reported
+finding uses each engine's \emph{default}, vendor-standard durability
+configuration (Section~\ref{sec:methodology}), not one we relaxed ourselves, so
+the write spreads (Table~\ref{tab:write}) describe a standard deployment rather
+than a tuning choice; a symmetric relaxed-durability secondary confirms the
+cross-engine gap is not an artifact of either configuration
+(Section~\ref{sec:discussion}, Supplement Table~S3).
 
 \paragraph{Internal validity.}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
 reasons unrelated to its inherent cost; every adapter must use its layer's
 documented, idiomatic eager-loading strategy on the deep-fetch endpoint
-(Section~\ref{sec:methodology}). The correctness cross-check (now the byte-level
-comparison above) caught two defects during development, both fixed before the
-measurements reported here (the checklist in Section~\ref{sec:discussion}).
-Explicit warm-up phases per cell (Section~\ref{sec:methodology}), set to
-exceed the slowest layer's cold-start stabilization, absorb JIT, pool-fill,
-and plan-cache effects, guarding against environmentally induced measurement
+(Section~\ref{sec:methodology}). The byte-level correctness cross-check above
+caught two defects during development, both fixed before the measurements
+reported here (the checklist in Section~\ref{sec:discussion}). Explicit warm-up
+phases per cell (Section~\ref{sec:methodology}), set to exceed the slowest
+layer's cold-start stabilization, absorb JIT, pool-fill, and plan-cache effects,
+guarding against environmentally induced measurement
 bias~\cite{mytkowicz2009producing}; two further controls rule out non-layer
-confounds: benchmark rows reset before every cell (physically rebuilt for
+confounds --- benchmark rows reset before every cell (physically rebuilt for
 writes), and one correlated-subquery plan for aggregation across layers
 (Section~\ref{sec:methodology}). Every layer and engine within a replicate is
 driven by the identical, PRNG-seeded id sequence, and a forward-versus-reversed
 cell-order check found no detectable history effect
-(Section~\ref{sec:methodology}) --- addressing the concern that processing
-order could confound layer identity with run position. A residual risk is
-coordinated omission in the load generator, which can under-report tail latency
-at saturation~\cite{fruth2022tail,tene2015latency}; a native,
+(Section~\ref{sec:methodology}), addressing the concern that processing order
+could confound layer identity with run position. A residual risk is coordinated
+omission in the load generator, which can under-report tail latency at
+saturation~\cite{fruth2022tail,tene2015latency}; a native,
 coordinated-omission-corrected constant-arrival cross-run on the deep fetch
 (Section~\ref{sec:methodology}) confirms the tail ranking holds under that
 stricter model (Section~\ref{sec:results}; Supplement Table~S6).
@@ -78,59 +77,57 @@ client that replaced the earlier in-process Rust query
 engine~\cite{prisma7_benchmarks}, so the results characterize the current
 architecture rather than a superseded one; an earlier campaign on the Rust-engine
 generation had reported a multi-core application-CPU profile for Prisma that this
-re-run retires (Section~\ref{sec:discussion}), a concrete demonstration that
-access-layer rankings can age within a single major release. Two version choices
-are disclosed rather than resolved: Sequelize is measured on its stable 6.x line
-because the version~7 line is a prerelease at the freeze date, and Prisma's MySQL
-path runs through the MariaDB driver adapter (\texttt{@prisma/adapter-mariadb}),
-since Prisma ships no \texttt{mysql2} adapter --- an asymmetry with the other
-MySQL layers. Pinning does not remove the currency risk, because libraries keep
-moving; what re-establishes a current ranking is the instrument, not the table,
-as this re-run itself shows. The host is a virtualized, 16-vCPU,
-single-NUMA-node cloud instance rather than dedicated bare metal, so absolute
-req/s figures reflect that substrate specifically; only the \emph{relative}
-ordering within an engine is intended to travel. The working set is
-memory-resident, so these results are a hot-cache regime maximizing the
-visibility of layer differences; as a workload becomes I/O-bound (larger than RAM, cold caches),
-every layer increasingly waits on the same storage and the spreads should
-compress toward $1\times$. The deep-fetch object graph is small (a
-post with on average ten comments, at most 25 in the seed); the replicated fan-out
-sweep (Section~\ref{sec:results}) shows the spread is a roughly fixed multiplier from
-0 to 500 child rows, so the headline figure is representative of the range rather
-than specific to one graph size. We mitigate these limitations by pinning every
-version, publishing the seed and an automated environment capture, and releasing
-the harness for re-runs on other hardware or against newer releases. A further
-limitation is that the load generator and server share a host, common
-practice in this genre that removes network variance as a confound but can
-understate network-bound effects; process separation on one host is not hardware
-isolation, since the primary campaign did not pin application, database,
-and generator to disjoint cores, so scheduler and shared-cache contention
-between them is possible (the environment capture records governor, NUMA, and
-affinity). A resource-isolation check re-ran the representative deep-fetch
-cells with the three components pinned to disjoint core sets (\texttt{ISO\_}
-run, replication package): the isolated and shared-host medians agree within
-about 2\% (ratios 0.98--1.01 across pg, Prisma, and MikroORM), and the layer
-ordering is unchanged, so same-host contention is not driving the reported
-ranking. The equal-CPU control (Section~\ref{sec:results}, Supplement Table~S4)
-now shows every layer is essentially single-core-bound per process --- no
-layer's deep-fetch throughput changes materially from one to four cores --- so
-the ranking is not an artifact of unequal core access. A single-process caveat
-still extends to deployment topology: the server runs as a single Node.js
-process, whereas production deployments typically run one worker per core
-(\texttt{cluster}, pm2, per-pod replicas). A multi-worker check (Supplement
-Table~S23) shows the low-per-process layers scale out near-linearly, so a
-layer's single-process throughput is not its aggregate ceiling --- Prisma rises
-from 1{,}117 to 4{,}449~req/s from one to four workers on the PostgreSQL deep
-fetch, reaching native-like aggregate throughput at four times the processes. A
-sustained-load check bounds temporal drift: holding three representative layers
-(native \texttt{pg}, Prisma, MikroORM) under ten minutes of continuous
-deep-fetch load, re-run under the final harness, moves throughput by at most
-$\pm1.4\%$ between the first and last three minutes, with the band ordering
-preserved in every single minute, and a 90~s run reproduces the 12~s medians
-within $1\%$ (replication package), so the short measured runs are not sampling
-a transient; longer-horizon drift over hours to days~\cite{kuffel2025nodejs}
-remains untested. A two-machine cross-run over a dedicated link, adding real
-network latency, and a multi-worker variant are planned to bound this further.
+re-run retires (Section~\ref{sec:discussion}). Two version choices are disclosed
+rather than resolved: Sequelize is measured on its stable 6.x line because the
+version~7 line is a prerelease at the freeze date, and Prisma's MySQL path runs
+through the MariaDB driver adapter (\texttt{@prisma/adapter-mariadb}), since
+Prisma ships no \texttt{mysql2} adapter --- an asymmetry with the other MySQL
+layers. Pinning does not remove the currency risk, because libraries keep moving;
+what re-establishes a current ranking is the instrument, not the table, as this
+re-run shows. The host is a virtualized, 16-vCPU, single-NUMA-node cloud instance
+rather than dedicated bare metal, so absolute req/s figures reflect that substrate
+specifically; only the \emph{relative} ordering within an engine is intended to
+travel. The working set is memory-resident, so these results are a hot-cache
+regime maximizing the visibility of layer differences; as a workload becomes
+I/O-bound (larger than RAM, cold caches), every layer increasingly waits on the
+same storage and the spreads should compress toward $1\times$. The deep-fetch
+object graph is small (a post with on average ten comments, at most 25 in the
+seed); the replicated fan-out sweep (Section~\ref{sec:results}) shows the spread
+is a roughly fixed multiplier from 0 to 500 child rows, so the headline figure is
+representative of the range rather than specific to one graph size. We mitigate
+these limitations by pinning every version, publishing the seed and an automated
+environment capture, and releasing the harness for re-runs on other hardware or
+against newer releases. A further limitation is that the load generator and
+server share a host, common practice in this genre that removes network variance
+as a confound but can understate network-bound effects; process separation on one
+host is not hardware isolation, since the primary campaign did not pin
+application, database, and generator to disjoint cores, so scheduler and
+shared-cache contention between them is possible (the environment capture records
+governor, NUMA, and affinity). A resource-isolation check re-ran the
+representative deep-fetch cells with the three components pinned to disjoint core
+sets (\texttt{ISO\_} run, replication package): the isolated and shared-host
+medians agree within about 2\% (ratios 0.98--1.01 across pg, Prisma, and
+MikroORM), and the layer ordering is unchanged, so same-host contention is not
+driving the reported ranking. The equal-CPU control (Section~\ref{sec:results},
+Supplement Table~S4) shows every layer is essentially single-core-bound per
+process --- no layer's deep-fetch throughput changes materially from one to four
+cores --- so the ranking is not an artifact of unequal core access. A
+single-process caveat still extends to deployment topology: the server runs as a
+single Node.js process, whereas production deployments typically run one worker
+per core (\texttt{cluster}, pm2, per-pod replicas). A multi-worker check
+(Supplement Table~S23) shows the low-per-process layers scale out near-linearly,
+so a layer's single-process throughput is not its aggregate ceiling, reaching
+native-like aggregate throughput at four times the processes
+(Section~\ref{sec:results}). A sustained-load check bounds temporal drift:
+holding three representative layers (native \texttt{pg}, Prisma, MikroORM) under
+ten minutes of continuous deep-fetch load, re-run under the final harness, moves
+throughput by at most $\pm1.4\%$ between the first and last three minutes, with
+the band ordering preserved in every single minute, and a 90~s run reproduces the
+12~s medians within $1\%$ (replication package), so the short measured runs are
+not sampling a transient; longer-horizon drift over hours to
+days~\cite{kuffel2025nodejs} remains untested. A two-machine cross-run over a
+dedicated link, adding real network latency, and a multi-worker variant are
+planned to bound this further.
 
 \paragraph{Conclusion validity.}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of
@@ -149,14 +146,13 @@ Figure~S1). On the deep/nested fetch all seven adjacently ranked pairs separate
 closest pair --- Sequelize over Objection, a ratio of $1.05$ --- at $p = 10^{-4}$
 with the faster layer ahead in $88\%$ of replicates; all seven survive a
 Bonferroni correction across the post-hoc adjacent-rank comparisons
-(Section~\ref{sec:results}). Rather than assert a
-specific statistical power, which would require a prospective effect-size and
-variance model we did not prespecify, we rest the conclusions on effect sizes
-and interval estimates: the separating pairs combine large paired ratios with
-the permutation floor and non-overlapping bootstrap intervals, above the
-run-to-run dispersion. Booting a fresh process per replicate prevents
-persistent process state from carrying across replicate
-runs~\cite{kalibera2013rigorous}, but the replicates share one host and one
-campaign; we therefore treat replicate index and measurement order as blocks
-(Section~\ref{sec:methodology}) rather than claiming full independence, and
-more replicates or longer runs would tighten the intervals further.
+(Section~\ref{sec:results}). Rather than assert a specific statistical power,
+which would require a prospective effect-size and variance model we did not
+prespecify, we rest the conclusions on effect sizes and interval estimates: the
+separating pairs combine large paired ratios with the permutation floor and
+non-overlapping bootstrap intervals, above the run-to-run dispersion. Booting a
+fresh process per replicate prevents persistent process state from carrying across
+replicate runs~\cite{kalibera2013rigorous}, but the replicates share one host and
+one campaign; we therefore treat replicate index and measurement order as blocks
+(Section~\ref{sec:methodology}) rather than claiming full independence, and more
+replicates or longer runs would tighten the intervals further.

@@ -25,46 +25,44 @@ benchmarks}: plentiful but narrow, published by the maintainers of the
 compared products, confined almost exclusively to PostgreSQL, and settling on
 a single metric family rather than reporting throughput and the tail together.
 In the sources searched, we did not identify one reporting the p99 tail
-behavior that is widely held to matter for user-perceived latency under
-load~\cite{dean2013tail,fruth2022tail}. The
-peer-reviewed literature is sparser still, limited to at most three ORMs,
-confined to PostgreSQL, and, where it benchmarks PostgreSQL against MySQL
-directly, holding the access layer fixed rather than varying
-it~\cite{colley2018orm,prisma_rawsql_2025,
+behavior widely held to matter for user-perceived latency under
+load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is sparser
+still, limited to at most three ORMs, confined to PostgreSQL, and, where it
+benchmarks PostgreSQL against MySQL directly, holding the access layer fixed
+rather than varying it~\cite{colley2018orm,prisma_rawsql_2025,
 orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql} (Section~\ref{sec:related}
 surveys each).
 
 In the sources we searched (Section~\ref{sec:related}) this leaves a gap along
 four axes: (1)~no access-layer comparison we found includes MySQL, and no
 PostgreSQL/MySQL benchmark varies the access layer; (2)~no vendor-independent
-study spans the taxonomy broadly, since the broad-coverage comparisons are
-vendor-authored and academic work covers at most three
+study spans the taxonomy broadly, the broad-coverage comparisons being
+vendor-authored and academic work covering at most three
 libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~we did not identify one
-reporting throughput and the p99 tail jointly, the sole vendor suite that pairs
+reporting throughput and the p99 tail jointly, the sole vendor suite pairing
 throughput with a percentile stopping at a single P95 at one load
-point~\cite{drizzle_benchmarks}; and (4)~none of the located studies measures
-client-observed performance through an HTTP framework, academic studies instrumenting query
+point~\cite{drizzle_benchmarks}; and (4)~none measures client-observed
+performance through an HTTP framework, academic studies instrumenting query
 execution inside the application process~\cite{zhadko2025orm} and the
-Express-based work that measures the round trip comparing runtime
-optimizations on a single stack rather than access
-layers~\cite{imamsakti2025async}.
+Express-based work comparing runtime optimizations on a single stack rather than
+access layers~\cite{imamsakti2025async}.
 
-This paper addresses that gap with a single, vendor-independent benchmark: we
-serve an \emph{identical} Express application through all nine access layers
+This paper addresses that gap with a single, vendor-independent benchmark: an
+\emph{identical} Express application served through all nine access layers
 (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
 Objection, MikroORM) over five CRUD-spanning access patterns rather than a
 measured production workload (point read, keyset range scan, deep/nested
 fetch, per-author aggregation, and insert; Section~\ref{sec:methodology}).
-Seven of the nine layers (all but the two engine-specific native drivers) run
-against \emph{both} engines under an identical schema, dataset, and pool size;
-two tuned native-driver baselines (prepared-statement variants of \texttt{pg}
-and \texttt{mysql2}) mark what hand-tuned driver use achieves. Every (layer, engine, pattern) combination reports throughput (req/s) and
-saturated client-observed response-time p99 (at a 50-connection operating point) jointly, from
-25 repeated runs, with a utilization-controlled open-loop tail measured below saturation.
-The study separates two estimands: the \emph{default-configuration} effect of
-each layer used idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL}
-contrast that bounds the residual difference once every layer executes identical
-SQL, changing query formulation, protocol, preparation, round-trips, and mapping
+Seven layers run against \emph{both} engines under an identical schema,
+dataset, and pool size; two tuned native-driver baselines mark what hand-tuned
+driver use achieves. Every (layer, engine, pattern) combination reports
+throughput (req/s) and saturated client-observed response-time p99 (at a
+50-connection operating point) jointly, from 25 repeated runs, with a
+utilization-controlled open-loop tail measured below saturation. The study
+separates two estimands: the \emph{default-configuration} effect of each layer
+used idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL} contrast that
+bounds the residual difference once every layer executes identical SQL ---
+changing query formulation, protocol, preparation, round-trips, and mapping
 together rather than isolating any one. The full harness (adapters, seed data, an
 autocannon-driven~\cite{autocannon} load runner, and an automated cross-check
 that all layers return \emph{byte-identical} responses on the four
@@ -89,9 +87,9 @@ implementations under the specified operating point:
         implementation most consequential in this configuration?
 \end{enumerate}
 
-This paper makes four contributions. The \textbf{primary} contributions are the
-harness and the benchmark design; the third is a configuration-specific snapshot
-of a fast-moving ecosystem, and the harness and design outlast the pinned versions:
+This paper makes four contributions; the \textbf{primary} ones are the harness
+and the benchmark design, which outlast the pinned versions, while the third is
+a configuration-specific snapshot of a fast-moving ecosystem:
 \begin{itemize}[leftmargin=*]
   \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
         deterministic seed, a matrix runner with repeated randomized-block runs and
@@ -113,12 +111,10 @@ of a fast-moving ecosystem, and the harness and design outlast the pinned versio
         implementation-and-strategy difference concentrating in
         relation-materializing patterns; that read rankings transfer across
         engines while aggregation and writes transfer only moderately (visible
-        only in a dual-engine design); and, as direct evidence that such rankings
-        are \textbf{perishable}, that a headline finding of an earlier version of
-        this study --- the query-engine ORM Prisma tying the native driver at
-        roughly five cores of CPU --- \textbf{did not survive} re-running the same
-        harness against Prisma's Rust-free successor, which draws about one core
-        and sits mid-pack (Section~\ref{sec:results}).
+        only in a dual-engine design); and direct evidence that such rankings are
+        \textbf{perishable}, a headline of an earlier version of this study
+        retired by one re-run against Prisma's Rust-free successor
+        (Section~\ref{sec:results}).
   \item A practitioner-oriented \textbf{checklist of four pitfalls specific to
         access-layer benchmarking} (Section~\ref{sec:discussion}), surfaced during
         development, several caught by the correctness cross-check and the rest by

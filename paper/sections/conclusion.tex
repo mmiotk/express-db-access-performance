@@ -18,13 +18,12 @@ current library versions no layer is multi-core-bound and the native driver
 leads on essentially every pattern; read rankings transfer across the two
 engines while aggregation and writes transfer only moderately, a caution against
 generalizing single-engine results (Section~\ref{sec:discussion}). That
-access-layer rankings are perishable is, here, not a hypothesis but a measured
-result: a headline of an earlier version of this study, the query-engine ORM
-Prisma tying the native driver at roughly five cores of CPU, did not survive
-re-running the same harness against Prisma's Rust-free successor. Development
-also surfaced a reusable checklist of benchmarking pitfalls specific to this
-genre, one of them, a fast-but-wrong write path that passed the read-level
-cross-check, added by this very re-run (Section~\ref{sec:discussion}).
+access-layer rankings are perishable is, here, a measured result, not a
+hypothesis: an earlier version's headline did not survive re-running the same
+harness against Prisma's Rust-free successor. Development also surfaced a
+reusable checklist of benchmarking pitfalls specific to this genre, one of them,
+a fast-but-wrong write path that passed the read-level cross-check, added by this
+very re-run (Section~\ref{sec:discussion}).
 
 These findings held under a concurrency sweep (1 to 256 connections) and under
 paired permutation and Wilcoxon tests confirming adjacent-layer separation

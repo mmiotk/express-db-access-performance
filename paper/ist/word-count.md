@@ -10,11 +10,11 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,028 |
-| Structured abstract | 298 |
-| Tables and figures in the main text (8 × 200) | 1,600 |
-| Reference list (65 entries) | 1,922 |
-| **Total (IST rule)** | **14,848** |
+| Body text (7 sections) | 11,376 |
+| Structured abstract | 299 |
+| Tables and figures in the main text (7 × 200) | 1,400 |
+| Reference list (62 entries) | 1,842 |
+| **Total (IST rule)** | **14,917** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
 the abstract it is 14,550). Twenty-seven tables and one figure are placed in the
