@@ -208,10 +208,10 @@ layer and engine is driven by the identical request-id sequence from a PRNG
 seeded on the (endpoint, replicate) pair; this paired-stream design removes
 between-layer sampling noise as a confound, and the first ids of every stream are
 archived. We report the median of the 25 replicate values; 449 of the 450
-dedicated write-endpoint boots completed normally, the exception being
-knex/PostgreSQL, whose replicate-16 boot hit a health-check timeout immediately
-after the write-state reset, leaving that cell with 24 of 25 runs (the runner
-records and skips such failures rather than retrying silently). Each replicate
+dedicated write-endpoint boots completed normally, the exception being one
+drizzle/MySQL write replicate whose server boot did not clear the post-reset
+health check, leaving that cell with 24 of 25 runs (the runner records and skips
+such failures rather than retrying silently). Each replicate
 yields throughput (requests per second) and latency percentiles p50, p90, p97.5,
 and p99. \texttt{autocannon} records a per-run latency histogram at
 millisecond resolution; even the slowest deep-fetch cells

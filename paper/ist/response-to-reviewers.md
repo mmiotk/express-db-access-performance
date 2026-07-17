@@ -247,7 +247,9 @@ The literature search is now reproducible (Related Work, lines 6–21):
   "Because the seven adjacent pairs follow the *observed* ranking rather than a
   preregistered one, we treat their significances descriptively (post-hoc
   adjacent-rank comparisons)."
-- **p99 sample size / histogram resolution.** See PENDING CHANGE 1 above and Q6 below.
+- **p99 sample size / histogram resolution.** The Measurement procedure now reports the
+  per-run request count behind each p99 (≈5,800–6,200 requests per run, roughly 60 in the
+  upper 1% tail, at millisecond histogram resolution); see Q6.
 
 ## Artifact (§9)
 
@@ -337,12 +339,11 @@ representativeness could be off.
 
 **Q6 — How many requests contribute to each run-level p99 in the slowest cells, and
 at what histogram resolution?** `autocannon` records a per-run latency histogram at
-1 ms resolution; a 12 s measured run of the slowest deep-fetch cells (≈480–516 req/s)
-contains ≈5,760–6,190 completed requests, so each run-level p99 is estimated from
-roughly 58–62 requests in the upper 1% of a single run, and the reported p99 is the
-median of 25 such run-level values. **This sentence is not yet in the manuscript —
-see PENDING CHANGE 1**; we will add it to the Measurement procedure after verifying
-the counts against the archived histograms.
+millisecond resolution; even the slowest deep-fetch cells (≈480–516 req/s over the
+12 s window) complete ≈5,800–6,200 requests per run, so each run-level p99 is
+estimated from roughly 60 requests in its upper 1% tail, and the reported p99 is the
+median of the 25 such run-level values. This is now stated in the Measurement
+procedure (Section 3, Methodology).
 
 **Q7 — Does the Zenodo archive regenerate every table clean-room?** Yes. A clean-room
 reproduction from the archived v1.5.2 tarball (not the dev checkout) regenerates

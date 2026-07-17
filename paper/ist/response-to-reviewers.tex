@@ -137,8 +137,10 @@ general threshold (lines 302--312): "The \$\textbackslash\{\}pm5\textbackslash\{
 "Because the seven adjacent pairs follow the \emph{observed} ranking rather than a preregistered one, we treat their significances descriptively (post-hoc adjacent-rank comparisons)."
 
 \begin{itemize}
-  \item \textbf{p99 sample size / histogram resolution.} See PENDING CHANGE 1 above and Q6 below.
+  \item \textbf{p99 sample size / histogram resolution.} The Measurement procedure now reports the
 \end{itemize}
+
+per-run request count behind each p99 ($\approx$5,800--6,200 requests per run, roughly 60 in the upper 1\% tail, at millisecond histogram resolution); see Q6.
 
 \section*{Artifact (\S{}9)}
 
@@ -213,7 +215,7 @@ Discussion (lines 96--102) generalizes it: "Timing is meaningless until every re
 
 \textbf{Q5 --- Were the adapters reviewed by the libraries' maintainers?} No, and this is disclosed as a limitation (Study Design lines 48--51); the alt-loading variants (Supplement Table S18) and the byte-equivalence cross-check bound how far idiomatic representativeness could be off.
 
-\textbf{Q6 --- How many requests contribute to each run-level p99 in the slowest cells, and at what histogram resolution?} \texttt{autocannon} records a per-run latency histogram at 1 ms resolution; a 12 s measured run of the slowest deep-fetch cells ($\approx$480--516 req/s) contains $\approx$5,760--6,190 completed requests, so each run-level p99 is estimated from roughly 58--62 requests in the upper 1\% of a single run, and the reported p99 is the median of 25 such run-level values. \textbf{This sentence is not yet in the manuscript --- see PENDING CHANGE 1}; we will add it to the Measurement procedure after verifying the counts against the archived histograms.
+\textbf{Q6 --- How many requests contribute to each run-level p99 in the slowest cells, and at what histogram resolution?} \texttt{autocannon} records a per-run latency histogram at millisecond resolution; even the slowest deep-fetch cells ($\approx$480--516 req/s over the 12 s window) complete $\approx$5,800--6,200 requests per run, so each run-level p99 is estimated from roughly 60 requests in its upper 1\% tail, and the reported p99 is the median of the 25 such run-level values. This is now stated in the Measurement procedure (Section 3, Methodology).
 
 \textbf{Q7 --- Does the Zenodo archive regenerate every table clean-room?} Yes. A clean-room reproduction from the archived v1.5.2 tarball (not the dev checkout) regenerates every main-text and supplement table from the raw per-cell records via the committed one-command pipeline; the table-to-record manifest (\texttt{MANIFEST.md}) traces each cell to its source.
 
