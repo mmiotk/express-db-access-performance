@@ -150,10 +150,10 @@ section (lines 80--85) disclose the new architecture and its one asymmetry: "Pri
 
 \begin{itemize}
   \item \textbf{Versions table refreshed} to the re-frozen pins (S11, above).
-  \item \textbf{Clean-room reproduction.} From the archived Zenodo tarball (release v1.4.1, DOI
+  \item \textbf{Clean-room reproduction.} From the archived Zenodo tarball (release v1.5.2, DOI
 \end{itemize}
 
-10.5281/zenodo.21373621) --- not the development checkout --- a one-command setup regenerates every main-text and supplement table from the raw per-cell records; the harness is "released so the full matrix can be re-run with one command against a containerized or local PostgreSQL and MySQL" (Study Design, replication package). This confirms the archived package regenerates the tables (Question 7).
+10.5281/zenodo.21411395) --- not the development checkout --- a one-command setup regenerates every main-text and supplement table from the raw per-cell records; the harness is "released so the full matrix can be re-run with one command against a containerized or local PostgreSQL and MySQL" (Study Design, replication package). This confirms the archived package regenerates the tables (Question 7).
 
 \section*{Presentation (\S{}11) and minors (\S{}7)}
 
@@ -215,7 +215,7 @@ Discussion (lines 96--102) generalizes it: "Timing is meaningless until every re
 
 \textbf{Q6 --- How many requests contribute to each run-level p99 in the slowest cells, and at what histogram resolution?} \texttt{autocannon} records a per-run latency histogram at 1 ms resolution; a 12 s measured run of the slowest deep-fetch cells ($\approx$480--516 req/s) contains $\approx$5,760--6,190 completed requests, so each run-level p99 is estimated from roughly 58--62 requests in the upper 1\% of a single run, and the reported p99 is the median of 25 such run-level values. \textbf{This sentence is not yet in the manuscript --- see PENDING CHANGE 1}; we will add it to the Measurement procedure after verifying the counts against the archived histograms.
 
-\textbf{Q7 --- Does the Zenodo archive regenerate every table clean-room?} Yes. A clean-room reproduction from the archived v1.4.1 tarball (not the dev checkout) regenerates every main-text and supplement table from the raw per-cell records via the committed one-command pipeline; the table-to-record manifest (\texttt{MANIFEST.md}) traces each cell to its source.
+\textbf{Q7 --- Does the Zenodo archive regenerate every table clean-room?} Yes. A clean-room reproduction from the archived v1.5.2 tarball (not the dev checkout) regenerates every main-text and supplement table from the raw per-cell records via the committed one-command pipeline; the table-to-record manifest (\texttt{MANIFEST.md}) traces each cell to its source.
 
 \textbf{Q8 --- Which claims survive anonymizing the products to A--I?} The \emph{durable} claims survive the relabelling: (a) the difference is workload-dependent, concentrating in relation-materializing patterns and small where a layer forwards SQL; (b) read rankings transfer across engines while aggregation and writes transfer only moderately (an asymmetry visible only in the dual-engine design); and (c) large saturated-p99 gaps are a capacity-and-utilization effect, not intrinsic tail latency. What does \emph{not} survive anonymization is the specific leaderboard --- precisely the perishability point the retired Prisma result now demonstrates. The contribution is the instrument and the design that let any current leaderboard be re-established, not the leaderboard itself.
 

@@ -258,8 +258,8 @@ The literature search is now reproducible (Related Work, lines 6–21):
   3.5.3 driver for MySQL, as Prisma ships no `mysql2` adapter)" — "an asymmetry with
   the other MySQL layers."
 - **Versions table refreshed** to the re-frozen pins (S11, above).
-- **Clean-room reproduction.** From the archived Zenodo tarball (release v1.4.1, DOI
-  10.5281/zenodo.21373621) — not the development checkout — a one-command setup
+- **Clean-room reproduction.** From the archived Zenodo tarball (release v1.5.2, DOI
+  10.5281/zenodo.21411395) — not the development checkout — a one-command setup
   regenerates every main-text and supplement table from the raw per-cell records; the
   harness is "released so the full matrix can be re-run with one command against a
   containerized or local PostgreSQL and MySQL" (Study Design, replication package).
@@ -345,7 +345,7 @@ see PENDING CHANGE 1**; we will add it to the Measurement procedure after verify
 the counts against the archived histograms.
 
 **Q7 — Does the Zenodo archive regenerate every table clean-room?** Yes. A clean-room
-reproduction from the archived v1.4.1 tarball (not the dev checkout) regenerates
+reproduction from the archived v1.5.2 tarball (not the dev checkout) regenerates
 every main-text and supplement table from the raw per-cell records via the committed
 one-command pipeline; the table-to-record manifest (`MANIFEST.md`) traces each cell
 to its source.
