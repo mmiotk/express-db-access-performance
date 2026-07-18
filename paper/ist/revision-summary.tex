@@ -1,0 +1,100 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amssymb,amsmath}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\usepackage{parskip}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\newcommand{\euro}{EUR}
+\pagestyle{plain}
+\begin{document}
+\section*{Summary of Revisions (Round 6)}
+
+\textbf{Manuscript:} A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL \textbf{Author:} Mateusz Miotk (University of Gdańsk) \textbf{Journal:} Information and Software Technology
+
+I thank the reviewer for a sixth careful reading and for the clear framing that the dataset and artifact are publishable, the remaining obstacle being interpretation that claimed more causal specificity and category generality than a single-host, default-configuration design can establish. I have made that framing the organizing principle of this revision. A full point-by-point reply (every P1--P10 item, the \S{}7 minors, the \S{}8 statistical points, and questions Q1--Q8, each with a quotation of the revised text) is provided in the separate Response to Reviewers. The essential changes are summarized below.
+
+\section*{Governing change: the same-SQL causal claim is withdrawn}
+
+The earlier text read the same-SQL control as a causal decomposition --- that the eager-loading \emph{strategy}, not the execution machinery, drove most of the idiomatic spread. Because collapsing every layer onto identical SQL changes query strategy, statement count, prepared-statement behaviour, the raw-versus-ORM API, and result marshalling together, the design cannot support that attribution. I have \textbf{retracted it everywhere} (both abstracts, Results, Discussion, Conclusion) and reworded the control as a pure compound \textbf{bounding contrast}: it bounds the combined query-strategy-and-formulation contribution without isolating any single mechanism. The one remaining mechanistic remark (Prisma's slow raw path) is now labelled an explicit conjecture the contrast cannot confirm.
+
+\section*{New experiment: longer-window tail-latency validation}
+
+Addressing the concern that the primary p99 rests on \textasciitilde{}60 tail observations per run, I added a 60-second re-measurement of the deep fetch on both engines (five times the requests, \textasciitilde{}300 tail observations per run) at the same operating point. The p99 ranking is \textbf{preserved exactly (Spearman rho = 1.00 per engine)}, each cell's p99 barely moves from the 12-second value, the p97.5 ordering matches the p99 ordering, and the run-level p99 coefficient of variation stays at most 6.0\% (PostgreSQL) / 3.8\% (MySQL). The 12-second window is therefore adequate for the tail ranking (new Supplement Table S23).
+
+\section*{Interpretation and framing}
+
+\begin{itemize}
+  \item \textbf{Estimand renamed.} "Idiomatic" is now a *documented default configuration under a
+\end{itemize}
+
+reproducible adapter-selection rule*, explicitly not a claim of performance-optimal or typical production use.
+
+\begin{itemize}
+  \item \textbf{Three quantities separated.} RQ1 keeps capacity, overload latency (saturated p99 at
+\end{itemize}
+
+equal demand), and matched-utilization latency distinct.
+
+\begin{itemize}
+  \item \textbf{Category claims scoped.} Practical guidance now applies to the tested
+\end{itemize}
+
+implementations and configuration, offered as a hypothesis rather than a category law.
+
+\begin{itemize}
+  \item \textbf{Perishability tempered} from a general law to one observed version-sensitivity
+\end{itemize}
+
+example; the historical Prisma narrative is condensed to a single paragraph.
+
+\section*{Statistics and reporting}
+
+\begin{itemize}
+  \item Kendall's tau added alongside Spearman's rho; "read rankings transfer" softened to "the
+\end{itemize}
+
+read ordering is similar across engines."
+
+\begin{itemize}
+  \item Post-hoc adjacent-rank comparisons reported descriptively, not as ranking confirmation.
+  \item A layer-by-engine \textbf{interaction-magnitude} table (PostgreSQL$\div$MySQL ratios with
+\end{itemize}
+
+bootstrap intervals) reports effect size rather than a p-value floor.
+
+\begin{itemize}
+  \item An \textbf{ex-MikroORM robustness check}: the read ordering and the deep-fetch spread
+\end{itemize}
+
+(3.7x) survive excluding the largest outlier.
+
+\begin{itemize}
+  \item Raw per-replicate points for the noisiest (MySQL insert) cells shown as a figure.
+  \item The TOST margin is motivated by the engineering consequence, not by measurement noise.
+  \item "Intrinsic latency" replaced by capacity-normalized / matched-utilization wording;
+\end{itemize}
+
+"CRUD-spanning" replaced by "five representative access patterns"; "native leads all ten engine-pattern combinations" stated exactly; "latest stable" dated to the freeze.
+
+\section*{Reproducibility and length}
+
+\begin{itemize}
+  \item A new top-level \textbf{REPRODUCE.md} gives one-command smoke, full-matrix, and
+\end{itemize}
+
+clean-room-from-Zenodo-tarball recipes; the archive is a git archive containing all 33 raw-data JSON files with a regenerated checksum manifest.
+
+\begin{itemize}
+  \item The manuscript is 14,936 words (references and floats included, under 15,000); the
+\end{itemize}
+
+structured abstract is 298 words. New analyses are placed in the supplement; the condensed Prisma narrative and removed repetition offset the additions.
+
+The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21427844 (release v1.6.0). An independent adversarial re-review reproduced every headline number from the raw data and returned a minor-revision verdict.
+
+\end{document}
