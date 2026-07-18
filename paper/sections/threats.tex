@@ -139,17 +139,15 @@ Table~\ref{tab:significance}). Two bounds reinforce the ordering
 deep-fetch throughput varies by at most about $4.0\%$ across the 25 repeated runs
 on either engine (Supplement Tables~S9 and~S1) --- and the layer ordering
 holds across the concurrency sweep at $\geq32$ connections (Supplement
-Figure~S2). On the deep/nested fetch all seven adjacently ranked pairs separate
-(Table~\ref{tab:significance}): six at the permutation-resolution floor
-($p = 1/20{,}001$) with the faster layer ahead in every replicate, and the
-closest pair --- Sequelize over Objection, a ratio of $1.05$ --- at $p = 10^{-4}$
-with the faster layer ahead in $88\%$ of replicates; all seven survive a
-Bonferroni correction across the post-hoc adjacent-rank comparisons
-(Section~\ref{sec:results}). Rather than assert a specific statistical power,
-which would require a prospective effect-size and variance model we did not
-prespecify, we rest the conclusions on effect sizes and interval estimates: the
-separating pairs combine large paired ratios with the permutation floor and
-non-overlapping bootstrap intervals, above the run-to-run dispersion. Booting a
+Figure~S2). Rather than assert a specific statistical power, which would require a prospective
+effect-size and variance model we did not prespecify, we rest the conclusions on
+effect sizes and interval estimates: on the deep/nested fetch the adjacent-rank
+pairs combine large paired ratios --- down to $1.05$ for the closest, Sequelize over
+Objection, near the $\pm5\%$ practical-equivalence margin --- with non-overlapping
+bootstrap intervals, above the run-to-run dispersion (Table~\ref{tab:significance}).
+The paired permutation test agrees only as a descriptive post-hoc check (six pairs
+at the resolution floor, all seven surviving a Bonferroni correction;
+Section~\ref{sec:results}). Booting a
 fresh process per replicate prevents persistent process state from carrying across
 replicate runs~\cite{kalibera2013rigorous}, but the replicates share one host and
 one campaign; we therefore treat replicate index and measurement order as blocks

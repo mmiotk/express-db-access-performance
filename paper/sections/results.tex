@@ -56,7 +56,7 @@ MikroORM's 516~[499--525]) and $4.96\times$ on MySQL (\texttt{mysql2}
 leads outright on both engines --- no tie at the top --- and the data-mapper
 ORMs, especially MikroORM, trail furthest (Table~\ref{tab:deep_fetch}). The
 comparison is paired (Section~\ref{sec:methodology}); every adjacent step of the
-MySQL ranking separates under the paired permutation test
+MySQL ranking is large relative to its bootstrap interval
 (Table~\ref{tab:significance}).
 
 \textbf{Aggregation} is the least layer-sensitive pattern: the native-relative
@@ -209,7 +209,7 @@ difference in tail latency at comparable utilization. The single-rate open-loop 
 single runs, so near-knee values are indicative; the utilization sweep and the
 flat-then-collapse ordering are what reproduce.
 
-\subsection{Measurement stability and significance}
+\subsection{Measurement stability and effect sizes}
 Across the 25 repeated runs the coefficient of variation of deep-fetch throughput
 --- the pattern that carries the pairwise tests --- is at most $4.0\%$ on either
 engine (Supplement Tables~S1 and~S9), well below the between-layer spreads above;
@@ -230,20 +230,19 @@ primary campaign on both engines, with absolute throughput up to $16\%$ lower
 after the restart (larger on PostgreSQL), a cold-buffer and run-to-run drift the
 relative analysis absorbs (Supplement Table~S20).
 
-Comparing each adjacently ranked pair on the MySQL deep/nested fetch with the
-paired permutation test (Section~\ref{sec:methodology};
-Table~\ref{tab:significance}), all seven pairs separate: six with the observed
-statistic above every one of the $20{,}000$ permutations
-($p = 1/20{,}001 \approx 5\times10^{-5}$) and the faster layer ahead in every
-replicate (dominance $1.00$), all with ratios at least $1.15$; the narrowest
-step, Sequelize over Objection, still separates (ratio $1.05$, dominance $0.88$,
-$p = 0.0001$). The Wilcoxon test agrees throughout (replication package), and a
-Bonferroni correction leaves all seven far below any conventional threshold.
-Native \texttt{mysql2} leads outright with no tie at the top. Because these
-adjacent pairs were selected after observing the ranking, we read their separation
-descriptively rather than as independent confirmation of the ordering, and it
-covers the deep fetch only (Table~\ref{tab:significance}), not the full
-cross-pattern ranking.
+On the MySQL deep/nested fetch (Table~\ref{tab:significance}) the effect sizes carry
+the ordering: each adjacent step is a geometric-mean throughput ratio with a paired
+bootstrap CI, six of the seven at ratio $\geq 1.15$ with
+the faster layer ahead in every replicate (dominance $1.00$), all well above the
+$\leq 4.0\%$ run-to-run CV. Magnitude, not bare separation, is the point: the
+narrowest step (Sequelize over Objection, ratio $1.05$, dominance $0.88$) sits
+essentially at the $\pm5\%$ practical-equivalence margin --- distinguishable yet
+practically marginal --- whereas the large steps, and the up-to-$7\times$ deep-fetch
+spread, are practically decisive. The paired permutation test agrees (Wilcoxon
+likewise, Bonferroni intact; replication package), but descriptively: the pairs were
+chosen after observing the ranking, so the $p$-values are a post-hoc robustness
+check on the deep fetch only, not independent confirmation of the cross-pattern
+ranking.
 
 \subsection{Scaling with concurrency}
 A concurrency sweep from 1 to 256 connections (Supplement Figure~S2) shows the

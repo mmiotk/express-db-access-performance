@@ -26,9 +26,9 @@ reusable checklist of benchmarking pitfalls specific to this genre, one of them,
 a fast-but-wrong write path that passed the read-level cross-check, added by this
 very re-run (Section~\ref{sec:discussion}).
 
-These findings held under a concurrency sweep (1 to 256 connections) and under
-paired permutation and Wilcoxon tests confirming adjacent-layer separation
-(Section~\ref{sec:results}). Further extensions would deepen the evidence --- a two-machine cross-run to bound
+These findings held under a concurrency sweep (1 to 256 connections) and rest on
+large between-layer effect sizes with non-overlapping bootstrap intervals, the
+descriptive adjacent-rank permutation tests agreeing (Section~\ref{sec:results}). Further extensions would deepen the evidence --- a two-machine cross-run to bound
 observer interference beyond the open-loop check, additional engines and dataset
 sizes, and a dedicated study of the N+1 penalty and cold-start latency --- and the
 released harness, exercised again by this revision's re-run against Prisma~7, makes

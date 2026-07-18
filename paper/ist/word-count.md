@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,437 |
+| Body text (7 sections) | 11,435 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,984** |
+| **Total (IST rule)** | **14,982** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,685). The structured abstract is 299 words (under the journal's
+the abstract it is 14,683). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -99,6 +99,18 @@ choice"); this makes the terminology consistent with that definition. The
 (sameplan, altloading, insert-dispersion) and the replication-package `METHODOLOGY.md`
 were updated to match. Dropping the now-redundant "used idiomatically" disclaimer clause
 took the body to 11,437 and the total to 14,984.
+
+A final round-6 change simplified the statistical emphasis: the results subsection
+"Measurement stability and significance" was renamed "…and effect sizes" and rewritten
+to lead with geometric-mean ratios, bootstrap CIs, and practical significance (the
+narrowest adjacent step, 1.05, sits at the ±5% equivalence margin — statistically
+distinguishable yet practically marginal; the up-to-7× spread is decisive), with the
+post-hoc adjacent-pair permutation/Wilcoxon/Bonferroni tests compressed to a secondary,
+descriptive robustness note. The conclusion, methodology, and threats sentences were
+aligned to the same hierarchy (effect sizes and intervals primary; adjacent-rank tests
+secondary and descriptive). No statistic was added or removed; the significance table
+(Table 6) stays in the main text. Compressing the p-value enumeration offset the added
+practical-significance prose, so the body is 11,435 and the total 14,982.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
