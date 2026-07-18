@@ -1,28 +1,19 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Access-layer rankings are perishable; the instrument is the contribution.}
-The strongest lesson of this study is one its own method forced on us. An
-earlier campaign, run on the library generation current at the time, found the
-ORM Prisma (then version~5.22, built on an in-process Rust query engine) tying
-the native driver on the deep/nested fetch while drawing about five application
-cores --- a striking result we reported as a configuration-specific
-observation. Re-running the \emph{identical} harness, workload, and host against
-the latest stable releases (Prisma~7.8, now a Rust-free TypeScript client
-executing through a JavaScript driver adapter) retired that finding outright. No
-layer now draws more than about one application core (the maximum
-application-side CPU across all 90 cells is $110\%$), and Prisma has fallen to
-mid-to-low throughput across the matrix: seventh of eight layers on both reads
-on each engine, fifth on the PostgreSQL deep fetch and seventh on MySQL, near
-the bottom of the aggregation ranking on both engines, and last on MySQL inserts
-(Section~\ref{sec:results}). Nothing changed but one dependency's internals
-across a single major version. This is the paper's central claim made concrete:
-access-layer performance is highly sensitive to implementation and
-version~\cite{vanzyl2009optimisations}, so any specific ranking is perishable,
-and the durable contributions are the reusable harness, the benchmark design,
-and the pitfalls checklist that let a current ranking be re-established as the
-ecosystem moves rather than read from a frozen
-table~\cite{papadopoulos2021reproducible}.
+\paragraph{Access-layer rankings can be version-sensitive; the instrument is the contribution.}
+One case this study's own method forced on us illustrates the point. An earlier
+campaign found the ORM Prisma (then version~5.22, on an in-process Rust query
+engine) tying the native driver on the deep fetch while drawing about five
+application cores. Re-running the \emph{identical} harness against the latest
+stable releases at the 15 July 2026 freeze (Prisma~7.8, now a Rust-free
+TypeScript client) retired that finding: no layer now draws more than about one
+core, and Prisma has fallen to mid-to-low throughput across the matrix
+(Section~\ref{sec:results}). One dependency's internals changed across a single
+major version. Access-layer performance is sensitive to implementation and
+version~\cite{vanzyl2009optimisations}, so a specific ranking can be
+version-sensitive, and the durable contributions are the reusable harness, the
+benchmark design, and the pitfalls checklist~\cite{papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice.}
 RQ1 and RQ3 agree that the idiomatic implementation-and-strategy difference is
@@ -33,17 +24,17 @@ the native-relative spread is widest on the deep/nested fetch and narrowest on
 aggregation, where every layer forwards the same correlated-subquery plan
 (Section~\ref{sec:results}). Round-trip count alone does not set throughput: on
 the PostgreSQL deep fetch the single-query MikroORM is the slowest layer of all
-(516~req/s), while the two-query Drizzle (1{,}865) outruns both the two-query
-TypeORM (1{,}204) and the four-query Prisma (1{,}186) (Supplement Table~S2;
+while the two-query Drizzle outruns the four-query Prisma (Supplement Table~S2;
 Table~\ref{tab:deep_fetch}), so how a layer materializes a result graph matters
 more than how many statements it issues.
 
 \paragraph{The same-SQL control.}
-The same-SQL control (Section~\ref{sec:results}) locates most of the idiomatic
-deep-fetch spread in each layer's eager-loading strategy rather than its raw
-execution machinery; but because it changes query formulation, round-trip count,
-prepared-statement behavior, wire protocol, and result marshalling together, it
-bounds the residual difference without isolating a single factor.
+The same-SQL control (Section~\ref{sec:results}) narrows the idiomatic deep-fetch
+spread substantially once every layer runs identical SQL; but because it changes
+query formulation, round-trip count, prepared-statement behavior, wire protocol,
+and result marshalling together, it bounds the combined contribution of query
+strategy and formulation without isolating a single factor such as eager-loading
+strategy.
 
 \paragraph{Compute cost and horizontal scaling.}
 Under current versions the throughput differences are no longer bought with
@@ -148,9 +139,11 @@ general. The native driver leads throughput on every pattern on both engines, an
 the idiomatic ORM penalty concentrates on relation-materializing traffic, whereas
 read-simple patterns and aggregation, where a layer merely forwards SQL, spread
 far less (Section~\ref{sec:results}). Where a service's hot path is dominated by
-deep or nested fetches, the access layer is consequential, and a thinner path ---
-the native driver or a query builder --- is the safer default \emph{for
-throughput and response-time p99}. Where the workload is read-simple or
+deep or nested fetches, the access layer is consequential, and the tested thin
+paths (the native driver and Knex) were the safer default here \emph{for
+throughput and response-time p99}; whether that advantage generalizes to other
+implementations of those tiers is a hypothesis for broader study, not a category
+law. Where the workload is read-simple or
 write-bound, especially on MySQL, whose engine floor for single-row inserts
 dominates layer differences under default durability, the throughput cost is
 small, so a full ORM's productivity and type safety, not measured here, may
@@ -164,13 +157,8 @@ the workload tolerates staleness~\cite{chen2016cacheoptimizer}.
 These are performance findings only: the access-layer decision also turns on
 developer productivity, type safety, correctness, maintainability, and security,
 none of which this study measures, and which may outweigh the throughput
-differences reported here. Even as performance guidance, the recommendations rest
-on one schema, one hardware configuration, a single-host local-database
-deployment measured under each engine's default durability for writes, and the
-pinned library versions --- which, as the retired Prisma finding above shows, can
-be superseded within a single major release. The same-SQL comparisons bound the
-idiomatic cost; they are not a license to replace idiomatic defaults with raw SQL
-in practice. A production deployment adds network latency, TLS, a reverse proxy,
-a separate database host, connection poolers, read replicas, and larger or varied
-payloads, any of which can shift the balance; Section~\ref{sec:threats} sets out
-how far these results generalize.
+differences reported here. Even as performance guidance, the recommendations rest on one schema, one host, a
+single-host local-database deployment under default write durability, and the
+pinned versions; and the same-SQL comparisons bound the idiomatic cost rather than
+licensing raw SQL in practice. Section~\ref{sec:threats} sets out how far these
+results generalize.

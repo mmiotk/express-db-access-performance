@@ -5,7 +5,7 @@ function of two factors:
 
 - **access layer** (9): native driver → query builder → ORM
   (`pg`/`mysql2`, `knex`, `drizzle`, `prisma`, `sequelize`, `typeorm`, `objection`, `mikroorm`)
-- **engine** (2): PostgreSQL 16, MySQL 8.4
+- **engine** (2): PostgreSQL 18.4, MySQL 9.7.1 (the reference-run versions)
 
 One Express app, one adapter contract ([`src/adapters/README.md`](src/adapters/README.md)),
 five workload endpoints that map onto the canonical access patterns:
@@ -22,7 +22,9 @@ five workload endpoints that map onto the canonical access patterns:
 
 - Node ≥ 20 (tested on 24), npm
 - DB engines, either:
-  - **Docker** (`docker compose up -d`) — PostgreSQL 16 / MySQL 8.4, or
+  - **Docker** (`docker compose up -d`) — a convenience path pinning PostgreSQL 16 /
+    MySQL 8.4 (older than the reference run; use the conda path below to reproduce the
+    published numbers), or
   - **No Docker / no root**: conda user-space engines via
     `scripts/db-local.sh` (`conda create -n dbbench -c conda-forge postgresql
     mysql-server`, then `./scripts/db-local.sh init`). The reference run used this
@@ -67,7 +69,10 @@ the median. Server runs as a separate process from the load generator.
 
 ## Status
 
-Harness scaffold. Adapters are written to each layer's idiomatic recommended API
-but are **not yet validated against a live database** — first end-to-end run
-(shape assertions + a correctness cross-check that every adapter returns the same
-result for the same input) is the immediate next step. See repo root `TODO`.
+Complete and archived. The full matrix (11 access layers × PostgreSQL + MySQL × five
+access patterns, 25 independent runs per cell) has been measured on the reference host
+(PostgreSQL 18.4 / MySQL 9.7.1 via the conda path), byte-equivalence cross-checked
+(`bench/verify.mjs`), and released. The manuscript, raw per-cell data, and table
+generators are archived on Zenodo (concept DOI 10.5281/zenodo.21313858). See
+`REPRODUCE.md` at the repo root for the one-command reproduction path and
+`MANIFEST.md` for the table-to-generator map.

@@ -54,27 +54,27 @@ not a generalized library ranking, are the contribution.
 access layers (native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM) and
 two tuned native baselines, over five access patterns, on the latest stable
-library versions. We report throughput with client-observed response-time p99 from
+library versions current at the July 2026 freeze. We report throughput with client-observed response-time p99 from
 25 repeated runs per cell under three operating conditions: equal demand (a
 saturated 50-connection point), equal utilization (an open-loop sweep), and an
 equal compute budget; an automated cross-check verifies byte-identical responses
 before measurement, and inserts run under the engines' default durability.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
-(PostgreSQL) and $4.96\times$ (MySQL) between the native driver and the slowest ORM,
-narrowing to $1.68\times$ and $2.01\times$ once every layer runs identical SQL: a
-compound control showing the idiomatic eager-loading strategy drives most of it,
-isolating no single factor. Read rankings transfer across engines (Spearman
-$\rho \geq 0.86$); aggregation and writes transfer only moderately ($\rho = 0.64$,
-$0.68$). No layer exceeds $\approx\!110\%$ of one core: the native driver leads
-essentially every pattern and the Rust-free Prisma~7 client sits mid-pack. An
-earlier version found Prisma tying native at five cores: an artifact of a
-now-superseded generation, retired by one re-run. Large saturated-p99 gaps are a
-capacity effect that matched utilization largely closes.
-\textbf{Conclusion:} Access-layer rankings are perishable, as the retired five-core
-result shows; the durable contributions are the reproducible,
+(PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
+narrowing to $1.68\times$ and $2.01\times$ once every layer runs identical SQL, a
+compound control that bounds the combined query-strategy-and-formulation
+contribution without isolating a single mechanism. The read ordering is similar
+across engines (Spearman $\rho \geq 0.86$, Kendall $\tau \geq 0.71$); aggregation
+and writes transfer only moderately ($\rho = 0.64$, $0.68$). No layer exceeds
+$\approx\!110\%$ of one core; the native driver leads all ten engine-pattern
+combinations and Prisma~7 sits mid-pack. An earlier version's five-core Prisma
+result, from a now-superseded generation, did not survive the re-run. Large
+saturated-p99 gaps are a capacity effect that matched utilization largely closes.
+\textbf{Conclusion:} Access-layer rankings can be version-sensitive, as one retired
+five-core result shows; the durable contributions are the reproducible,
 byte-equivalence-checked harness, its three-estimand design, and a checklist of
-benchmarking pitfalls specific to this genre, released as a replication package.
+genre-specific benchmarking pitfalls, released as a replication package.
 \end{abstract}
 
 \vspace{0.5em}

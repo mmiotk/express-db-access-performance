@@ -67,7 +67,7 @@ show each layer's throughput under its own best pool. A per-layer pool-size
 frontier on both engines (Supplement Tables~S7 and~S24) addresses this directly:
 the ordering is preserved from a pool of 1 to 50, and each layer's throughput
 saturates well below 50, so the fixed-pool choice does not drive the ranking. A
-mixed read/write workload (Supplement Table~S25) likewise preserves the read
+mixed read/write workload (Supplement Table~S26) likewise preserves the read
 ordering. Results may not transfer to larger working sets, other pool sizes, or
 other engine versions, and library performance ages quickly, so rather than
 freeze an arbitrary snapshot the study pins the latest stable release of each
@@ -115,7 +115,7 @@ cores --- so the ranking is not an artifact of unequal core access. A
 single-process caveat still extends to deployment topology: the server runs as a
 single Node.js process, whereas production deployments typically run one worker
 per core (\texttt{cluster}, pm2, per-pod replicas). A multi-worker check
-(Supplement Table~S23) shows the low-per-process layers scale out near-linearly,
+(Supplement Table~S24) shows the low-per-process layers scale out near-linearly,
 so a layer's single-process throughput is not its aggregate ceiling, reaching
 native-like aggregate throughput at four times the processes
 (Section~\ref{sec:results}). A sustained-load check bounds temporal drift:
@@ -140,7 +140,7 @@ Table~\ref{tab:significance}). Two bounds reinforce the ordering
 deep-fetch throughput varies by at most about $4.0\%$ across the 25 repeated runs
 on either engine (Supplement Tables~S9 and~S1) --- and the layer ordering
 holds across the concurrency sweep at $\geq32$ connections (Supplement
-Figure~S1). On the deep/nested fetch all seven adjacently ranked pairs separate
+Figure~S2). On the deep/nested fetch all seven adjacently ranked pairs separate
 (Table~\ref{tab:significance}): six at the permutation-resolution floor
 ($p = 1/20{,}001$) with the faster layer ahead in every replicate, and the
 closest pair --- Sequelize over Objection, a ratio of $1.05$ --- at $p = 10^{-4}$

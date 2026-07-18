@@ -1,0 +1,30 @@
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Layer\,$\times$\,engine interaction magnitude: the PostgreSQL\,$\div$\,MySQL
+    throughput ratio (geometric mean of the paired per-replicate ratios, with a 95\%
+    paired-bootstrap interval) for each portable layer and pattern. A ratio $>1$ means
+    the layer runs faster on PostgreSQL, $<1$ faster on MySQL. Every layer is faster on
+    PostgreSQL here, so the interaction is in the \emph{spread} of the advantage, not its
+    sign: the three read patterns hold a narrow band across layers ($\approx$1.0--1.6, a
+    near-parallel profile, small interaction), whereas aggregation and especially the
+    insert scatter widely (insert 1.6--3.2), reordering the layers across engines --- the
+    interaction the blocked permutation test detects and the rank correlations of
+    Table~\ref{tab:ranks} summarize.}
+  \label{tab:interaction}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{l ccccc}
+    \toprule
+    Layer & Point read & Range scan & Deep fetch & Aggregation & Insert \\
+    \midrule
+    \texttt{knex} & 1.31~[1.28,1.34] & 1.07~[1.06,1.09] & 1.23~[1.21,1.25] & 1.46~[1.44,1.48] & 3.05~[2.89,3.23] \\
+    \texttt{drizzle} & 1.44~[1.42,1.46] & 1.28~[1.27,1.30] & 1.41~[1.40,1.42] & 1.80~[1.77,1.83] & 2.62~[2.46,2.79] \\
+    \texttt{prisma} & 1.57~[1.55,1.59] & 1.59~[1.57,1.62] & 1.89~[1.85,1.92] & 1.90~[1.87,1.92] & 3.23~[3.14,3.32] \\
+    \texttt{sequelize} & 1.28~[1.26,1.29] & 1.17~[1.15,1.19] & 1.12~[1.10,1.13] & 1.49~[1.48,1.51] & 1.82~[1.73,1.91] \\
+    \texttt{typeorm} & 1.38~[1.36,1.41] & 1.15~[1.12,1.17] & 1.19~[1.17,1.21] & 1.60~[1.57,1.63] & 2.05~[1.97,2.13] \\
+    \texttt{objection} & 1.22~[1.20,1.24] & 1.04~[1.03,1.05] & 1.22~[1.21,1.24] & 1.37~[1.35,1.40] & 2.38~[2.28,2.50] \\
+    \texttt{mikroorm} & 1.19~[1.17,1.21] & 1.06~[1.04,1.07] & 1.06~[1.04,1.08] & 1.51~[1.48,1.54] & 1.60~[1.56,1.64] \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

@@ -1,0 +1,35 @@
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+  \begin{axis}[width=\textwidth,height=6cm,
+      ylabel={Insert throughput (req/s)}, xmin=0.4, xmax=8.6,
+      xtick={1,2,3,4,5,6,7,8}, xticklabels={\texttt{mysql2},\texttt{knex},\texttt{drizzle},\texttt{prisma},\texttt{sequelize},\texttt{typeorm},\texttt{objection},\texttt{mikroorm}},
+      x tick label style={rotate=35,anchor=east,font=\footnotesize},
+      ymajorgrids, tick align=outside]
+  \addplot[only marks,mark=o,mark size=1.1pt,draw=black!55] coordinates {
+(1,1319) (1,1766) (1,1763) (1,1716) (1,1830) (1,1761) (1,1776) (1,1275) (1,1738) (1,1761) (1,1763) (1,1452) (1,1732) (1,1717) (1,1753) (1,1735) (1,1753) (1,1786) (1,1771) (1,1739) (1,1706) (1,1376) (1,1764) (1,1262) (1,1753)
+(2,1357) (2,1650) (2,1689) (2,1670) (2,1535) (2,1708) (2,1470) (2,1701) (2,1692) (2,1444) (2,1698) (2,1729) (2,1684) (2,1724) (2,1121) (2,1274) (2,1249) (2,1607) (2,1292) (2,1076) (2,1671) (2,1716) (2,1693) (2,1590) (2,1683)
+(3,1302) (3,1749) (3,1408) (3,1745) (3,1234) (3,1282) (3,1730) (3,1197) (3,1775) (3,1720) (3,1747) (3,1389) (3,1134) (3,1805) (3,1194) (3,1741) (3,1777) (3,1778) (3,1296) (3,1729) (3,1736) (3,1733) (3,1324) (3,1772)
+(4,742) (4,886) (4,906) (4,886) (4,831) (4,779) (4,872) (4,828) (4,897) (4,822) (4,903) (4,822) (4,932) (4,934) (4,926) (4,917) (4,751) (4,921) (4,756) (4,907) (4,853) (4,769) (4,888) (4,851) (4,899)
+(5,1300) (5,1375) (5,1375) (5,1478) (5,1386) (5,1195) (5,1598) (5,1723) (5,1682) (5,1301) (5,1644) (5,1691) (5,1274) (5,1369) (5,1717) (5,1330) (5,1684) (5,1699) (5,1263) (5,1722) (5,1724) (5,1685) (5,1299) (5,1420) (5,1673)
+(6,1416) (6,1292) (6,1352) (6,1334) (6,1367) (6,1082) (6,1297) (6,1119) (6,1310) (6,1386) (6,1313) (6,1361) (6,1040) (6,1386) (6,1043) (6,1357) (6,1301) (6,1350) (6,1369) (6,1200) (6,1345) (6,1351) (6,1359) (6,1373) (6,1344)
+(7,1821) (7,1628) (7,1297) (7,1746) (7,1708) (7,1733) (7,1335) (7,1745) (7,1742) (7,1590) (7,1764) (7,1241) (7,1442) (7,1598) (7,1728) (7,1757) (7,1776) (7,1760) (7,1744) (7,1281) (7,1752) (7,1750) (7,1704) (7,1279) (7,1724)
+(8,1297) (8,1258) (8,1027) (8,1090) (8,1302) (8,1279) (8,1311) (8,1213) (8,1254) (8,1281) (8,1285) (8,1207) (8,1232) (8,1243) (8,1243) (8,1259) (8,1256) (8,1181) (8,1240) (8,1265) (8,1257) (8,1107) (8,1283) (8,1262) (8,1268)
+  };
+\addplot[thick,red,mark=none] coordinates {(0.72,1753) (1.28,1753)};
+\addplot[thick,red,mark=none] coordinates {(1.72,1670) (2.2800000000000002,1670)};
+\addplot[thick,red,mark=none] coordinates {(2.7199999999999998,1729.5) (3.2800000000000002,1729.5)};
+\addplot[thick,red,mark=none] coordinates {(3.7199999999999998,886) (4.28,886)};
+\addplot[thick,red,mark=none] coordinates {(4.72,1478) (5.28,1478)};
+\addplot[thick,red,mark=none] coordinates {(5.72,1345) (6.28,1345)};
+\addplot[thick,red,mark=none] coordinates {(6.72,1728) (7.28,1728)};
+\addplot[thick,red,mark=none] coordinates {(7.72,1257) (8.28,1257)};
+  \end{axis}
+  \end{tikzpicture}
+  \caption{Raw per-replicate insert throughput on MySQL for the eight idiomatic layers
+    (25 independent runs each, red bar = median). The insert cells are the noisiest in
+    the study; several are visibly bimodal or heavy-tailed within a cell, structure a
+    coefficient of variation cannot convey, which is why the insert rank correlation and
+    dispersion are reported conservatively.}
+  \label{fig:insert_dispersion}
+\end{figure}

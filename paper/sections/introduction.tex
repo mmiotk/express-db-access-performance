@@ -47,10 +47,11 @@ execution inside the application process~\cite{zhadko2025orm} and the
 Express-based work comparing runtime optimizations on a single stack rather than
 access layers~\cite{imamsakti2025async}.
 
-This paper addresses that gap with a single, vendor-independent benchmark: an
+This paper addresses that gap with a single, vendor-independent benchmark
+(authorship only; Section~\ref{sec:methodology} defines the term): an
 \emph{identical} Express application served through all nine access layers
 (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
-Objection, MikroORM) over five CRUD-spanning access patterns rather than a
+Objection, MikroORM) over five representative access patterns rather than a
 measured production workload (point read, keyset range scan, deep/nested
 fetch, per-author aggregation, and insert; Section~\ref{sec:methodology}).
 Seven layers run against \emph{both} engines under an identical schema,
@@ -78,9 +79,12 @@ implementations under the specified operating point:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
   \item \emph{(performance difference):} How large is the throughput and
         response-time-p99 \emph{difference} of the benchmarked implementations
-        relative to the native-driver baseline, how does it vary across the five
-        access patterns, and how does it depend on the operating condition:
-        equal external demand, equal utilization, or an equal compute budget?
+        relative to the native-driver baseline, and how does it vary across the
+        five access patterns? We keep distinct three quantities that a fixed
+        operating point conflates: \emph{capacity} (saturating throughput),
+        \emph{overload latency} (the saturated p99 under equal external demand),
+        and \emph{latency at matched utilization} (each layer driven at equal
+        fractions of its own capacity).
   \item \emph{(engine dependence):} Does the observed layer ordering transfer
         across PostgreSQL and MySQL, or is it engine-dependent?
   \item \emph{(consequential patterns):} For which access patterns is the choice of
@@ -107,13 +111,13 @@ a configuration-specific snapshot of a fast-moving ecosystem:
         response-time p99 \textbf{jointly}, the combination missing from prior art.
   \item \textbf{Configuration-specific observations} on the current library
         versions and this host: that no layer is multi-core-bound and the native
-        driver leads on essentially every pattern, the idiomatic
+        driver leads all ten engine-pattern combinations, the idiomatic
         implementation-and-strategy difference concentrating in
-        relation-materializing patterns; that read rankings transfer across
+        relation-materializing patterns; that the read ordering is similar across
         engines while aggregation and writes transfer only moderately (visible
-        only in a dual-engine design); and direct evidence that such rankings are
-        \textbf{perishable}, a headline of an earlier version of this study
-        retired by one re-run against Prisma's Rust-free successor
+        only in a dual-engine design); and direct evidence that such rankings can
+        be \textbf{version-sensitive}, one headline of an earlier version of this
+        study retired by one re-run against Prisma's Rust-free successor
         (Section~\ref{sec:results}).
   \item A practitioner-oriented \textbf{checklist of four pitfalls specific to
         access-layer benchmarking} (Section~\ref{sec:discussion}), surfaced during

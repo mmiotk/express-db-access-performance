@@ -1,0 +1,98 @@
+# Reproducing the benchmark
+
+This file is the single entry point for reproducing the paper. It covers a one-command
+smoke test, the full primary matrix, and a **clean-room reproduction from the archived
+Zenodo tarball** (not this development checkout). It links, rather than duplicates, the
+detailed docs: image digests in [`experiments/schema/db-config.md`](experiments/schema/db-config.md),
+the table→generator→data map in [`experiments/MANIFEST.md`](experiments/MANIFEST.md),
+and the raw-data hashes in [`experiments/results/checksums.sha256`](experiments/results/checksums.sha256).
+
+## 0. What is reproduced
+
+- **Primary** (confirmatory): throughput + closed-loop p99 across 5 access patterns ×
+  2 engines at the 50-connection operating point, 25 independent runs per cell
+  (`results/raw.json`).
+- **Secondary / exploratory**: the same-SQL bound, open-loop and utilization-matched
+  tail, layer×engine interaction, CPU accounting, durability, fan-out, pool-size,
+  cluster, mixed workload, and robustness checks.
+- The role of every table (Primary / Secondary / Exploratory) is tabulated in the
+  paper's outcomes table (`paper/tables/outcomes.tex`) and mapped to its generator and
+  input data in `experiments/MANIFEST.md`.
+
+## 1. Requirements
+
+- Node.js 24.x (the reference run used 24.18.0) and `npm`.
+- PostgreSQL 18.4 and MySQL 9.7.1. Two supported paths:
+  - **conda user-space (reference path, no root/Docker):**
+    `conda create -n dbbench -c conda-forge postgresql mysql-server`, then
+    `experiments/scripts/db-local.sh init && experiments/scripts/db-local.sh start`.
+    This is the path that produced the published numbers.
+  - **Docker:** `docker compose up -d` — convenience only; it pins PostgreSQL 16 /
+    MySQL 8.4, which are *older* than the reference engines and will not reproduce the
+    published numbers exactly. Digests for the reference images are in
+    `experiments/schema/db-config.md`.
+- Disk: ~1 GB for the seeded databases; the seed is 2,000 authors / 100,000 posts /
+  1,000,000 comments from a deterministic PRNG.
+
+## 2. Smoke test (~5–10 minutes)
+
+```bash
+cd experiments
+npm ci
+# start engines — conda path (reference): scripts/db-local.sh init && scripts/db-local.sh start
+#                 or Docker path:          npm run db:up
+npm run migrate && npm run seed          # deterministic seed (2k/100k/1M rows)
+npm run bench:quick                       # 4 layers, PostgreSQL, 3s runs
+node bench/verify.mjs                     # byte-equivalence cross-check must print ALL MATCH
+```
+
+## 3. Full primary matrix (hours)
+
+```bash
+cd experiments
+npm ci
+# start engines as in section 2, then:
+npm run migrate && npm run seed
+node scripts/set-durability.mjs default                 # vendor-default durability
+INDEP=1 REPEATS=25 DURATION=12 WARMUP=15 node bench/runner.mjs   # -> results/raw.json
+npm run sync:tables                                     # results/tables -> paper/tables
+```
+
+Secondary experiments and the exact per-table commands are listed in
+`experiments/MANIFEST.md`. Regenerate the paper afterwards with `cd paper && make`.
+
+## 4. Clean-room reproduction from the Zenodo archive
+
+The immutable release is a `git archive` of the tagged commit, so it contains every
+tracked file **including all `results/*.json` raw data and the table generators** (the
+raw data is force-added past `.gitignore`). From the tarball alone:
+
+```bash
+tar xzf express-db-access-performance-<version>.tar.gz
+cd express-db-access-performance-<version>/experiments
+sha256sum -c results/checksums.sha256      # verify the 32 archived raw-data files
+npm ci
+# regenerate every table from the archived raw data (no database needed):
+node scripts/ci-tables.mjs && node scripts/gen-tables.mjs && \
+  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && \
+  ENGINE=postgres node bench/analyze.mjs && ENGINE=mysql node bench/analyze.mjs && \
+  node scripts/stats2.mjs
+npm run sync:tables && (cd ../paper && make)
+```
+
+Every main-text and supplement table regenerates from the archived `results/*.json`
+with node built-ins and the committed generators; the estimators are seeded
+(`mulberry32`), so the bootstrap intervals and permutation p-values are bit-reproducible.
+**One caveat:** the round-trip-count table (Supplement S2) is derived from transient
+server statement logs that are not archived, so its committed `.tex`
+(`results/tables/query_counts.tex`) ships pre-generated rather than regenerable from the
+tarball; every other table regenerates from archived data.
+
+## 5. Expected outputs
+
+- `results/raw.json`: 90 primary cells, each with 25 (`repeats`) per-run
+  `rps_samples` / `p99_samples`.
+- `bench/verify.mjs`: `ALL MATCH` on the four non-mutating patterns across all layers
+  and both engines.
+- `npm test`: 19/19 estimator unit tests pass (`bench/stats.test.mjs`).
+- The rebuilt `paper/ist/ist_main.pdf` and `paper/supplement.pdf`.

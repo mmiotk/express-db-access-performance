@@ -28,7 +28,7 @@ each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating
 throughput. An \emph{equal compute budget} is the equal-CPU control, the server
 confined to a fixed number of cores (Section~\ref{sec:results}). These answer
 different questions and need not agree --- the saturated condition measures
-capacity under overload, matched utilization the near-intrinsic per-request
+capacity under overload, matched utilization the capacity-normalized per-request
 latency, the equal budget the compute cost of the same work --- so we report all
 three and say which each result speaks to.
 
@@ -55,7 +55,7 @@ realized as HTTP endpoints (Table~\ref{tab:patterns}). The four native and tuned
 baselines are engine-specific (\texttt{pg}/\texttt{pg-tuned} on PostgreSQL,
 \texttt{mysql2}/\texttt{mysql2-tuned} on MySQL); the other seven layers run on
 both, giving $4 + 7\times 2 = 18$ layer\,$\times$\,engine cells and
-$18\times 5 = 90$ measured configurations. Supplement Table~S27 records which
+$18\times 5 = 90$ measured configurations. Supplement Table~S29 records which
 factors are held constant, which vary, and which are uncontrolled on this single
 virtualized host --- the reason we report results for this configuration rather
 than as general library performance.
@@ -81,7 +81,7 @@ than as general library performance.
 The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts}
 $1\!-\!*$ \texttt{comments} $*\!-\!1$ \texttt{authors}), exercising a
 one-to-many relationship and a two-hop join for the deep fetch. The five
-endpoints implement canonical CRUD access patterns~\cite{cooper2010ycsb}
+endpoints implement five representative access patterns~\cite{cooper2010ycsb}
 (Table~\ref{tab:patterns}): the keyset page issues \texttt{WHERE id < cursor
 ORDER BY id DESC LIMIT}~$n$ against the primary-key index rather than a large
 \texttt{OFFSET}; the deep/nested fetch returns a post with its author and
@@ -111,9 +111,10 @@ fetch: a hand-written join for the native drivers, Knex, and the
 query-builder-style Drizzle (the tuned baselines reuse the native join
 unchanged), and relation eager loading (\texttt{include},
 \texttt{withGraphFetched}, \texttt{populate}, or \texttt{relations}) for the
-data-mapper ORMs. The comparison is therefore one of \emph{idiomatic usage}, not
-a fixed query plan: a measured difference reflects the SQL each layer generates,
-its round-trip count, and how it materializes results. One asymmetry is inherent
+data-mapper ORMs. The comparison is therefore one of each layer's \emph{documented
+default configuration} under a fixed adapter-selection rule, not a fixed query
+plan: a measured difference reflects the SQL each layer generates, its round-trip
+count, and how it materializes results. One asymmetry is inherent
 to any driver-versus-ORM comparison: the native idiom is hand-authored SQL, the
 ORM idiom the library's default. Server-side statement logging captures the exact
 SQL, round-trip count, and \texttt{EXPLAIN} plans for the native statements
@@ -123,7 +124,10 @@ and MikroORM, two in the native drivers, Knex, Drizzle, and TypeORM, and four in
 Prisma and Objection. The idiomatic API was fixed by a rule decided \emph{before}
 measurement --- the eager-loading API each layer's official documentation
 presents first for the pinned version --- so the treatment is documented, not
-editorial; Supplement Table~S16 and \texttt{METHODOLOGY.md} record, per layer,
+editorial. Documentation order is a reproducible selection heuristic, not evidence
+that the chosen API is performance-optimal or the most common production choice, so
+we report a documented default-configuration estimand rather than ``the performance
+of each library used idiomatically''; Supplement Table~S16 and \texttt{METHODOLOGY.md} record, per layer,
 that API with its \textbf{documentation page and version}, its round-trip count,
 the documented alternative we did \emph{not} use, and that query logging, hooks,
 and validation are off. The six ORMs split both ways on the
@@ -218,7 +222,10 @@ millisecond resolution; even the slowest deep-fetch cells
 ($\approx480$--$516$~req/s over the 12~s window) complete
 $\approx5{,}800$--$6{,}200$ requests per run, so each run-level p99 is estimated
 from roughly $60$ requests in its upper $1\%$ tail, and the reported p99 is the
-median of the 25 such run-level values. During measured runs we sampled server CPU and peak resident memory from
+median of the 25 such run-level values. A 60~s re-measurement of the deep fetch
+(five times the requests) preserves the p99 ranking exactly on both engines and
+barely moves each cell's p99 (Supplement Table~S23), so the
+12~s window is adequate for the tail comparison. During measured runs we sampled server CPU and peak resident memory from
 \texttt{/proc} over the full process tree (parent plus descendants, so an
 in-process engine or spawned helper cannot escape measurement), with database and
 load-generator CPU sampled separately; a \texttt{perf\_hooks} GC observer (event
@@ -310,11 +317,12 @@ equivalence margin is an author-selected smallest effect of practical interest
 for \emph{this} study, not a general engineering threshold: at modest deployment
 scale a sub-$5\%$ throughput difference would not change a capacity-planning
 decision (for example, how many application instances to provision for a target
-load) and is within the run-to-run and day-to-day variation typical of a
-virtualized host (this study's own run-to-run CV reaches $15.9\%$ on the noisiest MySQL-insert
-cell, within $4.0\%$ on the reads); at very large
-scale even $5\%$ can correspond to many machines, so the margin should be reset
-per deployment. We chose it before the analysis but did not preregister it, and
+load). We set the margin from that engineering consequence rather than from
+measurement noise; it happens also to sit within the run-to-run and day-to-day
+variation typical of a virtualized host (this study's own run-to-run CV reaches
+$15.9\%$ on the noisiest MySQL-insert cell, within $4.0\%$ on the reads), but that
+coincidence is not the justification. At very large scale even $5\%$ can correspond
+to many machines, so the margin should be reset per deployment. We chose it before the analysis but did not preregister it, and
 the equivalence conclusion is not sensitive to the exact value within a few
 percent.
 

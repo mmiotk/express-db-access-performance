@@ -42,10 +42,16 @@ main-text tables.
 \label{sup:cv-mysql}
 The main text reports the coefficient-of-variation table for PostgreSQL and
 the per-engine maxima. Table~\ref{tab:cv_mysql} gives the full per-layer,
-per-pattern CV on MySQL across the 25 repeated runs (maximum 6.6\%,
-\texttt{knex}/insert).
+per-pattern CV on MySQL across the 25 repeated runs (maximum 15.9\%,
+\texttt{drizzle}/insert; the insert cells are the noisiest in the study).
+Figure~\ref{fig:insert_dispersion} plots the raw per-replicate insert throughput
+behind these coefficients: several cells are visibly bimodal or heavy-tailed
+within a cell, structure a single CV cannot convey, which is why the insert rank
+correlation and dispersion are reported conservatively.
 
 \input{\tabledir cv_mysql}
+
+\input{\tabledir fig_insert_dispersion}
 
 \section{Idiomatic round-trip counts}
 \label{sup:query-counts}
@@ -279,8 +285,9 @@ coordinated-omission-corrected p99 on the deep fetch when each layer is offered
 deep-fetch rate), replicated five times, on both engines. At matched utilization the
 tails are small and similar across layers---for example on PostgreSQL every layer
 holds p99 near 2--4~ms at 50\%---so the wide saturated-p99 ladder in the main text is
-a capacity-and-queueing effect, not a difference in intrinsic tail latency; the tail
-rises only as a layer nears its own capacity. This is the near-intrinsic latency
+a capacity-and-queueing effect, not a difference in tail latency at matched
+utilization; the tail rises only as a layer nears its own capacity. This is the
+capacity-normalized latency
 companion to the saturated primary p99. The 50/70\% cells, which carry that
 comparison, are stable across runs; the 85/95\% cells are increasingly noisy (p99
 varies several-fold between runs as a layer approaches saturation), so those columns
@@ -288,6 +295,22 @@ are read as trend, not precise values.
 
 \input{\tabledir utilization}
 \input{\tabledir utilization_mysql}
+
+\section{Longer-window tail sensitivity}
+\label{sup:taillong}
+The primary p99 is measured over a 12~s window, which yields only $\approx60$
+requests above the p99 threshold in the slowest deep-fetch cells. To check that this
+per-run tail count is sufficient, Table~\ref{tab:taillong} re-measures the deep fetch
+over a 60~s window (about five times the requests, $\approx300$ tail observations per
+run) at the same 50-connection operating point, ten independent runs, on both engines.
+The p99 ranking is preserved exactly (Spearman $\rho=1.00$ per engine), each cell's p99
+barely moves from the 12~s value, the p97.5 ordering matches the p99 ordering
+($\rho=1.00$), and the run-to-run p99 coefficient of variation stays small (maximum
+6.0\% on PostgreSQL, 3.8\% on MySQL). The shorter window is therefore adequate for the
+tail \emph{ranking}, and the tail conclusions do not rest on the exact per-run tail
+count.
+
+\input{\tabledir taillong}
 
 \section{Multi-worker scaling}
 \label{sup:cluster}
@@ -342,6 +365,25 @@ insert orderings scramble more ($\rho=0.68$), most visibly Prisma (rank 4 on
 PostgreSQL, 7 on MySQL).
 
 \input{\tabledir ranks}
+
+Because MikroORM is the largest single outlier in several spreads, we recompute the
+cross-engine agreement without it: over the remaining six portable layers the read
+ordering stays similar (deep-fetch $\rho=0.77$, $\tau=0.60$; range $\rho=0.83$,
+$\tau=0.73$) and the deep-fetch native-relative spread stays substantial at
+$3.7\times$ on both engines, so the RQ2 and RQ3 findings do not depend on that one
+layer.
+
+\section{Layer-by-engine interaction magnitude}
+\label{sup:interaction}
+The blocked permutation test reports \emph{that} the layer ordering interacts with the
+engine; Table~\ref{tab:interaction} reports \emph{how large} the interaction is, as the
+PostgreSQL$\div$MySQL throughput ratio per layer and pattern with a 95\% paired-bootstrap
+interval. Every layer is faster on PostgreSQL, so the interaction is in the spread of
+the advantage: the reads hold a narrow band across layers ($\approx$1.0--1.6) while the
+insert scatters from $1.6$ to $3.2$, the quantitative counterpart of the low insert rank
+correlation.
+
+\input{\tabledir interaction}
 
 \section{A reporting checklist for access-layer benchmarks}
 \label{sup:checklist}

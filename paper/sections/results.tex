@@ -24,7 +24,7 @@ within an engine (Section~\ref{sec:methodology}); two estimands recur below: the
 \input{\tabledir write}
 
 \subsection{RQ1: performance difference relative to the native baseline}
-The native driver leads on essentially every pattern and engine: on PostgreSQL
+The native driver leads all ten engine-pattern combinations: on PostgreSQL
 \texttt{pg} (or its tuned counterpart) is fastest on all five patterns, and
 \texttt{mysql2} leads the two reads, the deep fetch, aggregation, and the insert
 on MySQL. The current-generation ORMs sit mid-to-low throughout, Prisma among
@@ -78,23 +78,27 @@ isolated.
 
 On the identical SQL, the deep-fetch native-relative spread collapses from its
 idiomatic $7.15\times$ (PostgreSQL) and $4.96\times$ (MySQL) to $1.68\times$ and
-$2.01\times$ (Supplement Table~S14). Most of the idiomatic spread is therefore
-the eager-loading \emph{strategy}, not the execution machinery: on the raw path
+$2.01\times$ (Supplement Table~S14). Replacing each layer's idiomatic path with
+identical SQL bounds how much of the spread is attributable to query strategy and
+formulation \emph{jointly}; because the intervention changes several mechanisms
+together, it does not separate strategy from execution machinery. On the raw path
 Drizzle rises from 1{,}865 to 3{,}237~req/s, Prisma from 1{,}186 to 2{,}155, and
 Knex from 2{,}487 to 2{,}926 on PostgreSQL, so layers that trail on the idiomatic
 fetch converge once they run the same statement. Prisma is the slowest layer on
-the raw path itself (2{,}155 on PostgreSQL, 1{,}206 on MySQL), which we attribute
-to dispatch and marshalling overhead in its raw API rather than SQL execution.
-MikroORM shows the largest strategy gap: its idiomatic path reaches only $0.16$
+the raw path itself (2{,}155 on PostgreSQL, 1{,}206 on MySQL); we conjecture this
+reflects dispatch and marshalling overhead in its raw API rather than SQL
+execution, a hypothesis the composite contrast cannot confirm.
+MikroORM shows the largest idiomatic-to-same-SQL gap: its idiomatic path reaches only $0.16$
 (PostgreSQL) and $0.20$ (MySQL) of its own same-SQL throughput, a $6.3\times$ and
 $5.1\times$ idiomatic-to-raw gap. A loading-strategy sensitivity check
 (Supplement Table~S18) tests whether these deficits are merely a
 default-strategy artifact: switching the join-default data-mapper ORMs
 (Sequelize, MikroORM) to select-in, where the alternative is a byte-identical
-drop-in, makes them slower ($0.73$--$0.80\times$), so their deficit is intrinsic;
+drop-in, makes them slower ($0.73$--$0.80\times$), so their deficit persists under
+an alternative loading strategy;
 conversely, Objection's batched-select-in default is about $1.6\times$ slower
 than a single join on MySQL (820 vs.\ 1{,}301~req/s), so part of \emph{its}
-deficit there is a strategy choice rather than an intrinsic cost.
+deficit there is a strategy choice rather than a fixed cost.
 
 
 \subsection{RQ2: engine dependence of the ranking}
@@ -107,7 +111,7 @@ insert ($\rho=0.68$), which transfer less reliably though neither is
 uncorrelated. Prisma is the notable mover: mid-pack on PostgreSQL inserts
 (2{,}774~req/s, fourth of the seven portable layers) but last on MySQL inserts
 (886, behind even MikroORM's 1{,}257) --- a rank flip invisible to a
-single-engine benchmark (Supplement Table~S26). The cost's \emph{magnitude} also
+single-engine benchmark (Supplement Table~S27). The cost's \emph{magnitude} also
 depends on the engine: a blocked permutation test on the paired
 PostgreSQL-minus-MySQL log-throughput difference (Section~\ref{sec:methodology})
 finds the layer$\times$engine interaction significant on all five patterns
@@ -167,8 +171,8 @@ We report the closed-loop p99 for every cell (p50, p90, p97.5 in the
 replication package), measured at the 50-connection operating point against the
 fixed ten-connection pool (Section~\ref{sec:methodology}), so the tail includes
 connection-acquisition queueing --- the tail a deployment sees at saturation, not
-intrinsic per-request latency, which the open-loop experiment below reports below
-saturation. Under saturation, tail latency tracks throughput: on the deep/nested
+the per-request latency at moderate load, which the open-loop experiment below
+reports below saturation. Under saturation, tail latency tracks throughput: on the deep/nested
 fetch, PostgreSQL's p99 ladder runs \texttt{pg} 20, Knex 27, Drizzle 35, TypeORM
 50, Prisma 51, Objection 57, Sequelize 60, and MikroORM 116~ms
 (Table~\ref{tab:deep_fetch}), monotonic below the native driver --- a penalty
@@ -198,7 +202,7 @@ its saturated rank, rising only as it nears its own capacity (for example
 Objection's p99 reaches 285~ms at $95\%$ of its own capacity on PostgreSQL). At
 matched utilization the large saturated gap (\texttt{pg} 20~ms versus MikroORM
 116~ms) therefore largely dissolves; it is a capacity-and-queueing effect, not a
-difference in intrinsic tail latency. The single-rate open-loop cells above are
+difference in tail latency at comparable utilization. The single-rate open-loop cells above are
 single runs, so near-knee values are indicative; the utilization sweep and the
 flat-then-collapse ordering are what reproduce.
 
@@ -232,11 +236,14 @@ replicate (dominance $1.00$), all with ratios at least $1.15$; the narrowest
 step, Sequelize over Objection, still separates (ratio $1.05$, dominance $0.88$,
 $p = 0.0001$). The Wilcoxon test agrees throughout (replication package), and a
 Bonferroni correction leaves all seven far below any conventional threshold.
-Native \texttt{mysql2} leads outright with no tie at the top, so every step of
-the ranking is both statistically and practically supported.
+Native \texttt{mysql2} leads outright with no tie at the top. Because these
+adjacent pairs were selected after observing the ranking, we read their separation
+descriptively rather than as independent confirmation of the ordering, and it
+covers the deep fetch only (Table~\ref{tab:significance}), not the full
+cross-pattern ranking.
 
 \subsection{Scaling with concurrency}
-A concurrency sweep from 1 to 256 connections (Supplement Figure~S1) shows the
+A concurrency sweep from 1 to 256 connections (Supplement Figure~S2) shows the
 three-band ordering (native driver, then Knex and Drizzle, then the data-mapper
 ORMs) emerges by 8 connections and holds at every operating point above about 32;
 at a single connection the layers are far closer together (about

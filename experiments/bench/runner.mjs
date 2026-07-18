@@ -265,6 +265,7 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
         connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: REPEATS,
         rps_samples: reqps.map((x) => Math.round(x)), // retained for CV + significance tests
         p99_samples: p99,
+        p975_samples: p975, // retained for tail-window sensitivity (p97.5 vs p99)
       });
       console.log(`  ${adapter}/${engine}/${ep.key}: ${Math.round(median(reqps))} req/s  p99=${median(p99)}ms  cpu=${res.cpuPct}% (kids ${res.cpuChildrenPct}%, db ${res.dbCpuPct}%)  err/to/n2=${errors}/${timeouts}/${non2xx}  rss=${res.rssPeakMB}MB`);
     }
@@ -342,7 +343,7 @@ async function mainIndep() {
     errors: a.errors, timeouts: a.timeouts, non2xx: a.non2xx,
     connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: a.rps.length, independent: true,
     order_mode: ORDER, rebuild_writes: REBUILD_WRITES, paired_streams: true,
-    rps_samples: a.rps.map((x) => Math.round(x)), p99_samples: a.p99,
+    rps_samples: a.rps.map((x) => Math.round(x)), p99_samples: a.p99, p975_samples: a.p975,
   }));
   // artifact evidence of the paired id streams: first 50 ids per endpoint per replicate
   const sample = {};

@@ -11,14 +11,15 @@ five access patterns, reporting throughput and response-time p99 together
 The idiomatic implementation-and-strategy difference is concentrated, not
 uniform: sharpest for the deep/nested fetch that assembles a nested object graph
 application-side, and modest for point reads and aggregation
-(Section~\ref{sec:results}). The same-SQL control shows this difference is
-bounded but not attributable to any single mechanism, and that the idiomatic
-eager-loading strategy drives most of it (Section~\ref{sec:results}). On the
+(Section~\ref{sec:results}). The same-SQL control bounds this difference: running
+every layer on identical SQL narrows the spread substantially, but because that
+contrast changes several mechanisms together it does not attribute the difference
+to any single one (Section~\ref{sec:results}). On the
 current library versions no layer is multi-core-bound and the native driver
-leads on essentially every pattern; read rankings transfer across the two
+leads all ten engine-pattern combinations; the read ordering is similar across the two
 engines while aggregation and writes transfer only moderately, a caution against
 generalizing single-engine results (Section~\ref{sec:discussion}). That
-access-layer rankings are perishable is, here, a measured result, not a
+access-layer rankings can be version-sensitive is, here, a measured result, not a
 hypothesis: an earlier version's headline did not survive re-running the same
 harness against Prisma's Rust-free successor. Development also surfaced a
 reusable checklist of benchmarking pitfalls specific to this genre, one of them,
@@ -27,15 +28,9 @@ very re-run (Section~\ref{sec:discussion}).
 
 These findings held under a concurrency sweep (1 to 256 connections) and under
 paired permutation and Wilcoxon tests confirming adjacent-layer separation
-(Section~\ref{sec:results}). Further extensions would deepen the evidence: a
-two-machine cross-run isolating the load generator would bound
-observer-interference effects beyond the open-loop check performed here;
-additional engines and dataset sizes would widen external validity; and a
-dedicated study of the N+1 penalty and of cold-start latency would sharpen the
-practical guidance. Beyond these findings, the durable contribution is the
-harness itself: a vendor-independent, dual-engine instrument with a correctness
-cross-check and a same-SQL contrast control, released under open licenses so
-that these extensions, and independent re-runs against future library
-versions (like the one this revision performed against Prisma~7), are
-straightforward, addressing the repeatability gap widely
-documented in computer-systems research~\cite{collberg2016repeatability}.
+(Section~\ref{sec:results}). Further extensions would deepen the evidence --- a two-machine cross-run to bound
+observer interference beyond the open-loop check, additional engines and dataset
+sizes, and a dedicated study of the N+1 penalty and cold-start latency --- and the
+released harness, exercised again by this revision's re-run against Prisma~7, makes
+them straightforward, addressing the repeatability gap documented in
+computer-systems research~\cite{collberg2016repeatability}.
