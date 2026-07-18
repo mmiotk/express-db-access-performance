@@ -112,14 +112,15 @@ uncorrelated. Prisma is the notable mover: mid-pack on PostgreSQL inserts
 (2{,}774~req/s, fourth of the seven portable layers) but last on MySQL inserts
 (886, behind even MikroORM's 1{,}257) --- a rank flip invisible to a
 single-engine benchmark (Supplement Table~S27). The cost's \emph{magnitude} also
-depends on the engine: a blocked permutation test on the paired
-PostgreSQL-minus-MySQL log-throughput difference (Section~\ref{sec:methodology})
-finds the layer$\times$engine interaction significant on all five patterns
-(observed statistic above every one of the $20{,}000$ permutations), so that $p$
-reaches its floor ($1/20{,}001$) and conveys little about magnitude; the
-magnitude (Supplement Table~S28) is largest on the insert, where Prisma's
-2{,}774~req/s on PostgreSQL becomes 886 on MySQL. Single-engine results are thus portable in order for reads
-but not in degree, most loosely for writes.
+depends on the engine (Supplement Table~S28, per-layer
+PostgreSQL$\div$MySQL ratios). Every layer is faster on PostgreSQL, so
+the layer$\times$engine interaction is in the \emph{spread} of that advantage, not
+its sign: across the three reads it holds a narrow band ($\approx$1.0--1.6$\times$,
+near-parallel), but the insert scatters from $1.6\times$ (MikroORM) to $3.2\times$
+(Prisma), reordering the layers across engines. The blocked permutation test
+(Section~\ref{sec:methodology}) only confirms this interaction is nonzero; its floor
+$p$ says nothing about size. Single-engine results are thus portable in order for
+reads but not in degree, most loosely for writes.
 
 On the \textbf{keyset range scan} the native driver again leads, with a
 native-relative spread of $4.21\times$ on PostgreSQL and $3.85\times$ on MySQL

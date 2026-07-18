@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,435 |
+| Body text (7 sections) | 11,444 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,982** |
+| **Total (IST rule)** | **14,991** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,683). The structured abstract is 299 words (under the journal's
+the abstract it is 14,692). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -111,6 +111,14 @@ aligned to the same hierarchy (effect sizes and intervals primary; adjacent-rank
 secondary and descriptive). No statistic was added or removed; the significance table
 (Table 6) stays in the main text. Compressing the p-value enumeration offset the added
 practical-significance prose, so the body is 11,435 and the total 14,982.
+
+A follow-on round-6 change reported the layer×engine interaction by its magnitude
+rather than its p-value: the RQ2 paragraph now leads with the per-layer
+PostgreSQL÷MySQL throughput ratios (reads a narrow $\approx$1.0--1.6× band, the insert
+scattering 1.6--3.2× and reordering layers across engines), with the blocked
+permutation test demoted to confirming the interaction is nonzero (its floor p says
+nothing about size); the outcomes-table row foregrounds the effect ratios (Table S28).
+The added magnitude detail took the body to 11,444 and the total to 14,991.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
