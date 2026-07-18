@@ -133,8 +133,9 @@ the documented alternative we did \emph{not} use, and that query logging, hooks,
 and validation are off. The six ORMs split both ways on the
 join-versus-select-in default; a loading-strategy sensitivity check
 (Section~\ref{sec:results}) switches join-default data-mapper ORMs to select-in
-wherever the alternative is a byte-identical drop-in. To separate execution
-machinery from strategy, every adapter also implements a \emph{same-SQL control}:
+wherever the alternative is a byte-identical drop-in. To bound the combined
+contribution of query strategy and formulation, every adapter also implements a
+\emph{same-SQL control}:
 identical two-statement deep-fetch SQL (and, per engine, identical \texttt{EXPLAIN}
 plans) with identical row mapping, executed through the layer's raw-SQL facility,
 mirroring the aggregation control (Section~\ref{sec:results}). Server-side
