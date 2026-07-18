@@ -53,10 +53,10 @@ correlation and dispersion are reported conservatively.
 
 \input{\tabledir fig_insert_dispersion}
 
-\section{Idiomatic round-trip counts}
+\section{Documentation-selected round-trip counts}
 \label{sup:query-counts}
 Table~\ref{tab:query_counts} reports, for each layer, the number of SQL
-statements the idiomatic deep fetch issues per request, captured from
+statements the documentation-selected deep fetch issues per request, captured from
 server-side statement logs. The counts motivate the main text's observation
 that round-trip count alone does not determine throughput: the two layers
 issuing four statements (Prisma, Objection) sit at opposite ends of the
@@ -214,12 +214,12 @@ reports the ranking and the leading figures.
 
 \input{\tabledir aggregation}
 
-\section{Idiomatic deep-fetch choices per access layer}
+\section{Documentation-selected deep-fetch choices per access layer}
 \label{sup:adapter-choices}
 Table~\ref{tab:adapter_choices} documents, for each access layer, the exact
 eager-loading API used on the deep/nested fetch, the number of SQL round trips it
 issues, the documented alternative loading strategy we did \emph{not} use, and the
-query-logging state. Every layer uses its documented default (idiomatic) path;
+query-logging state. Every layer uses its documented default path;
 query logging is disabled and verified on all eleven adapters, and no lifecycle
 hooks or validation run on the read path. The six data-mapper and ORM layers split
 both ways on the join-versus-select-in default: Sequelize, TypeORM, and MikroORM
@@ -244,7 +244,7 @@ so the high-load-tail ordering holds on MySQL as on PostgreSQL.
 \section{Alternative eager-loading sensitivity}
 \label{sup:altloading}
 Table~\ref{tab:altloading} reports the loading-strategy sensitivity check: for the
-data-mapper ORMs whose alternative strategy is a byte-identical drop-in, idiomatic
+data-mapper ORMs whose alternative strategy is a byte-identical drop-in, documentation-selected
 deep-fetch throughput versus the alternative, on both engines. Both endpoints were
 verified to return byte-identical responses before timing.
 
@@ -400,7 +400,7 @@ claims can be scoped and reproduced. It is a reporting aid, not a standard.
   \item \textbf{Same-host repetition is not environmental replication.} Report how
         many runs, on how many hosts, over what period; do not call same-host
         repeats ``independent.''
-  \item \textbf{Idiomatic treatment.} State the exact API, its documentation page and
+  \item \textbf{Documentation-selected treatment.} State the exact API, its documentation page and
         version, the declined alternative, and whether logging, hooks, validation,
         and identity maps are on.
   \item \textbf{Latency construct.} Distinguish high-load closed-loop response time

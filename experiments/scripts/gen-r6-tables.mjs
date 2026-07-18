@@ -84,7 +84,7 @@ const fig = `\\begin{figure}[htbp]
 ${pts}  };
 ${medbars}  \\end{axis}
   \\end{tikzpicture}
-  \\caption{Raw per-replicate insert throughput on MySQL for the eight idiomatic layers
+  \\caption{Raw per-replicate insert throughput on MySQL for the eight documentation-selected layers
     (25 independent runs each, red bar = median). The insert cells are the noisiest in
     the study; several are visibly bimodal or heavy-tailed within a cell, structure a
     coefficient of variation cannot convey, which is why the insert rank correlation and

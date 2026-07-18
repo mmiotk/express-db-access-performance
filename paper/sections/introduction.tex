@@ -61,7 +61,7 @@ throughput (req/s) and client-observed response-time p99 at the fixed
 50-connection high-load operating point jointly, from 25 repeated runs, with a
 utilization-controlled open-loop tail measured below saturation. The study
 separates two estimands: the \emph{default-configuration} effect of each layer
-used idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL} contrast that
+(RQ1--RQ3), and a controlled \emph{same-SQL} contrast that
 bounds the residual difference once every layer executes identical SQL ---
 changing query formulation, protocol, preparation, round-trips, and mapping
 together rather than isolating any one. The full harness (adapters, seed data, an
@@ -111,7 +111,7 @@ a configuration-specific snapshot of a fast-moving ecosystem:
         response-time p99 \textbf{jointly}, the combination missing from prior art.
   \item \textbf{Configuration-specific observations} on the current library
         versions and this host: that no layer's throughput scales with additional application cores and the native
-        driver leads all ten engine-pattern combinations, the idiomatic
+        driver leads all ten engine-pattern combinations, the documentation-selected
         implementation-and-strategy difference concentrating in
         relation-materializing patterns; that the read ordering is similar across
         engines while aggregation and writes transfer only moderately (visible

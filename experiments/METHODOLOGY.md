@@ -1,4 +1,4 @@
-# Idiomatic deep-fetch choices, per access layer
+# Documentation-selected deep-fetch choices, per access layer
 
 ## Purpose and principle
 
@@ -8,7 +8,7 @@ strategy we deliberately did *not* use. The deep fetch materializes one post wit
 its author and all of its comments, each comment with its own comment-author
 (the `post → author`, `post → comments → comment-author` graph).
 
-The guiding principle is that **each layer uses its documented default / idiomatic
+The guiding principle is that **each layer uses its documentation-selected default
 eager-loading path** — the API a competent developer reaches for first when reading
 that library's own guide — rather than a hand-tuned variant. The only exceptions are
 the two explicitly labelled *tuned* native adapters (`pg-tuned`, `mysql2-tuned`),
@@ -21,12 +21,12 @@ relational-fetch machinery, not about incidental instrumentation.
 
 ## Selection protocol (fixed before measurement)
 
-The idiomatic API for each layer was chosen by a single rule, decided **before** any
+The documentation-selected API for each layer was chosen by a single rule, decided **before** any
 timing was collected: *use the eager-loading (relation-loading) API that the
 library's own official documentation for the pinned major version presents first in
 its "loading related records / eager loading / populating relations" section, with
 query logging, lifecycle hooks, and validation disabled and any identity map scoped
-per request.* This makes the "idiomatic" treatment a documented, reproducible choice
+per request.* This makes the documentation-selected treatment a documented, reproducible choice
 rather than an editorial one; the exact API, the pinned version, and the
 documentation page that justifies each choice are recorded below. We did not invite
 the library maintainers to review the adapters; that is disclosed as a limitation.
@@ -59,7 +59,7 @@ their deep fetch is two round-trips by construction.
 
 A separate *same-SQL* control (`getThreadRaw`, endpoint `/posts/:id/thread-raw`) runs
 the identical two-statement plan through every layer's raw-SQL facility, isolating raw
-execution from the idiomatic eager-loading path documented below.
+execution from the documentation-selected eager-loading path documented below.
 
 ---
 
@@ -76,7 +76,7 @@ execution from the idiomatic eager-loading path documented below.
 - **Round-trips:** 2 (measured).
 - **Alternative not used:** n/a (hand-written SQL). One could collapse to a single
   post⋈comments join, but that fans out the post row across comments; the two-query
-  split is the idiomatic no-fan-out plan and is the shared baseline all layers target.
+  split is the documentation-selected no-fan-out plan and is the shared baseline all layers target.
 - **Logging:** disabled — `new pg.Pool(...)` carries no logging option.
 - **Tracking / hooks / validation:** none. Native driver: no identity map, no
   lifecycle hooks, no validation on the read path.
@@ -122,7 +122,7 @@ execution from the idiomatic eager-loading path documented below.
   .select(...).where('c.post_id', id).orderBy('c.id')`.
 - **Round-trips:** 2 (measured).
 - **Alternative not used:** n/a (hand-written SQL). Knex is a query builder with no
-  eager-loading / relation abstraction; the two explicit joins are the idiomatic form.
+  eager-loading / relation abstraction; the two explicit joins are the documentation-selected form.
 - **Logging:** disabled — `knexFactory({...})` sets no `log:` handler and `debug` is
   left at its `false` default.
 - **Tracking / hooks / validation:** none. Query builder: no identity map, no hooks,
@@ -228,7 +228,7 @@ Five layers expose a documented alternative loading strategy that a planned
 follow-up sensitivity experiment could exercise, swapping only the loading path while
 holding everything else fixed:
 
-| Layer | Chosen (idiomatic default) | Documented alternative not used |
+| Layer | Chosen (documentation-selected default) | Documented alternative not used |
 |-------|----------------------------|---------------------------------|
 | drizzle | manual core builder with explicit joins | relational query API (`db.query...with`) |
 | prisma | `relationLoadStrategy: 'query'` (default) | `relationLoadStrategy: 'join'` |

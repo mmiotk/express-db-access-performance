@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,447 |
+| Body text (7 sections) | 11,437 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,994** |
+| **Total (IST rule)** | **14,984** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,695). The structured abstract is 299 words (under the journal's
+the abstract it is 14,685). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -88,6 +88,17 @@ advanced the whole toolchain at once, so it cannot be isolated), and the intro/c
 headline sentences now say the result was retired "on newer versions" rather than
 attributing it to "Prisma's Rust-free successor." Trimming the paragraph's lead-in and a
 parenthetical offset most of the hedge, taking the body to 11,447 and the total to 14,994.
+
+A final round-6 terminology change replaced the over-claiming label "idiomatic"
+(~53 occurrences) with "documentation-selected" throughout, with lighter synonyms
+("documented default", "default") where it read clunkily. The methodology already
+disclaimed the connotation ("Documentation order is a reproducible selection heuristic,
+not evidence that the chosen API is performance-optimal or the most common production
+choice"); this makes the terminology consistent with that definition. The
+"default-configuration" estimand name is unchanged; the generated table captions
+(sameplan, altloading, insert-dispersion) and the replication-package `METHODOLOGY.md`
+were updated to match. Dropping the now-redundant "used idiomatically" disclaimer clause
+took the body to 11,437 and the total to 14,984.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

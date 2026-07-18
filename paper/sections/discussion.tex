@@ -16,7 +16,7 @@ the durable contributions are the reusable harness, the benchmark design, and th
 pitfalls checklist~\cite{papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice.}
-RQ1 and RQ3 agree that the idiomatic implementation-and-strategy difference is
+RQ1 and RQ3 agree that the documentation-selected implementation-and-strategy difference is
 specific to the access \emph{pattern}, concentrating where a layer must hydrate
 rows into objects and resolve associations rather than merely issue SQL (the
 object-relational impedance mismatch~\cite{ireland2009impedance} made concrete):
@@ -29,7 +29,7 @@ Table~\ref{tab:deep_fetch}), so how a layer materializes a result graph matters
 more than how many statements it issues.
 
 \paragraph{The same-SQL control.}
-The same-SQL control (Section~\ref{sec:results}) narrows the idiomatic deep-fetch
+The same-SQL control (Section~\ref{sec:results}) narrows the documentation-selected deep-fetch
 spread substantially once every layer runs identical SQL; but because it changes
 query formulation, round-trip count, prepared-statement behavior, wire protocol,
 and result marshalling together, it bounds the combined contribution of query
@@ -136,7 +136,7 @@ The practical synthesis follows from RQ1--RQ3, on the default-configuration
 estimand a practitioner faces, and applies to the benchmarked implementations in
 this configuration, workload, and host rather than to access-layer categories in
 general. The native driver leads throughput on every pattern on both engines, and
-the idiomatic ORM penalty concentrates on relation-materializing traffic, whereas
+the documentation-selected ORM penalty concentrates on relation-materializing traffic, whereas
 read-simple patterns and aggregation, where a layer merely forwards SQL, spread
 far less (Section~\ref{sec:results}). Where a service's hot path is dominated by
 deep or nested fetches, the access layer is consequential, and the tested thin
@@ -159,6 +159,6 @@ developer productivity, type safety, correctness, maintainability, and security,
 none of which this study measures, and which may outweigh the throughput
 differences reported here. Even as performance guidance, the recommendations rest on one schema, one host, a
 single-host local-database deployment under default write durability, and the
-pinned versions; and the same-SQL comparisons bound the idiomatic cost rather than
+pinned versions; and the same-SQL comparisons bound the documentation-selected cost rather than
 licensing raw SQL in practice. Section~\ref{sec:threats} sets out how far these
 results generalize.

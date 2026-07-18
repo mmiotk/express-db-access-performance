@@ -7,12 +7,12 @@ The two consequential patterns are in the main text (the deep/nested fetch,
 Table~\ref{tab:deep_fetch}, and the insert, Table~\ref{tab:write}); the point
 read, keyset range scan, and aggregation are in Supplement Tables~S12, S13,
 and~S15. All numbers come from the run of Section~\ref{sec:methodology}. Each
-native driver is reported both idiomatically (\texttt{pg}, \texttt{mysql2}) and
+native driver is reported both as documentation-selected (\texttt{pg}, \texttt{mysql2}) and
 tuned (\texttt{pg-tuned}, \texttt{mysql2-tuned}), the tuned rows marking the
-throughput ceiling hand-tuned driver use reaches, not a level every idiomatic
+throughput ceiling hand-tuned driver use reaches, not a level every documentation-selected
 layer attains without code changes. We compare \emph{relative} differences
 within an engine (Section~\ref{sec:methodology}); two estimands recur below: the
-\emph{default-configuration (idiomatic) effect} (RQ1--RQ3) and the
+\emph{default-configuration (documentation-selected) effect} (RQ1--RQ3) and the
 \emph{same-SQL effect} (Supplement Table~S14).
 
 % One combined table per access pattern: throughput (req/s) and tail latency (p99)
@@ -35,7 +35,7 @@ version's headline of Prisma tying the native driver at a large CPU premium
 (Section~\ref{sec:discussion}): no layer now exceeds about one application core
 (resource subsection below), leaving no CPU-for-throughput trade to buy parity with.
 
-\texttt{pg-tuned} and \texttt{mysql2-tuned} track their idiomatic counterparts
+\texttt{pg-tuned} and \texttt{mysql2-tuned} track their documentation-selected counterparts
 within a few percent on the single-round-trip patterns and edge them only on the
 deep fetch, where issuing more than one round trip lets reusable prepared
 statements and MySQL's binary protocol pay off (\texttt{pg-tuned} 3{,}746 vs.\
@@ -61,7 +61,7 @@ MySQL ranking separates under the paired permutation test
 
 \textbf{Aggregation} is the least layer-sensitive pattern: the native-relative
 spread is only $1.83\times$ on PostgreSQL and $1.72\times$ on MySQL (Supplement
-Table~S15), and the native driver leads both. The idiomatic difference is small
+Table~S15), and the native driver leads both. The documentation-selected difference is small
 when a layer forwards a single query and large only when it must materialize a
 nested object graph application-side, as on the deep fetch.
 
@@ -77,20 +77,20 @@ together --- so the residual difference is bounded but no single factor is
 isolated.
 
 On the identical SQL, the deep-fetch native-relative spread collapses from its
-idiomatic $7.15\times$ (PostgreSQL) and $4.96\times$ (MySQL) to $1.68\times$ and
-$2.01\times$ (Supplement Table~S14). Replacing each layer's idiomatic path with
+documentation-selected $7.15\times$ (PostgreSQL) and $4.96\times$ (MySQL) to $1.68\times$ and
+$2.01\times$ (Supplement Table~S14). Replacing each layer's documentation-selected path with
 identical SQL bounds how much of the spread is attributable to query strategy and
 formulation \emph{jointly}; because the intervention changes several mechanisms
 together, it does not separate strategy from execution machinery. On the raw path
 Drizzle rises from 1{,}865 to 3{,}237~req/s, Prisma from 1{,}186 to 2{,}155, and
-Knex from 2{,}487 to 2{,}926 on PostgreSQL, so layers that trail on the idiomatic
+Knex from 2{,}487 to 2{,}926 on PostgreSQL, so layers that trail on the documentation-selected
 fetch converge once they run the same statement. Prisma is the slowest layer on
 the raw path itself (2{,}155 on PostgreSQL, 1{,}206 on MySQL); we conjecture this
 reflects dispatch and marshalling overhead in its raw API rather than SQL
 execution, a hypothesis the composite contrast cannot confirm.
-MikroORM shows the largest idiomatic-to-same-SQL gap: its idiomatic path reaches only $0.16$
+MikroORM shows the largest default-to-same-SQL gap: its documentation-selected path reaches only $0.16$
 (PostgreSQL) and $0.20$ (MySQL) of its own same-SQL throughput, a $6.3\times$ and
-$5.1\times$ idiomatic-to-raw gap. A loading-strategy sensitivity check
+$5.1\times$ default-to-raw gap. A loading-strategy sensitivity check
 (Supplement Table~S18) tests whether these deficits are merely a
 default-strategy artifact: switching the join-default data-mapper ORMs
 (Sequelize, MikroORM) to select-in, where the alternative is a byte-identical

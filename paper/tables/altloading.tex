@@ -2,17 +2,17 @@
 \begin{table}[htbp]
   \centering
   \caption{Alternative eager-loading sensitivity on the deep/nested fetch:
-    idiomatic throughput (req/s) versus the alternative loading strategy, both
+    documentation-selected throughput (req/s) versus the alternative loading strategy, both
     engines, for the layers whose alternative is a byte-identical drop-in. Sequelize
-    and MikroORM switch from their idiomatic single join to select-in; in both cases
-    the idiomatic default is the \emph{faster} strategy, so their deep-fetch deficit
+    and MikroORM switch from their documentation-selected single join to select-in; in both cases
+    the documentation-selected default is the \emph{faster} strategy, so their deep-fetch deficit
     is not an artifact of a poor default. \texttt{TypeORM} is omitted, its alternative strategy not a byte-identical drop-in in the pinned versions (its query strategy errors on the ordered nested \texttt{findOne}, and Objection's \texttt{withGraphJoined} changes row handling), which is itself a portability caveat.}
   \label{tab:altloading}
   \begin{tabular}{l l r r r r}
     \toprule
     & & \multicolumn{2}{c}{PostgreSQL} & \multicolumn{2}{c}{MySQL} \\
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
-    Layer & Switch & idiom. & alt. & idiom. & alt. \\
+    Layer & Switch & default & alt. & default & alt. \\
     \midrule
     \texttt{sequelize} & join$\to$select-in & 915 & 690 & 830 & 602 \\
     \texttt{mikroorm} & join$\to$select-in & 447 & 357 & 420 & 324 \\
