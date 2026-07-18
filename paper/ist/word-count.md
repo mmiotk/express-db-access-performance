@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,447 |
+| Body text (7 sections) | 11,448 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,994** |
+| **Total (IST rule)** | **14,995** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,695). The structured abstract is 299 words (under the journal's
+the abstract it is 14,696). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -128,6 +128,17 @@ became "not found in the access-layer benchmarks surveyed above." The four-axis 
 statement and the related-work positioning were already scoped ("In the sources we
 searched…"; "a structured scoping search (not a systematic review)"). Net +3 words; the
 body is 11,447 and the total 14,994.
+
+A final round-6 change stated explicit library inclusion/exclusion criteria in the
+methodology (each layer is maintained, in common use, occupies a distinct taxonomy tier,
+and — for the portable tiers — runs against both engines), with the reasons the named
+candidates were omitted: PostgreSQL-only clients (Slonik, pg-promise) are non-portable,
+and Kysely is a query builder already represented by Knex. The full criteria and a
+per-candidate table are in the replication package (`experiments/METHODOLOGY.md`, not
+word-counted). The addition was offset by removing a redundant tier-classification clause
+(Drizzle's placement, already given in the layer list) and tightening the
+vendor-independence sentence, so the net change is +1 word: the body is 11,448 and the
+total 14,995.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

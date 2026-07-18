@@ -44,15 +44,15 @@ counterparts \texttt{pg-tuned} (named prepared statements reused across calls) a
 documentation-selected treatments; the query builder Knex; and the ORMs Drizzle (a lightweight,
 query-builder-style ORM), Prisma, Sequelize, TypeORM, Objection, and MikroORM. We
 classify a library by its dominant interface, not its self-description
-(Section~\ref{sec:introduction}); Drizzle sits at the query-builder end of the
-ORM range and Objection layers an ORM over Knex, which the results bear out.
-The nine documentation-selected layers are a representative cross-section of the taxonomy's
-three tiers, not an exhaustive catalogue; other libraries (for example Kysely,
-Slonik, and pg-promise) are omitted. Vendor independence here means authorship
+(Section~\ref{sec:introduction}); Objection, for instance, layers an ORM over Knex.
+The nine documentation-selected layers are a representative cross-section of the three
+tiers, not an exhaustive catalogue: each is maintained, used, and --- for the portable
+tiers --- runs against both engines. That excludes PostgreSQL-only Slonik and
+pg-promise as non-portable, and Kysely as a query builder already covered by Knex
+(\texttt{METHODOLOGY.md} gives the full criteria). Vendor independence here means authorship
 only: no evaluated library's maintainers were involved or invited to inspect the
-adapters, which does not remove the consequential choices any benchmark author
-makes (library selection, documentation-selection criteria, schema, pool size, tuning); we
-disclose these and release the harness for inspection. The \emph{engine} has two
+adapters, though the consequential choices any author makes (library selection,
+criteria, schema, pool size, tuning) remain, which we disclose. The \emph{engine} has two
 levels, PostgreSQL~18.4 and MySQL~9.7.1, and the \emph{access pattern} has five,
 realized as HTTP endpoints (Table~\ref{tab:patterns}). The four native and tuned
 baselines are engine-specific (\texttt{pg}/\texttt{pg-tuned} on PostgreSQL,

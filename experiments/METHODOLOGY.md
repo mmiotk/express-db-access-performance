@@ -19,6 +19,38 @@ identity maps (where they exist) are either absent or scoped so they cannot leak
 state across requests. This keeps the comparison about each library's default
 relational-fetch machinery, not about incidental instrumentation.
 
+## Library inclusion and exclusion
+
+The eleven levels of the access-layer factor were fixed before measurement by the
+criteria below; the aim is a representative cross-section of the taxonomy, not an
+exhaustive catalogue.
+
+**Inclusion criteria.** A candidate library is included if it:
+
+1. is actively maintained and in common production use (npm downloads / GitHub
+   prominence at the July 2026 freeze);
+2. occupies a distinct tier of the native-driver → query-builder → ORM taxonomy,
+   classified by its dominant interface (not its self-description); and
+3. for the portable (cross-engine) tiers, runs against **both** PostgreSQL and MySQL
+   under the one uniform schema, exposing a documented relation / eager-loading path for
+   the deep fetch (so the N+1 treatment is well defined).
+
+The native-driver tier is the exception to (3): it is represented by each engine's
+standard driver — `pg` for PostgreSQL, `mysql2` for MySQL, engine-specific by nature —
+plus the two tuned baselines (`pg-tuned`, `mysql2-tuned`).
+
+**Excluded candidates (and why).**
+
+| Candidate | Tier | Reason for exclusion |
+|---|---|---|
+| Kysely | Query builder | Portable (PostgreSQL + MySQL), but the **same tier as Knex**, which already represents it. Being a query builder, its deep-fetch relation query is hand-composed (`jsonArrayFrom` / `jsonObjectFrom` helpers) — a query-builder join, not an ORM eager-loading abstraction — so it adds no distinct tier behavior. |
+| Slonik | PostgreSQL client | **PostgreSQL-only** (built on `pg`); cannot serve as a portable cross-engine layer (fails criterion 3). |
+| pg-promise | PostgreSQL client | **PostgreSQL-only**; same reason. |
+
+Other query builders and ORMs were omitted for the same two reasons: either
+PostgreSQL-only (non-portable) or a tier already represented by an included library. The
+manuscript summarizes this in Section 3 (Factors and treatments).
+
 ## Selection protocol (fixed before measurement)
 
 The documentation-selected API for each layer was chosen by a single rule, decided **before** any
