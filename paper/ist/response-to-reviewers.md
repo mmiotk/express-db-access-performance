@@ -1,261 +1,235 @@
-# Response to Reviewer (Revision Round 6)
+# Response to Reviewer (Revision Round 7)
 
 Dear Editor and Reviewer,
 
-Thank you for the sixth reading of my manuscript, *A Reproducible Benchmark of
-Relational Database Access-Layer Performance in Express.js: A Configuration-Specific
-Comparison on PostgreSQL and MySQL*, and for the clear verdict that the dataset and
-artifact are publishable while the remaining obstacle is interpretation — the paper
-claiming more causal specificity and category generality than a single-host,
-default-configuration design can establish. I have taken that framing seriously and
-made it the organizing principle of this revision.
-
-I answer below in the reviewer's own order: the governing change first (the Priority-1
-retraction), then the prioritized checklist P1–P10, then the §7 minor points, then the
-eight questions Q1–Q8. I quote the revised manuscript briefly so every claimed change
-is verifiable, and I cite sections by name rather than line number, since line numbers
-drift between builds.
+Thank you for the continued careful reading of my manuscript, *A Reproducible
+Benchmark of Relational Database Access-Layer Performance in Express.js: A
+Configuration-Specific Comparison on PostgreSQL and MySQL*. This round raised
+fourteen points, spanning a factual inconsistency, several statistical and
+reporting gaps, a set of scoping over-claims, and editorial and word-limit
+compliance. I have addressed all fourteen and answer them below in the reviewer's
+order. Each response quotes the revised manuscript briefly so every change is
+verifiable, and cites sections by name and supplement tables by number rather than
+by line number, since line numbers drift between builds.
 
 ---
 
-## The governing change this round: retracting the same-SQL causal claim (Priority 1)
+## Reviewer point 1 — Contradiction in the measurement dates
 
-You were right that the earlier text over-read the same-SQL control. It claimed that
-the eager-loading *strategy*, not the execution machinery, drove most of the idiomatic
-gap — a causal decomposition the design cannot support, because collapsing every layer
-onto identical SQL changes query strategy, query count, prepared-statement behaviour,
-the raw-versus-ORM API, and result marshalling all at once. I have **withdrawn the
-causal attribution everywhere and reworded the control as a pure bounding contrast**:
-both abstracts, the Results same-SQL subsection, the Discussion, and the Conclusion.
+> The text stated that all measurements were taken on 16–17 July 2026, yet
+> elsewhere described a run performed "eight days later," an internal contradiction.
 
-The abstract now presents the collapse as a bound, not a mechanism: “the deep/nested
-fetch spreads 7.15× (PostgreSQL) and 4.96× (MySQL) between native and the slowest ORM,
-narrowing to 1.68× and 2.01× once every layer runs identical SQL, a compound control
-that bounds the combined query-strategy-and-formulation contribution without isolating
-a single mechanism.”
+**Response.** The reviewer is right; this was a genuine inconsistency, and I have
+corrected the dates to reflect what actually happened. The Study Design
+(Section 3, *Experimental setup*) now reads that "the measurements were taken on
+2026-07-16 to 2026-07-18 on a single host," with the secondary experiments
+following "over 2026-07-16 and 2026-07-17, with the longer-window tail
+re-measurement taken on 2026-07-18." The "eight days later" phrasing is gone: the
+post-restart and longer-window runs are part of the same three-day campaign, and
+the previously stale post-restart figures were checked against the raw data and
+corrected.
 
-The Results *Same-SQL control* subsection states the limitation explicitly: “Replacing
-each layer's idiomatic path with identical SQL bounds how much of the spread is
-attributable to query strategy and formulation *jointly*; because the intervention
-changes several mechanisms together, it does not separate strategy from execution
-machinery.” Where I previously asserted the cause of Prisma's slow raw path, the
-sentence is now labelled conjecture: “we conjecture this reflects dispatch and
-marshalling overhead in its raw API rather than SQL execution, a hypothesis the
-composite contrast cannot confirm.”
+## Reviewer point 2 — p99 is a primary outcome but lacked tests, CIs, and effect sizes
 
-The Discussion paragraph *The same-SQL control* closes the loop: the contrast “bounds
-the combined contribution of query strategy and formulation without isolating a single
-factor such as eager-loading strategy,” and the Conclusion now reads that “running
-every layer on identical SQL narrows the spread substantially, but because that
-contrast changes several mechanisms together it does not attribute the difference to
-any single one.” The phrase “strategy gap” is gone; the residual is now the
-“idiomatic-to-same-SQL gap” throughout.
+> p99 tail latency is declared a primary outcome, yet the promised confidence
+> intervals, significance tests, and effect sizes were reported for throughput
+> only, not for p99.
 
----
+**Response.** I have closed this gap on both fronts. Every pattern table now carries
+a per-cell bootstrap 95% CI on p99 alongside throughput; for example the
+deep/nested-fetch table (Table 2) reports `pg` at "20~[18--21]" ms and MikroORM at
+"116~[113--119]" ms. I also added a paired p99 significance table (Supplement
+Table S30, `tab:significance_p99`) applying the same permutation, Wilcoxon,
+geometric-mean-ratio, and dominance analysis to each adjacent p99 step. The main
+text (Section 4, *Tail latency*) reports its outcome honestly, including the one
+near-tie: "A paired p99 analysis (Supplement Table~S30) resolves every adjacent
+pair on both engines except the near-tied TypeORM--Prisma step on PostgreSQL (ratio
+1.03, p=0.06)."
 
-## Prioritized checklist (P1–P10)
+## Reviewer point 3 — "saturated" over-claims the operating point
 
-### P1 — Same-SQL causal claim retracted (governing change)
+> Calling the primary 50-connection matrix a "saturated" measurement over-states
+> what was demonstrated, since a saturation knee was shown only for one pattern.
 
-Addressed in full above. The causal “strategy, not machinery” reading is withdrawn from
-both abstracts, the Results same-SQL subsection, the Discussion, and the Conclusion, and
-every residual is relabelled a bounded compound contrast. As one visible token of the
-rename, the Results now report that “MikroORM shows the largest idiomatic-to-same-SQL
-gap,” not a strategy gap.
+**Response.** I have renamed the primary operating point accordingly. The Study
+Design (Section 3) now describes the fixed 50-connection matrix as a "high-load"
+point, stating it is "high-load rather than saturated, the throughput knee being
+demonstrated only for the deep fetch (Supplement Figure~S2) while the ten-connection
+pool, not a per-pattern knee, is the binding constraint." The Introduction and the
+tail-latency prose adopt the same term ("fixed 50-connection high-load operating
+point"). Legitimate per-layer, pool, and open-loop uses of "saturat*" — where a
+genuine capacity limit is being described — are retained.
 
-### P2 — "idiomatic" renamed to a documented, reproducible estimand
+## Reviewer point 4 — "single-/multi-core-bound" is a causal over-claim
 
-I no longer treat documentation order as evidence of production-representative use. The
-Study Design now states: “Documentation order is a reproducible selection heuristic, not
-evidence that the chosen API is performance-optimal or the most common production choice,
-so we report a documented default-configuration estimand rather than 'the performance of
-each library used idiomatically'.” The no-maintainer-review disclosure is retained:
-“no evaluated library's maintainers were involved or invited to inspect the adapters.”
+> Describing layers as "single-core-bound" or "multi-core-bound" asserts a causal
+> CPU bottleneck the controls do not establish.
 
-### P3 — Category-level recommendations scoped to the tested implementations
+**Response.** I replaced the causal label with the observation the controls actually
+support, at every prose site and in two captions. The Results now state that "no
+layer buys throughput with extra application cores," and the Discussion that "the
+equal-CPU control confirms extra application cores do not raise a process's
+throughput," with the Conclusion noting "no layer's throughput scales with
+additional application cores." The equal-CPU and cluster controls "rule out unequal
+core access" as the cause of the ranking without claiming single-core CPU is the
+bottleneck. I also corrected the factual error in the equal-CPU caption
+(`equalcpu.tex`, Supplement Table S4), which now reads that "a layer's low
+per-process throughput is recovered by more processes, not more cores."
 
-The practical guidance no longer generalizes to access-layer *categories*. It now reads:
-“the tested thin paths (the native driver and Knex) were the safer default here *for
-throughput and response-time p99*; whether that advantage generalizes to other
-implementations of those tiers is a hypothesis for broader study, not a category law,”
-and the paragraph opens by scoping the synthesis to “the benchmarked implementations in
-this configuration, workload, and host rather than to access-layer categories in
-general.”
+## Reviewer point 5 — Prisma version sensitivity conflates fact and hypothesis
 
-### P4 — Capacity, overload latency, and matched-utilization latency kept distinct
+> The claim that a Prisma architecture change caused the retired five-core result is
+> asserted more strongly than the evidence allows.
 
-RQ1 now names the three quantities a fixed operating point conflates: “We keep distinct
-three quantities that a fixed operating point conflates: *capacity* (saturating
-throughput), *overload latency* (the saturated p99 under equal external demand), and
-*latency at matched utilization* (each layer driven at equal fractions of its own
-capacity).” The Study Design maps each to its experiment — equal external demand, equal
-utilization, and an equal compute budget — and the abstract reports all three operating
-conditions rather than one privileged point.
+**Response.** I now separate the fact from the hypothesis explicitly. The Discussion
+(*Access-layer rankings can be version-sensitive*) states: "The non-reproduction is
+a fact; its cause is a hypothesis: the vanished premium was Prisma-specific and only
+Prisma changed architecture, so its Rust-free rewrite is the likeliest driver, but
+the re-freeze moved the whole toolchain at once, so we cannot isolate it." The
+Introduction and Conclusion headline sentences now attribute the retirement to a
+re-run "on newer versions" rather than to any single library change (Conclusion: "an
+earlier version's headline did not survive re-running the same harness on newer
+versions").
 
-### P5 — p99 tail count validated by a longer-window re-measurement
+## Reviewer point 6 — "idiomatic" over-claims representativeness
 
-Because the primary p99 rests on roughly 60 tail observations per run, I added a 60 s
-re-measurement of the deep fetch. The Measurement procedure now states: “A 60 s
-re-measurement of the deep fetch (five times the requests) preserves the p99 ranking
-exactly on both engines and barely moves each cell's p99 (Supplement Table S23), so the
-12 s window is adequate for the tail comparison.” The full result is the new Supplement
-section *Longer-window tail sensitivity*; I give the numbers under Q4 below.
+> Labelling each configuration "idiomatic" implies it is the most typical or optimal
+> production choice, which the study cannot support.
 
-### P6 — Adjacent-rank separation reported descriptively, not as confirmation
+**Response.** I replaced "idiomatic" with "documentation-selected" throughout (about
+53 occurrences in the manuscript, plus the supplement and the replication package's
+`METHODOLOGY.md`), and made the selection rule reproducible rather than
+representative. The Study Design (Section 3) fixes the treatment as "the
+eager-loading API each layer's official documentation presents first for the pinned
+version" and states plainly that "Documentation order is a reproducible selection
+heuristic, not evidence that the chosen API is performance-optimal or the most common
+production choice." The estimand name "default-configuration" is retained.
 
-The significance prose is demoted to descriptive pairwise separation with the
-post-selection stated: “Because these adjacent pairs were selected after observing the
-ranking, we read their separation descriptively rather than as independent confirmation
-of the ordering, and it covers the deep fetch only (Table 6), not the full cross-pattern
-ranking.” The Analysis subsection likewise labels them “post-hoc adjacent-rank
-comparisons.”
+## Reviewer point 7 — Simplify the statistical analysis
 
-### P7 — Interaction reported as a magnitude, not only a p-floor
+> The statistical presentation is heavier than necessary; lead with effect sizes and
+> demote the post-hoc pairwise tests.
 
-I added a supplement interaction-magnitude table. The main text keeps the honest caveat
-that the blocked-permutation p reaches its floor and “conveys little about magnitude,”
-and the new Supplement section *Layer-by-engine interaction magnitude* reports the size
-directly: “Supplement Table S28 reports *how large* the interaction is, as the PostgreSQL÷MySQL
-throughput ratio per layer and pattern with a 95% paired-bootstrap interval … the reads
-hold a narrow band across layers (≈1.0–1.6) while the insert scatters from 1.6 to 3.2.”
+**Response.** I restructured the analysis to that hierarchy. The results subsection is
+renamed "Measurement stability and effect sizes" (Section 4) and now leads with
+geometric-mean ratios, bootstrap CIs, and practical significance: "Magnitude, not bare
+separation, is the point: the narrowest step (Sequelize over Objection, ratio 1.05,
+dominance 0.88) sits essentially at the ±5% practical-equivalence margin ---
+distinguishable yet practically marginal." The permutation, Wilcoxon, and Bonferroni
+tests are compressed to a secondary, descriptive note: "the pairs were chosen after
+observing the ranking, so the p-values are a post-hoc robustness check on the deep
+fetch only, not independent confirmation of the cross-pattern ranking." The
+Methodology, Threats, and Conclusion were aligned to the same primary/secondary
+split; no statistic was added or removed.
 
-### P8 — Perishability tempered from a law to a version-sensitivity claim
+## Reviewer point 8 — Report the magnitude of the layer×engine interaction
 
-Across all six sites the claim is now “can be version-sensitive,” anchored to one
-example rather than generalized. The Discussion heading reads “Access-layer rankings can
-be version-sensitive; the instrument is the contribution,” and the abstract states
-“Access-layer rankings can be version-sensitive, as one retired five-core result shows.”
-The Prisma case study is condensed to a single paragraph.
+> The interaction is reported only as a significance floor, which conveys nothing
+> about its size.
 
-### P9 — Length and repetition reduced
+**Response.** The RQ2 paragraph (Section 4) now leads with the magnitude, drawn from
+the new Supplement Table S28 (`tab:interaction`, per-layer PostgreSQL÷MySQL throughput
+ratios): "across the three reads it holds a narrow band (≈1.0--1.6×, near-parallel),
+but the insert scatters from 1.6× (MikroORM) to 3.2× (Prisma), reordering the layers
+across engines." The blocked permutation test is demoted to its proper role: "The
+blocked permutation test only confirms this interaction is nonzero; its floor p says
+nothing about size."
 
-The condensed Prisma narrative and the removal of repeated restatements offset the new
-disclosures, so the body moved only marginally (11,376 to 11,388 words) while the
-abstract was tightened from 313 to 298 words; the new floats (longer-window tail,
-interaction magnitude, insert dispersion) live in the supplement only. Total main-text
-count under the IST rule is 14,934 words.
+## Reviewer point 9 — Novelty claims exceed the scoping search
 
-### P10 — IST compliance
+> Claims that the design is "missing from prior art" or "absent from every benchmark"
+> over-reach a search the authors describe as non-systematic.
 
-The structured abstract is 298 words (under 300); the total is 14,934 words (under
-15,000); a top-level `REPRODUCE.md` was added; the raw-data checksums were regenerated to
-match the archived set 1:1; and the clean-room reproduction claim is verified (see Q7 and
-Q8).
+**Response.** I softened the two bald claims to match the search. The Introduction now
+describes the design as "a combination not identified in our documented search," and
+the Related Work as "a design choice not found in the access-layer benchmarks surveyed
+above." These sit alongside the already-scoped statement that the literature was
+located with "a structured scoping search (not a systematic review)" (Section 2), so
+every gap claim is now confined to the sources searched.
 
----
+## Reviewer point 10 — State library selection criteria
 
-## §7 minor points
+> The rationale for the specific libraries included and others omitted is not stated.
 
-- **Intrinsic latency removed.** The term is gone everywhere; the tail now reads as a
-  capacity effect, e.g. the saturated ladder “is a capacity-and-queueing effect, not a
-  difference in tail latency at comparable utilization,” and the closed-loop tail is “the
-  tail a deployment sees at saturation, not the per-request latency at moderate load.”
-- **CRUD-spanning removed.** The endpoints are described as “five representative access
-  patterns” in both the Introduction and the Study Design.
-- **Latest-stable qualifier.** The abstract now pins “the latest stable library versions
-  current at the July 2026 freeze,” matching the per-layer freeze rule in the Study Design
-  and Threats.
-- **Native leads all ten.** The claim is now the exact, verifiable “the native driver
-  leads all ten engine-pattern combinations,” replacing “essentially every pattern.”
-- **Vendor-independent qualified.** At first prominent use the Introduction reads “a
-  single, vendor-independent benchmark (authorship only; Section 3 defines the term),” and
-  the Study Design states “Vendor independence here means authorship only.”
-- **Significance-table caveat.** The table is scoped to the deep fetch, “not the full
-  cross-pattern ranking” (quoted under P6).
-- **Kendall's τ added.** The abstract now reports “the read ordering is similar across
-  engines (Spearman ρ ≥ 0.86, Kendall τ ≥ 0.71),” and the supplement carries τ alongside
-  every reported ρ.
-- **Insert dispersion.** A new supplement figure plots the raw per-replicate MySQL insert
-  throughput: “several cells are visibly bimodal or heavy-tailed within a cell, structure
-  a single CV cannot convey, which is why the insert rank correlation and dispersion are
-  reported conservatively.”
-- **TOST reframed.** The Analysis now leads with the engineering consequence — “The ±5%
-  equivalence margin is an author-selected smallest effect of practical interest for
-  *this* study, not a general engineering threshold” — and demotes the noise coincidence:
-  the margin happens to sit within the host's run-to-run variation, “but that coincidence
-  is not the justification.”
+**Response.** I added explicit inclusion criteria and named the exclusions in the
+Study Design (Section 3): each library "is maintained, used, and --- for the portable
+tiers --- runs against both engines. That excludes PostgreSQL-only Slonik and
+pg-promise as non-portable, and Kysely as a query builder already covered by Knex
+(METHODOLOGY.md gives the full criteria)." The full criteria and a per-candidate
+decision table are in the replication package's `experiments/METHODOLOGY.md`.
 
----
+## Reviewer point 11 — Add an artifact-reproducibility summary
 
-## The eight questions (Q1–Q8)
+> The submission would benefit from a structured summary of what is needed to
+> reproduce the study and which results regenerate automatically.
 
-**Q1 — Is documentation-first the same as idiomatic?** No, and I no longer imply it. The
-documentation-order rule is a *reproducible selection heuristic*, not a claim of
-production-representative use; I renamed the estimand accordingly (P2) and rest its
-validity on the byte-equivalence cross-check and the archived per-adapter protocol
-(Supplement Table 16 and `METHODOLOGY.md`), which record, per layer, the exact API, its
-documentation page and version, and the alternative not used.
+**Response.** I added Supplement Table S31 (`tab:reproducibility`), an artifact-
+reproducibility summary giving the version and commit (release v1.6.2), the Zenodo DOI
+(`10.5281/zenodo.21433223`), the software and hardware requirements, the run commands,
+and the time and resources — smoke test "≈5--10~min," full campaign "≈25~h wall-clock,"
+and table regeneration in "≈minutes, no database." It records which results are
+auto-reproduced: "Every table and figure, from the archived raw data;
+results/checksums.sha256 verifies the 33 raw-data files." A one-line pointer was added
+to the Data Availability section, and `REPRODUCE.md` is named as the single runnable
+entry point.
 
-**Q2 — What evidence identifies eager-loading as the dominant factor?** None — that claim
-is retracted (P1). The same-SQL contrast is a compound bound that isolates no single
-mechanism, and the manuscript now says so at every site.
+## Reviewer point 12 — Shorten and reduce repetition
 
-**Q3 — Were the libraries' maintainers asked to review the adapters?** No, and this is
-disclosed as a limitation. Independence and external correctness review are compatible,
-but the latter was out of scope this cycle; the guarantee I do provide is the automated
-byte-equivalence cross-check that “asserts full JSON byte equality against the
-native-driver baseline, on both engines … before any timing is collected.”
+> Several conclusions are restated multiple times; the manuscript can be tightened.
 
-**Q4 — How sensitive is the p99 to the run length?** This is now answered in full, not
-pending. The new Supplement section *Longer-window tail sensitivity* re-measures the deep
-fetch over a 60 s window (about five times the requests, roughly 300 tail observations per
-run), ten independent runs, on both engines: “The p99 ranking is preserved exactly
-(Spearman ρ = 1.00 per engine), each cell's p99 barely moves from the 12 s value, the
-p97.5 ordering matches the p99 ordering (ρ = 1.00), and the run-to-run p99 coefficient of
-variation stays small (maximum 6.0% on PostgreSQL, 3.8% on MySQL).” The 12 s window is
-therefore adequate for the tail *ranking*, and the tail conclusions do not rest on the
-exact per-run tail count (Supplement Table S23).
+**Response.** I consolidated the three most-repeated conclusions — the retired Prisma
+headline, the version-sensitivity thesis, and the same-SQL "bounds but does not
+isolate" caveat — to one canonical statement each with cross-references, and compressed
+the most duplicative auxiliary prose (the open-loop/utilization tail block and the
+thrice-told multi-worker cluster result) to a conclusion plus a supplement pointer.
+Every trimmed number still appears once in its supplement table. This cut the body by
+232 words (11,448 to 11,216).
 
-**Q5 — Why is the saturated p99 the primary tail rather than matched utilization?** The
-saturated p99 is deliberately an *overload* measurement, and I no longer privilege it
-implicitly. Following P4, the Study Design names equal external demand, equal utilization,
-and an equal compute budget as three co-primary operating conditions that “answer
-different questions and need not agree,” and the matched-utilization result is reported in
-the main text, where “the large saturated gap … therefore largely dissolves; it is a
-capacity-and-queueing effect.”
+## Reviewer point 13 — Editorial: double period on run-in headings
 
-**Q6 — Do the conclusions survive excluding MikroORM?** Yes. The Supplement *Per-layer
-cross-engine ranks* section recomputes the agreement over the remaining six portable
-layers: “the read ordering stays similar (deep-fetch ρ = 0.77, τ = 0.60; range ρ = 0.83,
-τ = 0.73) and the deep-fetch native-relative spread stays substantial at 3.7× on both
-engines, so the RQ2 and RQ3 findings do not depend on that one layer.”
+> The run-in paragraph headings render a doubled period under the journal class.
 
-**Q7 — Does the Zenodo archive regenerate every table clean-room?** Yes. The new top-level
-`REPRODUCE.md`, section 4, gives the runnable clean-room steps: the immutable release is a
-`git archive` of the tagged commit, so it ships every tracked file including all 33
-`results/*.json` raw-data files (force-added past `.gitignore`) and the committed
-generators, and the estimators are seeded so bootstrap intervals and permutation p-values
-are bit-reproducible. There is one disclosed caveat: “the round-trip-count table
-(Supplement S2) is derived from transient server statement logs that are not archived, so
-its committed `.tex` … ships pre-generated rather than regenerable from the tarball; every
-other table regenerates from archived data.”
+**Response.** Fixed. Under `elsarticle` the run-in `\paragraph` headings that already
+ended in a period had a second period auto-appended (rendering, for example, "the
+instrument is the contribution.."); I removed the trailing period from all twelve
+headings, so each now renders a single period (see Section 5, Discussion). Terminology
+was also unified across the manuscript ("documentation-selected," "high-load").
 
-**Q8 — Are all files in the immutable release?** Yes. The archive tracks 33
-`results/*.json` files (including `raw.json`), and `results/checksums.sha256` was
-regenerated to match that tracked set one-to-one — `sha256sum -c` over the tarball
-verifies every archived raw-data file, and the round-trip-count input is the single
-disclosed exception noted in Q7.
+## Reviewer point 14 — Confirm compliance with the word limit
+
+> Please confirm the manuscript meets the journal's word limit under its counting rule.
+
+**Response.** Confirmed against the IST *Guide for Authors* (research paper maximum
+15,000 words; "references and appendices are part of the submission and count against
+the total number of words, and figures and tables count 200 words each"). Applying that
+rule exactly, the manuscript is **14,763 words**: body 11,216 + structured abstract 299
++ reference list 1,848 + seven main-text floats × 200 = 1,400. There are no appendices
+(the supplement is separate online supplementary material under Elsevier policy, not an
+appendix), and the mandatory declaration sections are excluded per Elsevier convention.
+This is under the limit with 237 words of headroom, and the structured abstract (299
+words) is under the 300-word cap. The full declaration is in `word-count.md`.
 
 ---
 
 ## Summary of changes
 
-For the editor's convenience: I retracted the same-SQL causal attribution and reworded it
-as a bounding contrast in both abstracts, Results, Discussion, and Conclusion (P1);
-renamed the treatment a documented default-configuration estimand and kept the
-no-maintainer disclosure (P2); scoped the practical guidance to the tested implementations
-(P3); separated capacity, overload latency, and matched-utilization latency in RQ1 and the
-Study Design (P4); validated the p99 tail count with a 60 s longer-window re-measurement,
-new Supplement Table S23 (P5, Q4); demoted the adjacent-rank significance to descriptive,
-post-selection, deep-fetch-only (P6); added a layer-by-engine interaction-magnitude table
-(P7); tempered perishability to a version-sensitivity claim with one condensed example
-(P8); trimmed length to 14,934 words with a 298-word abstract (P9, P10); added
-`REPRODUCE.md` and regenerated the raw-data checksums (P10, Q7, Q8); and completed the §7
-minors, including the intrinsic-latency removal, the latest-stable and vendor-independent
-qualifiers, Kendall's τ, the insert-dispersion figure, and the TOST reframe. I believe
-these revisions leave the manuscript claiming exactly what a single-host, current-version,
-default-configuration benchmark can support, and I am grateful that your interpretation
-concerns sharpened it. I look forward to your assessment.
+For the editor's convenience: I corrected the measurement dates to 2026-07-16 through
+2026-07-18 and fixed the stale post-restart figures (1); added per-cell bootstrap p99
+CIs to all five pattern tables and a paired p99 significance table, Supplement Table S30
+(2); renamed the primary matrix a "fixed 50-connection high-load operating point" (3);
+replaced the "single-/multi-core-bound" causal label with a controlled observation and
+corrected the equal-CPU caption (4); separated the fact of the non-reproduction from the
+version/architecture hypothesis (5); replaced "idiomatic" with "documentation-selected"
+throughout (6); led the statistical analysis with effect sizes and demoted the post-hoc
+tests, renaming the subsection "Measurement stability and effect sizes" (7); reported the
+layer×engine interaction as a magnitude in new Supplement Table S28 (8); softened the
+novelty claims to the documented scoping search (9); stated explicit library
+inclusion/exclusion criteria (10); added the artifact-reproducibility summary, Supplement
+Table S31 (11); consolidated repeated conclusions and cut the body by 232 words (12);
+removed the doubled period from all twelve run-in headings (13); and confirmed the
+14,763-word total against the IST rule (14). I believe these revisions resolve every
+point raised and leave the manuscript claiming exactly what a single-host, current-
+version, default-configuration benchmark can support. I look forward to your assessment.
 
 Sincerely,
 
