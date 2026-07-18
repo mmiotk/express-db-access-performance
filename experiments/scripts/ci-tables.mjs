@@ -15,6 +15,7 @@ const PATTERNS = { point_read: 'Point read', range_scan: 'Keyset range scan', de
 const CAT = { pg: 'native-driver', mysql2: 'native-driver', 'pg-tuned': 'native-tuned', 'mysql2-tuned': 'native-tuned', knex: 'query-builder', drizzle: 'orm-lightweight', prisma: 'orm', sequelize: 'orm', typeorm: 'orm', objection: 'orm', mikroorm: 'orm' };
 
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function fnv1a(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
 const rand = mulberry32(0x57a75);
 function ci(samples, B = 5000) {
   if (!samples || samples.length < 2) return null;
@@ -23,12 +24,23 @@ function ci(samples, B = 5000) {
   s.sort((x, y) => x - y);
   return [Math.round(s[Math.floor(0.025 * B)]), Math.round(s[Math.floor(0.975 * B)])];
 }
+// Per-cell deterministically-seeded percentile bootstrap of the median, used for the
+// p99 CIs so the value is independent of iteration order and identical across every
+// generator (pattern tables, Table S30, analysis2.json) that reports it.
+function ciSeeded(samples, key, B = 5000) {
+  if (!samples || samples.length < 2) return null;
+  const r = mulberry32(fnv1a(key));
+  const s = [];
+  for (let b = 0; b < B; b++) { const rs = samples.map(() => samples[Math.floor(r() * samples.length)]); s.push(median(rs)); }
+  s.sort((x, y) => x - y);
+  return [Math.round(s[Math.floor(0.025 * B)]), Math.round(s[Math.floor(0.975 * B)])];
+}
 const get = (a, ep, eng) => raw.find((r) => r.adapter === a && r.endpoint === ep && r.engine === eng);
 const cell = (a, ep, eng) => {
   const r = get(a, ep, eng);
   if (!r) return { rps: '--', p99: '--' };
   const c = ci(r.rps_samples);
-  const c99 = ci(r.p99_samples);
+  const c99 = ciSeeded(r.p99_samples, `${a}|${eng}|${ep}|p99`);
   return {
     rps: c ? `${r.rps}~[${c[0]}--${c[1]}]` : String(r.rps),
     p99: c99 ? `${r.p99}~[${c99[0]}--${c99[1]}]` : String(r.p99),

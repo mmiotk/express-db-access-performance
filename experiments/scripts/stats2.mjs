@@ -39,6 +39,17 @@ function bootCI(fn, level = 0.95) { // fn() -> statistic on resampled data (unpa
   const s = Array.from({ length: B }, fn).sort((a, b) => a - b);
   return [q(s, (1 - level) / 2), q(s, 1 - (1 - level) / 2)];
 }
+function fnv1a(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
+// Per-cell deterministically-seeded percentile bootstrap of the median (integer-rounded),
+// identical to ci-tables.mjs/gen-p99-significance.mjs so the p99 CI is the same value in
+// analysis2.json and in every table that reports it, independent of iteration order.
+function ciSeeded(samples, key) {
+  const r = mulberry32(fnv1a(key));
+  const s = [];
+  for (let b = 0; b < B; b++) { const rs = samples.map(() => samples[Math.floor(r() * samples.length)]); s.push(median(rs)); }
+  s.sort((x, y) => x - y);
+  return [Math.round(s[Math.floor(0.025 * B)]), Math.round(s[Math.floor(0.975 * B)])];
+}
 
 const out = { seed: '0x57a75', bootstrap_B: B, permutation_B: 20000, paired: true, generated: '2026-07-13' };
 
@@ -92,8 +103,8 @@ for (const e of ['postgres', 'mysql']) for (const ep of PATTERNS) {
   const key = `${ep}/${e}`;
   out.p99[key] = cells.map(({ a, r }) => {
     const s = r.p99_samples;
-    const [lo, hi] = bootCI(() => median(resample(s)));
-    return { adapter: a, p99: median(s), ci95: [+lo.toFixed(1), +hi.toFixed(1)], nRequestsApprox: Math.round(r.rps * r.duration), errors: r.errors, timeouts: r.timeouts, non2xx: r.non2xx };
+    const [lo, hi] = ciSeeded(s, `${a}|${e}|${ep}|p99`);
+    return { adapter: a, p99: median(s), ci95: [lo, hi], nRequestsApprox: Math.round(r.rps * r.duration), errors: r.errors, timeouts: r.timeouts, non2xx: r.non2xx };
   });
   const pairs = [];
   for (let i = 0; i + 1 < cells.length; i++) {

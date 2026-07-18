@@ -416,7 +416,7 @@
         "adapter": "mikroorm",
         "p99": 116,
         "ci95": [
-          109,
+          113,
           119
         ],
         "nRequestsApprox": 6192,
@@ -454,7 +454,7 @@
         "adapter": "knex",
         "p99": 13,
         "ci95": [
-          13,
+          12,
           14
         ],
         "nRequestsApprox": 67992,
@@ -1055,7 +1055,7 @@
         "p99": 120,
         "ci95": [
           109,
-          138.5
+          138
         ],
         "nRequestsApprox": 20760,
         "errors": 0,
@@ -1123,19 +1123,19 @@
       {
         "pair": "drizzle>knex",
         "ratio": 1.13,
-        "paired_perm_p": 0.00004999750012499375,
+        "paired_perm_p": 0.0000999950002499875,
         "wilcoxon_p": 0.0002
       },
       {
         "pair": "typeorm>drizzle",
         "ratio": 1.07,
-        "paired_perm_p": 0.000599970001499925,
+        "paired_perm_p": 0.0006499675016249188,
         "wilcoxon_p": 0.002
       },
       {
         "pair": "objection>typeorm",
         "ratio": 1.01,
-        "paired_perm_p": 0.4273786310684466,
+        "paired_perm_p": 0.4329283535823209,
         "wilcoxon_p": 0.4382
       },
       {
@@ -1161,7 +1161,7 @@
       {
         "pair": "knex>pg",
         "ratio": 1.03,
-        "paired_perm_p": 0.12149392530373482,
+        "paired_perm_p": 0.12709364531773412,
         "wilcoxon_p": 0.088
       },
       {
@@ -1173,25 +1173,25 @@
       {
         "pair": "objection>drizzle",
         "ratio": 1.08,
-        "paired_perm_p": 0.0023998800059997,
+        "paired_perm_p": 0.0018999050047497626,
         "wilcoxon_p": 0.005
       },
       {
         "pair": "sequelize>objection",
         "ratio": 1.07,
-        "paired_perm_p": 0.002449877506124694,
+        "paired_perm_p": 0.0025498725063746812,
         "wilcoxon_p": 0.0063
       },
       {
         "pair": "typeorm>sequelize",
         "ratio": 1.03,
-        "paired_perm_p": 0.10179491025448728,
+        "paired_perm_p": 0.10779461026948653,
         "wilcoxon_p": 0.1002
       },
       {
         "pair": "prisma>typeorm",
         "ratio": 1.08,
-        "paired_perm_p": 0.00004999750012499375,
+        "paired_perm_p": 0.0000999950002499875,
         "wilcoxon_p": 0.0002
       },
       {
@@ -1223,7 +1223,7 @@
       {
         "pair": "prisma>typeorm",
         "ratio": 1.03,
-        "paired_perm_p": 0.05339733013349333,
+        "paired_perm_p": 0.05399730013499325,
         "wilcoxon_p": 0.0682
       },
       {
@@ -1235,7 +1235,7 @@
       {
         "pair": "sequelize>objection",
         "ratio": 1.05,
-        "paired_perm_p": 0.00014999250037498125,
+        "paired_perm_p": 0.000199990000499975,
         "wilcoxon_p": 0.0004
       },
       {
@@ -1255,37 +1255,37 @@
       {
         "pair": "knex>drizzle",
         "ratio": 1.08,
-        "paired_perm_p": 0.010099495025248737,
+        "paired_perm_p": 0.011049447527623619,
         "wilcoxon_p": 0.0129
       },
       {
         "pair": "typeorm>knex",
         "ratio": 0.96,
-        "paired_perm_p": 0.25573721313934306,
+        "paired_perm_p": 0.26183690815459226,
         "wilcoxon_p": 0.2417
       },
       {
         "pair": "mikroorm>typeorm",
         "ratio": 1.04,
-        "paired_perm_p": 0.16759162041897904,
+        "paired_perm_p": 0.15999200039998,
         "wilcoxon_p": 0.1478
       },
       {
         "pair": "sequelize>mikroorm",
         "ratio": 1.13,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00014999250037498125,
         "wilcoxon_p": 0.0004
       },
       {
         "pair": "prisma>sequelize",
         "ratio": 1.08,
-        "paired_perm_p": 0.0012999350032498376,
+        "paired_perm_p": 0.0007999600019999,
         "wilcoxon_p": 0.0018
       },
       {
         "pair": "objection>prisma",
         "ratio": 1.1,
-        "paired_perm_p": 0.0005499725013749313,
+        "paired_perm_p": 0.00039998000099995,
         "wilcoxon_p": 0.0009
       }
     ],
@@ -1293,43 +1293,43 @@
       {
         "pair": "knex>pg",
         "ratio": 1.25,
-        "paired_perm_p": 0.0039998000099995,
+        "paired_perm_p": 0.004549772511374431,
         "wilcoxon_p": 0.0164
       },
       {
         "pair": "drizzle>knex",
         "ratio": 1.05,
-        "paired_perm_p": 0.44132793360331984,
+        "paired_perm_p": 0.44142792860356983,
         "wilcoxon_p": 0.5558
       },
       {
         "pair": "objection>drizzle",
         "ratio": 1.16,
-        "paired_perm_p": 0.021498925053747314,
+        "paired_perm_p": 0.021648917554122293,
         "wilcoxon_p": 0.0249
       },
       {
         "pair": "prisma>objection",
         "ratio": 1.24,
-        "paired_perm_p": 0.0011499425028748563,
+        "paired_perm_p": 0.0010999450027498626,
         "wilcoxon_p": 0.0072
       },
       {
         "pair": "sequelize>prisma",
         "ratio": 0.98,
-        "paired_perm_p": 0.5346232688365582,
+        "paired_perm_p": 0.5348732563371832,
         "wilcoxon_p": 0.5034
       },
       {
         "pair": "typeorm>sequelize",
         "ratio": 1.05,
-        "paired_perm_p": 0.22083895805209738,
+        "paired_perm_p": 0.22268886555672215,
         "wilcoxon_p": 0.3282
       },
       {
         "pair": "mikroorm>typeorm",
         "ratio": 1.23,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00004999750012499375,
         "wilcoxon_p": 0.0012
       }
     ],
@@ -1337,19 +1337,19 @@
       {
         "pair": "mysql2>knex",
         "ratio": 1.04,
-        "paired_perm_p": 0.001399930003499825,
+        "paired_perm_p": 0.00119994000299985,
         "wilcoxon_p": 0.003
       },
       {
         "pair": "objection>mysql2",
         "ratio": 1.08,
-        "paired_perm_p": 0.000199990000499975,
+        "paired_perm_p": 0.0000999950002499875,
         "wilcoxon_p": 0.0007
       },
       {
         "pair": "typeorm>objection",
         "ratio": 1.09,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00004999750012499375,
         "wilcoxon_p": 0.0002
       },
       {
@@ -1361,7 +1361,7 @@
       {
         "pair": "drizzle>sequelize",
         "ratio": 1.04,
-        "paired_perm_p": 0.01344932753362332,
+        "paired_perm_p": 0.0143992800359982,
         "wilcoxon_p": 0.0237
       },
       {
@@ -1373,7 +1373,7 @@
       {
         "pair": "prisma>mikroorm",
         "ratio": 1.06,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00004999750012499375,
         "wilcoxon_p": 0.0003
       }
     ],
@@ -1381,13 +1381,13 @@
       {
         "pair": "mysql2>knex",
         "ratio": 1.05,
-        "paired_perm_p": 0.0008999550022498875,
+        "paired_perm_p": 0.0007999600019999,
         "wilcoxon_p": 0.0035
       },
       {
         "pair": "objection>mysql2",
         "ratio": 1.09,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00004999750012499375,
         "wilcoxon_p": 0.0001
       },
       {
@@ -1399,13 +1399,13 @@
       {
         "pair": "sequelize>typeorm",
         "ratio": 1.06,
-        "paired_perm_p": 0.0010499475026248687,
+        "paired_perm_p": 0.00119994000299985,
         "wilcoxon_p": 0.0024
       },
       {
         "pair": "drizzle>sequelize",
         "ratio": 1.08,
-        "paired_perm_p": 0.00004999750012499375,
+        "paired_perm_p": 0.0000999950002499875,
         "wilcoxon_p": 0.0001
       },
       {
@@ -1425,7 +1425,7 @@
       {
         "pair": "knex>mysql2",
         "ratio": 1.06,
-        "paired_perm_p": 0.0005499725013749313,
+        "paired_perm_p": 0.000199990000499975,
         "wilcoxon_p": 0.0009
       },
       {
@@ -1449,7 +1449,7 @@
       {
         "pair": "objection>sequelize",
         "ratio": 1.03,
-        "paired_perm_p": 0.0743962801859907,
+        "paired_perm_p": 0.07809609519524024,
         "wilcoxon_p": 0.0587
       },
       {
@@ -1469,43 +1469,43 @@
       {
         "pair": "typeorm>mysql2",
         "ratio": 0.99,
-        "paired_perm_p": 0.7302634868256587,
+        "paired_perm_p": 0.7332633368331584,
         "wilcoxon_p": 0.8859
       },
       {
         "pair": "knex>typeorm",
         "ratio": 1.05,
-        "paired_perm_p": 0.2874356282185891,
+        "paired_perm_p": 0.2920353982300885,
         "wilcoxon_p": 0.349
       },
       {
         "pair": "mikroorm>knex",
         "ratio": 1,
-        "paired_perm_p": 0.9174541272936353,
+        "paired_perm_p": 0.9230038498075096,
         "wilcoxon_p": 0.8973
       },
       {
         "pair": "sequelize>mikroorm",
         "ratio": 1.09,
-        "paired_perm_p": 0.017149142542872857,
+        "paired_perm_p": 0.01584920753962302,
         "wilcoxon_p": 0.0229
       },
       {
         "pair": "drizzle>sequelize",
         "ratio": 1,
-        "paired_perm_p": 0.9274536273186341,
+        "paired_perm_p": 0.9265036748162592,
         "wilcoxon_p": 0.8704
       },
       {
         "pair": "objection>drizzle",
         "ratio": 1.21,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00004999750012499375,
         "wilcoxon_p": 0.0001
       },
       {
         "pair": "prisma>objection",
         "ratio": 1.2,
-        "paired_perm_p": 0.0000999950002499875,
+        "paired_perm_p": 0.00004999750012499375,
         "wilcoxon_p": 0.0001
       }
     ],
@@ -1513,43 +1513,43 @@
       {
         "pair": "objection>mysql2",
         "ratio": 1.03,
-        "paired_perm_p": 0.5012749362531873,
+        "paired_perm_p": 0.5001749912504375,
         "wilcoxon_p": 0.5903
       },
       {
         "pair": "mikroorm>objection",
         "ratio": 0.98,
-        "paired_perm_p": 0.6904654767261637,
+        "paired_perm_p": 0.6970151492425378,
         "wilcoxon_p": 0.4924
       },
       {
         "pair": "drizzle>mikroorm",
         "ratio": 1.09,
-        "paired_perm_p": 0.1375931203439828,
+        "paired_perm_p": 0.13394330283485825,
         "wilcoxon_p": 0.2236
       },
       {
         "pair": "sequelize>drizzle",
         "ratio": 0.98,
-        "paired_perm_p": 0.583870806459677,
+        "paired_perm_p": 0.5772211389430528,
         "wilcoxon_p": 0.4488
       },
       {
         "pair": "typeorm>sequelize",
         "ratio": 0.99,
-        "paired_perm_p": 0.8509574521273936,
+        "paired_perm_p": 0.856207189640518,
         "wilcoxon_p": 0.9356
       },
       {
         "pair": "knex>typeorm",
         "ratio": 1.05,
-        "paired_perm_p": 0.4337283135843208,
+        "paired_perm_p": 0.42987850607469624,
         "wilcoxon_p": 0.5011
       },
       {
         "pair": "prisma>knex",
         "ratio": 1.16,
-        "paired_perm_p": 0.008899555022248887,
+        "paired_perm_p": 0.009249537523123843,
         "wilcoxon_p": 0.0038
       }
     ]

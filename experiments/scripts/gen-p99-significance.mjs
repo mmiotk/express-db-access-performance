@@ -14,12 +14,16 @@ const resultsDir = join(here, '..', 'results');
 const raw = JSON.parse(readFileSync(join(resultsDir, 'raw.json'), 'utf8'));
 
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-const rand = mulberry32(0x5eed);
+function fnv1a(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
+const rand = mulberry32(0x5eed);          // stream for the paired tests (ratio CI, permutation)
 const PERM_B = 20000;
-function bootCI(samples, B = 2000) {
+// Per-cell deterministically-seeded p99 CI (same formula/seed/B as ci-tables.mjs), so a
+// layer's p99 CI is identical whether it appears as A or B and matches the pattern tables.
+function bootCI(samples, key, B = 5000) {
   if (!samples || samples.length < 2) return [NaN, NaN];
+  const r = mulberry32(fnv1a(key));
   const meds = [];
-  for (let b = 0; b < B; b++) { const s = samples.map(() => samples[Math.floor(rand() * samples.length)]); meds.push(median(s)); }
+  for (let b = 0; b < B; b++) { const s = samples.map(() => samples[Math.floor(r() * samples.length)]); meds.push(median(s)); }
   meds.sort((x, y) => x - y);
   return [Math.round(meds[Math.floor(0.025 * B)]), Math.round(meds[Math.floor(0.975 * B)])];
 }
@@ -30,7 +34,7 @@ const get = (a, eng) => raw.find((r) => r.adapter === a && r.endpoint === 'deep_
 
 function block(engine) {
   const ranked = IDIOM.map((a) => ({ a, r: get(a, engine) })).filter((x) => x.r && x.r.p99_samples).sort((x, y) => x.r.p99 - y.r.p99);
-  const cim = (r) => { const [lo, hi] = bootCI(r.p99_samples); return `${r.p99}~[${lo}--${hi}]`; };
+  const cim = (r) => { const [lo, hi] = bootCI(r.p99_samples, `${r.adapter}|${engine}|deep_fetch|p99`); return `${r.p99}~[${lo}--${hi}]`; };
   const lines = [];
   for (let i = 0; i + 1 < ranked.length; i++) {
     const A = ranked[i], B = ranked[i + 1]; // A = lower (better) p99, B = higher (worse) p99
