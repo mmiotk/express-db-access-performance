@@ -328,10 +328,12 @@ the equivalence conclusion is not sensitive to the exact value within a few
 percent.
 
 \subsection{Experimental setup}
-All measurements were taken on 2026-07-16 and 2026-07-17 on a single host: the
-primary matrix ran overnight, and the order-invariance, durability, same-SQL,
+The measurements were taken on 2026-07-16 to 2026-07-18 on a single host: the
+primary matrix ran overnight and the order-invariance, durability, same-SQL,
 open-loop, fan-out, equal-CPU, concurrency-sweep, utilization, pool-size,
-cluster, mixed-workload, wait-event, and post-restart runs followed (a
+cluster, mixed-workload, wait-event, and post-restart runs followed over
+2026-07-16 and 2026-07-17, with the longer-window tail re-measurement taken on
+2026-07-18 (a
 virtualized Intel Xeon Gold~6140 instance, 16~vCPUs, single NUMA node, 126~GB
 RAM; Linux~6.17; Node.js~24.18.0; Express~5), with the database engines
 (PostgreSQL~18.4, MySQL~9.7.1) running locally. Each library is pinned to the
