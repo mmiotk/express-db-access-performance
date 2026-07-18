@@ -64,7 +64,7 @@ library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology}). 
 fixed pool makes this an \emph{equal configured connection limit} comparison, not a
 per-layer-tuned one: it isolates the access layer from pool tuning but does not
 show each layer's throughput under its own best pool. A per-layer pool-size
-frontier on both engines (Supplement Tables~S7 and~S24) addresses this directly:
+frontier on both engines (Supplement Tables~S7 and~S25) addresses this directly:
 the ordering is preserved from a pool of 1 to 50, and each layer's throughput
 saturates well below 50, so the fixed-pool choice does not drive the ranking. A
 mixed read/write workload (Supplement Table~S26) likewise preserves the read

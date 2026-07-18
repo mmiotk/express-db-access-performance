@@ -12,289 +12,153 @@
 \newcommand{\euro}{EUR}
 \pagestyle{plain}
 \begin{document}
-\section*{Response to Reviewer (Revision Round 5)}
+\section*{Response to Reviewer (Revision Round 6)}
 
 Dear Editor and Reviewer,
 
-Thank you for the exceptionally careful fifth reading of our manuscript, \emph{A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL}, and for judging the remaining issues "major but potentially correctable" with "a credible publication path in IST." We have taken every point seriously and made the strongest possible response to the one you ranked potentially fatal.
+Thank you for the sixth reading of my manuscript, \emph{A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL}, and for the clear verdict that the dataset and artifact are publishable while the remaining obstacle is interpretation --- the paper claiming more causal specificity and category generality than a single-host, default-configuration design can establish. I have taken that framing seriously and made it the organizing principle of this revision.
 
-Below we answer point by point, following the structure of the review (\S{}6.1--\S{}6.10, \S{}7 minors, \S{}8 statistics, \S{}9 artifact, \S{}11 presentation, and the eight questions of \S{}13). Section and line references are to the line-numbered \texttt{review}-class build of the revised submission; we quote the revised manuscript verbatim so every claimed change is verifiable.
+I answer below in the reviewer's own order: the governing change first (the Priority-1 retraction), then the prioritized checklist P1--P10, then the \S{}7 minor points, then the eight questions Q1--Q8. I quote the revised manuscript briefly so every claimed change is verifiable, and I cite sections by name rather than line number, since line numbers drift between builds.
 
 ---
 
-\section*{The governing change this round: version currency (your Priority-1 concern)}
+\section*{The governing change this round: retracting the same-SQL causal claim (Priority 1)}
 
-You were right, and the correction has become the paper's spine. The earlier headline was measured on \textbf{Prisma 5.22}, whose in-process Rust query engine produced the \textasciitilde{}498\% / five-application-core CPU anomaly, at a time when \textbf{Prisma 7 (the Rust-free rewrite) was the contemporary stable release}. Our freeze rule justified only "install on the measurement date," which does not justify a superseded major version.
+You were right that the earlier text over-read the same-SQL control. It claimed that the eager-loading \emph{strategy}, not the execution machinery, drove most of the idiomatic gap --- a causal decomposition the design cannot support, because collapsing every layer onto identical SQL changes query strategy, query count, prepared-statement behaviour, the raw-versus-ORM API, and result marshalling all at once. I have \textbf{withdrawn the causal attribution everywhere and reworded the control as a pure bounding contrast}: both abstracts, the Results same-SQL subsection, the Discussion, and the Conclusion.
 
-We did not patch the prose around this; we \textbf{re-froze every library to the latest stable release compatible with the harness at the freeze date (2026-07-15) and re-ran the entire 90-cell primary matrix and every secondary experiment.} The result vindicates both your concern and the paper's own thesis. On Prisma 7.8 (Rust-free) the five-core anomaly is gone --- the maximum application-side CPU across all 90 cells is now 110\% --- and Prisma falls to mid-to-low throughput (last on the MySQL insert, near the bottom of aggregation). The old "Prisma ties native at a CPU premium" finding is \textbf{retired}, and we reframe the old$\to$new contrast as the paper's central demonstrated claim: rankings are perishable; the reusable instrument, design, and pitfalls checklist are the durable contribution.
+The abstract now presents the collapse as a bound, not a mechanism: ``the deep/nested fetch spreads 7.15$\times$ (PostgreSQL) and 4.96$\times$ (MySQL) between native and the slowest ORM, narrowing to 1.68$\times$ and 2.01$\times$ once every layer runs identical SQL, a compound control that bounds the combined query-strategy-and-formulation contribution without isolating a single mechanism.''
 
-The pre-specified freeze rule is now stated in the Study Design (\S{}Experimental setup, lines 321--332):
+The Results \emph{Same-SQL control} subsection states the limitation explicitly: ``Replacing each layer's idiomatic path with identical SQL bounds how much of the spread is attributable to query strategy and formulation \emph{jointly}; because the intervention changes several mechanisms together, it does not separate strategy from execution machinery.'' Where I previously asserted the cause of Prisma's slow raw path, the sentence is now labelled conjecture: ``we conjecture this reflects dispatch and marshalling overhead in its raw API rather than SQL execution, a hypothesis the composite contrast cannot confirm.''
 
-> "Each library is pinned to the \emph{latest stable release compatible with the harness > adapter contract} as of the freeze date (2026-07-15), recorded from the committed > lockfile and an automated environment capture (Supplement Table S11); a library is > pinned to an earlier release only where the latest stable breaks the contract or > the byte-equivalence cross-check, and any such deviation is documented per layer. > Only Sequelize invokes this exception: its version-7 line is a prerelease, so the > current 6.x stable line is used. [\ldots{}] Because access-layer performance is > version-sensitive, this pins a dated snapshot rather than a permanent ranking, > exactly one headline of which a superseded pin produced and a re-freeze retired."
-
-The retirement is stated head-on in the Discussion (lines 4--24):
-
-> "An earlier campaign [\ldots{}] found the ORM Prisma (then version 5.22, built on an > in-process Rust query engine) tying the native driver on the deep/nested fetch > while drawing about five application cores [\ldots{}]. Re-running the \emph{identical} > harness, workload, and host against the latest stable releases (Prisma 7.8, now a > Rust-free TypeScript client executing through a JavaScript driver adapter) retired > that finding outright. No layer now draws more than about one application core > (the maximum application-side CPU across all 90 cells is 110\%), and Prisma has > fallen to mid-to-low throughput across the matrix [\ldots{}]. Nothing changed but one > dependency's internals across a single major version. This is the paper's central > claim made concrete: access-layer performance is highly sensitive to > implementation and version, so any specific ranking is perishable, and the durable > contributions are the reusable harness, the benchmark design, and the pitfalls > checklist."
-
-The pinned-version table (Supplement Table S11) now records \texttt{@prisma/client} 7.8.0, \texttt{drizzle-orm} 0.45.2, \texttt{typeorm} 1.1.0, \texttt{@mikro-orm/core} 7.1.6, \texttt{express} 5.2.1, \texttt{autocannon} 8.0.0, \texttt{mysql2} 3.23.0, and \texttt{sequelize} 6.37.8 (documented exception).
-
-This re-run makes Questions 1 and 2 largely moot; we answer them explicitly in \S{}13.
-
-\section*{Major concerns (\S{}6)}
-
-\subsection*{\S{}6.1 --- Saturated p99 is a saturation outcome; matched utilization elevated to co-primary}
-
-We agree, and the paper now names the saturated tail as an overload/queueing measurement and elevates the matched-utilization result to a co-primary latency construct in the \emph{main text}. The Tail-latency subsection (Results, lines 165--171) now opens:
-
-> "so the tail includes connection-acquisition queueing --- the tail a deployment sees > at saturation, not intrinsic per-request latency, which the open-loop experiment > below reports below saturation."
-
-and closes with the utilization result (lines 193--203):
-
-> "Offering each layer 50/70/85/95\% of \emph{its own} saturating throughput [\ldots{}] the tails > converge: at 50\% utilization every layer holds p99 near 2--5 ms on both engines > regardless of its saturated rank [\ldots{}]. At matched utilization the large saturated > gap (\texttt{pg} 20 ms versus MikroORM 116 ms) therefore largely dissolves; it is a > capacity-and-queueing effect, not a difference in intrinsic tail latency."
-
-The abstract now states the same demotion: "Large saturated-p99 gaps are a capacity effect that matched utilization largely closes." The interpretation is thus propagated to the abstract, and via the Discussion "Queueing under load" paragraph and the Threats "internal validity" paragraph, closing the propagation gap you identified as recurring.
-
-\subsection*{\S{}6.2 --- The 50-connection point now has an external rationale: three named estimands}
-
-We stop privileging the equal-demand point implicitly. The Study Design (lines 22--33) now names three operating conditions and maps each to its experiment:
-
-> "\emph{Equal external demand} is the saturated closed-loop matrix, every layer > receiving the identical request stream at a fixed 50-connection load. \emph{Equal > utilization} is the coordinated-omission-corrected open-loop sweep, each layer > offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput. An > \emph{equal compute budget} is the equal-CPU control, the server confined to a fixed > number of cores [\ldots{}]. These answer different questions and need not agree --- the > saturated condition measures capacity under overload, matched utilization the > near-intrinsic per-request latency, the equal budget the compute cost of the same > work --- so we report all three and say which each result speaks to."
-
-RQ1 (Introduction, lines 79--83) now explicitly asks how the difference "depend[s] on the operating condition: equal external demand, equal utilization, or an equal compute budget."
-
-\subsection*{\S{}6.3 --- "idiomatic" construct validity; "abstraction cost" removed}
-
-Two changes. First, the adapter-selection rule is now pre-specified and auditable (Study Design, lines 123--128):
-
-> "The idiomatic API was fixed by a rule decided \emph{before} measurement --- the > eager-loading API each layer's official documentation presents first for the > pinned version --- so the treatment is documented, not editorial; Supplement Table > S16 and \texttt{METHODOLOGY.md} record, per layer, that API with its \textbf{documentation page > and version}, its round-trip count, the documented alternative we did \emph{not} use, > and that query logging, hooks, and validation are off."
-
-The no-maintainer-review disclosure is retained (lines 48--51): "no evaluated library's maintainers were involved or invited to inspect the adapters, which does not remove the consequential choices any benchmark author makes [\ldots{}]; we disclose these and release the harness for inspection."
-
-Second, we replaced the value-laden "abstraction cost" throughout with the neutral \emph{observed implementation-and-strategy difference} (a \texttt{grep} for "abstraction" now returns zero interpretive uses); e.g. the Discussion (line 27) reads "the idiomatic implementation-and-strategy difference is specific to the access \emph{pattern}."
-
-\subsection*{\S{}6.4 --- "equal configured connection limit"; same-SQL as a compound bounding contrast}
-
-The pool estimand is renamed and its sufficiency shown (Threats, external validity, lines 64--69):
-
-> "The fixed pool makes this an \emph{equal configured connection limit} comparison, not > a per-layer-tuned one: it isolates the access layer from pool tuning but does not > show each layer's throughput under its own best pool. A per-layer pool-size > frontier on both engines (Supplement Tables S7 and S24) addresses this directly: > the ordering is preserved from a pool of 1 to 50, and each layer's throughput > saturates well below 50, so the fixed-pool choice does not drive the ranking."
-
-The same-SQL control is kept, but framed strictly as a compound bounding contrast that isolates no single factor (Results, lines 74--77):
-
-> "The contrast is composite --- it changes query strategy, query count, > prepared-statement behavior, the raw versus ORM API, and result marshalling > together --- so the residual difference is bounded but no single factor is > isolated."
-
-The residual-overreach phrasings you flagged ("abstraction is cheap when a layer merely forwards"; "recovers most of the deep fetch's cost") have been removed.
-
-\subsection*{\S{}6.5 --- Single-host scope; the node-cluster result; RQ1 "overhead" $\to$ "performance difference"}
-
-RQ1 no longer presupposes a direction. Its results heading (line 26) now reads "\textbf{RQ1: performance difference relative to the native baseline}," and the RQ itself (Introduction, line 79) asks about the "throughput and response-time-p99 \emph{difference} [\ldots{}] relative to the native-driver baseline."
-
-The single-host scope is declared (Study Design, lines 58--61: "which factors are held constant, which vary, and which are uncontrolled on this single virtualized host --- the reason we report results for this configuration rather than as general library performance"). The feasible test of your specific worry --- that a low single-process layer might merely be leaving cores idle --- is the node-cluster experiment (Results, lines 270--276):
-
-> "under a shared-port \texttt{node} cluster (Supplement Table S23) Prisma rises from 1,117 > to 2,275 to 4,449 req/s at 1, 2, and 4 workers on PostgreSQL, reaching native-like > aggregate throughput at four workers [\ldots{}]. Prisma's low single-process throughput > is thus recoverable by running more processes, at roughly four times the cores."
-
-\subsection*{\S{}6.6 --- Writes transfer \emph{moderately}; statistics broadened (with the honest partial)}
-
-The write ranking is no longer said to "not transfer." It now transfers \emph{moderately} (Discussion, lines 74--76):
-
-> "The write ranking transfers only moderately across engines (Spearman \$\textbackslash\{\}rho=0.68\$, > against 0.86--0.89 for the reads), so a single-engine write comparison invites the > wrong generalization either way [\ldots{}]."
-
-On the statistics we made three additions and disclose one partial. (i) Every primary throughput cell now carries a within-campaign 95\% bootstrap CI in the tables (\texttt{deep\_fetch}, \texttt{write}; e.g. \texttt{pg} deep fetch 3,687 [3,602--3,737], \texttt{mysql2} insert 1,753 [1,717--1,763]). (ii) The paired adjacent-rank significance table (Table \texttt{tab:significance}) reports, per adjacent pair, the geometric-mean paired ratio with a paired bootstrap CI, dominance, and permutation \emph{p}. (iii) The rank table (\texttt{tab:ranks}) backs the correlations with per-layer PG-vs-MySQL ranks (\$\textbackslash\{\}rho=0.86\$ deep fetch, \$0.68\$ insert; Prisma rank 4$\to$7).
-
-We are explicit that the \textbf{effect-size-table extension is partial}: the full adjacent-pair permutation table is provided for the deep/nested fetch (the pattern that carries the pairwise claims), while writes and the cross-engine contrast are reported through the within-campaign CIs and the rank table descriptively; and the p99 columns remain point medians rather than carrying their own CIs. We preferred to disclose this scope than to over-generate tables that the RQ claims do not rest on.
-
-\subsection*{\S{}6.7 --- Novelty search made auditable}
-
-The literature search is now reproducible (Related Work, lines 6--21):
-
-> "We located it with a structured scoping search (not a systematic review) of the > ACM Digital Library, IEEE Xplore, Scopus, and Google Scholar (July 2026, over > titles, abstracts, and keywords), crossing an access-layer set [\ldots{}] with context > [\ldots{}], engine [\ldots{}], and measurement [\ldots{}] sets, restricted to 2006--July 2026 and > followed by backward and forward citation chaining from the closest hits. We > retained empirical comparisons of relational access layers or engines and excluded > non-empirical, non-relational, and single-library studies. The exact strings, > per-source dates, and screening decisions are archived with the replication > package (\texttt{notes/related-work-search.md}); because this is a scoping rather than > exhaustive search, we scope every resulting gap claim to the sources searched."
-
-"we found none" is now everywhere softened to "in the sources searched."
-
-\section*{Statistics (\S{}8)}
-
-\begin{itemize}
-  \item \textbf{CI relabelling.} The bare "95\% CI" is now labelled a \emph{within-campaign} repeated-run
-\end{itemize}
-
-interval in the table captions ("median with a within-campaign 95\% bootstrap interval over the 25 repeated runs --- run-to-run variability within one host and campaign, not across hardware or days").
-
-\begin{itemize}
-  \item \textbf{Blocked-permutation spec.} The interaction test is specified compactly (Study
-\end{itemize}
-
-Design, lines 291--296): "for each layer and replicate we form the paired PostgreSQL-minus-MySQL log-throughput difference \$D\_\{\textbackslash\{\}ell,i\}\$ and, under the null of no interaction, permute the layer labels of \$\textbackslash\{\}\{D\_\{\textbackslash\{\}ell,i\}\textbackslash\{\}\}\$ \emph{within} each replicate \$i\$ (20,000 permutations); the statistic is the between-layer \$F\$ of a randomized-block ANOVA on \$D\$ with replicate as the block." The within-replicate permutation is the exchangeability statement.
-
-\begin{itemize}
-  \item \textbf{TOST sharpened.} The equivalence margin is now stated as author-selected, not a
-\end{itemize}
-
-general threshold (lines 302--312): "The \$\textbackslash\{\}pm5\textbackslash\{\}\%\$ equivalence margin is an author-selected smallest effect of practical interest for \emph{this} study, not a general engineering threshold [\ldots{}]. We chose it before the analysis but did not preregister it."
-
-\begin{itemize}
-  \item \textbf{Post-selection stated.} The adjacent-rank comparisons are treated descriptively:
-\end{itemize}
-
-"Because the seven adjacent pairs follow the \emph{observed} ranking rather than a preregistered one, we treat their significances descriptively (post-hoc adjacent-rank comparisons)."
-
-\begin{itemize}
-  \item \textbf{p99 sample size / histogram resolution.} The Measurement procedure now reports the
-\end{itemize}
-
-per-run request count behind each p99 ($\approx$5,800--6,200 requests per run, roughly 60 in the upper 1\% tail, at millisecond histogram resolution); see Q6.
-
-\section*{Artifact (\S{}9)}
-
-\begin{itemize}
-  \item \textbf{Prisma 7 driver adapters disclosed.} Supplement Table S11's note and the Threats
-\end{itemize}
-
-section (lines 80--85) disclose the new architecture and its one asymmetry: "Prisma 7 is Rust-free and connects through an official JS driver adapter (\texttt{@prisma/adapter-pg} for PostgreSQL, \texttt{@prisma/adapter-mariadb} with the \texttt{mariadb} 3.5.3 driver for MySQL, as Prisma ships no \texttt{mysql2} adapter)" --- "an asymmetry with the other MySQL layers."
-
-\begin{itemize}
-  \item \textbf{Versions table refreshed} to the re-frozen pins (S11, above).
-  \item \textbf{Clean-room reproduction.} From the archived Zenodo tarball (release v1.5.2, DOI
-\end{itemize}
-
-10.5281/zenodo.21411395) --- not the development checkout --- a one-command setup regenerates every main-text and supplement table from the raw per-cell records; the harness is "released so the full matrix can be re-run with one command against a containerized or local PostgreSQL and MySQL" (Study Design, replication package). This confirms the archived package regenerates the tables (Question 7).
-
-\section*{Presentation (\S{}11) and minors (\S{}7)}
-
-\begin{itemize}
-  \item \textbf{Length.} Counting references and floats per the IST guide (each float 200 words,
-\end{itemize}
-
-references included), the main text is now \textbf{14,917 words}, under the 15,000-word limit (\texttt{word-count.md}); 27 tables and one figure are in the numbered online supplement.
-
-\begin{itemize}
-  \item \textbf{Structure.} The paper is organized around three findings --- workload-dependent
-\end{itemize}
-
-differences (RQ1/RQ3), read-vs-write engine transfer (RQ2), and capacity-vs-utilization (Tail latency) --- with defensive sensitivity prose moved to the supplement.
-
-\begin{itemize}
-  \item *\emph{byte-identical }data\emph{ vs physical state.}* Corrected (Study Design, lines 90--93):
-\end{itemize}
-
-"every engine receives the same seed \emph{data payload} (byte-identical row values); the on-disk physical representation, index layout, and collation naturally differ between engines."
-
-\begin{itemize}
-  \item \textbf{RAM working-set caveat softened} (lines 94--95): "the measurements \emph{emphasize}
-\end{itemize}
-
-the access layer's per-request instruction, protocol, and mapping cost with disk-read latency largely removed; engine-side query execution, buffer management, locking, and logging remain part of every measurement."
-
-\begin{itemize}
-  \item \textbf{"1.5$\times$ \ldots{} small" removed} from the abstract, which now reports the same-SQL spread
-\end{itemize}
-
-numerically ("narrowing to 1.68$\times$ and 2.0$\times$") without the editorializing adjective.
-
-\begin{itemize}
-  \item The Knex n=24 exclusion is noted as prespecified (Study Design, lines 209--213).
-\end{itemize}
-
-\section*{New pitfall added by this very re-run: MikroORM 7 removed \texttt{persistAndFlush}}
-
-The re-run surfaced a fresh, current instance of the "correctness before timing" pitfall, which the checklist now includes. Results (Measurement stability, lines 213--217):
-
-> "on the current versions MikroORM 7 removed \texttt{persistAndFlush}, so every MikroORM > \emph{write} threw an HTTP 500 --- which returns faster than a real insert, so the broken > cells briefly showed \emph{inflated} throughput and spuriously led the MySQL insert > until the non-2xx counts flagged them."
-
-Discussion (lines 96--102) generalizes it: "Timing is meaningless until every response is a real 2xx, so the error counter is the write path's correctness gate as byte-equality is the read path's." The supplement checklist item 1 ("Correctness before timing") covers it.
+The Discussion paragraph \emph{The same-SQL control} closes the loop: the contrast ``bounds the combined contribution of query strategy and formulation without isolating a single factor such as eager-loading strategy,'' and the Conclusion now reads that ``running every layer on identical SQL narrows the spread substantially, but because that contrast changes several mechanisms together it does not attribute the difference to any single one.'' The phrase ``strategy gap'' is gone; the residual is now the ``idiomatic-to-same-SQL gap'' throughout.
 
 ---
 
-\section*{The eight questions (\S{}13)}
+\section*{Prioritized checklist (P1--P10)}
 
-\textbf{Q1 --- Why Prisma 5.22 in July 2026?} Under the old install-on-date rule it was the copy installed then; the revision re-freezes to the latest stable (Prisma 7.8) and documents a per-layer freeze rule, so the concern is moot and, more importantly, turned the paper's thesis into a demonstrated result (Study Design lines 321--332; Discussion lines 4--24).
+\subsection*{P1 --- Same-SQL causal claim retracted (governing change)}
 
-\textbf{Q2 --- Exact version rule, fixed before results?} Yes: the Stage-0 latest-stable rule quoted above, applied uniformly, with deviations documented (Sequelize 7 is a prerelease, so the 6.x stable line is used; Prisma's MySQL adapter asymmetry is disclosed). No result influenced a version choice.
+Addressed in full above. The causal ``strategy, not machinery'' reading is withdrawn from both abstracts, the Results same-SQL subsection, the Discussion, and the Conclusion, and every residual is relabelled a bounded compound contrast. As one visible token of the rename, the Results now report that ``MikroORM shows the largest idiomatic-to-same-SQL gap,'' not a strategy gap.
 
-\textbf{Q3 --- Why 50 connections as the primary point?} It is the \emph{equal-external-demand} estimand and is no longer privileged: equal utilization and an equal compute budget are now co-primary operating conditions, each mapped to its experiment (Study Design lines 22--33).
+\subsection*{P2 --- "idiomatic" renamed to a documented, reproducible estimand}
 
-\textbf{Q4 --- Would the conclusions change if matched utilization were primary?} They change in exactly the way you anticipated, and we now foreground it: the large saturated gaps largely reflect capacity and queueing, so at matched utilization the gap "largely dissolves; it is a capacity-and-queueing effect, not a difference in intrinsic tail latency" (Results lines 199--201). The matched-utilization result is now co-primary in the main text.
+I no longer treat documentation order as evidence of production-representative use. The Study Design now states: ``Documentation order is a reproducible selection heuristic, not evidence that the chosen API is performance-optimal or the most common production choice, so we report a documented default-configuration estimand rather than 'the performance of each library used idiomatically'.'' The no-maintainer-review disclosure is retained: ``no evaluated library's maintainers were involved or invited to inspect the adapters.''
 
-\textbf{Q5 --- Were the adapters reviewed by the libraries' maintainers?} No, and this is disclosed as a limitation (Study Design lines 48--51); the alt-loading variants (Supplement Table S18) and the byte-equivalence cross-check bound how far idiomatic representativeness could be off.
+\subsection*{P3 --- Category-level recommendations scoped to the tested implementations}
 
-\textbf{Q6 --- How many requests contribute to each run-level p99 in the slowest cells, and at what histogram resolution?} \texttt{autocannon} records a per-run latency histogram at millisecond resolution; even the slowest deep-fetch cells ($\approx$480--516 req/s over the 12 s window) complete $\approx$5,800--6,200 requests per run, so each run-level p99 is estimated from roughly 60 requests in its upper 1\% tail, and the reported p99 is the median of the 25 such run-level values. This is now stated in the Measurement procedure (Section 3, Methodology).
+The practical guidance no longer generalizes to access-layer \emph{categories}. It now reads: ``the tested thin paths (the native driver and Knex) were the safer default here \emph{for throughput and response-time p99}; whether that advantage generalizes to other implementations of those tiers is a hypothesis for broader study, not a category law,'' and the paragraph opens by scoping the synthesis to ``the benchmarked implementations in this configuration, workload, and host rather than to access-layer categories in general.''
 
-\textbf{Q7 --- Does the Zenodo archive regenerate every table clean-room?} Yes. A clean-room reproduction from the archived v1.5.2 tarball (not the dev checkout) regenerates every main-text and supplement table from the raw per-cell records via the committed one-command pipeline; the table-to-record manifest (\texttt{MANIFEST.md}) traces each cell to its source.
+\subsection*{P4 --- Capacity, overload latency, and matched-utilization latency kept distinct}
 
-\textbf{Q8 --- Which claims survive anonymizing the products to A--I?} The \emph{durable} claims survive the relabelling: (a) the difference is workload-dependent, concentrating in relation-materializing patterns and small where a layer forwards SQL; (b) read rankings transfer across engines while aggregation and writes transfer only moderately (an asymmetry visible only in the dual-engine design); and (c) large saturated-p99 gaps are a capacity-and-utilization effect, not intrinsic tail latency. What does \emph{not} survive anonymization is the specific leaderboard --- precisely the perishability point the retired Prisma result now demonstrates. The contribution is the instrument and the design that let any current leaderboard be re-established, not the leaderboard itself.
+RQ1 now names the three quantities a fixed operating point conflates: ``We keep distinct three quantities that a fixed operating point conflates: \emph{capacity} (saturating throughput), \emph{overload latency} (the saturated p99 under equal external demand), and \emph{latency at matched utilization} (each layer driven at equal fractions of its own capacity).'' The Study Design maps each to its experiment --- equal external demand, equal utilization, and an equal compute budget --- and the abstract reports all three operating conditions rather than one privileged point.
+
+\subsection*{P5 --- p99 tail count validated by a longer-window re-measurement}
+
+Because the primary p99 rests on roughly 60 tail observations per run, I added a 60 s re-measurement of the deep fetch. The Measurement procedure now states: ``A 60 s re-measurement of the deep fetch (five times the requests) preserves the p99 ranking exactly on both engines and barely moves each cell's p99 (Supplement Table S23), so the 12 s window is adequate for the tail comparison.'' The full result is the new Supplement section \emph{Longer-window tail sensitivity}; I give the numbers under Q4 below.
+
+\subsection*{P6 --- Adjacent-rank separation reported descriptively, not as confirmation}
+
+The significance prose is demoted to descriptive pairwise separation with the post-selection stated: ``Because these adjacent pairs were selected after observing the ranking, we read their separation descriptively rather than as independent confirmation of the ordering, and it covers the deep fetch only (Table 6), not the full cross-pattern ranking.'' The Analysis subsection likewise labels them ``post-hoc adjacent-rank comparisons.''
+
+\subsection*{P7 --- Interaction reported as a magnitude, not only a p-floor}
+
+I added a supplement interaction-magnitude table. The main text keeps the honest caveat that the blocked-permutation p reaches its floor and ``conveys little about magnitude,'' and the new Supplement section \emph{Layer-by-engine interaction magnitude} reports the size directly: ``Supplement Table S28 reports \emph{how large} the interaction is, as the PostgreSQL$\div$MySQL throughput ratio per layer and pattern with a 95\% paired-bootstrap interval \ldots{} the reads hold a narrow band across layers ($\approx$1.0--1.6) while the insert scatters from 1.6 to 3.2.''
+
+\subsection*{P8 --- Perishability tempered from a law to a version-sensitivity claim}
+
+Across all six sites the claim is now ``can be version-sensitive,'' anchored to one example rather than generalized. The Discussion heading reads ``Access-layer rankings can be version-sensitive; the instrument is the contribution,'' and the abstract states ``Access-layer rankings can be version-sensitive, as one retired five-core result shows.'' The Prisma case study is condensed to a single paragraph.
+
+\subsection*{P9 --- Length and repetition reduced}
+
+The condensed Prisma narrative and the removal of repeated restatements offset the new disclosures, so the body moved only marginally (11,376 to 11,388 words) while the abstract was tightened from 313 to 298 words; the new floats (longer-window tail, interaction magnitude, insert dispersion) live in the supplement only. Total main-text count under the IST rule is 14,934 words.
+
+\subsection*{P10 --- IST compliance}
+
+The structured abstract is 298 words (under 300); the total is 14,934 words (under 15,000); a top-level \texttt{REPRODUCE.md} was added; the raw-data checksums were regenerated to match the archived set 1:1; and the clean-room reproduction claim is verified (see Q7 and Q8).
 
 ---
 
-\section*{Summary of Changes}
-
-For the editor's convenience:
+\section*{\S{}7 minor points}
 
 \begin{itemize}
-  \item \textbf{Full re-freeze and re-run.} Every library pinned to the latest stable release
+  \item \textbf{Intrinsic latency removed.} The term is gone everywhere; the tail now reads as a
 \end{itemize}
 
-at the 2026-07-15 freeze date; the entire 90-cell matrix and all secondary experiments re-measured (Study Design \S{}Experimental setup; Supplement Table S11).
+capacity effect, e.g. the saturated ladder ``is a capacity-and-queueing effect, not a difference in tail latency at comparable utilization,'' and the closed-loop tail is ``the tail a deployment sees at saturation, not the per-request latency at moderate load.''
 
 \begin{itemize}
-  \item \textbf{Prisma five-core headline retired} and reframed as the paper's central
+  \item \textbf{CRUD-spanning removed.} The endpoints are described as ``five representative access
 \end{itemize}
 
-demonstrated claim that rankings are perishable (Discussion; abstract; Introduction contributions; Conclusion).
+patterns'' in both the Introduction and the Study Design.
 
 \begin{itemize}
-  \item \textbf{Three named operating conditions} (equal demand / equal utilization / equal
+  \item \textbf{Latest-stable qualifier.} The abstract now pins ``the latest stable library versions
 \end{itemize}
 
-compute budget), each mapped to an experiment; matched utilization elevated to co-primary in the main text (Study Design; Results Tail latency; abstract).
+current at the July 2026 freeze,'' matching the per-layer freeze rule in the Study Design and Threats.
 
 \begin{itemize}
-  \item \textbf{RQ1 reworded} from "overhead" to "performance difference relative to native"
+  \item \textbf{Native leads all ten.} The claim is now the exact, verifiable ``the native driver
 \end{itemize}
 
-(Introduction; Results heading).
+leads all ten engine-pattern combinations,'' replacing ``essentially every pattern.''
 
 \begin{itemize}
-  \item \textbf{Pre-specified idiomatic-selection protocol} and no-maintainer disclosure (Study
+  \item \textbf{Vendor-independent qualified.} At first prominent use the Introduction reads ``a
 \end{itemize}
 
-Design; Supplement Table S16, \texttt{METHODOLOGY.md}).
+single, vendor-independent benchmark (authorship only; Section 3 defines the term),'' and the Study Design states ``Vendor independence here means authorship only.''
 
 \begin{itemize}
-  \item \textbf{"equal configured connection limit"} estimand + pool frontier (Threats);
+  \item \textbf{Significance-table caveat.} The table is scoped to the deep fetch, ``not the full
 \end{itemize}
 
-same-SQL kept as a compound bounding contrast (Results; Study Design).
+cross-pattern ranking'' (quoted under P6).
 
 \begin{itemize}
-  \item \textbf{Writes transfer moderately} (\$\textbackslash\{\}rho=0.68\$) rather than "does not transfer"
+  \item \textbf{Kendall's $\tau$ added.} The abstract now reports ``the read ordering is similar across
 \end{itemize}
 
-(Discussion; \texttt{tab:ranks}).
+engines (Spearman $\rho$ $\ge$ 0.86, Kendall $\tau$ $\ge$ 0.71),'' and the supplement carries $\tau$ alongside every reported $\rho$.
 
 \begin{itemize}
-  \item \textbf{Statistics:} within-campaign CIs on every primary throughput cell; paired
+  \item \textbf{Insert dispersion.} A new supplement figure plots the raw per-replicate MySQL insert
 \end{itemize}
 
-adjacent-rank significance table; per-layer rank table; blocked-permutation spec; TOST margin stated as author-selected; effect-size extension disclosed as partial.
+throughput: ``several cells are visibly bimodal or heavy-tailed within a cell, structure a single CV cannot convey, which is why the insert rank correlation and dispersion are reported conservatively.''
 
 \begin{itemize}
-  \item \textbf{Auditable novelty search} (Related Work; \texttt{notes/related-work-search.md}).
-  \item \textbf{New "correctness before timing" pitfall} (MikroORM 7 \texttt{persistAndFlush})
+  \item \textbf{TOST reframed.} The Analysis now leads with the engineering consequence --- ``The $\pm$5\%
 \end{itemize}
 
-(Results; Discussion; Supplement checklist).
+equivalence margin is an author-selected smallest effect of practical interest for \emph{this} study, not a general engineering threshold'' --- and demotes the noise coincidence: the margin happens to sit within the host's run-to-run variation, ``but that coincidence is not the justification.''
 
-\begin{itemize}
-  \item \textbf{Artifact:} Prisma 7 driver adapters disclosed; versions table refreshed;
-\end{itemize}
+---
 
-clean-room reproduction from the archived tarball confirmed.
+\section*{The eight questions (Q1--Q8)}
 
-\begin{itemize}
-  \item \textbf{Presentation:} 14,917 words (under 15,000); byte-identical \emph{data} vs physical
-\end{itemize}
+\textbf{Q1 --- Is documentation-first the same as idiomatic?} No, and I no longer imply it. The documentation-order rule is a \emph{reproducible selection heuristic}, not a claim of production-representative use; I renamed the estimand accordingly (P2) and rest its validity on the byte-equivalence cross-check and the archived per-adapter protocol (Supplement Table 16 and \texttt{METHODOLOGY.md}), which record, per layer, the exact API, its documentation page and version, and the alternative not used.
 
-state; RAM caveat softened; "1.5$\times$ \ldots{} small" removed.
+\textbf{Q2 --- What evidence identifies eager-loading as the dominant factor?} None --- that claim is retracted (P1). The same-SQL contrast is a compound bound that isolates no single mechanism, and the manuscript now says so at every site.
 
-We are grateful that your Priority-1 concern pushed us to the re-run; it converted the paper's thesis from an assertion into a measured result and, we believe, leaves the manuscript claiming exactly what a single-host, current-version benchmark can identify. We look forward to your assessment.
+\textbf{Q3 --- Were the libraries' maintainers asked to review the adapters?} No, and this is disclosed as a limitation. Independence and external correctness review are compatible, but the latter was out of scope this cycle; the guarantee I do provide is the automated byte-equivalence cross-check that ``asserts full JSON byte equality against the native-driver baseline, on both engines \ldots{} before any timing is collected.''
+
+\textbf{Q4 --- How sensitive is the p99 to the run length?} This is now answered in full, not pending. The new Supplement section \emph{Longer-window tail sensitivity} re-measures the deep fetch over a 60 s window (about five times the requests, roughly 300 tail observations per run), ten independent runs, on both engines: ``The p99 ranking is preserved exactly (Spearman $\rho$ = 1.00 per engine), each cell's p99 barely moves from the 12 s value, the p97.5 ordering matches the p99 ordering ($\rho$ = 1.00), and the run-to-run p99 coefficient of variation stays small (maximum 6.0\% on PostgreSQL, 3.8\% on MySQL).'' The 12 s window is therefore adequate for the tail \emph{ranking}, and the tail conclusions do not rest on the exact per-run tail count (Supplement Table S23).
+
+\textbf{Q5 --- Why is the saturated p99 the primary tail rather than matched utilization?} The saturated p99 is deliberately an \emph{overload} measurement, and I no longer privilege it implicitly. Following P4, the Study Design names equal external demand, equal utilization, and an equal compute budget as three co-primary operating conditions that ``answer different questions and need not agree,'' and the matched-utilization result is reported in the main text, where ``the large saturated gap \ldots{} therefore largely dissolves; it is a capacity-and-queueing effect.''
+
+\textbf{Q6 --- Do the conclusions survive excluding MikroORM?} Yes. The Supplement \emph{Per-layer cross-engine ranks} section recomputes the agreement over the remaining six portable layers: ``the read ordering stays similar (deep-fetch $\rho$ = 0.77, $\tau$ = 0.60; range $\rho$ = 0.83, $\tau$ = 0.73) and the deep-fetch native-relative spread stays substantial at 3.7$\times$ on both engines, so the RQ2 and RQ3 findings do not depend on that one layer.''
+
+\textbf{Q7 --- Does the Zenodo archive regenerate every table clean-room?} Yes. The new top-level \texttt{REPRODUCE.md}, section 4, gives the runnable clean-room steps: the immutable release is a \texttt{git archive} of the tagged commit, so it ships every tracked file including all 33 \texttt{results/*.json} raw-data files (force-added past \texttt{.gitignore}) and the committed generators, and the estimators are seeded so bootstrap intervals and permutation p-values are bit-reproducible. There is one disclosed caveat: ``the round-trip-count table (Supplement S2) is derived from transient server statement logs that are not archived, so its committed \texttt{.tex} \ldots{} ships pre-generated rather than regenerable from the tarball; every other table regenerates from archived data.''
+
+\textbf{Q8 --- Are all files in the immutable release?} Yes. The archive tracks 33 \texttt{results/*.json} files (including \texttt{raw.json}), and \texttt{results/checksums.sha256} was regenerated to match that tracked set one-to-one --- \texttt{sha256sum -c} over the tarball verifies every archived raw-data file, and the round-trip-count input is the single disclosed exception noted in Q7.
+
+---
+
+\section*{Summary of changes}
+
+For the editor's convenience: I retracted the same-SQL causal attribution and reworded it as a bounding contrast in both abstracts, Results, Discussion, and Conclusion (P1); renamed the treatment a documented default-configuration estimand and kept the no-maintainer disclosure (P2); scoped the practical guidance to the tested implementations (P3); separated capacity, overload latency, and matched-utilization latency in RQ1 and the Study Design (P4); validated the p99 tail count with a 60 s longer-window re-measurement, new Supplement Table S23 (P5, Q4); demoted the adjacent-rank significance to descriptive, post-selection, deep-fetch-only (P6); added a layer-by-engine interaction-magnitude table (P7); tempered perishability to a version-sensitivity claim with one condensed example (P8); trimmed length to 14,934 words with a 298-word abstract (P9, P10); added \texttt{REPRODUCE.md} and regenerated the raw-data checksums (P10, Q7, Q8); and completed the \S{}7 minors, including the intrinsic-latency removal, the latest-stable and vendor-independent qualifiers, Kendall's $\tau$, the insert-dispersion figure, and the TOST reframe. I believe these revisions leave the manuscript claiming exactly what a single-host, current-version, default-configuration benchmark can support, and I am grateful that your interpretation concerns sharpened it. I look forward to your assessment.
 
 Sincerely,
 

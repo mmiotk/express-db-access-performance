@@ -30,7 +30,7 @@ The native driver leads all ten engine-pattern combinations: on PostgreSQL
 on MySQL. The current-generation ORMs sit mid-to-low throughout, Prisma among
 the lowest: seventh of eight on both point reads, near the bottom of aggregation
 on both engines, and last on the MySQL insert (Tables~\ref{tab:deep_fetch},
-\ref{tab:write}; Supplement Tables~S12, S13, and~S15). This retires an earlier
+\ref{tab:write}; Supplement Tables~S12 and~S15). This retires an earlier
 version's headline of Prisma tying the native driver at a large CPU premium
 (Section~\ref{sec:discussion}): no layer now exceeds about one application core
 (resource subsection below), leaving no CPU-for-throughput trade to buy parity with.
@@ -117,8 +117,8 @@ PostgreSQL-minus-MySQL log-throughput difference (Section~\ref{sec:methodology})
 finds the layer$\times$engine interaction significant on all five patterns
 (observed statistic above every one of the $20{,}000$ permutations), so that $p$
 reaches its floor ($1/20{,}001$) and conveys little about magnitude; the
-magnitude is largest on the insert, where Prisma's 2{,}774~req/s on PostgreSQL
-becomes 886 on MySQL. Single-engine results are thus portable in order for reads
+magnitude (Supplement Table~S28) is largest on the insert, where Prisma's
+2{,}774~req/s on PostgreSQL becomes 886 on MySQL. Single-engine results are thus portable in order for reads
 but not in degree, most loosely for writes.
 
 On the \textbf{keyset range scan} the native driver again leads, with a
@@ -277,7 +277,7 @@ throughput by at most a few percent per layer: \texttt{pg} holds 3{,}689,
 improves with extra cores, so the per-layer differences are not an artifact of
 unequal core budgets. Bound within one process, throughput scales out
 horizontally instead: under a shared-port \texttt{node} cluster (Supplement
-Table~S23) Prisma rises from 1{,}117 to 2{,}275 to 4{,}449~req/s at 1, 2, and 4
+Table~S24) Prisma rises from 1{,}117 to 2{,}275 to 4{,}449~req/s at 1, 2, and 4
 workers on PostgreSQL, reaching native-like aggregate throughput at four workers
 (\texttt{pg} 3{,}299 to 4{,}055 to 3{,}961, saturating near two workers as it
 becomes database-bound). Prisma's low single-process throughput is thus

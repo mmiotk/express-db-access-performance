@@ -8,8 +8,8 @@
     is mid-pack on PostgreSQL (rank 4) but last on MySQL (rank 7). This is why aggregation
     and writes are reported as transferring only moderately across engines. Excluding
     MikroORM (the largest single outlier) leaves the read ordering similar (deep-fetch
-    $\rho=0.77$, $\tau=0.60$) and the deep-fetch native-relative spread at $3.7\times$ on
-    both engines, so no single layer drives these findings.}
+    $\rho=0.77$, $\tau=0.60$) and the deep-fetch native-relative spread at $3.72\times$
+    (PostgreSQL) and $3.76\times$ (MySQL), so no single layer drives these findings.}
   \label{tab:ranks}
   \begin{tabular}{l cc cc}
     \toprule

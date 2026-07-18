@@ -70,11 +70,11 @@ raw data is force-added past `.gitignore`). From the tarball alone:
 ```bash
 tar xzf express-db-access-performance-<version>.tar.gz
 cd express-db-access-performance-<version>/experiments
-sha256sum -c results/checksums.sha256      # verify the 32 archived raw-data files
+sha256sum -c results/checksums.sha256      # verify the 33 archived raw-data files
 npm ci
 # regenerate every table from the archived raw data (no database needed):
 node scripts/ci-tables.mjs && node scripts/gen-tables.mjs && \
-  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && \
+  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && node scripts/gen-tail.mjs && \
   ENGINE=postgres node bench/analyze.mjs && ENGINE=mysql node bench/analyze.mjs && \
   node scripts/stats2.mjs
 npm run sync:tables && (cd ../paper && make)

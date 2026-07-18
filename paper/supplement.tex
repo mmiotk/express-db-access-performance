@@ -146,8 +146,8 @@ of throughput on PostgreSQL across the 25 repeated runs (maximum 7.6\%,
 \label{sup:resources}
 Table~\ref{tab:resources} gives the per-layer application-process CPU (median \%
 of one logical core) and peak resident memory on the deep/nested fetch
-(PostgreSQL), the detail behind the CPU trade-off discussed in the main text
-(all layers $\approx100$--$110\%$ of one core; peak RSS 204--271~MB).
+(MySQL), the detail behind the CPU trade-off discussed in the main text
+(all layers $\approx100$--$110\%$ of one core; peak RSS 215--356~MB).
 
 \input{\tabledir resources}
 
@@ -370,7 +370,7 @@ Because MikroORM is the largest single outlier in several spreads, we recompute 
 cross-engine agreement without it: over the remaining six portable layers the read
 ordering stays similar (deep-fetch $\rho=0.77$, $\tau=0.60$; range $\rho=0.83$,
 $\tau=0.73$) and the deep-fetch native-relative spread stays substantial at
-$3.7\times$ on both engines, so the RQ2 and RQ3 findings do not depend on that one
+$3.72\times$ (PostgreSQL) and $3.76\times$ (MySQL), so the RQ2 and RQ3 findings do not depend on that one
 layer.
 
 \section{Layer-by-engine interaction magnitude}
