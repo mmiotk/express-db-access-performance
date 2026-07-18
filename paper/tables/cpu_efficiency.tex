@@ -2,7 +2,7 @@
 \begin{table}[htbp]
   \centering
   \caption{Application-tier versus end-to-end CPU efficiency on the deep/nested
-    fetch (MySQL): median CPU (\% of one logical core) of the Node.js
+    fetch (PostgreSQL): median CPU (\% of one logical core) of the Node.js
     process tree and of the database server, the combined core-count, and
     throughput per application-CPU-second and per combined (app$+$database)
     CPU-second. The application-only figure understates the compute of layers that
@@ -14,14 +14,14 @@
     \toprule
     Layer & app CPU\% & db CPU\% & comb.\ cores & req/app-CPU-s & req/comb-CPU-s \\
     \midrule
-    mysql2 & 105 & 85 & 1.90 & 2269 & 1254 \\
-    knex & 100 & 75 & 1.75 & 2007 & 1147 \\
-    drizzle & 105 & 50 & 1.55 & 1255 & 850 \\
-    prisma & 105 & 60 & 1.65 & 604 & 384 \\
-    sequelize & 100 & 30 & 1.30 & 886 & 682 \\
-    typeorm & 100 & 70 & 1.70 & 1017 & 598 \\
-    objection & 100 & 45 & 1.45 & 834 & 575 \\
-    mikroorm & 110 & 25 & 1.35 & 436 & 356 \\
+    pg & 100 & 355 & 4.55 & 3687 & 810 \\
+    knex & 100 & 245 & 3.45 & 2487 & 721 \\
+    drizzle & 100 & 185 & 2.85 & 1865 & 654 \\
+    prisma & 105 & 60 & 1.65 & 1130 & 719 \\
+    sequelize & 100 & 50 & 1.50 & 991 & 661 \\
+    typeorm & 105 & 120 & 2.25 & 1147 & 535 \\
+    objection & 100 & 50 & 1.50 & 1028 & 685 \\
+    mikroorm & 105 & 50 & 1.55 & 491 & 333 \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

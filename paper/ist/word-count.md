@@ -10,18 +10,22 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,388 |
+| Body text (7 sections) | 11,429 |
 | Structured abstract | 298 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,934** |
+| **Total (IST rule)** | **14,975** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,636). The structured abstract is 298 words (under the journal's
-300-word structured-abstract limit). Twenty-nine tables and two figures are placed in the
-numbered online supplement (`supplement.pdf`, Supplement Tables S1–S29 and Supplement
+the abstract it is 14,677). The structured abstract is 298 words (under the journal's
+300-word structured-abstract limit). Thirty tables and two figures are placed in the
+numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
-DOI as the code and data; supplement floats are not part of the main-text count.
+DOI as the code and data; supplement floats are not part of the main-text count. A later
+revision added per-cell bootstrap 95% CIs to the p99 column of every pattern table and a
+paired p99 significance table (Supplement Table S30), delivering the p99 inference the
+outcomes table lists as primary; these widen existing tables and add one supplement float,
+not a main-text float.
 
 In this revision (round 5) the entire benchmark was re-run on the latest stable
 library versions (Prisma 7, Express 5, etc.); the manuscript was repositioned as a reproducible benchmark

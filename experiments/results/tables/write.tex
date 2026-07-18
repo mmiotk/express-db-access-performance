@@ -4,26 +4,27 @@
   \caption{Insert: throughput (req/s, higher is better; median with a
     within-campaign 95\% bootstrap interval over the 25 repeated runs --- run-to-run
     variability within one host and campaign, not across hardware or days) and
-    response-time p99 (ms, lower is better) by access layer and engine.}
+    response-time p99 (ms, lower is better; median run-level p99 with the same
+    within-campaign 95\% bootstrap interval) by access layer and engine.}
   \label{tab:write}
   \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l l r r r r}
     \toprule
     & & \multicolumn{2}{c}{PostgreSQL} & \multicolumn{2}{c}{MySQL} \\
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
-    Layer & Category & req/s [95\% CI] & p99 & req/s [95\% CI] & p99 \\
+    Layer & Category & req/s [95\% CI] & p99 [95\% CI] & req/s [95\% CI] & p99 [95\% CI] \\
     \midrule
-    pg & native-driver & 6402~[6242--6547] & 11 & -- & -- \\
-    mysql2 & native-driver & -- & -- & 1753~[1717--1763] & 113 \\
-    pg-tuned & native-tuned & 6413~[6073--6571] & 11 & -- & -- \\
-    mysql2-tuned & native-tuned & -- & -- & 1750~[1482--1759] & 120 \\
-    knex & query-builder & 4841~[4629--4908] & 15 & 1670~[1470--1692] & 127 \\
-    drizzle & orm-lightweight & 4085~[3928--4146] & 15 & 1730~[1324--1745] & 120 \\
-    prisma & orm & 2774~[2750--2815] & 23 & 886~[828--903] & 153 \\
-    sequelize & orm & 2732~[2719--2747] & 23 & 1478~[1375--1684] & 125 \\
-    typeorm & orm & 2648~[2630--2694] & 23 & 1345~[1301--1359] & 125 \\
-    objection & orm & 3907~[3746--3980] & 17 & 1728~[1598--1746] & 117 \\
-    mikroorm & orm & 1979~[1949--1997] & 30 & 1257~[1240--1268] & 117 \\
+    pg & native-driver & 6402~[6272--6530] & 11~[10--15] & -- & -- \\
+    mysql2 & native-driver & -- & -- & 1753~[1717--1763] & 113~[109--119] \\
+    pg-tuned & native-tuned & 6413~[6073--6571] & 11~[10--12] & -- & -- \\
+    mysql2-tuned & native-tuned & -- & -- & 1750~[1482--1759] & 120~[111--130] \\
+    knex & query-builder & 4841~[4629--4908] & 15~[14--16] & 1670~[1470--1692] & 127~[117--137] \\
+    drizzle & orm-lightweight & 4085~[3928--4146] & 15~[14--18] & 1730~[1324--1745] & 120~[109--143] \\
+    prisma & orm & 2774~[2736--2815] & 23~[22--24] & 886~[828--903] & 153~[137--160] \\
+    sequelize & orm & 2732~[2719--2747] & 23~[21--25] & 1478~[1369--1684] & 125~[118--132] \\
+    typeorm & orm & 2648~[2630--2694] & 23~[22--26] & 1345~[1301--1359] & 125~[119--129] \\
+    objection & orm & 3907~[3746--3980] & 17~[15--23] & 1728~[1598--1746] & 117~[108--132] \\
+    mikroorm & orm & 1979~[1958--1997] & 30~[29--31] & 1257~[1240--1268] & 117~[109--125] \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

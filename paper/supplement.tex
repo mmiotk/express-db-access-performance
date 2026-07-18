@@ -427,4 +427,17 @@ uncontrolled factors are why results are reported for this configuration rather
 than as a general library ranking.
 \input{\tabledir factors}
 
+\section{Paired significance of the p99 ladder}
+\label{sup:significance-p99}
+Table~\ref{tab:significance_p99} is the p99 counterpart of the main-text throughput
+significance table (Table~6): the same paired permutation, Wilcoxon,
+geometric-mean-ratio, paired-bootstrap-CI, and dominance analysis applied to each
+adjacent layer's per-replicate deep-fetch p99 on both engines, delivering the per-cell
+p99 inference the outcomes table (Table~3) lists as a primary analysis. Every adjacent pair separates on both engines except the near-tied
+TypeORM--Prisma step on PostgreSQL (ratio $1.03$, permutation $p=0.06$); the p99
+ordering mirrors the throughput ranking. Because the saturated tail tracks capacity,
+these are resolved capacity-and-queueing differences, not intrinsic per-request latency.
+
+\input{\tabledir significance_p99}
+
 \end{document}

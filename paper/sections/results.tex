@@ -168,18 +168,20 @@ fan-out as exploratory.)
 
 \subsection{Tail latency}
 We report the closed-loop p99 for every cell (p50, p90, p97.5 in the
-replication package), measured at the 50-connection operating point against the
-fixed ten-connection pool (Section~\ref{sec:methodology}), so the tail includes
-connection-acquisition queueing --- the tail a deployment sees at saturation, not
-the per-request latency at moderate load, which the open-loop experiment below
-reports below saturation. Under saturation, tail latency tracks throughput: on the deep/nested
-fetch, PostgreSQL's p99 ladder runs \texttt{pg} 20, Knex 27, Drizzle 35, TypeORM
-50, Prisma 51, Objection 57, Sequelize 60, and MikroORM 116~ms
-(Table~\ref{tab:deep_fetch}), monotonic below the native driver --- a penalty
-throughput-only vendor benchmarks miss, mirroring the throughput ranking, which
-separates pairwise on both engines (Table~\ref{tab:significance}). On MySQL
-inserts, by contrast, the faster layers' tails cluster (113--127~ms) at the
-engine floor, with only Prisma's 153~ms standing out.
+replication package) at the 50-connection operating point
+(Section~\ref{sec:methodology}), so the tail includes connection-acquisition
+queueing --- the tail a deployment sees at saturation, not the per-request latency
+at moderate load reported by the open-loop experiment below. Under saturation, tail latency tracks throughput: on the deep/nested
+fetch, PostgreSQL's p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (each
+layer's p99 with a 95\% CI, Table~\ref{tab:deep_fetch}), monotonic below the
+native driver --- a penalty
+throughput-only vendor benchmarks miss. A paired p99 analysis (Supplement
+Table~S30, the p99 counterpart of the throughput comparison) resolves every
+adjacent pair on both engines except the near-tied TypeORM--Prisma step on
+PostgreSQL (ratio $1.03$, $p=0.06$); the ordering mirrors the throughput ranking.
+On MySQL inserts, by contrast, the
+faster layers' tails cluster (113--127~ms) at the engine floor, with only Prisma's
+153~ms standing out.
 
 To check the tail ranking is not an artifact of the constant-concurrency model,
 we drove the deep/nested fetch on PostgreSQL under the coordinated-omission-corrected

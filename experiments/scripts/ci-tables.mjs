@@ -28,7 +28,11 @@ const cell = (a, ep, eng) => {
   const r = get(a, ep, eng);
   if (!r) return { rps: '--', p99: '--' };
   const c = ci(r.rps_samples);
-  return { rps: c ? `${r.rps}~[${c[0]}--${c[1]}]` : String(r.rps), p99: r.p99 };
+  const c99 = ci(r.p99_samples);
+  return {
+    rps: c ? `${r.rps}~[${c[0]}--${c[1]}]` : String(r.rps),
+    p99: c99 ? `${r.p99}~[${c99[0]}--${c99[1]}]` : String(r.p99),
+  };
 };
 
 for (const [ep, label] of Object.entries(PATTERNS)) {
@@ -42,14 +46,15 @@ for (const [ep, label] of Object.entries(PATTERNS)) {
   \\caption{${label}: throughput (req/s, higher is better; median with a
     within-campaign 95\\% bootstrap interval over the 25 repeated runs --- run-to-run
     variability within one host and campaign, not across hardware or days) and
-    response-time p99 (ms, lower is better) by access layer and engine.}
+    response-time p99 (ms, lower is better; median run-level p99 with the same
+    within-campaign 95\\% bootstrap interval) by access layer and engine.}
   \\label{tab:${ep}}
   \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l l r r r r}
     \\toprule
     & & \\multicolumn{2}{c}{PostgreSQL} & \\multicolumn{2}{c}{MySQL} \\\\
     \\cmidrule(lr){3-4}\\cmidrule(lr){5-6}
-    Layer & Category & req/s [95\\% CI] & p99 & req/s [95\\% CI] & p99 \\\\
+    Layer & Category & req/s [95\\% CI] & p99 [95\\% CI] & req/s [95\\% CI] & p99 [95\\% CI] \\\\
     \\midrule
 ${rows}
     \\bottomrule
