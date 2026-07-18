@@ -11,10 +11,9 @@ five access patterns, reporting throughput and response-time p99 together
 The documentation-selected implementation-and-strategy difference is concentrated, not
 uniform: sharpest for the deep/nested fetch that assembles a nested object graph
 application-side, and modest for point reads and aggregation
-(Section~\ref{sec:results}). The same-SQL control bounds this difference: running
-every layer on identical SQL narrows the spread substantially, but because that
-contrast changes several mechanisms together it does not attribute the difference
-to any single one (Section~\ref{sec:results}). On the
+(Section~\ref{sec:results}). The same-SQL control narrows the spread substantially
+but, changing several mechanisms together, bounds rather than attributes the
+difference to any single one (Section~\ref{sec:results}). On the
 current library versions no layer's throughput scales with additional application cores and the native driver
 leads all ten engine-pattern combinations; the read ordering is similar across the two
 engines while aggregation and writes transfer only moderately, a caution against

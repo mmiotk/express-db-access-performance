@@ -1,7 +1,7 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Access-layer rankings can be version-sensitive; the instrument is the contribution.}
+\paragraph{Access-layer rankings can be version-sensitive; the instrument is the contribution}
 One case here illustrates the point. An earlier
 campaign found Prisma (then version~5.22, on an in-process Rust query
 engine) tying the native driver on the deep fetch while drawing about five
@@ -15,7 +15,7 @@ moved the whole toolchain at once, so we cannot isolate it. The headline is ther
 the durable contributions are the reusable harness, the benchmark design, and the
 pitfalls checklist~\cite{papadopoulos2021reproducible}.
 
-\paragraph{Implications for practice.}
+\paragraph{Implications for practice}
 RQ1 and RQ3 agree that the documentation-selected implementation-and-strategy difference is
 specific to the access \emph{pattern}, concentrating where a layer must hydrate
 rows into objects and resolve associations rather than merely issue SQL (the
@@ -28,21 +28,17 @@ while the two-query Drizzle outruns the four-query Prisma (Supplement Table~S2;
 Table~\ref{tab:deep_fetch}), so how a layer materializes a result graph matters
 more than how many statements it issues.
 
-\paragraph{The same-SQL control.}
+\paragraph{The same-SQL control}
 The same-SQL control (Section~\ref{sec:results}) narrows the documentation-selected deep-fetch
-spread substantially once every layer runs identical SQL; but because it changes
-query formulation, round-trip count, prepared-statement behavior, wire protocol,
-and result marshalling together, it bounds the combined contribution of query
-strategy and formulation without isolating a single factor such as eager-loading
-strategy.
+spread substantially, but because it changes several mechanisms together it \emph{bounds}
+the combined query-strategy-and-formulation contribution rather than isolating one factor
+such as eager-loading strategy.
 
-\paragraph{Compute cost and horizontal scaling.}
+\paragraph{Compute cost and horizontal scaling}
 Under current versions the throughput differences are no longer bought with
-extra application cores. On the deep fetch every layer sits at roughly one
-application core --- Prisma at about $105\%$, the native driver at about
-$100\%$ (Figure~\ref{fig:cpu_tradeoff}) --- and the native driver's lead comes
-instead from issuing lean SQL that pushes work onto the database tier (its
-PostgreSQL database-side CPU reaches about $355\%$ against Prisma's $60\%$). The
+extra application cores: every layer sits at roughly one application core, and the
+native driver's lead comes instead from issuing lean SQL that pushes work onto the
+database tier (Section~\ref{sec:results}; Figure~\ref{fig:cpu_tradeoff}). The
 equal-CPU control confirms extra application cores do not raise a process's
 throughput (Section~\ref{sec:results}), so a layer's low per-process throughput is
 not a fixed ceiling: Prisma scales out nearly linearly under a shared-port
@@ -50,12 +46,12 @@ not a fixed ceiling: Prisma scales out nearly linearly under a shared-port
 (Section~\ref{sec:results}) --- at four times the processes and cores, trading
 footprint and energy for throughput~\cite{bonvoisin2024orm}.
 
-\paragraph{Queueing under load and the open-loop check.}
+\paragraph{Queueing under load and the open-loop check}
 The open-loop cross-run (Section~\ref{sec:results}) shows that a closed-loop
 benchmark alone would underestimate how abruptly, not just how much, a
 heavyweight ORM's tail degrades once offered load crosses its capacity.
 
-\paragraph{Writes: a partly engine-bound cost under default durability.}
+\paragraph{Writes: a partly engine-bound cost under default durability}
 RQ2 has a clear answer on inserts, under each engine's \emph{default} durability
 configuration (Section~\ref{sec:methodology}): the native driver leads on both
 engines, and PostgreSQL's insert throughput stays strongly layer-dependent even
@@ -80,7 +76,7 @@ per-commit flush across six inserts. Prisma, mid-pack on the single-row
 PostgreSQL insert, falls to the bottom of the transactional subset, so the
 transactional ordering does not simply track the single-row one.
 
-\paragraph{Methodological lessons: a checklist for access-layer benchmarking.}
+\paragraph{Methodological lessons: a checklist for access-layer benchmarking}
 Reaching the figures above meant confronting four confounds that would otherwise
 have corrupted the comparison silently. One, the aggregation fan-out, is a
 \emph{correctness} bug our automated byte-equality cross-check caught, along with
@@ -131,7 +127,7 @@ performance ones without profiling every cell), and at least one plausibly
 explains part of the gap between some vendor-reported and independently verified
 figures in this space.
 
-\paragraph{Practical guidance.}
+\paragraph{Practical guidance}
 The practical synthesis follows from RQ1--RQ3, on the default-configuration
 estimand a practitioner faces, and applies to the benchmarked implementations in
 this configuration, workload, and host rather than to access-layer categories in

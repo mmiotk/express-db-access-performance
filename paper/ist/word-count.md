@@ -5,19 +5,27 @@ in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL*
 (submission build `ist/ist_main.tex`).
 
 Counted with `texcount` on the seven body sections plus the structured abstract.
-Following the IST author guidelines, each table and figure counts as 200 words, and
-**the reference list is included in the total**.
+The IST *Guide for Authors* sets the limit for a research paper at **15,000 words**, and
+states that **"references and appendices are part of the submission and count against the
+total number of words, and figures and tables count 200 words each."** This count applies
+that rule exactly: the reference list is included and each of the seven main-text floats
+counts 200 words. The paper has **no appendices** — all supplementary material is in the
+separate `supplement.pdf`, which under Elsevier's policy is online supplementary material,
+not an appendix, and is not part of the manuscript word count. The mandatory declaration
+sections (CRediT, Declaration of competing interest, Funding, Data availability, and the
+generative-AI declaration, ~300 words) are required metadata, not article content or
+appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,448 |
+| Body text (7 sections) | 11,216 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,995** |
+| **Total (IST rule)** | **14,763** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,696). The structured abstract is 299 words (under the journal's
+the abstract it is 14,464). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-one tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S31 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -148,6 +156,20 @@ with a one-line pointer in the Data Availability section. Both are outside the c
 of the seven counted sections — so the declared total is unchanged at 14,995. The supplement
 now holds thirty-one tables (S1–S31); the table is placed last, so S1–S30 keep their
 numbers.
+
+A final round-6 pass shortened the manuscript and fixed editorial errors. Repeated
+conclusions were consolidated to one canonical statement each with cross-references —
+the Prisma retired-headline story, the version-sensitivity thesis, and the same-SQL
+"bounds but does not isolate" caveat were each stated once and cross-referenced elsewhere
+— and the most duplicative auxiliary prose (the open-loop/utilization tail block and the
+thrice-told multi-worker cluster result) was compressed to its conclusion plus the
+Supplement table pointer; every trimmed number still appears once in its Supplement table.
+This cut the body by 232 words, from 11,448 to 11,216, and the total from 14,995 to
+**14,763** (237 words of headroom under the 15,000 limit). Editorially, the run-in
+`\paragraph` headings were rendering a double period under `elsarticle` (which auto-appends
+a period to a heading that already ended in one — "the instrument is the contribution..");
+the trailing period was removed from all twelve headings so each now renders a single
+period.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

@@ -4,7 +4,7 @@
 We organize the threats along the four standard validity
 categories~\cite{cook1979quasi,wohlin2012experimentation}.
 
-\paragraph{Construct validity.}
+\paragraph{Construct validity}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
 (p99) at the Express endpoint, not query-execution time at the driver or
 database boundary --- deliberate, since it captures the full request round trip
@@ -33,7 +33,7 @@ than a tuning choice; a symmetric relaxed-durability secondary confirms the
 cross-engine gap is not an artifact of either configuration
 (Section~\ref{sec:discussion}, Supplement Table~S3).
 
-\paragraph{Internal validity.}
+\paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
 reasons unrelated to its inherent cost; every adapter must use its layer's
 documented default eager-loading strategy on the deep-fetch endpoint
@@ -57,7 +57,7 @@ coordinated-omission-corrected constant-arrival cross-run on the deep fetch
 (Section~\ref{sec:methodology}) confirms the tail ranking holds under that
 stricter model (Section~\ref{sec:results}; Supplement Table~S6).
 
-\paragraph{External validity.}
+\paragraph{External validity}
 All measurements come from a single schema, a single dataset size, one hardware
 configuration, and a connection pool fixed at ten, against specific engine and
 library versions (PostgreSQL~18.4, MySQL~9.7.1; Section~\ref{sec:methodology}). The
@@ -114,10 +114,9 @@ from one to four cores, so the ranking is not an artifact of unequal core access
 single-process caveat still extends to deployment topology: the server runs as a
 single Node.js process, whereas production deployments typically run one worker
 per core (\texttt{cluster}, pm2, per-pod replicas). A multi-worker check
-(Supplement Table~S24) shows the low-per-process layers scale out near-linearly,
-so a layer's single-process throughput is not its aggregate ceiling, reaching
-native-like aggregate throughput at four times the processes
-(Section~\ref{sec:results}). A sustained-load check bounds temporal drift:
+(Supplement Table~S24; Section~\ref{sec:results}) shows the low-per-process layers
+scale out near-linearly, so single-process throughput is not the aggregate ceiling.
+A sustained-load check bounds temporal drift:
 holding three representative layers (native \texttt{pg}, Prisma, MikroORM) under
 ten minutes of continuous deep-fetch load, re-run under the final harness, moves
 throughput by at most $\pm1.4\%$ between the first and last three minutes, with
@@ -128,7 +127,7 @@ days~\cite{kuffel2025nodejs} remains untested. A two-machine cross-run over a
 dedicated link, adding real network latency, and a multi-worker variant are
 planned to bound this further.
 
-\paragraph{Conclusion validity.}
+\paragraph{Conclusion validity}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of
 variation and bootstrap 95\% confidence intervals as stability signals and, because
 the design is a randomized block, compares adjacently ranked layers with

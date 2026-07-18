@@ -32,8 +32,7 @@ the lowest: seventh of eight on both point reads, near the bottom of aggregation
 on both engines, and last on the MySQL insert (Tables~\ref{tab:deep_fetch},
 \ref{tab:write}; Supplement Tables~S12 and~S15). This retires an earlier
 version's headline of Prisma tying the native driver at a large CPU premium
-(Section~\ref{sec:discussion}): no layer now exceeds about one application core
-(resource subsection below), leaving no CPU-for-throughput trade to buy parity with.
+(Section~\ref{sec:discussion}).
 
 \texttt{pg-tuned} and \texttt{mysql2-tuned} track their documentation-selected counterparts
 within a few percent on the single-round-trip patterns and edge them only on the
@@ -78,10 +77,8 @@ isolated.
 
 On the identical SQL, the deep-fetch native-relative spread collapses from its
 documentation-selected $7.15\times$ (PostgreSQL) and $4.96\times$ (MySQL) to $1.68\times$ and
-$2.01\times$ (Supplement Table~S14). Replacing each layer's documentation-selected path with
-identical SQL bounds how much of the spread is attributable to query strategy and
-formulation \emph{jointly}; because the intervention changes several mechanisms
-together, it does not separate strategy from execution machinery. On the raw path
+$2.01\times$ (Supplement Table~S14), bounding the query-strategy-and-formulation
+contribution without, as above, isolating a single mechanism. On the raw path
 Drizzle rises from 1{,}865 to 3{,}237~req/s, Prisma from 1{,}186 to 2{,}155, and
 Knex from 2{,}487 to 2{,}926 on PostgreSQL, so layers that trail on the documentation-selected
 fetch converge once they run the same statement. Prisma is the slowest layer on
@@ -185,28 +182,19 @@ On MySQL inserts, by contrast, the
 faster layers' tails cluster (113--127~ms) at the engine floor, with only Prisma's
 153~ms standing out.
 
-To check the tail ranking is not an artifact of the constant-concurrency model,
-we drove the deep/nested fetch on PostgreSQL under the coordinated-omission-corrected
-open-loop harness (Section~\ref{sec:methodology}; timed-out requests capped at
-10~s and clipped into the distribution; full sweep in Supplement Table~S6). Below
-saturation the corrected tails are flat and small (\texttt{pg} holds p99 at
-2--3~ms up to 2{,}000~req/s; Knex 2~ms and Prisma 13~ms up to 1{,}000~req/s);
-beyond each layer's capacity the tail collapses rather than degrading gracefully,
-the data-mapper ORMs earliest. At 2{,}000~req/s Prisma and Sequelize exceed 10~s
-while \texttt{pg} still clears at 3~ms and Knex at 89~ms, and at 4{,}000~req/s
-\texttt{pg}'s corrected p99 is 1.48~s against Knex's 8.8~s and the ORMs above
-10~s. Calling a \emph{collapse} an offered rate at which a layer clears under half
-the load, the open-loop ordering matches the
-closed-loop one, and the MySQL sweep (Supplement Table~S17) reproduces it, so the
-high-load-tail ordering is engine-robust. Offering each layer 50/70/85/95\% of
-\emph{its own} saturating throughput (coordinated-omission-corrected, five runs,
-both engines; Supplement Tables~S21--S22), the tails converge: at 50\%
-utilization every layer holds p99 near $2$--$5$~ms on both engines regardless of
-its high-load rank, rising only as it nears its own capacity (for example
-Objection's p99 reaches 285~ms at $95\%$ of its own capacity on PostgreSQL). At
-matched utilization the large high-load gap (\texttt{pg} 20~ms versus MikroORM
-116~ms) therefore largely dissolves; it is a capacity-and-queueing effect, not a
-difference in tail latency at comparable utilization. The single-rate open-loop cells above are
+To check the tail ranking is not an artifact of the constant-concurrency model, we drove
+the deep/nested fetch under the coordinated-omission-corrected open-loop harness
+(Section~\ref{sec:methodology}; full sweeps in Supplement Tables~S6 (PostgreSQL) and~S17
+(MySQL)). Below saturation the corrected tails are flat and small (\texttt{pg} holds p99 at
+2--3~ms up to 2{,}000~req/s); beyond each layer's capacity the tail collapses rather than
+degrading gracefully, the data-mapper ORMs earliest. The open-loop ordering matches the
+closed-loop one on both engines, so the high-load-tail ordering is engine-robust. Offering
+each layer 50/70/85/95\% of \emph{its own} saturating throughput (Supplement
+Tables~S21--S22), the tails converge: at 50\% utilization every layer holds p99 near
+$2$--$5$~ms on both engines, rising only as it nears its own capacity. At matched
+utilization the large high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) therefore
+largely dissolves; it is a capacity-and-queueing effect, not a difference in tail latency at
+comparable utilization. The single-rate open-loop cells above are
 single runs, so near-knee values are indicative; the utilization sweep and the
 flat-then-collapse ordering are what reproduce.
 
