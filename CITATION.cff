@@ -1,13 +1,15 @@
 cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below."
-title: "A Comparative Analysis of Relational Database Access-Layer Performance in Express.js for PostgreSQL and MySQL"
+title: "A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL"
 abstract: >-
   Reproducible benchmark harness and paper comparing the performance of relational
   database access layers in an Express.js service — native drivers (pg, mysql2), a
   query builder (Knex), and ORMs (Drizzle, Prisma, Sequelize, TypeORM, Objection,
   MikroORM) — across PostgreSQL and MySQL, over five access patterns (point read,
-  range scan, deep/nested fetch, aggregation, insert), reporting both throughput
-  (req/s) and tail latency (p50/p90/p99).
+  range scan, deep/nested fetch, aggregation, insert), reporting throughput
+  (req/s) and client-observed response-time tail latency (p99) jointly, with an
+  automated byte-level correctness cross-check and a longer-window tail-latency
+  sensitivity check.
 type: software
 authors:
   - family-names: Miotk
