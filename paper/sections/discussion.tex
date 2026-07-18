@@ -2,18 +2,18 @@
 \label{sec:discussion}
 
 \paragraph{Access-layer rankings can be version-sensitive; the instrument is the contribution.}
-One case this study's own method forced on us illustrates the point. An earlier
-campaign found the ORM Prisma (then version~5.22, on an in-process Rust query
+One case here illustrates the point. An earlier
+campaign found Prisma (then version~5.22, on an in-process Rust query
 engine) tying the native driver on the deep fetch while drawing about five
-application cores. Re-running the \emph{identical} harness against the latest
-stable releases at the 15 July 2026 freeze (Prisma~7.8, now a Rust-free
-TypeScript client) retired that finding: no layer now draws more than about one
-core, and Prisma has fallen to mid-to-low throughput across the matrix
-(Section~\ref{sec:results}). One dependency's internals changed across a single
-major version. Access-layer performance is sensitive to implementation and
-version~\cite{vanzyl2009optimisations}, so a specific ranking can be
-version-sensitive, and the durable contributions are the reusable harness, the
-benchmark design, and the pitfalls checklist~\cite{papadopoulos2021reproducible}.
+application cores. Re-running the \emph{identical} harness on the latest
+stable releases at the 15 July 2026 freeze did not reproduce it: no layer now draws
+more than about one core, and Prisma has fallen to mid-to-low throughput
+(Section~\ref{sec:results}). The non-reproduction is a fact; its cause is a
+hypothesis: the vanished premium was Prisma-specific and only Prisma changed
+architecture, so its Rust-free rewrite is the likeliest driver, but the re-freeze
+moved the whole toolchain at once, so we cannot isolate it. The headline is therefore version-sensitive~\cite{vanzyl2009optimisations}, and
+the durable contributions are the reusable harness, the benchmark design, and the
+pitfalls checklist~\cite{papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice.}
 RQ1 and RQ3 agree that the idiomatic implementation-and-strategy difference is

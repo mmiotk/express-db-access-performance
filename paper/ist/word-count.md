@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,443 |
+| Body text (7 sections) | 11,447 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,990** |
+| **Total (IST rule)** | **14,994** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,691). The structured abstract is 299 words (under the journal's
+the abstract it is 14,695). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -78,6 +78,16 @@ cluster table captions (the latter also corrected: its own data shows Prisma fla
 are cluster workers, not cores). Merging a now-redundant sentence offset the reframe, so
 the body is 11,443 and the total 14,990; the CPU-utilization measurements ("$\approx$110\%
 of one core") are unchanged.
+
+A final round-6 clarification separated the *fact* that an earlier Prisma result did not
+reproduce on the re-run from the *hypothesis* that Prisma's version/architecture change
+caused it: the Discussion now states the non-reproduction as a fact and its cause as an
+explicitly hedged hypothesis (the vanished premium was Prisma-specific and only Prisma
+changed architecture, so its Rust-free rewrite is the likeliest driver, but the re-freeze
+advanced the whole toolchain at once, so it cannot be isolated), and the intro/conclusion
+headline sentences now say the result was retired "on newer versions" rather than
+attributing it to "Prisma's Rust-free successor." Trimming the paragraph's lead-in and a
+parenthetical offset most of the hedge, taking the body to 11,447 and the total to 14,994.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
