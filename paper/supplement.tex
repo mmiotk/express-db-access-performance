@@ -440,4 +440,51 @@ these are resolved capacity-and-queueing differences, not intrinsic per-request 
 
 \input{\tabledir significance_p99}
 
+\section{Artifact reproducibility summary}
+\label{sup:reproducibility}
+Table~\ref{tab:reproducibility} summarizes what is needed to reproduce the study and which
+results are regenerated automatically; \texttt{REPRODUCE.md} in the replication package is
+the single runnable entry point.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Artifact reproducibility summary: version and identifier, requirements, how to
+    run, time and resources, and which results are reproduced automatically.}
+  \label{tab:reproducibility}
+  \begin{tabular}{@{}p{0.24\textwidth} p{0.68\textwidth}@{}}
+    \toprule
+    Item & Detail \\
+    \midrule
+    Artifact \& version & \texttt{express-db-access-performance}, release v1.6.1 (git tag
+      \texttt{v1.6.1}); the archive is a \texttt{git archive} of the tagged commit and
+      contains every tracked file, including the raw data and the table generators. \\
+    Persistent identifier & Zenodo \texttt{10.5281/zenodo.21428215} (concept
+      \texttt{10.5281/zenodo.21313858}). \\
+    Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
+      conda user-space (\texttt{conda-forge}); the Docker path is a convenience and pins
+      older engines (PostgreSQL 16 / MySQL 8.4), so it only approximates the published
+      numbers. \\
+    Hardware \& disk & Single Linux host (full host and version capture in
+      Table~\ref{tab:versions}); $\approx$1~GB for the seeded databases. \\
+    Deterministic seed & 2{,}000 authors / 100{,}000 posts / 1{,}000{,}000 comments from a
+      fixed PRNG. \\
+    Smoke test ($\approx$5--10~min) & \texttt{npm ci}; \texttt{npm run migrate \&\& npm run
+      seed}; \texttt{npm run bench:quick}; \texttt{node bench/verify.mjs} --- the
+      byte-equivalence cross-check must print ALL MATCH. \\
+    Full campaign & Primary matrix ($\approx$~hours): \texttt{INDEP=1 REPEATS=25
+      DURATION=12 WARMUP=15 node bench/runner.mjs} $\rightarrow$ \texttt{results/raw.json};
+      all secondary experiments add up to $\approx$25~h wall-clock. \\
+    Regenerate from raw & $\approx$minutes, \emph{no database}: the committed generators
+      rebuild every table and figure from \texttt{results/*.json}, then \texttt{npm run
+      sync:tables} and \texttt{make}. \\
+    Automatically reproduced & \emph{Every} table and figure, from the archived raw data;
+      \texttt{results/checksums.sha256} verifies the 33 raw-data files. Reproducing the raw
+      data itself requires the full campaign on the reference engines. \\
+    Entry point & \texttt{REPRODUCE.md} (smoke test, full matrix, clean-room reproduction
+      from the tarball); the per-table data-and-generator map is in \texttt{MANIFEST.md}. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \end{document}

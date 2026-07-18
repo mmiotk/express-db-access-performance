@@ -66,6 +66,7 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:interaction` | S28 | `interaction.tex` | `scripts/gen-r6-tables.mjs` | `results/raw.json` |
 | `tab:factors` | S29 | `factors.tex` | hand-authored | — |
 | `tab:significance_p99` | S30 | `significance_p99.tex` | `scripts/gen-p99-significance.mjs` | `results/raw.json` |
+| `tab:reproducibility` | S31 | inline in `supplement.tex` | hand-authored | `REPRODUCE.md`, `results/checksums.sha256` |
 | `fig:insert_dispersion` | Fig S1 | `fig_insert_dispersion.tex` | `scripts/gen-r6-tables.mjs` | `results/raw.json` |
 
 The five per-pattern tables (`point_read`…`write`) carry a 95% bootstrap CI on

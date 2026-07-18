@@ -18,8 +18,8 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
 the abstract it is 14,696). The structured abstract is 299 words (under the journal's
-300-word structured-abstract limit). Thirty tables and two figures are placed in the
-numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
+300-word structured-abstract limit). Thirty-one tables and two figures are placed in the
+numbered online supplement (`supplement.pdf`, Supplement Tables S1–S31 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
 DOI as the code and data; supplement floats are not part of the main-text count. A later
 revision added per-cell bootstrap 95% CIs to the p99 column of every pattern table and a
@@ -139,6 +139,15 @@ word-counted). The addition was offset by removing a redundant tier-classificati
 (Drizzle's placement, already given in the layer list) and tightening the
 vendor-independence sentence, so the net change is +1 word: the body is 11,448 and the
 total 14,995.
+
+A final round-6 change added a short **artifact-reproducibility table** (Supplement Table
+S31: version/commit and DOI, software and hardware requirements, the run commands, the time
+and resources, and which results are regenerated automatically from the archived raw data),
+with a one-line pointer in the Data Availability section. Both are outside the counted body
+— the table is a supplement float (uncounted) and Data Availability is back-matter, not one
+of the seven counted sections — so the declared total is unchanged at 14,995. The supplement
+now holds thirty-one tables (S1–S31); the table is placed last, so S1–S30 keep their
+numbers.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
