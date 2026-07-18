@@ -23,7 +23,7 @@ for (const engine of ['postgres', 'mysql']) {
   \\caption{Utilization-controlled open-loop tail on the deep fetch (${eng}):
     coordinated-omission-corrected p99 (ms, median of five runs) when each layer is
     offered a fixed fraction of \\emph{its own} saturating throughput. At matched
-    utilization the tails are small and similar across layers---the large saturated
+    utilization the tails are small and similar across layers---the large high-load
     p99 gap is a capacity/queueing effect, not intrinsic tail latency; the tail rises
     only as each layer approaches its own capacity.}
   \\label{tab:${label}}

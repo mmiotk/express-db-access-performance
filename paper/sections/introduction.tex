@@ -57,8 +57,8 @@ fetch, per-author aggregation, and insert; Section~\ref{sec:methodology}).
 Seven layers run against \emph{both} engines under an identical schema,
 dataset, and pool size; two tuned native-driver baselines mark what hand-tuned
 driver use achieves. Every (layer, engine, pattern) combination reports
-throughput (req/s) and saturated client-observed response-time p99 (at a
-50-connection operating point) jointly, from 25 repeated runs, with a
+throughput (req/s) and client-observed response-time p99 at the fixed
+50-connection high-load operating point jointly, from 25 repeated runs, with a
 utilization-controlled open-loop tail measured below saturation. The study
 separates two estimands: the \emph{default-configuration} effect of each layer
 used idiomatically (RQ1--RQ3), and a controlled \emph{same-SQL} contrast that
@@ -82,7 +82,7 @@ implementations under the specified operating point:
         relative to the native-driver baseline, and how does it vary across the
         five access patterns? We keep distinct three quantities that a fixed
         operating point conflates: \emph{capacity} (saturating throughput),
-        \emph{overload latency} (the saturated p99 under equal external demand),
+        \emph{overload latency} (the high-load p99 under equal external demand),
         and \emph{latency at matched utilization} (each layer driven at equal
         fractions of its own capacity).
   \item \emph{(engine dependence):} Does the observed layer ordering transfer

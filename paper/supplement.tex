@@ -237,7 +237,7 @@ Table~\ref{tab:openloop_mysql} is the MySQL companion to the PostgreSQL open-loo
 sweep (Supplement Table~S6): coordinated-omission-corrected p99 on the deep/nested
 fetch at a constant offered rate. The sub-saturation tail is flat and small on
 both engines, and each layer collapses once the offered rate crosses its capacity,
-so the saturated-tail ordering holds on MySQL as on PostgreSQL.
+so the high-load-tail ordering holds on MySQL as on PostgreSQL.
 
 \input{\tabledir openloop_mysql}
 
@@ -285,11 +285,11 @@ coordinated-omission-corrected p99 on the deep fetch when each layer is offered
 50/70/85/95\% of \emph{its own} saturating throughput (its primary closed-loop
 deep-fetch rate), replicated five times, on both engines. At matched utilization the
 tails are small and similar across layers---for example on PostgreSQL every layer
-holds p99 near 2--4~ms at 50\%---so the wide saturated-p99 ladder in the main text is
+holds p99 near 2--4~ms at 50\%---so the wide high-load p99 ladder in the main text is
 a capacity-and-queueing effect, not a difference in tail latency at matched
 utilization; the tail rises only as a layer nears its own capacity. This is the
 capacity-normalized latency
-companion to the saturated primary p99. The 50/70\% cells, which carry that
+companion to the high-load primary p99. The 50/70\% cells, which carry that
 comparison, are stable across runs; the 85/95\% cells are increasingly noisy (p99
 varies several-fold between runs as a layer approaches saturation), so those columns
 are read as trend, not precise values.
@@ -351,8 +351,8 @@ deep-fetch read dominates the cost; exploratory.
 \label{sup:scaling}
 Figure~\ref{fig:scaling} sweeps the deep/nested fetch from 1 to 256 client
 connections for a representative layer of each tier, both engines. The 50-connection
-operating point used throughout sits above the knee for every layer; the ordering is
-load-robust above about 32 connections. This is the evidence behind the choice of
+operating point used throughout sits above the knee for every layer on this
+pattern; the ordering is load-robust above about 32 connections. This is the evidence behind the choice of
 operating point.
 
 \input{\tabledir fig_scaling}
@@ -403,7 +403,7 @@ claims can be scoped and reproduced. It is a reporting aid, not a standard.
   \item \textbf{Idiomatic treatment.} State the exact API, its documentation page and
         version, the declined alternative, and whether logging, hooks, validation,
         and identity maps are on.
-  \item \textbf{Latency construct.} Distinguish saturated closed-loop response time
+  \item \textbf{Latency construct.} Distinguish high-load closed-loop response time
         (which tracks throughput and queueing) from utilization-controlled or
         open-loop latency; report the operating point.
   \item \textbf{Same-SQL / shared-plan control.} Report it as a compound intervention
@@ -435,7 +435,7 @@ geometric-mean-ratio, paired-bootstrap-CI, and dominance analysis applied to eac
 adjacent layer's per-replicate deep-fetch p99 on both engines, delivering the per-cell
 p99 inference the outcomes table (Table~3) lists as a primary analysis. Every adjacent pair separates on both engines except the near-tied
 TypeORM--Prisma step on PostgreSQL (ratio $1.03$, permutation $p=0.06$); the p99
-ordering mirrors the throughput ranking. Because the saturated tail tracks capacity,
+ordering mirrors the throughput ranking. Because the high-load tail tracks capacity,
 these are resolved capacity-and-queueing differences, not intrinsic per-request latency.
 
 \input{\tabledir significance_p99}

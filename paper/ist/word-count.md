@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,429 |
-| Structured abstract | 298 |
+| Body text (7 sections) | 11,444 |
+| Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,975** |
+| **Total (IST rule)** | **14,991** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,677). The structured abstract is 298 words (under the journal's
+the abstract it is 14,692). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -58,6 +58,15 @@ case study and the removal of repeated restatements offset most of these additio
 body changed marginally (11,376 to 11,388) and the abstract was tightened from 313 to 298
 words; the total is 14,934. The longer-window tail sensitivity (Table S23), interaction
 magnitude (Table S28), and insert dispersion (Figure S1) are the new supplement floats.
+
+A subsequent round-6 clarification renamed the primary 50-connection matrix from
+"saturated" to a "fixed 50-connection high-load operating point," since the throughput
+knee is demonstrated (Supplement Figure S2) only for the deep fetch, while the
+ten-connection pool---not a per-pattern knee---is the binding high-load constraint
+(Section 3, Controls); the per-layer/pool/open-loop "saturat*" uses are unchanged. The
+rename plus its one-clause justification added a net 15 body words (offset by tightening
+three tail-latency sentences) and one abstract word, taking the body to 11,444 and the
+total to 14,991.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

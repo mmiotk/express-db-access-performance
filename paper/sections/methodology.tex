@@ -21,13 +21,16 @@ not a mechanism-isolating decomposition.
 A fixed concurrency imposes equal \emph{demand} on layers of unequal capacity
 and therefore drives them to unequal \emph{utilization}, so RQ1 is characterized
 under three operating conditions rather than one privileged point.
-\emph{Equal external demand} is the saturated closed-loop matrix, every layer
-receiving the identical request stream at a fixed 50-connection load.
+\emph{Equal external demand} is the fixed 50-connection \emph{high-load} operating
+point --- high-load rather than saturated, the throughput knee being demonstrated
+only for the deep fetch (Supplement Figure~S2) while the ten-connection pool, not a
+per-pattern knee, is the binding constraint (Controls, below) --- every layer
+receiving the identical request stream.
 \emph{Equal utilization} is the coordinated-omission-corrected open-loop sweep,
 each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating
 throughput. An \emph{equal compute budget} is the equal-CPU control, the server
 confined to a fixed number of cores (Section~\ref{sec:results}). These answer
-different questions and need not agree --- the saturated condition measures
+different questions and need not agree --- the high-load condition measures
 capacity under overload, matched utilization the capacity-normalized per-request
 latency, the equal budget the compute cost of the same work --- so we report all
 three and say which each result speaks to.

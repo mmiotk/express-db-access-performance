@@ -170,15 +170,16 @@ fan-out as exploratory.)
 We report the closed-loop p99 for every cell (p50, p90, p97.5 in the
 replication package) at the 50-connection operating point
 (Section~\ref{sec:methodology}), so the tail includes connection-acquisition
-queueing --- the tail a deployment sees at saturation, not the per-request latency
-at moderate load reported by the open-loop experiment below. Under saturation, tail latency tracks throughput: on the deep/nested
+queueing --- the tail a deployment sees under load, not the per-request latency of
+the open-loop experiment below. At this
+high-load point, tail latency tracks throughput: on the deep/nested
 fetch, PostgreSQL's p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (each
 layer's p99 with a 95\% CI, Table~\ref{tab:deep_fetch}), monotonic below the
 native driver --- a penalty
 throughput-only vendor benchmarks miss. A paired p99 analysis (Supplement
-Table~S30, the p99 counterpart of the throughput comparison) resolves every
-adjacent pair on both engines except the near-tied TypeORM--Prisma step on
-PostgreSQL (ratio $1.03$, $p=0.06$); the ordering mirrors the throughput ranking.
+Table~S30) resolves every adjacent pair on both engines except the near-tied
+TypeORM--Prisma step on PostgreSQL (ratio $1.03$, $p=0.06$), mirroring the
+throughput ranking.
 On MySQL inserts, by contrast, the
 faster layers' tails cluster (113--127~ms) at the engine floor, with only Prisma's
 153~ms standing out.
@@ -194,15 +195,15 @@ the data-mapper ORMs earliest. At 2{,}000~req/s Prisma and Sequelize exceed 10~s
 while \texttt{pg} still clears at 3~ms and Knex at 89~ms, and at 4{,}000~req/s
 \texttt{pg}'s corrected p99 is 1.48~s against Knex's 8.8~s and the ORMs above
 10~s. Calling a \emph{collapse} an offered rate at which a layer clears under half
-the load with many requests timing out, the open-loop ordering matches the
+the load, the open-loop ordering matches the
 closed-loop one, and the MySQL sweep (Supplement Table~S17) reproduces it, so the
-saturated-tail ordering is engine-robust. Offering each layer 50/70/85/95\% of
+high-load-tail ordering is engine-robust. Offering each layer 50/70/85/95\% of
 \emph{its own} saturating throughput (coordinated-omission-corrected, five runs,
 both engines; Supplement Tables~S21--S22), the tails converge: at 50\%
 utilization every layer holds p99 near $2$--$5$~ms on both engines regardless of
-its saturated rank, rising only as it nears its own capacity (for example
+its high-load rank, rising only as it nears its own capacity (for example
 Objection's p99 reaches 285~ms at $95\%$ of its own capacity on PostgreSQL). At
-matched utilization the large saturated gap (\texttt{pg} 20~ms versus MikroORM
+matched utilization the large high-load gap (\texttt{pg} 20~ms versus MikroORM
 116~ms) therefore largely dissolves; it is a capacity-and-queueing effect, not a
 difference in tail latency at comparable utilization. The single-rate open-loop cells above are
 single runs, so near-knee values are indicative; the utilization sweep and the
@@ -250,8 +251,8 @@ three-band ordering (native driver, then Knex and Drizzle, then the data-mapper
 ORMs) emerges by 8 connections and holds at every operating point above about 32;
 at a single connection the layers are far closer together (about
 320--1{,}020~req/s) and Prisma is mid-pack throughout, never approaching the
-native driver. The 50-connection operating point used throughout sits above the
-knee for every layer, so the RQ1 ranking is not an artifact of a single point.
+native driver. The 50-connection operating point sits above the knee for every
+layer on the deep fetch, so the RQ1 ranking is not an artifact of a single point.
 
 \subsection{Resource footprint}
 On the current library generation the application-side CPU cost is uniform
