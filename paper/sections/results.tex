@@ -271,14 +271,13 @@ completes 1{,}254~req per combined-CPU-second on the MySQL deep fetch against
 Prisma's 384 and MikroORM's 356 (Supplement Table~S5). There is no
 CPU-for-throughput trade: the slower layers are also less compute-efficient.
 
-An equal-CPU control confirms every layer is application-single-core-bound.
+An equal-CPU control confirms no layer gains throughput from additional application cores.
 Confining the server process with \texttt{taskset} to 1, 2, or 4 cores (database
 and load generator on disjoint cores; Supplement Table~S4) changes deep-fetch
 throughput by at most a few percent per layer: \texttt{pg} holds 3{,}689,
 3{,}688, and 3{,}687~req/s at 1, 2, and 4 cores, Prisma 1{,}079, 1{,}052, and
-1{,}219, and MikroORM 446, 495, and 522. No layer's per-process throughput
-improves with extra cores, so the per-layer differences are not an artifact of
-unequal core budgets. Bound within one process, throughput scales out
+1{,}219, and MikroORM 446, 495, and 522, so the per-layer differences are not an
+artifact of unequal core budgets. Bound within one process, throughput scales out
 horizontally instead: under a shared-port \texttt{node} cluster (Supplement
 Table~S24) Prisma rises from 1{,}117 to 2{,}275 to 4{,}449~req/s at 1, 2, and 4
 workers on PostgreSQL, reaching native-like aggregate throughput at four workers

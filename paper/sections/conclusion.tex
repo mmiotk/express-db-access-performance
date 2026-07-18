@@ -15,7 +15,7 @@ application-side, and modest for point reads and aggregation
 every layer on identical SQL narrows the spread substantially, but because that
 contrast changes several mechanisms together it does not attribute the difference
 to any single one (Section~\ref{sec:results}). On the
-current library versions no layer is multi-core-bound and the native driver
+current library versions no layer's throughput scales with additional application cores and the native driver
 leads all ten engine-pattern combinations; the read ordering is similar across the two
 engines while aggregation and writes transfer only moderately, a caution against
 generalizing single-engine results (Section~\ref{sec:discussion}). That

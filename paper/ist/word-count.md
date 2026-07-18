@@ -10,14 +10,14 @@ Following the IST author guidelines, each table and figure counts as 200 words, 
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,444 |
+| Body text (7 sections) | 11,443 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,991** |
+| **Total (IST rule)** | **14,990** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,692). The structured abstract is 299 words (under the journal's
+the abstract it is 14,691). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S30 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -67,6 +67,17 @@ ten-connection pool---not a per-pattern knee---is the binding high-load constrai
 rename plus its one-clause justification added a net 15 body words (offset by tightening
 three tail-latency sentences) and one abstract word, taking the body to 11,444 and the
 total to 14,991.
+
+A further round-6 clarification softened the causal claim that each layer is
+"single-core-bound" / "multi-core-bound": the equal-CPU and multi-worker controls show
+that extra application cores do not raise a process's throughput (so the ranking is not a
+core-budget artifact), but do not prove single-core CPU is the causal bottleneck. The
+label was replaced by that observation at every prose site and in the equal-CPU and
+cluster table captions (the latter also corrected: its own data shows Prisma flat across
+1/2/4 cores, so "Prisma requires roughly four cores to approach pg" was wrong---the four
+are cluster workers, not cores). Merging a now-redundant sentence offset the reframe, so
+the body is 11,443 and the total 14,990; the CPU-utilization measurements ("$\approx$110\%
+of one core") are unchanged.
 The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

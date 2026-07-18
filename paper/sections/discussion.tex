@@ -43,8 +43,8 @@ application core --- Prisma at about $105\%$, the native driver at about
 $100\%$ (Figure~\ref{fig:cpu_tradeoff}) --- and the native driver's lead comes
 instead from issuing lean SQL that pushes work onto the database tier (its
 PostgreSQL database-side CPU reaches about $355\%$ against Prisma's $60\%$). The
-equal-CPU control confirms each layer is essentially single-core-bound per
-process (Section~\ref{sec:results}), so a layer's low per-process throughput is
+equal-CPU control confirms extra application cores do not raise a process's
+throughput (Section~\ref{sec:results}), so a layer's low per-process throughput is
 not a fixed ceiling: Prisma scales out nearly linearly under a shared-port
 \texttt{node} cluster to native-like aggregate throughput at four workers
 (Section~\ref{sec:results}) --- at four times the processes and cores, trading

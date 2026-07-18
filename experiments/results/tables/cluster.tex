@@ -2,8 +2,8 @@
 \begin{table}[htbp]
   \centering
   \caption{Multi-worker deep-fetch throughput (req/s, median of three runs) as each
-    layer is scaled to 1, 2, and 4 Express workers (node cluster, shared port). Every
-    layer is single-core-bound per process, so throughput scales roughly linearly
+    layer is scaled to 1, 2, and 4 Express workers (node cluster, shared port). Because each
+    process uses about one core, throughput scales roughly linearly
     with workers until the host saturates: Prisma, low at one worker (PostgreSQL
     1{,}117), rises to 2{,}275 at two and 4{,}449 at four workers, recovering
     native-like aggregate throughput at four times the processes. A layer's low

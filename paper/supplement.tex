@@ -316,8 +316,8 @@ count.
 \section{Multi-worker scaling}
 \label{sup:cluster}
 Table~\ref{tab:cluster} scales each of a representative subset to 1, 2, and 4 Express
-workers (a shared-port \texttt{node} cluster). Because every layer is
-single-core-bound per process, throughput scales roughly linearly with workers
+workers (a shared-port \texttt{node} cluster). Because each process uses about one
+core and gains nothing from more, throughput scales roughly linearly with workers
 until the host saturates: on PostgreSQL the native driver leads at one worker
 (\texttt{pg} 3{,}299 to Prisma's 1{,}117) and saturates near two workers as it
 becomes database-bound (4{,}055, then 3{,}961 at four), while Prisma, low per
