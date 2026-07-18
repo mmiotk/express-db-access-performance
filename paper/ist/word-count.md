@@ -54,5 +54,6 @@ case study and the removal of repeated restatements offset most of these additio
 body changed marginally (11,376 to 11,388) and the abstract was tightened from 313 to 298
 words; the total is 14,934. The longer-window tail sensitivity (Table S23), interaction
 magnitude (Table S28), and insert dispersion (Figure S1) are the new supplement floats.
+The current release is v1.6.1 (DOI 10.5281/zenodo.21428215).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
