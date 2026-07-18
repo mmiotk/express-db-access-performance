@@ -75,6 +75,6 @@ S23).
   condensed Prisma narrative and removed repetition offset the additions.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21427844 (release v1.6.0). An independent adversarial re-review
+DOI 10.5281/zenodo.21428215 (release v1.6.1). An independent adversarial re-review
 reproduced every headline number from the raw data and returned a minor-revision
 verdict.
