@@ -488,4 +488,39 @@ the single runnable entry point.
   \end{tabular}
 \end{table}
 
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{Scope of every experiment: the access pattern(s), engine(s), number of
+    access-layer implementations, and repeated runs each covers. The \emph{primary
+    comparison} (throughput and closed-loop p99) is the full five-pattern, two-engine
+    matrix; every other experiment is a limited condition, most restricted to the
+    deep/nested fetch, and each conclusion is scoped accordingly. ``Layers'' counts
+    implementations (the nine access layers plus, where present, the two tuned native
+    baselines); a representative subset is used where a caption says so. Engine
+    entries name where the experiment was run (\texttt{pg} is PostgreSQL-only,
+    \texttt{mysql2} MySQL-only).}
+  \label{tab:scope}
+  \begin{tabular}{@{}p{0.34\textwidth} p{0.13\textwidth} p{0.11\textwidth} c p{0.15\textwidth}@{}}
+    \toprule
+    Experiment & Pattern(s) & Engines & Layers & Runs \\
+    \midrule
+    Primary matrix: throughput \& closed-loop p99 (main paper) & all five & PG, MySQL & 11 & 25 independent \\
+    Same-SQL raw-path control (Table~\ref{tab:sameplan}) & deep fetch & PG, MySQL & 9 & median of 10 \\
+    Open-loop CO-corrected tail (Tables~\ref{tab:openloop},~\ref{tab:openloop_mysql}) & deep fetch & PG, MySQL & 5 & rate sweep \\
+    Utilization-controlled tail (Tables~\ref{tab:utilization},~\ref{tab:utilization_mysql}) & deep fetch & PG, MySQL & 8 & median of 5 \\
+    Equal-CPU, 1/2/4 cores (Table~\ref{tab:equalcpu}) & deep fetch & PG & 3 & median of 3 \\
+    Node-cluster multi-worker (Table~\ref{tab:cluster}) & deep fetch & PG, MySQL & 3 & median of 3 \\
+    Pool-size sweep, 1--50 (Tables~\ref{tab:poolsize},~\ref{tab:poolsize_mysql}) & deep fetch & PG, MySQL & 4 & median of 3 \\
+    Mixed read/write, 90:10 \& 70:30 (Table~\ref{tab:mixed}) & deep fetch, insert & PG, MySQL & 5 & median of 5 \\
+    Relaxed vs default durability (Table~\ref{tab:durability}) & insert & PG, MySQL & 11 & 25 def.\ $+$ 10 relaxed \\
+    Wait-event flush decomposition (Table~\ref{tab:waitevents}) & insert & MySQL & 3 & 4000 inserts/layer \\
+    Transactional multi-statement write (Table~\ref{tab:txn_write}) & \texttt{POST /threads} & PG & 5 & median of 5 \\
+    Longer-window (60\,s) tail (Table~\ref{tab:taillong}) & deep fetch & PG, MySQL & 11 & 10 runs \\
+    Post-restart cold cache (Table~\ref{tab:postreboot}) & deep fetch & PG, MySQL & 3 & vs primary median \\
+    Alternative eager-loading (Table~\ref{tab:altloading}) & deep fetch & PG, MySQL & 3 & median of 5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \end{document}

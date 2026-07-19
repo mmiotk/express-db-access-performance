@@ -36,7 +36,7 @@ cross-engine gap is not an artifact of either configuration
 \paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
 reasons unrelated to its inherent cost; every adapter must use its layer's
-documented default eager-loading strategy on the deep-fetch endpoint
+documentation-selected eager-loading strategy on the deep-fetch endpoint
 (Section~\ref{sec:methodology}). The byte-level correctness cross-check above
 caught two defects during development, both fixed before the measurements
 reported here (the checklist in Section~\ref{sec:discussion}). Explicit warm-up

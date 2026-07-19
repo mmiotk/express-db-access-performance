@@ -26,8 +26,8 @@ appendices, and are excluded per Elsevier convention.
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
 the abstract it is 14,464). The structured abstract is 299 words (under the journal's
-300-word structured-abstract limit). Thirty-one tables and two figures are placed in the
-numbered online supplement (`supplement.pdf`, Supplement Tables S1–S31 and Supplement
+300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
+numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
 DOI as the code and data; supplement floats are not part of the main-text count. A later
 revision added per-cell bootstrap 95% CIs to the p99 column of every pattern table and a
@@ -153,9 +153,9 @@ S31: version/commit and DOI, software and hardware requirements, the run command
 and resources, and which results are regenerated automatically from the archived raw data),
 with a one-line pointer in the Data Availability section. Both are outside the counted body
 — the table is a supplement float (uncounted) and Data Availability is back-matter, not one
-of the seven counted sections — so the declared total is unchanged at 14,995. The supplement
-now holds thirty-one tables (S1–S31); the table is placed last, so S1–S30 keep their
-numbers.
+of the seven counted sections — so the declared total is unchanged at 14,995. That round-6
+change brought the supplement to thirty-one tables (S1–S31); the table was placed last, so
+S1–S30 kept their numbers.
 
 A final round-6 pass shortened the manuscript and fixed editorial errors. Repeated
 conclusions were consolidated to one canonical statement each with cross-references —
@@ -170,6 +170,22 @@ This cut the body by 232 words, from 11,448 to 11,216, and the total from 14,995
 a period to a heading that already ended in one — "the instrument is the contribution..");
 the trailing period was removed from all twelve headings so each now renders a single
 period.
-The current release is v1.6.3 (DOI 10.5281/zenodo.21440942).
+
+A round-7 methodology-and-scope pass sharpened the claims without changing any measurement:
+the estimand was renamed from "default-configuration" to "documentation-selected
+implementation-and-strategy" (choosing the first documented API is not the library's default
+configuration); the three claim levels — the primary implementation-and-strategy comparison,
+the same-SQL raw-path bounding control, and the individually non-identified mechanisms — were
+named and kept separate; "capacity", "saturating throughput", and "overload" were reserved
+for the deep-fetch sweep, where a throughput knee was actually measured, and the primary
+matrix's fixed point is described as "high-load" rather than "overload"; and a compact
+**experiment-scope table** (Supplement Table S32: each experiment's access pattern(s),
+engine(s), layer count, and repeated runs) was added last, so S1–S31 keep their numbers. The
+supplement now holds thirty-two tables (S1–S32). These are rewordings and one uncounted
+supplement float, so the manuscript total is **14,925** words (11,378 body, 75 under the
+15,000 limit; the longer "documentation-selected implementation-and-strategy" estimand name
+accounts for most of the round's small net growth).
+The last published release is v1.6.3 (DOI 10.5281/zenodo.21440942); this revision will be
+archived as v1.6.4.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

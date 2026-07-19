@@ -60,7 +60,7 @@ driver use achieves. Every (layer, engine, pattern) combination reports
 throughput (req/s) and client-observed response-time p99 at the fixed
 50-connection high-load operating point jointly, from 25 repeated runs, with a
 utilization-controlled open-loop tail measured below saturation. The study
-separates two estimands: the \emph{default-configuration} effect of each layer
+separates two estimands: the \emph{documentation-selected implementation-and-strategy} effect of each layer
 (RQ1--RQ3), and a controlled \emph{same-SQL} contrast that
 bounds the residual difference once every layer executes identical SQL ---
 changing query formulation, protocol, preparation, round-trips, and mapping
@@ -81,10 +81,10 @@ implementations under the specified operating point:
         response-time-p99 \emph{difference} of the benchmarked implementations
         relative to the native-driver baseline, and how does it vary across the
         five access patterns? We keep distinct three quantities that a fixed
-        operating point conflates: \emph{capacity} (saturating throughput),
-        \emph{overload latency} (the high-load p99 under equal external demand),
-        and \emph{latency at matched utilization} (each layer driven at equal
-        fractions of its own capacity).
+        operating point conflates: \emph{capacity} (saturating throughput,
+        measured by the deep-fetch concurrency sweep), \emph{high-load latency}
+        (the p99 under equal external demand), and \emph{latency at matched
+        utilization} (each layer driven at equal fractions of its own capacity).
   \item \emph{(engine dependence):} Does the observed layer ordering transfer
         across PostgreSQL and MySQL, or is it engine-dependent?
   \item \emph{(consequential patterns):} For which access patterns is the choice of

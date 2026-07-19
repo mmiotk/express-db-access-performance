@@ -11,29 +11,30 @@ engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines}, crossing
 seven portable access layers with both engines and all five patterns, plus two
 engine-specific native drivers and their tuned counterparts \texttt{pg-tuned}
 and \texttt{mysql2-tuned} (eleven layers: nine documentation-selected, two tuned reference
-baselines; full rationale in \texttt{METHODOLOGY.md}). Two estimands are kept
-separate throughout: the \emph{default-configuration} estimand (RQ1--RQ3,
-Section~\ref{sec:results}), the cost a practitioner incurs from each layer's
-documentation-selected configuration, and a \emph{same-SQL (raw-path)} estimand, what remains once every
-layer executes identical SQL through its raw facility --- a compound contrast,
-not a mechanism-isolating decomposition.
+baselines; full rationale in \texttt{METHODOLOGY.md}). The comparison is read at three
+levels, kept separate throughout. The \textbf{primary comparison} (RQ1--RQ3,
+Section~\ref{sec:results}) is each layer's \emph{documentation-selected implementation and
+query/loading strategy} --- the API each library's documentation presents first, not a claim
+about the most common or most performant one. A \textbf{same-SQL (raw-path) control} then
+\emph{bounds} what remains once every layer executes identical SQL through its raw facility.
+The \textbf{mechanisms} that differ within a layer --- eager-loading strategy, wire protocol,
+round-trips, statement preparation, hydration --- change together and are \emph{not}
+separately or causally identified; the same-SQL contrast is a bound, not a decomposition.
 
-A fixed concurrency imposes equal \emph{demand} on layers of unequal capacity
-and therefore drives them to unequal \emph{utilization}, so RQ1 is characterized
-under three operating conditions rather than one privileged point.
-\emph{Equal external demand} is the fixed 50-connection \emph{high-load} operating
-point --- high-load rather than saturated, the throughput knee being demonstrated
-only for the deep fetch (Supplement Figure~S2) while the ten-connection pool, not a
-per-pattern knee, is the binding constraint (Controls, below) --- every layer
-receiving the identical request stream.
-\emph{Equal utilization} is the coordinated-omission-corrected open-loop sweep,
-each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating
-throughput. An \emph{equal compute budget} is the equal-CPU control, the server
-confined to a fixed number of cores (Section~\ref{sec:results}). These answer
-different questions and need not agree --- the high-load condition measures
-capacity under overload, matched utilization the capacity-normalized per-request
-latency, the equal budget the compute cost of the same work --- so we report all
-three and say which each result speaks to.
+A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and
+therefore drives them to unequal \emph{utilization}, so RQ1 is characterized under three
+operating conditions rather than one privileged point. \emph{Equal external demand} is the
+fixed 50-connection \emph{high-load} operating point --- the full five-pattern, two-engine
+matrix; high-load rather than saturated, because the throughput knee is measured only for the
+deep fetch (Supplement Figure~S2), while 50 connections against a ten-connection pool keep
+about forty requests queued regardless of pattern (Controls, below). The other two conditions
+are a \emph{limited} set restricted to the deep fetch, the pattern on which each layer's
+capacity was actually measured (Supplement Table~S32 tabulates every experiment's scope):
+\emph{equal utilization} is the coordinated-omission-corrected open-loop sweep, each layer
+offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput, and an
+\emph{equal compute budget} is the equal-CPU control, the server confined to a fixed number
+of cores. These answer different questions and need not agree, so we report all three and
+state which each result speaks to.
 
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels spanning the
@@ -114,8 +115,8 @@ fetch: a hand-written join for the native drivers, Knex, and the
 query-builder-style Drizzle (the tuned baselines reuse the native join
 unchanged), and relation eager loading (\texttt{include},
 \texttt{withGraphFetched}, \texttt{populate}, or \texttt{relations}) for the
-data-mapper ORMs. The comparison is therefore one of each layer's \emph{documented
-default configuration} under a fixed adapter-selection rule, not a fixed query
+data-mapper ORMs. The comparison is therefore one of each layer's
+\emph{documentation-selected configuration} under a fixed adapter-selection rule, not a fixed query
 plan: a measured difference reflects the SQL each layer generates, its round-trip
 count, and how it materializes results. One asymmetry is inherent
 to any driver-versus-ORM comparison: the native default is hand-authored SQL, the
@@ -129,7 +130,7 @@ measurement --- the eager-loading API each layer's official documentation
 presents first for the pinned version --- so the treatment is documented, not
 editorial. Documentation order is a reproducible selection heuristic, not evidence
 that the chosen API is performance-optimal or the most common production choice, so
-we report a documented default-configuration estimand; Supplement Table~S16 and \texttt{METHODOLOGY.md} record, per layer,
+we report a documentation-selected implementation-and-strategy estimand; Supplement Table~S16 and \texttt{METHODOLOGY.md} record, per layer,
 that API with its \textbf{documentation page and version}, its round-trip count,
 the documented alternative we did \emph{not} use, and that query logging, hooks,
 and validation are off. The six ORMs split both ways on the
