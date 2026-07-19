@@ -1,9 +1,11 @@
 \section{Related Work}
 \label{sec:related}
 
-We organize prior work along four axes on which our study differs from it --- taxonomy
-coverage, engine coverage, joint throughput/tail reporting, and vendor independence ---
-summarized in Table~\ref{tab:prior_art}. We located it with a structured scoping search (not a
+We survey prior work along four \emph{coverage} axes --- taxonomy coverage, engine coverage,
+joint throughput/tail reporting, and vendor independence --- along which access-layer
+benchmarks vary and which our case study spans (Table~\ref{tab:prior_art}); more fundamentally,
+as Section~\ref{sec:related} argues, prior work leaves the comparability of its numbers
+unestablished, the gap our protocol addresses. We located it with a structured scoping search (not a
 systematic review) of the ACM Digital Library, IEEE Xplore, Scopus, and Google Scholar
 (July~2026), crossing an access-layer set (\emph{ORM}, ``object-relational mapping'', ``query
 builder'', ``database access layer'', and the seven library names) with Node.js/Express/
@@ -116,18 +118,22 @@ authorship, PostgreSQL-only coverage, and a single reported metric family.
 
 \subsection{Positioning}
 In the sources searched through July 2026 (protocol archived with the
-replication package), no study combined broad taxonomy coverage, both engines,
-joint throughput/tail reporting, and vendor independence; each covers at most two
-or three of these four properties (Table~\ref{tab:prior_art}). This study
-combines all four (Section~\ref{sec:introduction}), closing the same engine gap
-separating access-layer studies from engine-only work such
-as~\cite{salunke2024pgmysql}.
+replication package), the access-layer benchmarks report throughput or latency numbers whose
+comparability is assumed rather than established, and none combines broad taxonomy coverage,
+both engines, joint throughput/tail reporting, and vendor independence --- each covers at most
+two or three of these four properties (Table~\ref{tab:prior_art}). Our case study spans all
+four, but the paper's contribution is the \emph{comparability protocol} it applies
+(Section~\ref{sec:introduction}): the semantic-equivalence gate, the same-SQL strategy bound,
+and the separated operating points that make such a comparison a controlled experiment and
+that the genre otherwise leaves unaddressed --- closing the engine gap that separates
+access-layer studies from engine-only work such as~\cite{salunke2024pgmysql}.
 
 \begin{table}[htbp]
   \centering
   \small
   \caption{Prior work on relational-database access-layer performance,
-    positioned along the four axes on which this study differs from it.
+    positioned along four \emph{coverage} axes our case study spans; the paper's contribution
+    is the comparability protocol of Section~\ref{sec:introduction}, not this coverage.
     ``Layers covered'' aggregates native drivers, query builders, and ORMs
     into one count; ``none'' marks studies that vary the engine or
     framework but not the access layer.}

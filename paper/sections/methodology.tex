@@ -1,11 +1,15 @@
 \section{Study Design}
 \label{sec:methodology}
 
-Our goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
+The case study's goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
 database access layer of an Express.js service \emph{for the purpose of}
 quantifying its performance cost \emph{with respect to} throughput and
 response-time p99 \emph{from the point of view of} an application developer choosing a layer
-\emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. The
+\emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. This section
+specifies the study's \emph{comparability protocol} (Section~\ref{sec:introduction}) --- the
+semantic-equivalence cross-check, the documentation-selected estimand with its same-SQL
+control, and the separated operating conditions --- and the dual-engine case study that
+applies it. The
 design follows established guidelines for controlled experimentation in software
 engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines}, crossing
 seven portable access layers with both engines and all five patterns, plus two
@@ -23,7 +27,8 @@ separately or causally identified; the same-SQL contrast is a bound, not a decom
 
 A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and
 therefore drives them to unequal \emph{utilization}, so RQ1 is characterized under three
-operating conditions rather than one privileged point. \emph{Equal external demand} is the
+operating conditions rather than one privileged point --- the protocol's
+\emph{operating-point separation}. \emph{Equal external demand} is the
 fixed 50-connection \emph{high-load} operating point --- the full five-pattern, two-engine
 matrix; high-load rather than saturated, because the throughput knee is measured only for the
 deep fetch (Supplement Figure~S2), while 50 connections against a ten-connection pool keep
@@ -124,8 +129,8 @@ a documentation-selected implementation-and-strategy estimand; Supplement Table~
 its round-trip count, the documented alternative we did \emph{not} use, and that query
 logging, hooks, and validation are off.
 
-To bound the combined contribution of query strategy and formulation, every adapter also
-implements a \emph{same-SQL control}: identical two-statement deep-fetch SQL (and, per
+To bound the combined contribution of query strategy and formulation --- the protocol's
+\emph{strategy-attribution} precondition --- every adapter also implements a \emph{same-SQL control}: identical two-statement deep-fetch SQL (and, per
 engine, identical \texttt{EXPLAIN} plans) with identical row mapping, executed through the
 layer's raw-SQL facility, mirroring the aggregation control (Section~\ref{sec:results}).
 Server-side capture, synchronized to a request marker so connection handshakes are excluded,
@@ -138,8 +143,8 @@ the alternative is a byte-identical drop-in. To ensure no adapter silently retur
 issues N+1 queries, an automated cross-check (\texttt{bench/verify.mjs}) funnels every
 adapter's rows through shared canonical constructors and asserts full JSON byte equality
 against the native-driver baseline, on both engines, across 12 probes per adapter spanning
-the four non-mutating patterns and the same-SQL control, before any timing is collected. This
-check caught two defects during development (a fan-out aggregation bug and a driver
+the four non-mutating patterns and the same-SQL control, before any timing is collected --- the
+protocol's \emph{semantic-equivalence} precondition. This check caught two defects during development (a fan-out aggregation bug and a driver
 result-shape mismatch; see Section~\ref{sec:discussion}).
 
 \subsection{Controls}

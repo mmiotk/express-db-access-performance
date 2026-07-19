@@ -19,7 +19,7 @@
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,
-    pdftitle={A Comparative Analysis of Relational Database Access-Layer Performance in Express.js for PostgreSQL and MySQL},
+    pdftitle={A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js},
 }
 \usepackage{csquotes}
 
@@ -28,9 +28,8 @@
 \addbibresource{references.bib}
 
 % --- Document metadata ---
-\title{A Reproducible Benchmark of Relational Database Access-Layer\\
-  Performance in Express.js: A Configuration-Specific Comparison\\
-  on PostgreSQL and MySQL}
+\title{A Comparability Protocol for Benchmarking Relational Database\\
+  Access Layers in Express.js}
 \author{Mateusz Miotk\\
   Faculty of Mathematics, Physics and Informatics,\\
   University of Gdańsk\\
@@ -44,12 +43,14 @@
 \noindent\textbf{Context:} Node.js/Express services reach relational databases
 through a spectrum of access layers (native drivers, query builders, and
 object-relational mappers, or ORMs), yet practitioners choose between them largely
-on vendor benchmarks that are fragmented, PostgreSQL-only, and rarely report the
-tail (p99).
-\textbf{Objective:} We present a reproducible, byte-equivalence-checked benchmark
-harness and use it to compare eleven access-layer implementations under one clearly
-specified operating point on PostgreSQL and MySQL; the harness and its controls,
-not a generalized library ranking, are the contribution.
+on vendor benchmarks whose numbers are rarely shown to be comparable --- fragmented,
+PostgreSQL-only, and seldom reporting the tail (p99).
+\textbf{Objective:} We contribute a reusable \emph{comparability protocol} for
+access-layer benchmarking --- a semantic-equivalence correctness gate, a
+documentation-selected estimand bounded by a same-SQL control, and separated
+operating points --- realized in an open harness and demonstrated through a
+dual-engine PostgreSQL/MySQL case study. The protocol, not any ranking, is the
+contribution.
 \textbf{Methods:} An identical Express application is served through nine documentation-selected
 access layers (native drivers \texttt{pg} and \texttt{mysql2}, the query builder
 Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM) and
@@ -71,15 +72,15 @@ and writes transfer only moderately ($\rho = 0.64$, $0.68$). No layer exceeds
 $\approx\!110\%$ of one core; the native driver leads all ten engine-pattern
 combinations and Prisma~7 sits mid-pack. An earlier version's five-core Prisma
 result, from a now-superseded generation, did not survive the re-run.
-\textbf{Conclusion:} Access-layer rankings can be version-sensitive, as one retired
-five-core result shows; the durable contributions are the reproducible,
-byte-equivalence-checked harness, its three-estimand design, and a checklist of
-genre-specific benchmarking pitfalls, released as a replication package.
+\textbf{Conclusion:} The case study shows why the protocol matters: access-layer
+rankings are configuration-specific and version-sensitive (one earlier five-core
+result did not survive the re-run), so the durable contribution is the protocol and
+its harness, not any single ranking.
 \end{abstract}
 
 \vspace{0.5em}
-\noindent\textbf{Keywords:} database access layer; object-relational mapping;
-Node.js; reproducible benchmarking; response-time tail (p99); empirical software engineering
+\noindent\textbf{Keywords:} benchmarking methodology; database access layer; object-relational mapping;
+Node.js; response-time tail (p99); empirical software engineering
 
 % \tabledir is set here so the shared results section can locate the generated
 % tables; the IST build (paper/ist/) sets it to ../tables/ instead.

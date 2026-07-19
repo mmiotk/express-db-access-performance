@@ -43,8 +43,17 @@ one load point~\cite{drizzle_benchmarks}); and none measures client-observed per
 through an HTTP framework, academic studies instead instrumenting query execution inside the
 process~\cite{zhadko2025orm,imamsakti2025async}.
 
-This paper addresses that gap with a single, vendor-independent benchmark
-(authorship only; Section~\ref{sec:methodology} defines the term): an
+These are gaps in \emph{coverage}. A more basic gap is methodological: across the sources
+searched, the reported numbers are not established to be \emph{comparable}. A layer that
+returns fewer fields, or errors faster than it does real work, can appear faster; the query
+strategy chosen for a library is conflated with the library's own cost; and a single,
+arbitrary load point conflates capacity, tail latency under demand, and per-request latency.
+Comparing access layers meaningfully requires establishing that comparability first --- the
+problem this paper takes up.
+
+This paper addresses these gaps with a \emph{comparability protocol} and a
+vendor-independent case study that applies it (authorship only;
+Section~\ref{sec:methodology} defines the term): an
 \emph{identical} Express application served through all nine access layers
 (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
 Objection, MikroORM) over five representative access patterns rather than a
@@ -70,7 +79,7 @@ measurements, and the table/figure-generating scripts:
 v1.6.4 is permanently archived at Zenodo,
 \texttt{https://doi.org/10.5281/zenodo.21444624}.}
 
-Three research questions structure the study, each scoped to the benchmarked
+The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
   \item \emph{(performance difference):} How large is the throughput and
@@ -87,28 +96,39 @@ implementations under the specified operating point:
         implementation most consequential in this configuration?
 \end{enumerate}
 
-This paper makes four contributions; the \textbf{primary} ones are the harness and the
-benchmark design, which outlast the pinned versions, while the third is a
-configuration-specific snapshot of a fast-moving ecosystem:
+This paper's primary contribution is a \textbf{comparability protocol for
+access-layer benchmarking}: a set of controls that turn the vendor-benchmark genre ---
+which reports throughput or latency numbers whose comparability is assumed --- into a
+controlled experiment, by establishing three preconditions the genre otherwise leaves
+unmet.
 \begin{itemize}[leftmargin=*]
-  \item An \textbf{open, reproducible harness}: a uniform adapter contract, a deterministic
-        seed, a matrix runner with repeated randomized-block runs and paired request streams, a
-        physical write-state reset, a same-SQL control with server-side protocol evidence, a
-        coordinated-omission-corrected open-loop generator with a utilization-controlled mode,
-        and an automated \textbf{correctness cross-check} asserting \textbf{byte-identical}
-        responses across layers (Section~\ref{sec:methodology}).
-  \item A \textbf{vendor-independent, broad-coverage benchmark design} spanning the taxonomy's
-        three tiers (native driver $\to$ query builder $\to$ six ORMs), \textbf{dual-engine},
-        measured at the \textbf{Express level}, reporting throughput and response-time p99
-        \textbf{jointly}, a combination not identified in our documented search.
-  \item \textbf{Configuration-specific observations} on the current versions and this host: no
-        layer's throughput scales with additional application cores, the native driver leads
-        all ten engine-pattern combinations with the difference concentrating in
-        relation-materializing patterns, the read ordering is similar across engines while
-        aggregation and writes transfer only moderately (visible only in a dual-engine design),
-        and direct evidence that such rankings can be \textbf{version-sensitive} --- one earlier
-        headline retired by a re-run on newer versions (Section~\ref{sec:results}).
-  \item A practitioner-oriented \textbf{checklist of four benchmarking pitfalls specific to
-        access layers} (Section~\ref{sec:discussion}), several caught by the correctness
-        cross-check and the rest by performance analysis.
+  \item \textbf{Semantic equivalence.} Every layer must return \emph{byte-identical}
+        results (and every write a real 2xx) before its timing is admitted, so a layer
+        that silently returns less, or errors faster than it works, cannot appear faster
+        (Section~\ref{sec:methodology}).
+  \item \textbf{Strategy attribution.} The treatment is a \emph{documentation-selected
+        implementation-and-strategy} estimand, and a \emph{same-SQL control} bounds how
+        much of an observed difference is the library's execution machinery versus the
+        query strategy selected for it.
+  \item \textbf{Operating-point separation.} Capacity (saturating throughput), tail
+        latency under equal demand, and latency at matched utilization are measured and
+        reported as \emph{distinct} quantities rather than conflated at one arbitrary load
+        point.
 \end{itemize}
+We distinguish this contribution from two things it is easily confused with. The
+\textbf{artifact} --- an open, reusable harness (a uniform adapter contract, a
+deterministic seed, a randomized-block matrix runner, the automated correctness
+cross-check, and a coordinated-omission-corrected open-loop generator) ---
+\emph{operationalizes} the protocol and is released so it can be re-run, but is not
+itself the scientific claim (Section~\ref{sec:methodology}). The \textbf{empirical case
+study} --- eleven implementations (nine documentation-selected layers and two tuned
+baselines) across PostgreSQL and MySQL over five access patterns
+(Section~\ref{sec:results}) --- \emph{demonstrates} the protocol and shows why each
+precondition is load-bearing: a broken MikroORM cell briefly \emph{led} the MySQL write
+ranking until the equivalence gate excluded it, the sevenfold deep-fetch spread collapsed to
+$1.7\times$ once every layer ran identical SQL, and a large high-load tail gap dissolved once
+layers were compared at matched utilization. The resulting rankings are, moreover,
+configuration-specific and version-sensitive (one earlier headline did not survive a re-run on
+newer libraries), so the reusable protocol, not any single ranking, is the durable result. The case study also yields a
+practitioner-oriented checklist of genre-specific benchmarking pitfalls
+(Section~\ref{sec:discussion}), each an instance of a precondition the protocol enforces.

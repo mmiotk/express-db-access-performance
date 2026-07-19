@@ -19,8 +19,9 @@ against. Grounded in the prior-art review (`notes/prior-art.md`), especially
 
 - **Throughput** — requests/second (autocannon `requests.average`).
 - **Tail latency** — p50, p90, p97.5, **p99** (ms). Reporting throughput *and*
-  the tail together is the core contribution; vendor benchmarks report one or the
-  other and pick whichever flatters them.
+  the tail together, rather than one metric picked after the fact, is one requirement of
+  the comparability protocol that is the paper's contribution; vendor benchmarks report
+  one or the other and pick whichever flatters them.
 
 ## Controls (what we hold constant so the layer is the only variable)
 

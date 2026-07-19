@@ -1,7 +1,7 @@
 # Word-count declaration
 
-Manuscript: *A Reproducible Benchmark of Relational Database Access-Layer Performance
-in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL*
+Manuscript: *A Comparability Protocol for Benchmarking Relational Database Access
+Layers in Express.js*
 (submission build `ist/ist_main.tex`).
 
 Counted with `texcount` on the seven body sections plus the structured abstract.
@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 8,669 |
+| Body text (7 sections) | 8994 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **12,216** |
+| **Total (IST rule)** | **12541** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 11,917). The structured abstract is 299 words (under the journal's
+the abstract it is 12242). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
