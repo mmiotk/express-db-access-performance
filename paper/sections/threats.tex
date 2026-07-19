@@ -4,7 +4,7 @@
 We organize the threats along the four standard validity
 categories~\cite{cook1979quasi,wohlin2012experimentation}.
 
-\paragraph{Construct validity}
+\paragraph{Construct validity of the measures}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
 (p99) at the Express endpoint, not query-execution time at the driver or
 database boundary --- deliberate, since it captures the full request round trip
@@ -32,6 +32,29 @@ the write spreads (Table~\ref{tab:write}) describe a standard deployment rather
 than a tuning choice; a symmetric relaxed-durability secondary confirms the
 cross-engine gap is not an artifact of either configuration
 (Section~\ref{sec:discussion}, Supplement Table~S3).
+
+\paragraph{Construct validity of the treatment}
+RQ1's treatment is each layer's \emph{documentation-selected} implementation and eager-loading
+strategy: an operational rule --- the API the official documentation presents first --- that we
+do not validate against surveyed, typical, or performance-tuned usage. It is a reproducible proxy
+for one persona, the developer who follows the official documentation, not a claim that
+documentation ordering equals idiomatic or performance-conscious practice; where a layer's
+documentation-first API differs from what a performance-conscious developer would choose, RQ1's
+spread mixes the library's execution machinery with that strategy choice, a mixture made material
+by the one-to-four statement range on the deep fetch (Supplement Table~S2). Three things bound it.
+First, the selected API is in every case the relations mechanism the official documentation
+presents first --- for the ORMs, the library's canonical eager-loading API --- not an obscure one (Supplement Table~S33, corroborated against the official documentation recorded per
+layer in \texttt{METHODOLOGY.md}). Second, the \emph{same-SQL control} makes every
+layer run common SQL through its raw facility, so the raw-path spread (deep fetch $1.68\times$,
+against $7.15\times$ documentation-selected; Section~\ref{sec:results}) is far smaller --- a
+compound contrast that \emph{bounds}, rather than decomposes, how much of RQ1's spread comes from
+the documentation-selected loading strategy as opposed to the library machinery. Third, where the documented
+alternative is a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows the
+documentation-selected default is the \emph{faster} strategy for the join-default ORMs, so their
+deficit is not an artifact of a poor default; the one exception, Objection's slower select-in
+default on MySQL, is disclosed rather than corrected. RQ1 therefore answers what a documentation-following
+developer obtains, not the library's intrinsic overhead --- which this design \emph{bounds} rather
+than \emph{measures}.
 
 \paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for

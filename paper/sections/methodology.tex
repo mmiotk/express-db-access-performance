@@ -23,7 +23,7 @@ about the most common or most performant one. A \textbf{same-SQL (raw-path) cont
 \emph{bounds} what remains once every layer executes identical SQL through its raw facility.
 The \textbf{mechanisms} that differ within a layer --- eager-loading strategy, wire protocol,
 round-trips, statement preparation, hydration --- change together and are \emph{not}
-separately or causally identified; the same-SQL contrast is a bound, not a decomposition.
+separately or causally identified; the same-SQL contrast is a bound, not a decomposition (Table~\ref{tab:samesql_components} enumerates the components it moves).
 
 A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and
 therefore drives them to unequal \emph{utilization}, so RQ1 is characterized under three
@@ -124,7 +124,10 @@ Prisma and Objection). The documentation-selected API was fixed by a rule decide
 \emph{before} measurement --- the eager-loading API each layer's official documentation
 presents first for the pinned version --- a reproducible selection heuristic, not evidence
 that the chosen API is performance-optimal or the most common production choice, so we report
-a documentation-selected implementation-and-strategy estimand; Supplement Table~S16 and
+a documentation-selected implementation-and-strategy estimand that models the choice of a
+developer following the official documentation --- a construct whose corroboration and limits are
+set out in the supplement's Construct-validity section (Table~S33) and Section~\ref{sec:threats}.
+Supplement Table~S16 and
 \texttt{METHODOLOGY.md} record, per layer, that API with its documentation page and version,
 its round-trip count, the documented alternative we did \emph{not} use, and that query
 logging, hooks, and validation are off.

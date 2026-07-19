@@ -8,7 +8,7 @@ Counted with `texcount` on the seven body sections plus the structured abstract.
 The IST *Guide for Authors* sets the limit for a research paper at **15,000 words**, and
 states that **"references and appendices are part of the submission and count against the
 total number of words, and figures and tables count 200 words each."** This count applies
-that rule exactly: the reference list is included and each of the seven main-text floats
+that rule exactly: the reference list is included and each of the eight main-text floats
 counts 200 words. The paper has **no appendices** — all supplementary material is in the
 separate `supplement.pdf`, which under Elsevier's policy is online supplementary material,
 not an appendix, and is not part of the manuscript word count. The mandatory declaration
@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 8994 |
+| Body text (7 sections) | 9526 |
 | Structured abstract | 299 |
-| Tables and figures in the main text (7 × 200) | 1,400 |
+| Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **12541** |
+| **Total (IST rule)** | **13273** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 12242). The structured abstract is 299 words (under the journal's
+the abstract it is 12974). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -117,7 +117,7 @@ post-hoc adjacent-pair permutation/Wilcoxon/Bonferroni tests compressed to a sec
 descriptive robustness note. The conclusion, methodology, and threats sentences were
 aligned to the same hierarchy (effect sizes and intervals primary; adjacent-rank tests
 secondary and descriptive). No statistic was added or removed; the significance table
-(Table 6) stays in the main text. Compressing the p-value enumeration offset the added
+(Table 7) stays in the main text. Compressing the p-value enumeration offset the added
 practical-significance prose, so the body is 11,435 and the total 14,982.
 
 A follow-on round-6 change reported the layer×engine interaction by its magnitude
@@ -201,7 +201,7 @@ the open-loop and equal-compute-budget conditions to the deep fetch. A pre-submi
 consistency sweep confirmed the pinned library versions match `package.json`, the DOI and
 GitHub link resolve, and every headline number matches its table. That sweep also corrected a
 CV figure ("within 4.2%", not 4.0%, on the reads), removed the redundant per-cell median CIs
-from the main-paper paired significance table (Table 6) that had disagreed with the pattern
+from the main-paper paired significance table (Table 7) that had disagreed with the pattern
 table's bounds, and reconciled two loose prose phrasings ("the faster layers" cluster within
 5%; the transactional ordering "broadly tracks" the single-row insert apart from Prisma). These
 are all rewordings, so the manuscript total was **14,903** words (11,356 body, 97 under the

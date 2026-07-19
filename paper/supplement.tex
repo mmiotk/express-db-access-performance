@@ -637,4 +637,47 @@ the single runnable entry point.
   \end{tabular}
 \end{table}
 
+\section{Construct validity of the documentation-selected treatment}
+\label{sup:construct}
+The \emph{documentation-selected} rule operationalizes the eager-loading strategy a developer who
+follows a library's official documentation would adopt on the deep fetch. Its construct validity
+rests on the selected API being the library's \emph{canonical} relations mechanism --- the one its
+official documentation presents first for the pinned version (the selection rule; per-layer
+documentation page and version in \texttt{METHODOLOGY.md} and Table~\ref{tab:adapter_choices}) ---
+rather than an obscure or deprecated option. Table~\ref{tab:construct} records this per layer. Drizzle is the one borderline case: it exposes both a SQL-style query builder (the selected join) and a higher-level relational-query API that its documentation also presents, so we selected the builder join --- comparable with the query-builder tier --- and record the relational-query API as the documented alternative.
+Where the documented alternative is a byte-identical drop-in, the loading-strategy sensitivity
+check (Table~\ref{tab:altloading}) adds an empirical signal: for the join-default ORMs (Sequelize,
+MikroORM) the documentation-selected default is the \emph{faster} of the two strategies, so a
+layer's deep-fetch deficit is not an artifact of a poor default; for Objection the documented
+default (batched select-in) is the slower option on MySQL, which we disclose rather than correct; the
+Drizzle, Prisma, and TypeORM alternatives were not evaluated (TypeORM's errors on the ordered
+nested fetch), itself a portability caveat. The construct is therefore a defined, reproducible practitioner
+persona --- the documentation-following developer --- and is \emph{not} a claim about
+performance-tuned expert usage or measured production frequency, which this study does not
+observe; RQ1 is scoped accordingly (main text, Threats to Validity).
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{Construct-validity corroboration for the documentation-selected deep-fetch treatment:
+    the selected eager-loading API, whether it is the library's canonical (documentation-primary)
+    relations mechanism, and the empirical loading-strategy signal where the documented
+    alternative is a byte-identical drop-in (Table~\ref{tab:altloading}).}
+  \label{tab:construct}
+  \begin{tabular}{@{}l l p{0.30\textwidth} p{0.30\textwidth}@{}}
+    \toprule
+    Layer & Selected API & Canonical relations mechanism? & Loading-strategy signal \\
+    \midrule
+    \texttt{pg}, \texttt{mysql2} (+tuned) & hand-written JOIN & Yes --- the reference way to fetch a graph with a driver; no higher-level relations API applies & n/a (hand-written SQL) \\
+    \texttt{knex} & builder \texttt{.join()} & Yes --- the query builder's documented join & n/a (hand-written SQL) \\
+    \texttt{drizzle} & builder join & Documented; the relational-query API is the alternative & alternative (relational-query API) not evaluated \\
+    \texttt{prisma} & \texttt{include} & Yes --- Prisma's primary relation-query API & alternative (join strategy) not evaluated \\
+    \texttt{sequelize} & \texttt{include} (join) & Yes --- Sequelize's canonical eager loading & default \emph{faster} than select-in \\
+    \texttt{typeorm} & \texttt{relations} & Yes --- TypeORM's documented relations option & alternative errors on the ordered nested fetch (not evaluated) \\
+    \texttt{objection} & \texttt{withGraphFetched} & Yes --- Objection's flagship eager-loading & default (select-in) slower than join on MySQL (disclosed) \\
+    \texttt{mikroorm} & \texttt{populate} (join) & Yes --- MikroORM's canonical eager loading & default \emph{faster} than select-in \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \end{document}

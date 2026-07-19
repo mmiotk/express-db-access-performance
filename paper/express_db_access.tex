@@ -64,7 +64,7 @@ before measurement, and inserts run under the engines' default durability.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
-narrowing to $1.68\times$ and $2.01\times$ once every layer runs identical SQL, a
+against only $1.68\times$ and $2.01\times$ among the raw paths running common SQL, a
 compound control that bounds the combined query-strategy-and-formulation
 contribution without isolating a single mechanism. The read ordering is similar
 across engines (Spearman $\rho \geq 0.86$); aggregation

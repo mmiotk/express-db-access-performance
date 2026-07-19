@@ -12,8 +12,11 @@ tuned (\texttt{pg-tuned}, \texttt{mysql2-tuned}), the tuned rows marking the
 throughput ceiling hand-tuned driver use reaches, not a level every documentation-selected
 layer attains without code changes. We compare \emph{relative} differences
 within an engine (Section~\ref{sec:methodology}); two estimands recur below: the
-\emph{documentation-selected implementation-and-strategy effect} (RQ1--RQ3) and the
-\emph{same-SQL effect} (Supplement Table~S14).
+\emph{documentation-selected implementation-and-strategy effect} (RQ1--RQ3) --- what a
+developer following each library's documentation obtains, not its intrinsic overhead --- and
+the \emph{same-SQL effect} (Supplement Table~S14) --- what remains when every layer runs common
+SQL through its raw facility, a compound contrast that bounds rather than decomposes the
+difference (construct validity: Section~\ref{sec:threats}).
 
 % One combined table per access pattern: throughput (req/s) and tail latency (p99)
 % side by side, per access layer and engine. \tabledir is set by each main file
@@ -63,21 +66,48 @@ when a layer forwards a single query and large only when it must materialize a
 nested object graph application-side, as on the deep fetch.
 
 \subsection{Same-SQL control}
-The \emph{same-SQL control} (Section~\ref{sec:methodology}) bounds the residual
-difference once each layer runs the same statement rather than choosing its own
-query strategy: server-side capture confirms the statement text is byte-identical
-across layers on both engines while the wire protocols differ per layer, so this
-control is \emph{same SQL, protocol disclosed}, not \emph{same plan}. The
-contrast is composite --- it changes query strategy, query count,
-prepared-statement behavior, the raw versus ORM API, and result marshalling
-together --- so the residual difference is bounded but no single factor is
-isolated.
+The \emph{same-SQL control} (Section~\ref{sec:methodology}) is a \emph{compound} intervention:
+replacing each layer's documentation-selected relational-loading path with the same hand-written
+SQL through its raw facility changes the loading API, query strategy, SQL formulation, round-trip
+count, statement preparation, and result hydration \emph{together}
+(Table~\ref{tab:samesql_components}). Server-side capture confirms the statement text is
+byte-identical across layers on both engines while the wire protocols differ per layer, so the
+control is \emph{same SQL, protocol disclosed}, not \emph{same plan}. It therefore \emph{bounds}
+the combined difference these components make; it does not attribute that difference to any one of
+them, and in particular does not establish how much comes from SQL formulation or query count.
 
-On the identical SQL, the deep-fetch native-relative spread collapses from $7.15\times$
-(PostgreSQL) and $4.96\times$ (MySQL) to $1.68\times$ and $2.01\times$ (Supplement Table~S14),
-so layers that trail on the documentation-selected fetch largely converge once they run the
-same statement --- bounding the query-strategy-and-formulation contribution without isolating a
-single mechanism. Prisma is the slowest layer on the raw path itself; we conjecture this
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{The \emph{same-SQL control} is a compound intervention: switching each layer from its
+    documentation-selected path to the same hand-written SQL through its raw facility moves every
+    component below at once --- equalizing the SQL text, query strategy, round-trip count, and
+    result mapping, while the raw-SQL facility, statement preparation, and disclosed wire protocol
+    still differ across layers. The residual difference it leaves therefore bounds their combined
+    effect and cannot be attributed to any single one --- in particular, not to SQL formulation or
+    query count.}
+  \label{tab:samesql_components}
+  \begin{tabular}{@{}l p{0.33\textwidth} p{0.33\textwidth}@{}}
+    \toprule
+    Component & Documentation-selected path & Same-SQL (raw-path) control \\
+    \midrule
+    Loading API & the ORM's eager-load API (\texttt{include}, \texttt{populate}, \ldots) or a builder join & the layer's raw-SQL facility \\
+    Query strategy & per layer: single join, batched select-in, or multi-query & one hand-written two-statement join, identical across layers \\
+    SQL formulation & per-ORM generated statement text & byte-identical statement text (server-side confirmed) \\
+    Round-trip count & one to four statements & two statements \\
+    Statement preparation & ORM-managed & the raw facility's default \\
+    Wire protocol & per driver (extended/simple, text/binary) & per driver, unchanged and disclosed \\
+    Result hydration & the ORM's object-graph mapping & shared canonical constructors, identical across layers \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Among the raw paths running common SQL, the deep-fetch native-relative spread is far smaller ---
+$1.68\times$ (PostgreSQL) and $2.01\times$ (MySQL), against the documentation-selected $7.15\times$
+and $4.96\times$ (Supplement Table~S14). The result this supports is that the documentation-selected
+paths differ much more than the raw paths executing common SQL; it does \emph{not} quantify how much
+of the original difference comes from SQL formulation or query count, which change together with the
+API, protocol, preparation, and hydration (Table~\ref{tab:samesql_components}). Prisma is the slowest layer on the raw path itself; we conjecture this
 reflects dispatch and marshalling overhead in its raw API rather than SQL execution, a
 hypothesis the composite contrast cannot confirm. A loading-strategy sensitivity check
 (Supplement Table~S18) rules out a mere default-strategy artifact: switching the join-default
