@@ -74,7 +74,19 @@ S23).
   structured abstract is 298 words. New analyses are placed in the supplement; the
   condensed Prisma narrative and removed repetition offset the additions.
 
+**Pre-submission consistency pass.** Before submission the artefact was audited end to end
+so the main paper, supplement, and Zenodo archive report one version and one set of numbers.
+Three engine-specific tables (the deep-fetch significance table, the CPU-efficiency table
+S5, and the resource-footprint table S10) had been rendered for PostgreSQL while the text
+cites the MySQL figures; they were regenerated for MySQL to match. The relaxed-durability
+secondary (S3) was re-run because its archived raw file was corrupt (it showed relaxed
+durability slower than default); the fresh, reproducible run confirms the published result
+(mysql2 +2.36x on the MySQL insert) and corrects a single MikroORM outlier. The Elsevier
+Highlights were refreshed to current terminology and numbers, and three small
+cross-references were corrected. Every table now reproduces from the archived raw data (the
+checksum manifest verifies 33/33).
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21433223 (release v1.6.2). An independent adversarial re-review
+DOI 10.5281/zenodo.21440942 (release v1.6.3). An independent adversarial re-review
 reproduced every headline number from the raw data and returned a minor-revision
 verdict.

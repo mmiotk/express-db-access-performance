@@ -164,8 +164,8 @@ decision table are in the replication package's `experiments/METHODOLOGY.md`.
 > reproduce the study and which results regenerate automatically.
 
 **Response.** I added Supplement Table S31 (`tab:reproducibility`), an artifact-
-reproducibility summary giving the version and commit (release v1.6.2), the Zenodo DOI
-(`10.5281/zenodo.21433223`), the software and hardware requirements, the run commands,
+reproducibility summary giving the version and commit (release v1.6.3), the Zenodo DOI
+(`10.5281/zenodo.21440942`), the software and hardware requirements, the run commands,
 and the time and resources — smoke test "≈5--10~min," full campaign "≈25~h wall-clock,"
 and table regeneration in "≈minutes, no database." It records which results are
 auto-reproduced: "Every table and figure, from the archived raw data;

@@ -170,6 +170,6 @@ This cut the body by 232 words, from 11,448 to 11,216, and the total from 14,995
 a period to a heading that already ended in one — "the instrument is the contribution..");
 the trailing period was removed from all twelve headings so each now renders a single
 period.
-The current release is v1.6.2 (DOI 10.5281/zenodo.21433223).
+The current release is v1.6.3 (DOI 10.5281/zenodo.21440942).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
