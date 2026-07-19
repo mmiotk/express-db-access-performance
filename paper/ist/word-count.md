@@ -186,9 +186,14 @@ same round demoted the equal-CPU experiment to an exploratory sensitivity check 
 its "at most a few percent" wording (the ORM per-core values wobble 10–17% run-to-run);
 added that the bootstrap intervals capture within-campaign variability, not cross-machine
 generalization; noted that 1–2 ms p99 gaps sit at the millisecond measurement floor; and
-brought the raw MySQL-insert distributions (Supplement Figure S1) into the body. These are all
-rewordings and one uncounted supplement float, so the manuscript total is **14,963** words
-(11,416 body, 37 under the 15,000 limit).
+brought the raw MySQL-insert distributions (Supplement Figure S1) into the body. A final
+conclusions-and-language pass then limited "access-layer overhead" wording to the combined
+implementation-and-strategy quantity the design actually measures, replaced the "thin layers
+are a safer default" recommendation with "benchmark the relation-heavy hot path for the
+specific application", and added an explicit "configuration-specific" label to the
+Conclusion (the cautious "in the sources searched" novelty phrasing was already in place).
+These are all rewordings and one uncounted supplement float, so the manuscript total is
+**14,977** words (11,430 body, 23 under the 15,000 limit).
 The last published release is v1.6.3 (DOI 10.5281/zenodo.21440942); this revision will be
 archived as v1.6.4.
 

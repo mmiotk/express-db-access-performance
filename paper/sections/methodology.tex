@@ -160,7 +160,7 @@ driver result-shape mismatch; see Section~\ref{sec:discussion}).
 \subsection{Controls}
 Four controls isolate the access layer as the only variable.
 \emph{(i)~Pool size} is fixed at ten connections for every adapter, so the
-comparison measures access-layer overhead rather than pool tuning, a known
+comparison reflects the access-layer choice, not pool tuning, a known
 web-application performance factor~\cite{gupta2017pooling,laigner2021microservices};
 for Prisma, whose default pool is otherwise derived from core count, this is
 pinned explicitly via the \texttt{connection\_limit} URL parameter. Because the
@@ -174,7 +174,7 @@ $\approx 10$ of 10) and a mean of about 32 requests pending in the acquisition
 queue (peaks of 39--40).
 \emph{(ii)~Identical query semantics}: each endpoint issues the same logical
 query across layers; aggregation uses a single correlated-subquery formulation
-everywhere (the documented raw-SQL path), so it measures layer overhead on an
+everywhere (the documented raw-SQL path), so the residual reflects the layer on an
 identical plan, not differences in generated SQL.
 \emph{(iii)~Write isolation}: because the insert endpoint mutates the dataset,
 every cell resets it before warm-up and before every measured run, not merely

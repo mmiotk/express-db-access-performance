@@ -135,11 +135,11 @@ general. The native driver leads throughput on every pattern on both engines, an
 the documentation-selected ORM penalty concentrates on relation-materializing traffic, whereas
 read-simple patterns and aggregation, where a layer merely forwards SQL, spread
 far less (Section~\ref{sec:results}). Where a service's hot path is dominated by
-deep or nested fetches, the access layer is consequential, and the tested thin
-paths (the native driver and Knex) were the safer default here \emph{for
-throughput and response-time p99}; whether that advantage generalizes to other
-implementations of those tiers is a hypothesis for broader study, not a category
-law. Where the workload is read-simple or
+deep or nested fetches, the access layer is consequential and should be benchmarked
+for the specific application: the tested thin paths (the native driver and Knex) led
+here \emph{for throughput and response-time p99}, but whether that advantage
+generalizes to other implementations of those tiers, schemas, or workloads is a
+hypothesis for broader study, not a category law or a general default. Where the workload is read-simple or
 write-bound, especially on MySQL, whose engine floor for single-row inserts
 dominates layer differences under default durability, the throughput cost is
 small, so a full ORM's productivity and type safety, not measured here, may
