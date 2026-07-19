@@ -137,8 +137,8 @@ transactional subset.
 \section{Dispersion on PostgreSQL}
 \label{sup:cv-pg}
 Table~\ref{tab:cv} gives the full per-layer, per-pattern coefficient of variation
-of throughput on PostgreSQL across the 25 repeated runs (maximum 7.6\%,
-\texttt{pg}/insert), the companion to the MySQL table in Section~S1.
+of throughput on PostgreSQL across the 25 repeated runs (maximum 7.3\%,
+\texttt{knex}/insert), the companion to the MySQL table in Section~S1.
 
 \input{\tabledir cv_all}
 
@@ -380,7 +380,7 @@ The blocked permutation test reports \emph{that} the layer ordering interacts wi
 engine; Table~\ref{tab:interaction} reports \emph{how large} the interaction is, as the
 PostgreSQL$\div$MySQL throughput ratio per layer and pattern with a 95\% paired-bootstrap
 interval. Every layer is faster on PostgreSQL, so the interaction is in the spread of
-the advantage: the reads hold a narrow band across layers ($\approx$1.0--1.6) while the
+the advantage: the reads stay within $\approx$1.0--1.9 while the
 insert scatters from $1.6$ to $3.2$, the quantitative counterpart of the low insert rank
 correlation.
 
@@ -433,9 +433,10 @@ Table~\ref{tab:significance_p99} is the p99 counterpart of the main-text through
 significance table (Table~6): the same paired permutation, Wilcoxon,
 geometric-mean-ratio, paired-bootstrap-CI, and dominance analysis applied to each
 adjacent layer's per-replicate deep-fetch p99 on both engines, delivering the per-cell
-p99 inference the outcomes table (Table~3) lists as a primary analysis. Every adjacent pair separates on both engines except the near-tied
-TypeORM--Prisma step on PostgreSQL (ratio $1.03$, permutation $p=0.06$); the p99
-ordering mirrors the throughput ranking. Because the high-load tail tracks capacity,
+p99 inference the outcomes table (Table~3) lists as a primary analysis. Every adjacent pair separates on both engines except two near-ties at ratio
+$1.03$ --- the TypeORM--Prisma step on PostgreSQL (permutation $p=0.05$) and the
+Sequelize--Objection step on MySQL ($p=0.08$); the p99 ordering otherwise mirrors
+the throughput ranking. Because the high-load tail tracks capacity,
 these are resolved capacity-and-queueing differences, not intrinsic per-request latency.
 
 \input{\tabledir significance_p99}

@@ -112,8 +112,8 @@ single-engine benchmark (Supplement Table~S27). The cost's \emph{magnitude} also
 depends on the engine (Supplement Table~S28, per-layer
 PostgreSQL$\div$MySQL ratios). Every layer is faster on PostgreSQL, so
 the layer$\times$engine interaction is in the \emph{spread} of that advantage, not
-its sign: across the three reads it holds a narrow band ($\approx$1.0--1.6$\times$,
-near-parallel), but the insert scatters from $1.6\times$ (MikroORM) to $3.2\times$
+its sign: across the three reads it stays within $\approx$1.0--1.9$\times$, but the
+insert scatters from $1.6\times$ (MikroORM) to $3.2\times$
 (Prisma), reordering the layers across engines. The blocked permutation test
 (Section~\ref{sec:methodology}) only confirms this interaction is nonzero; its floor
 $p$ says nothing about size. Single-engine results are thus portable in order for
@@ -175,8 +175,9 @@ fetch, PostgreSQL's p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (each
 layer's p99 with a 95\% CI, Table~\ref{tab:deep_fetch}), monotonic below the
 native driver --- a penalty
 throughput-only vendor benchmarks miss. A paired p99 analysis (Supplement
-Table~S30) resolves every adjacent pair on both engines except the near-tied
-TypeORM--Prisma step on PostgreSQL (ratio $1.03$, $p=0.06$), mirroring the
+Table~S30) resolves every adjacent pair on both engines except two near-ties at
+ratio $1.03$ --- the TypeORM--Prisma step on PostgreSQL ($p=0.05$) and the
+Sequelize--Objection step on MySQL ($p=0.08$) --- otherwise mirroring the
 throughput ranking.
 On MySQL inserts, by contrast, the
 faster layers' tails cluster (113--127~ms) at the engine floor, with only Prisma's

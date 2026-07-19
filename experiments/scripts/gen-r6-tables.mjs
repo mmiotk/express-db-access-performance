@@ -41,9 +41,9 @@ const tex = `\\begin{table}[htbp]
     paired-bootstrap interval) for each portable layer and pattern. A ratio $>1$ means
     the layer runs faster on PostgreSQL, $<1$ faster on MySQL. Every layer is faster on
     PostgreSQL here, so the interaction is in the \\emph{spread} of the advantage, not its
-    sign: the three read patterns hold a narrow band across layers ($\\approx$1.0--1.6, a
-    near-parallel profile, small interaction), whereas aggregation and especially the
-    insert scatter widely (insert 1.6--3.2), reordering the layers across engines --- the
+    sign: point read and range scan hold a tight band ($\\approx$1.0--1.6), the deep fetch
+    and aggregation reach $\\approx$1.9, and the insert scatters widest (1.6--3.2), reordering
+    the layers across engines --- the
     interaction the blocked permutation test detects and the rank correlations of
     Table~\\ref{tab:ranks} summarize.}
   \\label{tab:interaction}

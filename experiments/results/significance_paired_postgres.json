@@ -2,25 +2,11 @@
   {
     "engine": "postgres",
     "endpoint": "deep_fetch",
-    "pair": "pg>prisma",
-    "ratio": 1.02,
+    "pair": "pg>knex",
+    "ratio": 1.479,
     "ratioCI": [
-      1.002,
-      1.04
-    ],
-    "winFraction": 0.64,
-    "perm_p": 0.058447077646117694,
-    "wilcoxon_p": 0.0803,
-    "cliffs_delta_unpaired": 0.35
-  },
-  {
-    "engine": "postgres",
-    "endpoint": "deep_fetch",
-    "pair": "prisma>knex",
-    "ratio": 1.474,
-    "ratioCI": [
-      1.445,
-      1.502
+      1.457,
+      1.5
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -31,10 +17,10 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "knex>drizzle",
-    "ratio": 1.2,
+    "ratio": 1.332,
     "ratioCI": [
-      1.18,
-      1.22
+      1.314,
+      1.351
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -45,10 +31,10 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "drizzle>typeorm",
-    "ratio": 1.553,
+    "ratio": 1.542,
     "ratioCI": [
-      1.534,
-      1.574
+      1.521,
+      1.565
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -58,11 +44,25 @@
   {
     "engine": "postgres",
     "endpoint": "deep_fetch",
-    "pair": "typeorm>objection",
-    "ratio": 1.283,
+    "pair": "typeorm>prisma",
+    "ratio": 1.015,
     "ratioCI": [
-      1.265,
-      1.3
+      1.004,
+      1.028
+    ],
+    "winFraction": 0.64,
+    "perm_p": 0.022998850057497126,
+    "wilcoxon_p": 0.0238,
+    "cliffs_delta_unpaired": 0.3
+  },
+  {
+    "engine": "postgres",
+    "endpoint": "deep_fetch",
+    "pair": "prisma>objection",
+    "ratio": 1.154,
+    "ratioCI": [
+      1.133,
+      1.176
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -73,24 +73,24 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "objection>sequelize",
-    "ratio": 1.047,
+    "ratio": 1.041,
     "ratioCI": [
-      1.033,
-      1.059
+      1.026,
+      1.055
     ],
     "winFraction": 0.88,
     "perm_p": 0.00004999750012499375,
-    "wilcoxon_p": 0.0001,
-    "cliffs_delta_unpaired": 0.74
+    "wilcoxon_p": 0.0002,
+    "cliffs_delta_unpaired": 0.76
   },
   {
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "sequelize>mikroorm",
-    "ratio": 1.74,
+    "ratio": 1.931,
     "ratioCI": [
-      1.713,
-      1.77
+      1.897,
+      1.969
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
