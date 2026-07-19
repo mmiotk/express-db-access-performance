@@ -10,8 +10,8 @@ attribution), and separates capacity, tail-under-demand, and matched-utilization
 dual-engine case study --- eleven implementations across PostgreSQL and MySQL over five
 access patterns --- demonstrates it (Section~\ref{sec:introduction}).
 
-The documentation-selected implementation-and-strategy difference is concentrated, not
-uniform: sharpest for the deep/nested fetch that assembles a nested object graph
+The documentation-selected implementation-and-strategy difference is concentrated across the
+five tested patterns, not uniform: sharpest for the deep/nested fetch that assembles a nested object graph
 application-side, and modest for point reads and aggregation
 (Section~\ref{sec:results}). Among the raw paths running common SQL the spread is far smaller,
 but because that contrast changes several mechanisms together, it bounds rather than attributes the

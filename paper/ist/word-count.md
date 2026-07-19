@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9648 |
+| Body text (7 sections) | 9739 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13395** |
+| **Total (IST rule)** | **13486** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13096). The structured abstract is 299 words (under the journal's
+the abstract it is 13187). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -241,5 +241,15 @@ reported only as coarse descriptive summaries. These changes added a main-text c
 diagram (seven → eight main floats) and expanded the estimand/RQ2 prose; the body is 9,648
 words and the total 13,395, and the structured abstract was tightened (a duplicated
 version-sensitivity sentence dropped, the reversal detail added) to stay under 300.
+
+A round-8 workload-scope pass then narrowed the one generalizing statement the reviewer
+flagged — "the ORM penalty concentrates on relation-materializing traffic" — to the tested
+implementations and patterns: the Discussion now says the documentation-selected ORM spread was
+largest on the single deep/nested-fetch shape tested and adds that one nested-fetch topology (the
+fan-out sweep varies its breadth, 0–500 children, but not its depth, schema, or query mix) cannot
+establish a general distribution of ORM penalties, so the pattern is a benchmark observation to be
+re-measured on the target workload, not an established law; the Conclusion and the practice
+paragraph were scoped to "the five tested patterns" / "these probes" to match. The added scoping
+took the body to 9,739 words and the total to 13,486, still under the 15,000 limit.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
