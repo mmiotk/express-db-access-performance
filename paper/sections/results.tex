@@ -134,16 +134,18 @@ an engine-imposed floor --- \texttt{mysql2} 1{,}753, Drizzle 1{,}730, Objection
 with p99 around 113--153~ms; Prisma is the exception at 886~req/s (last), which
 widens the nominal MySQL spread to $1.98\times$. Direct
 \texttt{performance\_schema} instrumentation attributes the floor to the commit
-path: the redo-log and binlog flush is a shared engine cost, similar across the
-native driver, query builder, and slowest ORM despite their very different read
-performance, and removing it (relaxed durability) lifts \texttt{mysql2} from
-1{,}576 to 3{,}238~req/s (Supplement Table~S19). Relaxing durability roughly
-doubles MySQL insert throughput layer-wide (\texttt{mysql2} $2.35\times$, 1{,}753
-to 4{,}114; Supplement Table~S3), confirming the floor is engine-side rather than
-layer-specific. PostgreSQL, by contrast, spreads $3.23\times$ (\texttt{pg}
-6{,}402 down to MikroORM 1{,}979) and is only weakly durability-sensitive on the
-lean layers (\texttt{pg} $1.13\times$ relaxed$\div$default; Supplement Table~S3),
-so there the access layer, not the engine, remains the larger factor.
+path: removing the redo-log and binlog flush (relaxed durability) lifts
+\texttt{mysql2} from 1{,}576 to 3{,}238~req/s (Supplement Table~S19). The gain
+concentrates in the flush-bound layers: relaxing durability lifts the native
+driver and query builder about $2\times$ on the MySQL insert (\texttt{mysql2}
+$2.36\times$, 1{,}753 to 4{,}130; Knex $2.10\times$; Supplement Table~S3), while
+the slower ORMs, limited by their own write overhead, gain less
+($1.1$--$1.5\times$) --- the engine's commit path is the floor for the lean
+layers, not a layer property. PostgreSQL, by contrast, spreads $3.23\times$
+(\texttt{pg} 6{,}402 down to MikroORM 1{,}979) and is only weakly
+durability-sensitive ($\le$14\%, \texttt{pg} $1.11\times$ relaxed$\div$default;
+Supplement Table~S3), so there the access layer, not the engine, remains the
+larger factor.
 
 \subsection{RQ3: which patterns matter most}
 Ranking the five patterns by native-relative spread on PostgreSQL gives deep

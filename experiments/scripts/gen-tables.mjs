@@ -39,8 +39,9 @@ const g = (rows, a, e, ep) => rows.find((r) => r.adapter === a && r.engine === e
     median of 25 replicates) and under the relaxed regime (all of the above off;
     median of 10), with the relaxed$\\div$default ratio. At 50 concurrent
     connections, group commit amortizes the per-commit flushes: relaxing
-    durability buys at most 14\\% on PostgreSQL (and $\\le$4\\% on the
-    layer-bound ORMs) and 19--24\\% on MySQL.}
+    durability buys at most 14\\% on PostgreSQL and $1.1$--$2.4\\times$ on MySQL,
+    largest for the flush-bound \\texttt{mysql2} and Knex and smallest for the
+    overhead-bound ORMs.}
   \\label{tab:durability}
   \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l r r r r r r}
