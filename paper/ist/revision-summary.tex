@@ -12,91 +12,80 @@
 \newcommand{\euro}{EUR}
 \pagestyle{plain}
 \begin{document}
-\section*{Summary of Revisions (Round 6)}
+\section*{Summary of Revisions}
 
 \textbf{Manuscript:} A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL \textbf{Author:} Mateusz Miotk (University of Gdańsk) \textbf{Journal:} Information and Software Technology
 
-I thank the reviewer for a sixth careful reading and for the clear framing that the dataset and artifact are publishable, the remaining obstacle being interpretation that claimed more causal specificity and category generality than a single-host, default-configuration design can establish. I have made that framing the organizing principle of this revision. A full point-by-point reply (every P1--P10 item, the \S{}7 minors, the \S{}8 statistical points, and questions Q1--Q8, each with a quotation of the revised text) is provided in the separate Response to Reviewers. The essential changes are summarized below.
+I thank the reviewer for a thorough, multi-part reading. This revision addresses five successive sets of comments --- on methodology and the scope of claims, on the CPU and statistical reporting, on the conclusions and language, on presentation, and on the paper's length. A full point-by-point reply, each with a quotation of the revised text, is in the separate Response to Reviewers; the essential changes are summarized below. No measurement changed --- the revision is one of framing, scoping, and length.
 
-\section*{Governing change: the same-SQL causal claim is withdrawn}
-
-The earlier text read the same-SQL control as a causal decomposition --- that the eager-loading \emph{strategy}, not the execution machinery, drove most of the idiomatic spread. Because collapsing every layer onto identical SQL changes query strategy, statement count, prepared-statement behaviour, the raw-versus-ORM API, and result marshalling together, the design cannot support that attribution. I have \textbf{retracted it everywhere} (both abstracts, Results, Discussion, Conclusion) and reworded the control as a pure compound \textbf{bounding contrast}: it bounds the combined query-strategy-and-formulation contribution without isolating any single mechanism. The one remaining mechanistic remark (Prisma's slow raw path) is now labelled an explicit conjecture the contrast cannot confirm.
-
-\section*{New experiment: longer-window tail-latency validation}
-
-Addressing the concern that the primary p99 rests on \textasciitilde{}60 tail observations per run, I added a 60-second re-measurement of the deep fetch on both engines (five times the requests, \textasciitilde{}300 tail observations per run) at the same operating point. The p99 ranking is \textbf{preserved exactly (Spearman rho = 1.00 per engine)}, each cell's p99 barely moves from the 12-second value, the p97.5 ordering matches the p99 ordering, and the run-level p99 coefficient of variation stays at most 6.0\% (PostgreSQL) / 3.8\% (MySQL). The 12-second window is therefore adequate for the tail ranking (new Supplement Table S23).
-
-\section*{Interpretation and framing}
+\section*{Scope of claims and methodology}
 
 \begin{itemize}
-  \item \textbf{Estimand renamed.} "Idiomatic" is now a *documented default configuration under a
+  \item The estimand is renamed from "default-configuration" to **documentation-selected
 \end{itemize}
 
-reproducible adapter-selection rule*, explicitly not a claim of performance-optimal or typical production use.
+implementation-and-strategy**: choosing the first documented API is a reproducible selection heuristic, not the library's actual default configuration.
 
 \begin{itemize}
-  \item \textbf{Three quantities separated.} RQ1 keeps capacity, overload latency (saturated p99 at
+  \item The comparison is now read at \textbf{three explicit, separated levels}: the primary
 \end{itemize}
 
-equal demand), and matched-utilization latency distinct.
+implementation-and-strategy comparison, the same-SQL raw-path \textbf{bounding} control, and the individual mechanisms, which change together and are \textbf{not} causally isolated.
 
 \begin{itemize}
-  \item \textbf{Category claims scoped.} Practical guidance now applies to the tested
+  \item The operating conditions are scoped: the full five-pattern, two-engine matrix is the fixed
 \end{itemize}
 
-implementations and configuration, offered as a hypothesis rather than a category law.
+\textbf{high-load} point, while the equal-utilization and equal-CPU conditions are a limited set restricted to the deep fetch. "capacity", "saturating throughput", and "overload" are reserved for the deep-fetch sweep, where a throughput knee was actually measured.
 
 \begin{itemize}
-  \item \textbf{Perishability tempered} from a general law to one observed version-sensitivity
+  \item A new \textbf{experiment-scope table} (Supplement Table S32) tabulates every experiment's
 \end{itemize}
 
-example; the historical Prisma narrative is condensed to a single paragraph.
+patterns, engines, layer count, and repeated runs.
 
-\section*{Statistics and reporting}
+\section*{CPU and statistics}
 
 \begin{itemize}
-  \item Kendall's tau added alongside Spearman's rho; "read rankings transfer" softened to "the
+  \item The equal-CPU experiment is \textbf{demoted to an exploratory sensitivity check}; the earlier
 \end{itemize}
 
-read ordering is similar across engines."
+"at most a few percent" wording is corrected (the ORM per-core values wobble 10--17\% run-to-run with no monotonic gain from more cores).
 
 \begin{itemize}
-  \item Post-hoc adjacent-rank comparisons reported descriptively, not as ranking confirmation.
-  \item A layer-by-engine \textbf{interaction-magnitude} table (PostgreSQL$\div$MySQL ratios with
+  \item The bootstrap intervals are stated to capture \textbf{within-campaign}, run-to-run variability
 \end{itemize}
 
-bootstrap intervals) reports effect size rather than a p-value floor.
+on this host, not variation across machines or versions; adjacent-layer p99 gaps of one or two milliseconds sit at the millisecond measurement floor and are not read as real.
 
 \begin{itemize}
-  \item An \textbf{ex-MikroORM robustness check}: the read ordering and the deep-fetch spread
+  \item The raw per-replicate MySQL-insert distributions (Supplement Figure S1) are brought into
 \end{itemize}
 
-(3.7x) survive excluding the largest outlier.
+the Results body.
+
+\section*{Conclusions and language}
 
 \begin{itemize}
-  \item Raw per-replicate points for the noisiest (MySQL insert) cells shown as a figure.
-  \item The TOST margin is motivated by the engineering consequence, not by measurement noise.
-  \item "Intrinsic latency" replaced by capacity-normalized / matched-utilization wording;
+  \item "access-layer overhead" wording is limited where it implied an isolated measurement (the
 \end{itemize}
 
-"CRUD-spanning" replaced by "five representative access patterns"; "native leads all ten engine-pattern combinations" stated exactly; "latest stable" dated to the freeze.
+primary comparison bundles library, query strategy, round-trips, and mapping); the "thin layers are a safer default" recommendation becomes \textbf{"benchmark the relation-heavy hot path for the specific application"}; an explicit \textbf{configuration-specific} label is added to the Conclusion; and novelty is scoped throughout to "the sources searched".
 
-\section*{Reproducibility and length}
+\section*{Presentation, length, and consistency}
 
 \begin{itemize}
-  \item A new top-level \textbf{REPRODUCE.md} gives one-command smoke, full-matrix, and
+  \item Rather than split the paper (which would read as salami-slicing, since both threads share
 \end{itemize}
 
-clean-room-from-Zenodo-tarball recipes; the archive is a git archive containing all 33 raw-data JSON files with a regenerated checksum manifest.
+one research question), the main text is \textbf{condensed by about 24\% (51 $\to$ 43 pages; body 11,356 $\to$ 8,669 words)} so the central message is not lost among the controls and sensitivity analyses. Detail is \textbf{moved to the supplement, not deleted}: new \emph{Statistical Methods}, \emph{Measurement Details}, and \emph{Benchmarking-Pitfalls Checklist} sections. The same-SQL control, the RQ1--RQ3 answers, and Threats to Validity remain prominent in the main text. The manuscript is 12,216 words, well under the 15,000-word IST limit.
 
 \begin{itemize}
-  \item The manuscript is 14,936 words (references and floats included, under 15,000); the
+  \item A pre-submission consistency sweep confirmed that the pinned library versions match the
 \end{itemize}
 
-structured abstract is 298 words. New analyses are placed in the supplement; the condensed Prisma narrative and removed repetition offset the additions.
+lockfile, the DOI and repository link resolve, and every headline number matches its table; it corrected a coefficient-of-variation figure ("within 4.2\%", not 4.0\%, on the reads), removed redundant per-cell median confidence intervals from the paired significance table that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
-\textbf{Pre-submission consistency pass.} Before submission the artefact was audited end to end so the main paper, supplement, and Zenodo archive report one version and one set of numbers. Three engine-specific tables (the deep-fetch significance table, the CPU-efficiency table S5, and the resource-footprint table S10) had been rendered for PostgreSQL while the text cites the MySQL figures; they were regenerated for MySQL to match. The relaxed-durability secondary (S3) was re-run because its archived raw file was corrupt (it showed relaxed durability slower than default); the fresh, reproducible run confirms the published result (mysql2 +2.36x on the MySQL insert) and corrects a single MikroORM outlier. The Elsevier Highlights were refreshed to current terminology and numbers, and three small cross-references were corrected. Every table now reproduces from the archived raw data (the checksum manifest verifies 33/33).
-
-The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21440942 (release v1.6.3). An independent adversarial re-review reproduced every headline number from the raw data and returned a minor-revision verdict.
+The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21444624 (release v1.6.4). Every table reproduces from the archived raw data, whose checksum manifest verifies 33/33.
 
 \end{document}

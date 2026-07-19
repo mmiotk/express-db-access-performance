@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 11,216 |
+| Body text (7 sections) | 8,669 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (7 × 200) | 1,400 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14,763** |
+| **Total (IST rule)** | **12,216** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 14,464). The structured abstract is 299 words (under the journal's
+the abstract it is 11,917). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -219,7 +219,6 @@ single-host/version-sensitivity caveats consolidated. The manuscript total is no
 words (8,669 body + 299 abstract + 1,848 references + seven main floats), well under the 15,000
 limit; the supplement grew from 26 to 29 pages. All citations were kept in the main text (the
 supplement has no bibliography), so the reference list is unchanged.
-The last published release is v1.6.3 (DOI 10.5281/zenodo.21440942); this revision will be
-archived as v1.6.4.
+This revision is archived as release v1.6.4 (DOI 10.5281/zenodo.21444624).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
