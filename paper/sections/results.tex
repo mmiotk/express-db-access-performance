@@ -206,7 +206,9 @@ Across the 25 repeated runs the coefficient of variation of deep-fetch throughpu
 --- the pattern that carries the pairwise tests --- is at most $4.0\%$ on either
 engine (Supplement Tables~S1 and~S9), well below the between-layer spreads above;
 dispersion is larger only on the insert, where the MySQL cells are the noisiest,
-bimodal under group-commit batching (up to $15.9\%$). Every measured
+bimodal under group-commit batching (up to $15.9\%$); Supplement Figure~S1 plots the raw
+per-replicate MySQL insert throughputs, several bimodal or heavy-tailed within a cell, so the
+insert rank correlation and dispersion are reported conservatively. Every measured
 request in the primary matrix succeeded: HTTP errors, connection-acquisition
 timeouts, and non-2xx responses were zero across all 90 cells' measurement
 windows (nonzero timeouts arise only in the deliberate open-loop overload runs
@@ -262,19 +264,14 @@ completes 1{,}254~req per combined-CPU-second on the MySQL deep fetch against
 Prisma's 384 and MikroORM's 356 (Supplement Table~S5). There is no
 CPU-for-throughput trade: the slower layers are also less compute-efficient.
 
-An equal-CPU control confirms no layer gains throughput from additional application cores.
-Confining the server process with \texttt{taskset} to 1, 2, or 4 cores (database
-and load generator on disjoint cores; Supplement Table~S4) changes deep-fetch
-throughput by at most a few percent per layer: \texttt{pg} holds 3{,}689,
-3{,}688, and 3{,}687~req/s at 1, 2, and 4 cores, Prisma 1{,}079, 1{,}052, and
-1{,}219, and MikroORM 446, 495, and 522, so the per-layer differences are not an
-artifact of unequal core budgets. Bound within one process, throughput scales out
-horizontally instead: under a shared-port \texttt{node} cluster (Supplement
-Table~S24) Prisma rises from 1{,}117 to 2{,}275 to 4{,}449~req/s at 1, 2, and 4
-workers on PostgreSQL, reaching native-like aggregate throughput at four workers
-(\texttt{pg} 3{,}299 to 4{,}055 to 3{,}961, saturating near two workers as it
-becomes database-bound). Prisma's low single-process throughput is thus
-recoverable by running more processes, at roughly four times the cores.
+An exploratory equal-CPU sensitivity check (median of three runs; Supplement Table~S4) finds
+no layer converts extra application cores into throughput: confined by \texttt{taskset} to
+1, 2, or 4 cores (database and load generator on disjoint cores), \texttt{pg} is flat
+(3{,}689/3{,}688/3{,}687~req/s) while the two ORMs only wobble run-to-run without climbing
+toward \texttt{pg} (Prisma 1{,}079/1{,}052/1{,}219, MikroORM 446/495/522, a $\pm$10--17\%
+spread at this small replicate count), staying 3--8$\times$ below it. The ranking is thus not
+an artifact of unequal core budgets, though the per-core values are noisy; bound within one
+process, throughput instead scales out horizontally (Supplement Table~S24).
 
 Memory differences are smaller (Supplement Table~S10): the query
 builder and the lightest ORMs are cheapest (Knex 215, Objection 221, and TypeORM

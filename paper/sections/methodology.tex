@@ -32,7 +32,7 @@ are a \emph{limited} set restricted to the deep fetch, the pattern on which each
 capacity was actually measured (Supplement Table~S32 tabulates every experiment's scope):
 \emph{equal utilization} is the coordinated-omission-corrected open-loop sweep, each layer
 offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput, and an
-\emph{equal compute budget} is the equal-CPU control, the server confined to a fixed number
+\emph{equal compute budget} is the exploratory equal-CPU check, the server confined to a fixed number
 of cores. These answer different questions and need not agree, so we report all three and
 state which each result speaks to.
 
@@ -253,9 +253,9 @@ the fastest deep-fetch cell, so the framework floor leaves between-layer spreads
 visible rather than compressed. To characterize behavior under load, we swept the
 deep/nested fetch (the most layer-sensitive pattern) across connection counts
 from 1 to 256 for every layer and engine, since throughput and contention scale
-non-linearly with concurrency~\cite{yu2014concurrency}; a separate
-equal-CPU-budget control (1, 2, or 4 cores) attributes part of that scaling
-directly to CPU (Section~\ref{sec:results}). A native, \texttt{undici}-based
+non-linearly with concurrency~\cite{yu2014concurrency}; a separate,
+exploratory equal-CPU-budget check (1, 2, or 4 cores) tests whether that scaling is
+CPU-bound (Section~\ref{sec:results}). A native, \texttt{undici}-based
 constant-arrival generator drove the deep fetch under a fixed offered rate
 (250--4{,}000~req/s) rather than fixed concurrency, measuring latency from each
 request's intended send time and clipping timed-out requests into the
@@ -297,9 +297,14 @@ replicates the faster layer wins). In every test the unit is the
 cell), never the individual request; all confidence intervals are
 \emph{percentile} bootstraps resampling replicate indices (preserving the
 pairing), from a fixed seed (\texttt{mulberry32(0x57a75)}) so every resample is
-reproducible. Because p99 is reported at millisecond resolution and contains
+reproducible. These intervals capture within-campaign, run-to-run variability on this host
+and configuration, not variation across machines, versions, or deployments, which the
+single-host design cannot bound (Section~\ref{sec:threats}).
+Because p99 is reported at millisecond resolution and contains
 ties, the permutation test keeps zero log-ratios and the Wilcoxon test drops them
-with the standard tie correction (the paired p99 comparisons are Supplement Table~S30). Because the seven adjacent pairs follow the
+with the standard tie correction (the paired p99 comparisons are Supplement Table~S30).
+Adjacent-layer p99 gaps of one or two milliseconds therefore sit at the measurement floor and
+are not read as real; conclusions rest on the large-ratio patterns, chiefly the deep fetch. Because the seven adjacent pairs follow the
 \emph{observed} ranking rather than a preregistered one, we treat their
 significances as a secondary, descriptive robustness check (post-hoc adjacent-rank
 comparisons), applying a Bonferroni correction as a conservatism check rather than

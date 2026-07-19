@@ -108,9 +108,10 @@ representative deep-fetch cells with the three components pinned to disjoint cor
 sets (\texttt{ISO\_} run, replication package): the isolated and shared-host
 medians agree within about 2\% (ratios 0.98--1.01 across pg, Prisma, and
 MikroORM), and the layer ordering is unchanged, so same-host contention is not
-driving the reported ranking. The equal-CPU control (Section~\ref{sec:results},
-Supplement Table~S4) shows no layer's deep-fetch throughput changes materially
-from one to four cores, so the ranking is not an artifact of unequal core access. A
+driving the reported ranking. The exploratory equal-CPU check (Section~\ref{sec:results},
+Supplement Table~S4) shows no layer's deep-fetch throughput rises with more cores --- the
+ORM values wobble run-to-run without climbing toward \texttt{pg} --- so the ranking is not
+an artifact of unequal core access. A
 single-process caveat still extends to deployment topology: the server runs as a
 single Node.js process, whereas production deployments typically run one worker
 per core (\texttt{cluster}, pm2, per-pod replicas). A multi-worker check

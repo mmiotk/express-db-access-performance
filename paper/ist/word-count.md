@@ -181,10 +181,14 @@ for the deep-fetch sweep, where a throughput knee was actually measured, and the
 matrix's fixed point is described as "high-load" rather than "overload"; and a compact
 **experiment-scope table** (Supplement Table S32: each experiment's access pattern(s),
 engine(s), layer count, and repeated runs) was added last, so S1–S31 keep their numbers. The
-supplement now holds thirty-two tables (S1–S32). These are rewordings and one uncounted
-supplement float, so the manuscript total is **14,925** words (11,378 body, 75 under the
-15,000 limit; the longer "documentation-selected implementation-and-strategy" estimand name
-accounts for most of the round's small net growth).
+supplement now holds thirty-two tables (S1–S32). A companion CPU-and-statistics pass in the
+same round demoted the equal-CPU experiment to an exploratory sensitivity check and corrected
+its "at most a few percent" wording (the ORM per-core values wobble 10–17% run-to-run);
+added that the bootstrap intervals capture within-campaign variability, not cross-machine
+generalization; noted that 1–2 ms p99 gaps sit at the millisecond measurement floor; and
+brought the raw MySQL-insert distributions (Supplement Figure S1) into the body. These are all
+rewordings and one uncounted supplement float, so the manuscript total is **14,963** words
+(11,416 body, 37 under the 15,000 limit).
 The last published release is v1.6.3 (DOI 10.5281/zenodo.21440942); this revision will be
 archived as v1.6.4.
 

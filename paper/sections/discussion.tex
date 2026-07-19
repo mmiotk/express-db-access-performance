@@ -39,7 +39,7 @@ Under current versions the throughput differences are no longer bought with
 extra application cores: every layer sits at roughly one application core, and the
 native driver's lead comes instead from issuing lean SQL that pushes work onto the
 database tier (Section~\ref{sec:results}; Figure~\ref{fig:cpu_tradeoff}). The
-equal-CPU control confirms extra application cores do not raise a process's
+exploratory equal-CPU check indicates extra application cores do not raise a process's
 throughput (Section~\ref{sec:results}), so a layer's low per-process throughput is
 not a fixed ceiling: Prisma scales out nearly linearly under a shared-port
 \texttt{node} cluster to native-like aggregate throughput at four workers

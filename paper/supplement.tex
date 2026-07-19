@@ -73,7 +73,7 @@ relaxed$\div$default ratio quoted in the main text.
 
 \input{\tabledir durability}
 
-\section{Equal-CPU-budget control}
+\section{Equal-CPU-budget sensitivity check}
 \label{sup:equalcpu}
 Table~\ref{tab:equalcpu} gives the deep-fetch throughput with the server
 confined to 1, 2, or 4 cores (database and load generator pinned to disjoint
@@ -509,7 +509,7 @@ the single runnable entry point.
     Same-SQL raw-path control (Table~\ref{tab:sameplan}) & deep fetch & PG, MySQL & 9 & median of 10 \\
     Open-loop CO-corrected tail (Tables~\ref{tab:openloop},~\ref{tab:openloop_mysql}) & deep fetch & PG, MySQL & 5 & rate sweep \\
     Utilization-controlled tail (Tables~\ref{tab:utilization},~\ref{tab:utilization_mysql}) & deep fetch & PG, MySQL & 8 & median of 5 \\
-    Equal-CPU, 1/2/4 cores (Table~\ref{tab:equalcpu}) & deep fetch & PG & 3 & median of 3 \\
+    Equal-CPU, 1/2/4 cores (Table~\ref{tab:equalcpu}), exploratory & deep fetch & PG & 3 & median of 3 \\
     Node-cluster multi-worker (Table~\ref{tab:cluster}) & deep fetch & PG, MySQL & 3 & median of 3 \\
     Pool-size sweep, 1--50 (Tables~\ref{tab:poolsize},~\ref{tab:poolsize_mysql}) & deep fetch & PG, MySQL & 4 & median of 3 \\
     Mixed read/write, 90:10 \& 70:30 (Table~\ref{tab:mixed}) & deep fetch, insert & PG, MySQL & 5 & median of 5 \\
