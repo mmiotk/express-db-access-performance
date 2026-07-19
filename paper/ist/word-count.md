@@ -204,8 +204,21 @@ CV figure ("within 4.2%", not 4.0%, on the reads), removed the redundant per-cel
 from the main-paper paired significance table (Table 6) that had disagreed with the pattern
 table's bounds, and reconciled two loose prose phrasings ("the faster layers" cluster within
 5%; the transactional ordering "broadly tracks" the single-row insert apart from Prisma). These
-are all rewordings, so the manuscript total is **14,903** words (11,356 body, 97 under the
+are all rewordings, so the manuscript total was **14,903** words (11,356 body, 97 under the
 15,000 limit); the structured abstract is 292 words.
+
+A subsequent editorial pass condensed the main text by roughly **24%** (body 11,356 → 8,669
+words; main paper 51 → 43 pages) so it reads as "a reproducible benchmark methodology
+demonstrated through a dual-engine case study," with the full audit trail in the supplement.
+Nothing was deleted: the detailed statistical construction (permutation/bootstrap/TOST/ANOVA)
+became the supplement's *Statistical methods* section, the measurement internals (warm-up,
+order-invariance, tail estimation, resource sampling) its *Measurement details* section, and
+the four-pitfall checklist its *Benchmarking-pitfalls checklist* section (main text keeps a
+named summary); Methodology, Results, Discussion, and Threats were tightened and repeated
+single-host/version-sensitivity caveats consolidated. The manuscript total is now **12,216**
+words (8,669 body + 299 abstract + 1,848 references + seven main floats), well under the 15,000
+limit; the supplement grew from 26 to 29 pages. All citations were kept in the main text (the
+supplement has no bibliography), so the reference list is unchanged.
 The last published release is v1.6.3 (DOI 10.5281/zenodo.21440942); this revision will be
 archived as v1.6.4.
 

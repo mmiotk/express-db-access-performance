@@ -33,19 +33,15 @@ rather than varying it~\cite{colley2018orm,prisma_rawsql_2025,
 orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql} (Section~\ref{sec:related}
 surveys each).
 
-In the sources we searched (Section~\ref{sec:related}) this leaves a gap along
-four axes: (1)~no access-layer comparison we found includes MySQL, and no
-PostgreSQL/MySQL benchmark varies the access layer; (2)~no vendor-independent
-study spans the taxonomy broadly, the broad-coverage comparisons being
-vendor-authored and academic work covering at most three
-libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; (3)~we did not identify one
-reporting throughput and the p99 tail jointly, the sole vendor suite pairing
-throughput with a percentile stopping at a single P95 at one load
-point~\cite{drizzle_benchmarks}; and (4)~none measures client-observed
-performance through an HTTP framework, academic studies instrumenting query
-execution inside the application process~\cite{zhadko2025orm} and the
-Express-based work comparing runtime optimizations on a single stack rather than
-access layers~\cite{imamsakti2025async}.
+In the sources we searched (Section~\ref{sec:related}) this leaves a gap along four
+axes (Table~\ref{tab:prior_art}): no access-layer comparison we found includes MySQL, and no
+PostgreSQL/MySQL benchmark varies the access layer; no vendor-independent study spans the
+taxonomy broadly (the broad-coverage comparisons are vendor-authored, academic work covering
+at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}); we did not identify one
+reporting throughput and the p99 tail jointly (the sole vendor suite stops at a single P95 at
+one load point~\cite{drizzle_benchmarks}); and none measures client-observed performance
+through an HTTP framework, academic studies instead instrumenting query execution inside the
+process~\cite{zhadko2025orm,imamsakti2025async}.
 
 This paper addresses that gap with a single, vendor-independent benchmark
 (authorship only; Section~\ref{sec:methodology} defines the term): an
@@ -91,36 +87,28 @@ implementations under the specified operating point:
         implementation most consequential in this configuration?
 \end{enumerate}
 
-This paper makes four contributions; the \textbf{primary} ones are the harness
-and the benchmark design, which outlast the pinned versions, while the third is
-a configuration-specific snapshot of a fast-moving ecosystem:
+This paper makes four contributions; the \textbf{primary} ones are the harness and the
+benchmark design, which outlast the pinned versions, while the third is a
+configuration-specific snapshot of a fast-moving ecosystem:
 \begin{itemize}[leftmargin=*]
-  \item An \textbf{open, reproducible harness}: a uniform adapter contract, a
-        deterministic seed, a matrix runner with repeated randomized-block runs and
-        paired request streams, a physical write-state reset, a same-SQL
-        control with server-side protocol evidence, a
-        coordinated-omission-corrected open-loop generator with a
-        utilization-controlled latency mode, and an automated
-        \textbf{correctness cross-check} asserting \textbf{byte-identical}
-        responses across layers on the four non-mutating patterns
-        (Section~\ref{sec:methodology}).
-  \item A \textbf{vendor-independent, broad-coverage benchmark design}
-        spanning the taxonomy's three tiers (native driver $\to$ query
-        builder $\to$ six ORMs), \textbf{dual-engine} (PostgreSQL and MySQL),
-        measured at the \textbf{Express level}, reporting throughput and
-        response-time p99 \textbf{jointly}, a combination not identified in our documented search.
-  \item \textbf{Configuration-specific observations} on the current library
-        versions and this host: that no layer's throughput scales with additional application cores and the native
-        driver leads all ten engine-pattern combinations, the documentation-selected
-        implementation-and-strategy difference concentrating in
-        relation-materializing patterns; that the read ordering is similar across
-        engines while aggregation and writes transfer only moderately (visible
-        only in a dual-engine design); and direct evidence that such rankings can
-        be \textbf{version-sensitive}, one headline of an earlier version of this
-        study retired by one re-run on newer versions
-        (Section~\ref{sec:results}).
-  \item A practitioner-oriented \textbf{checklist of four pitfalls specific to
-        access-layer benchmarking} (Section~\ref{sec:discussion}), surfaced during
-        development, several caught by the correctness cross-check and the rest by
-        performance analysis.
+  \item An \textbf{open, reproducible harness}: a uniform adapter contract, a deterministic
+        seed, a matrix runner with repeated randomized-block runs and paired request streams, a
+        physical write-state reset, a same-SQL control with server-side protocol evidence, a
+        coordinated-omission-corrected open-loop generator with a utilization-controlled mode,
+        and an automated \textbf{correctness cross-check} asserting \textbf{byte-identical}
+        responses across layers (Section~\ref{sec:methodology}).
+  \item A \textbf{vendor-independent, broad-coverage benchmark design} spanning the taxonomy's
+        three tiers (native driver $\to$ query builder $\to$ six ORMs), \textbf{dual-engine},
+        measured at the \textbf{Express level}, reporting throughput and response-time p99
+        \textbf{jointly}, a combination not identified in our documented search.
+  \item \textbf{Configuration-specific observations} on the current versions and this host: no
+        layer's throughput scales with additional application cores, the native driver leads
+        all ten engine-pattern combinations with the difference concentrating in
+        relation-materializing patterns, the read ordering is similar across engines while
+        aggregation and writes transfer only moderately (visible only in a dual-engine design),
+        and direct evidence that such rankings can be \textbf{version-sensitive} --- one earlier
+        headline retired by a re-run on newer versions (Section~\ref{sec:results}).
+  \item A practitioner-oriented \textbf{checklist of four benchmarking pitfalls specific to
+        access layers} (Section~\ref{sec:discussion}), several caught by the correctness
+        cross-check and the rest by performance analysis.
 \end{itemize}

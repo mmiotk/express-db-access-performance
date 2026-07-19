@@ -2,149 +2,91 @@
 \label{sec:discussion}
 
 \paragraph{Access-layer rankings can be version-sensitive; the instrument is the contribution}
-One case here illustrates the point. An earlier
-campaign found Prisma (then version~5.22, on an in-process Rust query
-engine) tying the native driver on the deep fetch while drawing about five
-application cores. Re-running the \emph{identical} harness on the latest
-stable releases at the 15 July 2026 freeze did not reproduce it: no layer now draws
-more than about one core, and Prisma has fallen to mid-to-low throughput
-(Section~\ref{sec:results}). The non-reproduction is a fact; its cause is a
-hypothesis: the vanished premium was Prisma-specific and only Prisma changed
-architecture, so its Rust-free rewrite is the likeliest driver, but the re-freeze
-moved the whole toolchain at once, so we cannot isolate it. The headline is therefore version-sensitive~\cite{vanzyl2009optimisations}, and
-the durable contributions are the reusable harness, the benchmark design, and the
-pitfalls checklist~\cite{papadopoulos2021reproducible}.
+An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the
+native driver on the deep fetch while drawing about five application cores; re-running the
+\emph{identical} harness on the latest stable releases at the freeze did not reproduce it ---
+no layer now draws more than about one core, and Prisma has fallen to mid-to-low throughput
+(Section~\ref{sec:results}). The non-reproduction is a fact; its cause is a hypothesis (only
+Prisma changed architecture, so its Rust-free rewrite is the likeliest driver, but the
+re-freeze moved the whole toolchain at once). The headline is therefore
+version-sensitive~\cite{vanzyl2009optimisations,papadopoulos2021reproducible}, and the durable
+contributions are the reusable harness, the benchmark design, and the pitfalls checklist.
 
 \paragraph{Implications for practice}
 RQ1 and RQ3 agree that the documentation-selected implementation-and-strategy difference is
-specific to the access \emph{pattern}, concentrating where a layer must hydrate
-rows into objects and resolve associations rather than merely issue SQL (the
-object-relational impedance mismatch~\cite{ireland2009impedance} made concrete):
-the native-relative spread is widest on the deep/nested fetch and narrowest on
-aggregation, where every layer forwards the same correlated-subquery plan
-(Section~\ref{sec:results}). Round-trip count alone does not set throughput: on
-the PostgreSQL deep fetch the single-query MikroORM is the slowest layer of all
+specific to the access \emph{pattern}, concentrating where a layer must hydrate rows into
+objects and resolve associations rather than merely issue SQL (the object-relational impedance
+mismatch~\cite{ireland2009impedance} made concrete): the native-relative spread is widest on
+the deep/nested fetch and narrowest on aggregation. Round-trip count alone does not set
+throughput --- on the PostgreSQL deep fetch the single-query MikroORM is the slowest of all
 while the two-query Drizzle outruns the four-query Prisma (Supplement Table~S2;
-Table~\ref{tab:deep_fetch}), so how a layer materializes a result graph matters
-more than how many statements it issues.
+Table~\ref{tab:deep_fetch}) --- so how a layer materializes a result graph matters more than
+how many statements it issues.
 
 \paragraph{Compute cost and horizontal scaling}
-Under current versions the throughput differences are no longer bought with
-extra application cores: every layer sits at roughly one application core, and the
-native driver's lead comes instead from issuing lean SQL that pushes work onto the
-database tier (Section~\ref{sec:results}; Figure~\ref{fig:cpu_tradeoff}). The
-exploratory equal-CPU check indicates extra application cores do not raise a process's
-throughput (Section~\ref{sec:results}), so a layer's low per-process throughput is
-not a fixed ceiling: Prisma scales out nearly linearly under a shared-port
-\texttt{node} cluster to native-like aggregate throughput at four workers
-(Section~\ref{sec:results}) --- at four times the processes and cores, trading
-footprint and energy for throughput~\cite{bonvoisin2024orm}.
-
-\paragraph{Queueing under load and the open-loop check}
-The open-loop cross-run (Section~\ref{sec:results}) shows that a closed-loop
-benchmark alone would underestimate how abruptly, not just how much, a
-heavyweight ORM's tail degrades once offered load crosses its capacity.
+Under current versions the throughput differences are no longer bought with extra
+application cores: every layer sits at roughly one application core, and the native driver's
+lead comes from issuing lean SQL that pushes work onto the database tier
+(Section~\ref{sec:results}; Figure~\ref{fig:cpu_tradeoff}). A low per-process throughput is
+not a fixed ceiling --- Prisma recovers native-like aggregate throughput under a shared-port
+\texttt{node} cluster at four workers, trading footprint and energy for
+throughput~\cite{bonvoisin2024orm}. The open-loop cross-run further shows that a closed-loop
+benchmark alone would underestimate how abruptly, not just how much, a heavyweight ORM's tail
+degrades once offered load crosses its capacity.
 
 \paragraph{Writes: a partly engine-bound cost under default durability}
 RQ2 has a clear answer on inserts, under each engine's \emph{default} durability
-configuration (Section~\ref{sec:methodology}): the native driver leads on both
-engines, and PostgreSQL's insert throughput stays strongly layer-dependent even
-with fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on MySQL the faster layers
-cluster within about $5\%$ near an engine-level commit floor, consistent with the
-per-commit double flush (redo log, then binlog) InnoDB performs on every
-insert~\cite{harizopoulos2008oltp}; relaxing durability does not overturn this
-engine contrast (Section~\ref{sec:results}). The write ranking transfers only
-moderately across engines (Spearman $\rho=0.68$, against $0.86$--$0.89$ for the
-reads), so a single-engine write comparison invites the wrong generalization
-either way (``the access layer barely matters to writes'' from MySQL, or ``it
-matters a great deal'' from PostgreSQL); an engine-only benchmark such
-as~\cite{salunke2024pgmysql} cannot expose this interaction, since it omits the
-access layer entirely, whereas the dual-engine design does, consistent with
-earlier ORM work showing database technology modulates mapping-strategy
-cost~\cite{lorenz2017orm}. The single-row insert is not the only write shape: a
-transactional multi-statement write, inserting a post and five comments in one
-transaction, spreads the representative layers about $3.7\times$ (native
-\texttt{pg} 2{,}718 down to Prisma 733~req/s; Supplement Table~S8), below the
-widest read spread, because the transaction's single commit amortizes the
-per-commit flush across six inserts. Prisma, mid-pack on the single-row
-PostgreSQL insert, falls to the bottom of the transactional subset, so the
-transactional ordering does not simply track the single-row one.
+configuration: the native driver leads on both engines, PostgreSQL's insert throughput stays
+strongly layer-dependent even with fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on
+MySQL the faster layers cluster within about $5\%$ near an engine-level commit floor (the
+per-commit redo-log-then-binlog double flush~\cite{harizopoulos2008oltp}; Supplement
+Table~S19), and relaxing durability does not overturn this engine contrast. The write ranking
+transfers only moderately across engines (Spearman $\rho=0.68$, against $0.86$--$0.89$ for the
+reads), so a single-engine write comparison invites the wrong generalization either way; an
+engine-only benchmark such as~\cite{salunke2024pgmysql} cannot expose this interaction,
+whereas the dual-engine design does, consistent with earlier work showing database technology
+modulates mapping-strategy cost~\cite{lorenz2017orm}. A transactional multi-statement write (a
+post and five comments in one transaction) narrows the representative-layer spread to about
+$3.7\times$ (Supplement Table~S8), below the widest read spread, because the single commit
+amortizes the flush across six inserts; Prisma, mid-pack on the single-row insert, falls to
+the bottom transactionally, so the transactional ordering does not simply track the
+single-row one.
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking}
-Reaching the figures above meant confronting four confounds that would otherwise
-have corrupted the comparison silently. One, the aggregation fan-out, is a
-\emph{correctness} bug our automated byte-equality cross-check caught, along with
-a driver result-shape mismatch and --- on the write path, which that
-read-oriented check does not cover --- a fresh, current instance: MikroORM~7
-removed \texttt{persistAndFlush}, so every MikroORM insert threw a 500, and
-because an error response returns faster than a real insert, the broken cells
-briefly appeared to \emph{lead} the MySQL write ranking until the runner's
-non-2xx response counter flagged them and excluded the cell. Timing is
-meaningless until every response is a real 2xx, so the error counter is the write
-path's correctness gate as byte-equality is the read path's. The other three
-confounds return \emph{correct} results, invisible to any equality check, and
-were found only by performance analysis. We regard the resulting checklist as
-reusable:
-\begin{itemize}[leftmargin=*,noitemsep,topsep=2pt]
-  \item \textbf{Aggregation fan-out.} A naive join between \texttt{posts} and
-        \texttt{comments} evaluated before the \texttt{SUM} multiplies each
-        post's view count by its number of matching comment rows, inflating
-        the aggregate, a correctness bug invisible unless every layer's
-        output is checked against a reference, not a performance one.
-  \item \textbf{OFFSET vs.\ keyset pagination.} An early, OFFSET-based design
-        for the range-scan endpoint collapsed on MySQL at
-        realistic offsets, which would have been misread as an access-layer
-        weakness rather than what it is: a pagination-strategy cost that
-        InnoDB pays more dearly for than PostgreSQL. Rewriting every adapter
-        around keyset pagination (\texttt{WHERE id < cursor ORDER BY id DESC
-        LIMIT n}) removed the confound.
-  \item \textbf{Write-workload contamination.} The insert endpoint grows
-        \texttt{posts} on every call; because engines and layers commit at
-        different rates, later cells in a run would scan a differently sized
-        table depending on run order rather than on layer identity, unless
-        benchmark-inserted rows are deleted before every cell.
-  \item \textbf{Query-formulation confounds.} A first attempt at the
-        aggregation endpoint pre-aggregated \emph{all} of \texttt{comments}
-        before filtering to one author, so every request re-scanned the whole
-        table regardless of which author was requested, a query-plan
-        artifact masquerading as an access-layer effect~\cite{leis2015optimizers},
-        fixed by rewriting
-        the query as a correlated subquery touching only the target author's
-        rows.
-\end{itemize}
-None of these four is schema-specific; each is a generic failure mode of the
-genre, extending the database-benchmarking pitfalls cataloged by Fruth et
-al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair} to the
-access-layer-comparison sub-genre. Each is easy to introduce by accident and
-hard to detect (the correctness ones without an automated cross-check, the
-performance ones without profiling every cell), and at least one plausibly
-explains part of the gap between some vendor-reported and independently verified
-figures in this space.
+Reaching the figures above meant confronting four confounds that would otherwise have
+corrupted the comparison silently, which we distill into a reusable checklist (full detail in
+the supplement's \emph{Benchmarking-pitfalls checklist}): an \textbf{aggregation fan-out} (a
+join evaluated before \texttt{SUM}, inflating the aggregate) and a driver result-shape
+mismatch, both \emph{correctness} bugs the automated byte-equality cross-check caught;
+\textbf{OFFSET pagination} collapsing on MySQL, a pagination-strategy cost easily misread as an
+access-layer weakness; \textbf{write-workload contamination} from an unreset growing table; and
+a \textbf{query-formulation confound} where a mis-scoped pre-aggregation re-scanned the whole
+table, a query-plan artifact masquerading as an access-layer
+effect~\cite{leis2015optimizers}. The write path needs its own gate: MikroORM~7's removal of
+\texttt{persistAndFlush} made every MikroORM insert throw a 500 that returned faster than a
+real insert, briefly \emph{leading} the MySQL write ranking until the non-2xx counter flagged
+it, so the error counter is the write path's correctness gate as byte-equality is the read
+path's. None of the four is schema-specific; each is a generic failure mode extending the
+database-benchmarking pitfalls of Fruth et al.~\cite{fruth2022tail} and Raasveldt et
+al.~\cite{raasveldt2018fair} to the access-layer sub-genre, and at least one plausibly explains
+part of the gap between some vendor-reported and independently verified figures in this space.
 
 \paragraph{Practical guidance}
-The practical synthesis follows from RQ1--RQ3, on the documentation-selected
-implementation-and-strategy a practitioner faces, and applies to the benchmarked implementations in
-this configuration, workload, and host rather than to access-layer categories in
-general. The native driver leads throughput on every pattern on both engines, and
-the documentation-selected ORM penalty concentrates on relation-materializing traffic, whereas
-read-simple patterns and aggregation, where a layer merely forwards SQL, spread
-far less (Section~\ref{sec:results}). Where a service's hot path is dominated by
-deep or nested fetches, the access layer is consequential and should be benchmarked
-for the specific application: the tested thin paths (the native driver and Knex) led
-here \emph{for throughput and response-time p99}, but whether that advantage
-generalizes to other implementations of those tiers, schemas, or workloads is a
-hypothesis for broader study, not a category law or a general default. Where the workload is read-simple or
-write-bound, especially on MySQL, whose engine floor for single-row inserts
-dominates layer differences under default durability, the throughput cost is
-small, so a full ORM's productivity and type safety --- not measured here --- may
-reasonably decide the choice; a layer's low per-process throughput is not on its own
-disqualifying, being recoverable by horizontal scaling (Section~\ref{sec:results}), and
-second-level caching can absorb part of an ORM's read cost where the workload tolerates
-staleness~\cite{chen2016cacheoptimizer}.
-
-These are performance findings only: the access-layer decision also turns on correctness,
-maintainability, security, and developer productivity, which this study does not measure and
-which may outweigh the throughput differences reported here. The recommendations rest on the
-single host, default durability, and pinned versions detailed in Section~\ref{sec:threats},
-and the same-SQL results bound the documentation-selected cost rather than licensing raw SQL
-in practice.
+The practical synthesis follows from RQ1--RQ3 and applies to the benchmarked implementations in
+this configuration, workload, and host rather than to access-layer categories in general. The
+native driver leads throughput on every pattern on both engines, and the ORM penalty
+concentrates on relation-materializing traffic while read-simple patterns and aggregation
+spread far less. Where a service's hot path is dominated by deep or nested fetches the access
+layer is consequential and should be benchmarked for the specific application: the tested thin
+paths (native driver and Knex) led here \emph{for throughput and response-time p99}, but
+whether that generalizes to other implementations, schemas, or workloads is a hypothesis for
+broader study, not a category law or a general default. Where the workload is read-simple or
+write-bound (especially on MySQL, whose commit floor dominates layer differences under default
+durability) the throughput cost is small, so a full ORM's productivity and type safety --- not
+measured here --- may reasonably decide the choice, and a layer's low per-process throughput is
+recoverable by horizontal scaling. These are performance findings only: the decision also turns
+on correctness, maintainability, security, and developer productivity, which this study does
+not measure and which may outweigh the differences reported here; the recommendations rest on
+the single host, default durability, and pinned versions of Section~\ref{sec:threats}, and the
+same-SQL results bound the documentation-selected cost rather than licensing raw SQL in
+practice.

@@ -1,24 +1,18 @@
 \section{Related Work}
 \label{sec:related}
 
-We organize prior work along four axes on which our study differs from it ---
-taxonomy coverage, engine coverage, joint throughput/tail reporting, and vendor
-independence --- summarized in Table~\ref{tab:prior_art}. We located it with a
-structured scoping search (not a systematic review) of the ACM Digital Library,
-IEEE Xplore, Scopus, and Google Scholar (July~2026, over titles, abstracts, and
-keywords), crossing an access-layer set (\emph{ORM}, ``object-relational
-mapping'', ``query builder'', ``database access layer'', and the seven library
-names) with context (\emph{Node.js}, \emph{Express}, \emph{JavaScript},
-\emph{TypeScript}), engine (\emph{PostgreSQL}, \emph{MySQL}, ``relational
-database''), and measurement (\emph{benchmark}, \emph{performance},
-\emph{throughput}, \emph{latency}) sets, restricted to 2006--July~2026 and
-followed by backward and forward citation chaining from the closest hits. We
-retained empirical comparisons of relational access layers or engines and
-excluded non-empirical, non-relational, and single-library studies. The exact
-strings, per-source dates, and screening decisions are archived with the
-replication package (\texttt{notes/related-work-search.md}); because this is a
-scoping rather than exhaustive search, we scope every resulting gap claim to the
-sources searched.
+We organize prior work along four axes on which our study differs from it --- taxonomy
+coverage, engine coverage, joint throughput/tail reporting, and vendor independence ---
+summarized in Table~\ref{tab:prior_art}. We located it with a structured scoping search (not a
+systematic review) of the ACM Digital Library, IEEE Xplore, Scopus, and Google Scholar
+(July~2026), crossing an access-layer set (\emph{ORM}, ``object-relational mapping'', ``query
+builder'', ``database access layer'', and the seven library names) with Node.js/Express/
+JavaScript, engine, and measurement terms over 2006--July~2026, followed by backward and
+forward citation chaining. We retained empirical comparisons of relational access layers or
+engines and excluded non-empirical, non-relational, and single-library studies; the exact
+strings, per-source dates, and screening decisions are archived with the replication package
+(\texttt{notes/related-work-search.md}). Because this is a scoping rather than exhaustive
+search, we scope every resulting gap claim to the sources searched.
 
 \subsection{Object-relational mapping and the access-layer spectrum}
 Access layers bridge the object-relational impedance mismatch between the
@@ -34,29 +28,22 @@ stores~\cite{sadalage2012nosql}, a choice we hold fixed while varying only the
 access layer.
 
 \subsection{ORM performance and data-access anti-patterns}
-A parallel line studies ORM performance from the opposite direction, detecting
-and repairing the inefficient SQL that mapping frameworks emit rather than
-benchmarking layers. The costliest pattern is the N+1 query problem
-(Section~\ref{sec:introduction}); it and related redundant-query anti-patterns
-are pervasive across real-world web
-applications~\cite{yang2018dbapps,yan2017inefficiencies}, and Shao et
-al.~\cite{shao2020antipatterns} give an independent taxonomy and detector for
-database-access anti-patterns. Chen et al.\ quantify the performance impact of
-redundant data access in ORM-backed Java systems~\cite{chen2016redundant},
-extending earlier anti-pattern detection work~\cite{chen2014orm}. A complementary
-strand shows the overhead is often \emph{removable} by query synthesis, lazy
-round-trip batching, or
-caching~\cite{cheung2013querysynthesis,cheung2014sloth,chen2016cacheoptimizer};
-the JavaScript analogue is mis-sequenced \texttt{async}/\texttt{await} serializing
-independent I/O~\cite{turcotte2022asyncjs}. Closest to our design, Lorenz et
-al.~\cite{lorenz2017orm} show the best O/R mapping strategy depends on the
-database technology, van Zyl et al.~\cite{vanzyl2009optimisations} that ORM
-performance is highly sensitive to tuning, and a recent study adds an energy
-dimension~\cite{bonvoisin2024orm}. This literature establishes \emph{where} ORM
-overhead concentrates (relation-materializing, N+1-prone access) and that it is
-configurable rather than fixed, which our per-pattern results confirm; it does
-not compare drivers, query builders, and ORMs head-to-head under controlled load,
-our aim here.
+A parallel line studies ORM performance from the opposite direction, detecting and repairing
+the inefficient SQL that mapping frameworks emit rather than benchmarking layers. The costliest
+pattern is the N+1 query problem (Section~\ref{sec:introduction}); it and related
+redundant-query anti-patterns are pervasive across real-world web
+applications~\cite{yang2018dbapps,yan2017inefficiencies,shao2020antipatterns}, and their
+performance impact has been quantified in ORM-backed systems~\cite{chen2016redundant,chen2014orm}
+and shown often \emph{removable} by query synthesis, round-trip batching, or
+caching~\cite{cheung2013querysynthesis,cheung2014sloth,chen2016cacheoptimizer} (the JavaScript
+analogue being mis-sequenced \texttt{async}/\texttt{await} serializing independent
+I/O~\cite{turcotte2022asyncjs}). Closest to our design, Lorenz et al.~\cite{lorenz2017orm} show
+the best O/R mapping strategy depends on the database technology, van Zyl et
+al.~\cite{vanzyl2009optimisations} that ORM performance is highly tuning-sensitive, and a recent
+study adds an energy dimension~\cite{bonvoisin2024orm}. This literature establishes \emph{where}
+ORM overhead concentrates (relation-materializing, N+1-prone access) and that it is configurable
+rather than fixed, which our per-pattern results confirm; it does not compare drivers, query
+builders, and ORMs head-to-head under controlled load, our aim here.
 
 \subsection{Peer-reviewed access-layer comparisons}
 The peer-reviewed literature that measures access layers head-to-head is narrow.
@@ -95,28 +82,22 @@ back-end frameworks more broadly. None isolates the database access layer as an
 independent variable, let alone varies it across the taxonomy studied here.
 
 \subsection{Standard benchmarks and benchmarking methodology}
-Standard benchmarks define how database systems are measured: YCSB~\cite{cooper2010ycsb}
-for cloud-serving stores and the TPC-C/TPC-E suites for OLTP. These target the
-\emph{engine} and its transaction mix, saying nothing about the driver, query builder, or ORM through
-which an application issues work (the variable this study isolates), but they
-set the methodological bar for controlled, repeatable load. A separate
-methodological literature explains why the vendor benchmarks' single-metric
-habit is a problem in its own right: Fruth et al.~\cite{fruth2022tail} and
-Raasveldt et al.~\cite{raasveldt2018fair} catalog pitfalls specific to database
-benchmarking (coordinated omission, warm-up, tool-induced distortion) that
-silently corrupt reported percentiles; Dean and Barroso~\cite{dean2013tail}
-show why the tail, not the mean, determines user-perceived latency once a
-request fans out over many components, as an Express request serving a
-deep/nested fetch does; and Li et al.~\cite{li2014tales} trace the hardware,
-OS, and application sources of that tail. Load-testing surveys report such measurement is often
-ad hoc~\cite{jiang2015load,leitner2017exploratory}, and repeatability studies
-find systems results frequently hard to reproduce~\cite{collberg2016repeatability},
-motivating a shared, reusable harness; the benchmarking literature stresses
-relevance, repeatability, and fairness~\cite{huppler2009benchmark}
-and the role of neutral benchmarks in advancing a field~\cite{sim2003benchmark}. From
-this literature we take a design choice not found in the access-layer
-benchmarks surveyed above: report throughput \emph{and} tail latency (p99) for
-the same run, rather than a single metric family chosen after the fact.
+Standard benchmarks define how database systems are measured: YCSB~\cite{cooper2010ycsb} for
+cloud-serving stores and the TPC-C/TPC-E suites for OLTP. These target the \emph{engine} and its
+transaction mix, saying nothing about the driver, query builder, or ORM this study isolates, but
+they set the methodological bar for controlled, repeatable load. A separate methodological
+literature explains why the vendor benchmarks' single-metric habit is itself a problem: Fruth et
+al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair} catalog database-benchmarking
+pitfalls (coordinated omission, warm-up, tool-induced distortion) that silently corrupt reported
+percentiles; Dean and Barroso~\cite{dean2013tail} show why the tail, not the mean, determines
+user-perceived latency once a request fans out, as a deep/nested fetch does; and Li et
+al.~\cite{li2014tales} trace its hardware, OS, and application sources. Load-testing surveys report
+such measurement is often ad hoc~\cite{jiang2015load,leitner2017exploratory} and systems results
+frequently hard to reproduce~\cite{collberg2016repeatability}, motivating a shared, reusable harness
+built for relevance, repeatability, and fairness~\cite{huppler2009benchmark,sim2003benchmark}. From
+this literature we take a design choice absent from the access-layer benchmarks surveyed above:
+report throughput \emph{and} tail latency (p99) for the same run, rather than a single metric family
+chosen after the fact.
 
 \subsection{Practitioner and vendor benchmarks}
 A larger body of evidence comes from practitioners and vendors, each authored by
