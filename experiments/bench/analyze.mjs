@@ -84,7 +84,12 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
     .map((a) => ({ a, r: get(a, endpoint, engine) }))
     .filter((x) => x.r && x.r.rps_samples)
     .sort((x, y) => y.r.rps - x.r.rps);
-  const ci = (r) => { const [lo, hi] = bootCI(r.rps_samples); return `${r.rps}~[${lo}--${hi}]`; };
+  // Median point value only; the per-cell median throughput CI is reported once in the
+  // pattern tables (deep_fetch.tex / Supplement Tables S12--S15), not duplicated here (it
+  // was the source of a cross-table CI-bound mismatch). The bootCI call is kept purely to
+  // advance the shared RNG identically, so the paired ratio CIs, permutation p, and every
+  // other table below stay byte-identical to prior runs. The paired ratio CI is retained.
+  const ci = (r) => { bootCI(r.rps_samples); return `${r.rps}`; };
   const lines = [];
   for (let i = 0; i + 1 < ranked.length; i++) {
     const A = ranked[i]; const B = ranked[i + 1];
@@ -110,8 +115,8 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
   \\caption{Paired comparison of adjacently ranked access layers on the deep/nested
     fetch (${engine==="postgres"?"PostgreSQL":"MySQL"}), over the ${ranked[0].r.repeats} repeated runs. Because
     every layer runs the identical per-replicate request stream, layers are compared
-    on their per-replicate throughput ratios: median throughput (req/s) with
-    bootstrap 95\\% CI, the geometric-mean paired ratio A$/$B with a paired bootstrap
+    on their per-replicate throughput ratios: median throughput (req/s; the per-cell
+    bootstrap CI is in the pattern tables), the geometric-mean paired ratio A$/$B with a paired bootstrap
     95\\% CI, paired dominance (fraction of replicates in which A exceeds B), and the
     two-sided paired sign-flip permutation $p$ (${PERM_B} permutations; a value
     of $5.0{\\times}10^{-5}$ is the resolution floor $1/(B{+}1)=1/20{,}001$, i.e.
@@ -121,7 +126,7 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
   \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l r r r r r}
     \\toprule
-    Comparison (A $>$ B) & med.\\ A [95\\% CI] & med.\\ B [95\\% CI] & ratio A$/$B [95\\% CI] & dom. & perm.\\ $p$ \\\\
+    Comparison (A $>$ B) & med.\\ A & med.\\ B & ratio A$/$B [95\\% CI] & dom. & perm.\\ $p$ \\\\
     \\midrule
     ${lines.join('\n    ')}
     \\bottomrule

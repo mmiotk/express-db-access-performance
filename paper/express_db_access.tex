@@ -56,8 +56,9 @@ Knex, and the ORMs Drizzle, Prisma, Sequelize, TypeORM, Objection and MikroORM) 
 two tuned native baselines, over five access patterns, on the latest stable
 library versions current at the July 2026 freeze. We report throughput with client-observed response-time p99 from
 25 repeated runs per cell under three operating conditions: equal demand (a
-fixed 50-connection high-load point), equal utilization (an open-loop sweep), and an
-equal compute budget; an automated cross-check verifies byte-identical responses
+fixed 50-connection high-load point) across all patterns, and---on the deep fetch only---equal
+utilization (an open-loop sweep) and an exploratory equal compute budget; an automated
+cross-check verifies byte-identical responses
 before measurement, and inserts run under the engines' default durability.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
@@ -65,12 +66,11 @@ relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
 narrowing to $1.68\times$ and $2.01\times$ once every layer runs identical SQL, a
 compound control that bounds the combined query-strategy-and-formulation
 contribution without isolating a single mechanism. The read ordering is similar
-across engines (Spearman $\rho \geq 0.86$, Kendall $\tau \geq 0.71$); aggregation
+across engines (Spearman $\rho \geq 0.86$); aggregation
 and writes transfer only moderately ($\rho = 0.64$, $0.68$). No layer exceeds
 $\approx\!110\%$ of one core; the native driver leads all ten engine-pattern
 combinations and Prisma~7 sits mid-pack. An earlier version's five-core Prisma
-result, from a now-superseded generation, did not survive the re-run. Large
-high-load-p99 gaps are a capacity effect that matched utilization largely closes.
+result, from a now-superseded generation, did not survive the re-run.
 \textbf{Conclusion:} Access-layer rankings can be version-sensitive, as one retired
 five-core result shows; the durable contributions are the reproducible,
 byte-equivalence-checked harness, its three-estimand design, and a checklist of

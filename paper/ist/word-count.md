@@ -192,8 +192,20 @@ implementation-and-strategy quantity the design actually measures, replaced the 
 are a safer default" recommendation with "benchmark the relation-heavy hot path for the
 specific application", and added an explicit "configuration-specific" label to the
 Conclusion (the cautious "in the sources searched" novelty phrasing was already in place).
-These are all rewordings and one uncounted supplement float, so the manuscript total is
-**14,977** words (11,430 body, 23 under the 15,000 limit).
+A closing presentation-and-control pass then removed repeated caveats — the standalone
+same-SQL "bounds not isolates" Discussion paragraph (already stated in Results, the abstract,
+and the Conclusion), the duplicated horizontal-scaling and "productivity/type-safety not
+measured" sentences in Practical Guidance, and a redundant single-host restatement — and, in
+the abstract, dropped the secondary Kendall-tau and matched-utilization results while scoping
+the open-loop and equal-compute-budget conditions to the deep fetch. A pre-submission
+consistency sweep confirmed the pinned library versions match `package.json`, the DOI and
+GitHub link resolve, and every headline number matches its table. That sweep also corrected a
+CV figure ("within 4.2%", not 4.0%, on the reads), removed the redundant per-cell median CIs
+from the main-paper paired significance table (Table 6) that had disagreed with the pattern
+table's bounds, and reconciled two loose prose phrasings ("the faster layers" cluster within
+5%; the transactional ordering "broadly tracks" the single-row insert apart from Prisma). These
+are all rewordings, so the manuscript total is **14,903** words (11,356 body, 97 under the
+15,000 limit); the structured abstract is 292 words.
 The last published release is v1.6.3 (DOI 10.5281/zenodo.21440942); this revision will be
 archived as v1.6.4.
 

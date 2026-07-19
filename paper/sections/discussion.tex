@@ -28,12 +28,6 @@ while the two-query Drizzle outruns the four-query Prisma (Supplement Table~S2;
 Table~\ref{tab:deep_fetch}), so how a layer materializes a result graph matters
 more than how many statements it issues.
 
-\paragraph{The same-SQL control}
-The same-SQL control (Section~\ref{sec:results}) narrows the documentation-selected deep-fetch
-spread substantially, but because it changes several mechanisms together it \emph{bounds}
-the combined query-strategy-and-formulation contribution rather than isolating one factor
-such as eager-loading strategy.
-
 \paragraph{Compute cost and horizontal scaling}
 Under current versions the throughput differences are no longer bought with
 extra application cores: every layer sits at roughly one application core, and the
@@ -55,7 +49,7 @@ heavyweight ORM's tail degrades once offered load crosses its capacity.
 RQ2 has a clear answer on inserts, under each engine's \emph{default} durability
 configuration (Section~\ref{sec:methodology}): the native driver leads on both
 engines, and PostgreSQL's insert throughput stays strongly layer-dependent even
-with fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on MySQL most layers
+with fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on MySQL the faster layers
 cluster within about $5\%$ near an engine-level commit floor, consistent with the
 per-commit double flush (redo log, then binlog) InnoDB performs on every
 insert~\cite{harizopoulos2008oltp}; relaxing durability does not overturn this
@@ -142,19 +136,15 @@ generalizes to other implementations of those tiers, schemas, or workloads is a
 hypothesis for broader study, not a category law or a general default. Where the workload is read-simple or
 write-bound, especially on MySQL, whose engine floor for single-row inserts
 dominates layer differences under default durability, the throughput cost is
-small, so a full ORM's productivity and type safety, not measured here, may
-reasonably decide the choice. A layer's low per-process throughput is not on its
-own disqualifying: Prisma, among the slowest layers here on several patterns,
-recovers native-like aggregate throughput by scaling out at four times the
-processes (Section~\ref{sec:results}), trading single-process efficiency for
-replica count. Second-level caching can absorb part of an ORM's read cost where
-the workload tolerates staleness~\cite{chen2016cacheoptimizer}.
+small, so a full ORM's productivity and type safety --- not measured here --- may
+reasonably decide the choice; a layer's low per-process throughput is not on its own
+disqualifying, being recoverable by horizontal scaling (Section~\ref{sec:results}), and
+second-level caching can absorb part of an ORM's read cost where the workload tolerates
+staleness~\cite{chen2016cacheoptimizer}.
 
-These are performance findings only: the access-layer decision also turns on
-developer productivity, type safety, correctness, maintainability, and security,
-none of which this study measures, and which may outweigh the throughput
-differences reported here. Even as performance guidance, the recommendations rest on one schema, one host, a
-single-host local-database deployment under default write durability, and the
-pinned versions; and the same-SQL comparisons bound the documentation-selected cost rather than
-licensing raw SQL in practice. Section~\ref{sec:threats} sets out how far these
-results generalize.
+These are performance findings only: the access-layer decision also turns on correctness,
+maintainability, security, and developer productivity, which this study does not measure and
+which may outweigh the throughput differences reported here. The recommendations rest on the
+single host, default durability, and pinned versions detailed in Section~\ref{sec:threats},
+and the same-SQL results bound the documentation-selected cost rather than licensing raw SQL
+in practice.

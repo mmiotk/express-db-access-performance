@@ -7,7 +7,8 @@
     5). A representative layer of each tier is shown; the full matrix is left
     to future work. Between-layer spread is $3.7\times$ (\texttt{pg} 2718 down to
     Prisma 733, now the slowest), well below the $7.15\times$ read spread, and the
-    ordering tracks the single-row insert, so the write conclusions extend to a
+    ordering broadly tracks the single-row insert apart from Prisma (mid-pack
+    single-row, last here), so the write conclusions largely extend to a
     multi-statement transactional write.}
   \label{tab:txn_write}
   \begin{tabular}{l r r}
