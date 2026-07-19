@@ -18,8 +18,9 @@ but because that contrast changes several mechanisms together, it bounds rather 
 difference to any single one (Section~\ref{sec:results}). On the
 current library versions no layer's throughput scales with additional application cores and the native driver
 leads all ten engine-pattern combinations; the read ordering is similar across the two
-engines while aggregation and writes transfer only moderately, a caution against
-generalizing single-engine results (Section~\ref{sec:discussion}). That
+engines while the aggregation and insert orderings reverse (Prisma drops from mid-pack to
+last on the MySQL insert), a caution against generalizing single-engine results
+(Section~\ref{sec:discussion}). That
 access-layer rankings can be version-sensitive is, here, a measured result, not a
 hypothesis: an earlier version's headline did not survive re-running the same
 harness on newer versions. Development also surfaced a

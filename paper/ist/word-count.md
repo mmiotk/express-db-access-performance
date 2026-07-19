@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9526 |
+| Body text (7 sections) | 9648 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13273** |
+| **Total (IST rule)** | **13395** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 12974). The structured abstract is 299 words (under the journal's
+the abstract it is 13096). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -220,5 +220,26 @@ words (8,669 body + 299 abstract + 1,848 references + seven main floats), well u
 limit; the supplement grew from 26 to 29 pages. All citations were kept in the main text (the
 supplement has no bibliography), so the reference list is unchanged.
 This revision is archived as release v1.6.4 (DOI 10.5281/zenodo.21444624).
+
+A round-8 revision subordinated the whole narrative to one primary contribution — a
+**comparability protocol** for access-layer benchmarking (a semantic-equivalence gate, a
+documentation-selected estimand bounded by a same-SQL control, and separated operating
+points) — explicitly distinguished from the reusable artifact and the empirical case study
+(title, abstract, introduction contribution list, related-work positioning, discussion,
+conclusion, and highlights). It also addressed the estimand's construct validity (the
+documentation-selected treatment is a reproducible persona proxy, not a claim about
+practitioner choice; a same-SQL control that *bounds* rather than *decomposes* the
+strategy contribution; new evidence in Supplement Table S33), rewrote the same-SQL result
+in consistently non-causal terms and diagrammed its changed components in a new main-text
+table (Table 6), and reweighted the RQ2 cross-engine treatment to lead with the concrete
+rank reversals and the layer×engine interaction magnitudes (on the insert \texttt{knex}
+1→3 and \texttt{drizzle} 2→1 trade the lead while Prisma falls 4→last; the per-layer
+PostgreSQL÷MySQL advantage scatters 1.6–3.2× on the insert and 1.4–1.9× on aggregation;
+Supplement Tables S27–S28) rather than characterizing the n=7 Spearman coefficients with
+qualitative labels such as "moderate," which were removed; the coefficients are now
+reported only as coarse descriptive summaries. These changes added a main-text component
+diagram (seven → eight main floats) and expanded the estimand/RQ2 prose; the body is 9,648
+words and the total 13,395, and the structured abstract was tightened (a duplicated
+version-sensitivity sentence dropped, the reversal detail added) to stay under 300.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

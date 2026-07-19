@@ -117,25 +117,32 @@ batched-select-in default is about $1.6\times$ slower than a single join on MySQ
 
 
 \subsection{RQ2: engine dependence of the ranking}
-The relative ordering is largely, but not uniformly, stable across engines. The
-Spearman rank correlation between the PostgreSQL and MySQL orderings of the seven
-portable layers (descriptive; Section~\ref{sec:methodology}) is high on the reads
---- $\rho=0.86$ on the point read, $0.89$ on the range scan, and $0.86$ on the
-deep fetch --- but only \emph{moderate} on aggregation ($\rho=0.64$) and the
-insert ($\rho=0.68$), which transfer less reliably though neither is
-uncorrelated. Prisma is the notable mover: mid-pack on PostgreSQL inserts
-(2{,}774~req/s, fourth of the seven portable layers) but last on MySQL inserts
-(886, behind even MikroORM's 1{,}257) --- a rank flip invisible to a
-single-engine benchmark (Supplement Table~S27). The cost's \emph{magnitude} also
-depends on the engine (Supplement Table~S28, per-layer
-PostgreSQL$\div$MySQL ratios). Every layer is faster on PostgreSQL, so
-the layer$\times$engine interaction is in the \emph{spread} of that advantage, not
-its sign: across the three reads it stays within $\approx$1.0--1.9$\times$, but the
-insert scatters from $1.6\times$ (MikroORM) to $3.2\times$
-(Prisma), reordering the layers across engines. The blocked permutation test
-(Section~\ref{sec:methodology}) only confirms this interaction is nonzero; its floor
-$p$ says nothing about size. Single-engine results are thus portable in order for
-reads but not in degree, most loosely for writes.
+The read ordering is stable across engines, but the aggregation and insert
+orderings reverse at the top, so we characterize the transfer by these concrete
+rank reversals and by the layer$\times$engine interaction magnitudes rather than by a
+correlation coefficient computed over only seven portable layers. On the
+\textbf{insert}, \texttt{knex} leads on PostgreSQL (4{,}841~req/s) but drops to third
+on MySQL (1{,}670), where \texttt{drizzle} takes the lead (1{,}730); Prisma falls
+furthest, from fourth on PostgreSQL (2{,}774) to last on MySQL (886, behind even
+MikroORM's 1{,}257) --- a reversal invisible to a single-engine benchmark. On
+\textbf{aggregation} the same shape recurs: \texttt{drizzle} leads on PostgreSQL
+(6{,}280) but falls to fourth on MySQL (3{,}520), where \texttt{knex} leads
+(3{,}842), while Prisma and Objection swap the bottom two places (Supplement
+Table~S27). The interaction is equally visible in \emph{magnitude} (Supplement
+Table~S28, per-layer PostgreSQL$\div$MySQL throughput ratios): every layer is faster
+on PostgreSQL, so the interaction lies in the \emph{spread} of that advantage, not
+its sign. Across the three reads the spread stays within $\approx$1.0--1.9$\times$,
+but the insert scatters from $1.6\times$ (MikroORM) to $3.2\times$ (Prisma) and
+aggregation from $1.4\times$ to $1.9\times$ --- a two-to-one range in the per-layer
+engine advantage on the writes that reorders the layers across engines. The blocked
+permutation test (Section~\ref{sec:methodology}) confirms this interaction is nonzero
+but bounds only its existence, not its size. For completeness the rank correlations
+these reversals produce are reported (descriptive only, and coarse at $n=7$):
+$\rho=0.86$, $0.89$, $0.86$ on the point read, range scan, and deep fetch, and
+$\rho=0.64$ ($\tau=0.52$) on aggregation and $\rho=0.68$ on the insert --- but the
+finding rests on the reversals and interaction spreads above, not on the
+coefficients. Single-engine results are thus portable in order for the reads and not
+for the writes.
 
 On the \textbf{keyset range scan} the native driver again leads (native-relative spread
 $4.21\times$ on PostgreSQL, $3.85\times$ on MySQL; Supplement Table~S13), driven

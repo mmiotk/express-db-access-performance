@@ -42,8 +42,10 @@ strongly layer-dependent even with fsync on ($3.23\times$; Table~\ref{tab:write}
 MySQL the faster layers cluster within about $5\%$ near an engine-level commit floor (the
 per-commit redo-log-then-binlog double flush~\cite{harizopoulos2008oltp}; Supplement
 Table~S19), and relaxing durability does not overturn this engine contrast. The write ranking
-transfers only moderately across engines (Spearman $\rho=0.68$, against $0.86$--$0.89$ for the
-reads), so a single-engine write comparison invites the wrong generalization either way; an
+reverses across engines --- \texttt{knex} leads on PostgreSQL but \texttt{drizzle} on MySQL,
+and Prisma drops from fourth to last (Table~\ref{tab:write}) --- with the per-layer engine
+advantage spanning $1.6$--$3.2\times$ (Supplement Table~S28), so a single-engine write comparison
+invites the wrong generalization either way; an
 engine-only benchmark such as~\cite{salunke2024pgmysql} cannot expose this interaction,
 whereas the dual-engine design does, consistent with earlier work showing database technology
 modulates mapping-strategy cost~\cite{lorenz2017orm}. A transactional multi-statement write (a

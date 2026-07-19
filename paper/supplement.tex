@@ -359,10 +359,15 @@ operating point.
 \section{Per-layer cross-engine ranks}
 \label{sup:ranks}
 Table~\ref{tab:ranks} gives each portable layer's throughput rank on PostgreSQL
-versus MySQL for the deep fetch and the insert, backing the rank correlations in the
-main text: the deep-fetch orderings largely agree ($\rho=0.86$) while the
-insert orderings scramble more ($\rho=0.68$), most visibly Prisma (rank 4 on
-PostgreSQL, 7 on MySQL).
+versus MySQL for the deep fetch, aggregation, and the insert, showing the concrete
+rank reversals behind the main text's engine-dependence finding. The deep-fetch
+orderings largely agree, but aggregation and the insert reverse at the top: on
+aggregation \texttt{drizzle} (PostgreSQL rank 1) and \texttt{knex} (MySQL rank 1)
+trade the lead, and on the insert \texttt{knex} drops from rank 1 to 3 while
+\texttt{drizzle} rises to 1, with Prisma falling from mid-pack (rank 4) to last
+(rank 7) on both. The rank correlations these reversals produce ($\rho=0.86$ deep
+fetch, $0.64$ aggregation, $0.68$ insert; coarse at $n=7$) are reported only as
+descriptive summaries.
 
 \input{\tabledir ranks}
 
