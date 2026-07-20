@@ -8,7 +8,7 @@
     throughput on a single core and gains nothing from more; Prisma and MikroORM
     stay far below it and do not rise monotonically with extra cores (their per-core
     values wobble by 10--17\% run-to-run at this replicate count), so the deep-fetch
-    ranking is not an artifact of unequal core budgets --- a layer's low per-process
+    ranking does not appear to be an artifact of unequal core budgets --- a layer's low per-process
     throughput is recovered by more processes over the tested range (Table~\ref{tab:cluster}), not more cores.}
   \label{tab:equalcpu}
   \begin{tabular}{l r r r}

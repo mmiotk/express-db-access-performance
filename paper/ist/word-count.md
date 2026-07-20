@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9879 |
+| Body text (7 sections) | 9891 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13626** |
+| **Total (IST rule)** | **13638** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13327). The structured abstract is 299 words (under the journal's
+the abstract it is 13339). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -263,5 +263,26 @@ supplement section, and the S24/S4 table captions in their generators and both c
 to the tested 1→4-worker range, with the unsupported "database-bound" attribution removed and the
 MySQL counter-case and the absence of DB-side saturation measurement stated explicitly. The added
 caveats took the body to 9,879 words and the total to 13,626, still under the 15,000 limit.
+
+A round-8 language pass then matched the strength of the prose to the replication of the
+low-run secondary experiments the reviewer flagged (equal-CPU three runs, pool-size three runs,
+transactional write five runs, and by the same principle the node-cluster and open-loop
+coordinated-omission checks). Inferential verbs became consistency statements: "an equal-CPU
+check confirms no layer converts extra cores" -> "is consistent with no layer converting"; the
+pool-size frontier "shows the ordering preserved" -> "is consistent with the ordering being
+preserved" and "does not drive the ranking" -> "does not appear to drive the ranking" (in the
+Threats prose, both supplement pool-size sections, and the S4/S7/S25 captions in their
+generators and copies); the equal-CPU caption's "is not an artifact of unequal core budgets" ->
+"does not appear to be an artifact"; the open-loop CO cross-run "confirms the tail ranking holds"
+-> "is consistent with the tail ranking holding"; the cluster and open-loop "shows" -> "indicates";
+and the transactional-write section now states its "median of five runs, exploratory" replication;
+and the alternative-eager-loading check (median of five) "rules out a mere default-strategy
+artifact" -> "argues against" and its "deficit is not an artifact of a poor default" -> "does not
+appear to be an artifact" (Results, Threats, the construct-validity supplement section, and the
+S18 caption in its generator and both copies).
+Deterministic checks (byte-identity, checksums) and the primary-rigor claims (the 25-run matrix,
+its permutation test, the 25+10-run durability secondary, and the multi-point concurrency sweep's
+"not an artifact of a single point") keep their stronger wording. The rewording took the body to
+9,891 words and the total to 13,638, still under the 15,000 limit.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

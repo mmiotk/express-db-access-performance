@@ -36,7 +36,7 @@ throughput~\cite{bonvoisin2024orm}. This is a bounded 1-to-4-worker check on a s
 not a demonstration of general scalability: it measures no database-side saturation, on MySQL
 the native driver keeps scaling and the gap does not close, and scaling further would
 eventually reach another bottleneck --- database contention or connection limits --- this run
-does not locate. The open-loop cross-run further shows that a closed-loop
+does not locate. The open-loop cross-run further indicates that a closed-loop
 benchmark alone would underestimate how abruptly, not just how much, a heavyweight ORM's tail
 degrades once offered load crosses its capacity.
 

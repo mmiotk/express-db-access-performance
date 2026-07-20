@@ -110,7 +110,7 @@ of the original difference comes from SQL formulation or query count, which chan
 API, protocol, preparation, and hydration (Table~\ref{tab:samesql_components}). Prisma is the slowest layer on the raw path itself; we conjecture this
 reflects dispatch and marshalling overhead in its raw API rather than SQL execution, a
 hypothesis the composite contrast cannot confirm. A loading-strategy sensitivity check
-(Supplement Table~S18) rules out a mere default-strategy artifact: switching the join-default
+(Supplement Table~S18) argues against a mere default-strategy artifact: switching the join-default
 ORMs (Sequelize, MikroORM) to select-in makes them slower, whereas Objection's
 batched-select-in default is about $1.6\times$ slower than a single join on MySQL, so part of
 \emph{its} deficit there is a strategy choice rather than a fixed cost.
@@ -228,7 +228,7 @@ application CPU and drive lower database CPU. The native driver therefore leads 
 and end-to-end compute efficiency at once --- counting combined application-plus-database CPU
 per request, \texttt{mysql2} completes 1{,}254~req per combined-CPU-second on the MySQL deep
 fetch against Prisma's 384 and MikroORM's 356 (Supplement Table~S5) --- so the slower layers
-are also less compute-efficient. An exploratory equal-CPU check confirms no layer converts
+are also less compute-efficient. An exploratory equal-CPU check is consistent with no layer converting
 extra application cores into throughput; a layer's low per-process throughput may instead be
 addressed by additional application processes until another bottleneck is reached --- over the
 tested 1-to-4-worker range aggregate throughput rose roughly in proportion to workers, though

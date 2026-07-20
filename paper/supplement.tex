@@ -113,7 +113,7 @@ access layer from pool tuning. Table~\ref{tab:poolsize} varies the pool from 1 t
 50 for a representative layer of each tier on the deep fetch (PostgreSQL, 50
 connections). The deep-fetch ordering (\texttt{pg} $>$ Knex $>$ Prisma $>$ MikroORM) is preserved at every pool size, and each layer's
 throughput saturates at a pool well below 50, so the fixed-pool choice does not
-drive the ranking; a very small pool (1--2) is the one regime that compresses the
+appear to drive the ranking; a very small pool (1--2) is the one regime that compresses the
 differences, because every layer then queues on connection acquisition.
 
 \input{\tabledir poolsize}
@@ -123,7 +123,8 @@ differences, because every layer then queues on connection acquisition.
 Beyond the single-row insert of the primary matrix, Table~\ref{tab:txn_write}
 reports a transactional write, \texttt{POST /threads}, which inserts a post and
 five comments in one transaction through each layer's transaction facility, for a
-representative layer of each tier on PostgreSQL under default durability. The
+representative layer of each tier on PostgreSQL under default durability (median of five
+runs, exploratory). The
 full layer\,$\times$\,engine matrix for this pattern is left to future work. Because
 the transaction commits once, its per-commit fsync dominates and the layers cluster
 more tightly than the widest read spread ($3.7\times$, \texttt{pg} 2{,}718 down to
@@ -337,7 +338,7 @@ proportional cost in cores --- a partial test of the single-host resource-compet
 Table~\ref{tab:poolsize_mysql} is the MySQL companion to the PostgreSQL pool sweep
 (Supplement Table~S7): deep-fetch throughput as the connection pool varies from 1 to
 50, per layer. Each layer saturates at a pool well below 50 and the ordering is
-preserved at every pool size, so the fixed pool of ten does not drive the ranking on
+preserved at every pool size, so the fixed pool of ten does not appear to drive the ranking on
 either engine.
 
 \input{\tabledir poolsize_mysql}
@@ -658,7 +659,7 @@ rather than an obscure or deprecated option. Table~\ref{tab:construct} records t
 Where the documented alternative is a byte-identical drop-in, the loading-strategy sensitivity
 check (Table~\ref{tab:altloading}) adds an empirical signal: for the join-default ORMs (Sequelize,
 MikroORM) the documentation-selected default is the \emph{faster} of the two strategies, so a
-layer's deep-fetch deficit is not an artifact of a poor default; for Objection the documented
+layer's deep-fetch deficit does not appear to be an artifact of a poor default; for Objection the documented
 default (batched select-in) is the slower option on MySQL, which we disclose rather than correct; the
 Drizzle, Prisma, and TypeORM alternatives were not evaluated (TypeORM's errors on the ordered
 nested fetch), itself a portability caveat. The construct is therefore a defined, reproducible practitioner

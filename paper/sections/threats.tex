@@ -51,7 +51,7 @@ compound contrast that \emph{bounds}, rather than decomposes, how much of RQ1's 
 the documentation-selected loading strategy as opposed to the library machinery. Third, where the documented
 alternative is a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows the
 documentation-selected default is the \emph{faster} strategy for the join-default ORMs, so their
-deficit is not an artifact of a poor default; the one exception, Objection's slower select-in
+deficit does not appear to be an artifact of a poor default; the one exception, Objection's slower select-in
 default on MySQL, is disclosed rather than corrected. RQ1 therefore answers what a documentation-following
 developer obtains, not the library's intrinsic overhead --- which this design \emph{bounds} rather
 than \emph{measures}.
@@ -77,16 +77,16 @@ could confound layer identity with run position. A residual risk is coordinated
 omission in the load generator, which can under-report tail latency at
 saturation~\cite{fruth2022tail,tene2015latency}; a native,
 coordinated-omission-corrected constant-arrival cross-run on the deep fetch
-(Section~\ref{sec:methodology}) confirms the tail ranking holds under that
+(Section~\ref{sec:methodology}) is consistent with the tail ranking holding under that
 stricter model (Section~\ref{sec:results}; Supplement Table~S6).
 
 \paragraph{External validity}
 All measurements come from a single schema, dataset size, and 16-vCPU virtualized host, with a
 connection pool fixed at ten, against specific engine and library versions (PostgreSQL~18.4,
 MySQL~9.7.1). The fixed pool makes this an \emph{equal configured connection limit} comparison;
-a per-layer pool-size frontier (Supplement Tables~S7, S25) shows the ordering preserved from a
-pool of 1 to 50, and a mixed read/write workload (Supplement Table~S26) preserves the read
-ordering, so the fixed pool does not drive the ranking. Results may not transfer to larger
+a per-layer pool-size frontier (Supplement Tables~S7, S25) is consistent with the ordering being
+preserved from a pool of 1 to 50, and a mixed read/write workload (Supplement Table~S26) preserves
+the read ordering, so the fixed pool does not appear to drive the ranking. Results may not transfer to larger
 working sets, other pool sizes, or other versions, and library performance ages quickly, so
 rather than freeze an arbitrary snapshot we pin the latest stable release compatible with the
 harness at the freeze date (Supplement Table~S11); Prisma is measured at 7.8, the Rust-free
@@ -101,7 +101,7 @@ $1\times$, and the fan-out sweep (Section~\ref{sec:results}) shows the small dee
 is representative of a 0--500-child range. Three same-host concerns are checked and found not to
 drive the ranking: a resource-isolation run pinning application, database, and generator to
 disjoint cores agrees with the shared-host medians within about 2\% (ordering unchanged); a
-multi-worker check (Supplement Table~S24) shows that over one to four workers the low-per-process
+multi-worker check (Supplement Table~S24) indicates that over one to four workers the low-per-process
 layers scale out roughly linearly, so single-process throughput is not the aggregate ceiling at
 that scale; the check measures no database-side saturation, so scaling further would eventually
 reach a database or connection bottleneck it does not locate; and a ten-minute
