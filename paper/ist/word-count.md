@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9890 |
+| Body text (7 sections) | 9982 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13637** |
+| **Total (IST rule)** | **13729** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13338). The structured abstract is 299 words (under the journal's
+the abstract it is 13430). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -302,5 +302,22 @@ reader-facing, so no checksum churn). No secondary material was moved to the sup
 the manuscript is under the word limit, so density, not length, was the concern, and the R8
 caveats are load-bearing for the other points; the abstract trim is the density fix. The body is
 9,890 words and the total 13,637, still under the 15,000 limit.
+
+A round-8 novelty-discipline pass held the strongest novelty claim to what a scoping (not
+systematic) search supports and distinguished the two kinds of novelty. In the Positioning, "none
+combines [the four properties]" became "we did not identify a study combining [them] --- each we
+found covers at most two or three," followed by an explicit statement that the paper claims only
+"we did not identify a prior study combining these properties in the documented search," not
+priority the scoping search cannot establish. In the Introduction's contribution paragraph, the
+case study is now framed as contributing novel experimental evidence (a dual-engine,
+throughput-and-p99, documentation-selected comparison not identified in the searched sources)
+that is configuration-specific, distinct from the novel benchmark infrastructure (the protocol
+and its harness), which is the more durable contribution. No "first"/priority claim is made
+anywhere; the audit found only enumerative/temporal "first"s. The introduction's four-axis gap
+statement was also tidied so the "four coverage axes" are named explicitly (access-layer
+taxonomy, engine, joint throughput/tail metrics, independent authorship) and the separate
+HTTP-framework/client-observed gap is presented as "beyond these four axes" rather than as a
+fourth axis, matching the prior-art table's four columns. The additions took the body to
+9,982 words and the total to 13,729, still under the 15,000 limit.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

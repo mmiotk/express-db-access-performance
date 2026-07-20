@@ -33,15 +33,16 @@ rather than varying it~\cite{colley2018orm,prisma_rawsql_2025,
 orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql} (Section~\ref{sec:related}
 surveys each).
 
-In the sources we searched (Section~\ref{sec:related}) this leaves a gap along four
-axes (Table~\ref{tab:prior_art}): no access-layer comparison we found includes MySQL, and no
+In the sources we searched (Section~\ref{sec:related}) this leaves a gap along the four coverage
+axes of Table~\ref{tab:prior_art} --- access-layer taxonomy, engine, joint throughput/tail
+metrics, and independent authorship: no access-layer comparison we found includes MySQL, and no
 PostgreSQL/MySQL benchmark varies the access layer; no independently authored study spans the
 taxonomy broadly (the broad-coverage comparisons are vendor-authored, academic work covering
-at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}); we did not identify one
+at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}); and we did not identify one
 reporting throughput and the p99 tail jointly (the sole vendor suite stops at a single P95 at
-one load point~\cite{drizzle_benchmarks}); and none measures client-observed performance
-through an HTTP framework, academic studies instead instrumenting query execution inside the
-process~\cite{zhadko2025orm,imamsakti2025async}.
+one load point~\cite{drizzle_benchmarks}). Beyond these four axes, no study we found measures
+client-observed performance through an HTTP framework, academic studies instead instrumenting
+query execution inside the process~\cite{zhadko2025orm,imamsakti2025async}.
 
 These are gaps in \emph{coverage}. A more basic gap is methodological: across the sources
 searched, the reported numbers are not established to be \emph{comparable}. A layer that
@@ -128,8 +129,11 @@ precondition is load-bearing: a broken MikroORM cell briefly \emph{led} the MySQ
 ranking until the equivalence gate excluded it, the sevenfold documentation-selected deep-fetch spread
 was only $1.7\times$ among the raw paths running common SQL, and a large high-load tail gap
 dissolved once
-layers were compared at matched utilization. The resulting rankings are, moreover,
-configuration-specific and version-sensitive (one earlier headline did not survive a re-run on
-newer libraries), so the reusable protocol, not any single ranking, is the durable result. The case study also yields a
+layers were compared at matched utilization. The case study thus contributes novel experimental evidence --- a dual-engine,
+throughput-and-p99, documentation-selected access-layer comparison we did not identify in the
+searched sources --- but the resulting rankings are configuration-specific and version-sensitive
+(one earlier headline did not survive a re-run on newer libraries), so the novel benchmark
+infrastructure (the protocol and its harness), not any single ranking, is the more durable
+contribution. The case study also yields a
 practitioner-oriented checklist of genre-specific benchmarking pitfalls
 (Section~\ref{sec:discussion}), each an instance of a precondition the protocol enforces.
