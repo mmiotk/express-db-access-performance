@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9739 |
+| Body text (7 sections) | 9879 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13486** |
+| **Total (IST rule)** | **13626** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13187). The structured abstract is 299 words (under the journal's
+the abstract it is 13327). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -251,5 +251,17 @@ establish a general distribution of ORM penalties, so the pattern is a benchmark
 re-measured on the target workload, not an established law; the Conclusion and the practice
 paragraph were scoped to "the five tested patterns" / "these probes" to match. The added scoping
 took the body to 9,739 words and the total to 13,486, still under the 15,000 limit.
+
+A round-8 horizontal-scaling pass then weakened the claim, flagged by the reviewer, that a
+layer's low per-process throughput is "recoverable by horizontal scaling." The node-cluster
+check (Supplement Table S24) scales only 1→4 workers on a co-located 16-core host, measures no
+database-side saturation, and on MySQL the native driver keeps scaling so the gap widens; the
+one PostgreSQL knee (native `pg`) was previously attributed to becoming "database-bound" with no
+DB-side evidence. Every claim site (Results, Discussion ×2, Threats, the Multi-worker-scaling
+supplement section, and the S24/S4 table captions in their generators and both copies) now reads
+"may be addressed by additional application processes until another bottleneck is reached," scoped
+to the tested 1→4-worker range, with the unsupported "database-bound" attribution removed and the
+MySQL counter-case and the absence of DB-side saturation measurement stated explicitly. The added
+caveats took the body to 9,879 words and the total to 13,626, still under the 15,000 limit.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

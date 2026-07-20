@@ -101,8 +101,10 @@ $1\times$, and the fan-out sweep (Section~\ref{sec:results}) shows the small dee
 is representative of a 0--500-child range. Three same-host concerns are checked and found not to
 drive the ranking: a resource-isolation run pinning application, database, and generator to
 disjoint cores agrees with the shared-host medians within about 2\% (ordering unchanged); a
-multi-worker check (Supplement Table~S24) confirms the low-per-process layers scale out
-near-linearly, so single-process throughput is not the aggregate ceiling; and a ten-minute
+multi-worker check (Supplement Table~S24) shows that over one to four workers the low-per-process
+layers scale out roughly linearly, so single-process throughput is not the aggregate ceiling at
+that scale; the check measures no database-side saturation, so scaling further would eventually
+reach a database or connection bottleneck it does not locate; and a ten-minute
 sustained-load check moves throughput by at most $\pm1.4\%$, so the short runs are not sampling
 a transient. Longer-horizon drift~\cite{kuffel2025nodejs} and a two-machine cross-run over a
 dedicated link remain planned.

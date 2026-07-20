@@ -3,11 +3,13 @@
   \centering
   \caption{Multi-worker deep-fetch throughput (req/s, median of three runs) as each
     layer is scaled to 1, 2, and 4 Express workers (node cluster, shared port). Because each
-    process uses about one core, throughput scales roughly linearly
-    with workers until the host saturates: Prisma, low at one worker (PostgreSQL
+    process uses about one core, aggregate throughput rises roughly in proportion
+    to workers over this range: Prisma, low at one worker (PostgreSQL
     1{,}117), rises to 2{,}275 at two and 4{,}449 at four workers, recovering
-    native-like aggregate throughput at four times the processes. A layer's low
-    per-process throughput is therefore recoverable by horizontal scaling, at a
+    native-like aggregate throughput at four times the processes. This bounded
+    1-to-4-worker check measures no database-side saturation and stops before any
+    layer's knee, so a layer's low per-process throughput may be addressed by
+    additional application processes until another bottleneck is reached, at a
     proportional cost in cores.}
   \label{tab:cluster}
   \begin{tabular}{l r r r}

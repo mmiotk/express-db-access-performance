@@ -229,8 +229,10 @@ and end-to-end compute efficiency at once --- counting combined application-plus
 per request, \texttt{mysql2} completes 1{,}254~req per combined-CPU-second on the MySQL deep
 fetch against Prisma's 384 and MikroORM's 356 (Supplement Table~S5) --- so the slower layers
 are also less compute-efficient. An exploratory equal-CPU check confirms no layer converts
-extra application cores into throughput; a layer's low per-process throughput is instead
-recoverable by horizontal scaling (Supplement Tables~S4, S24). Memory differences are smaller
+extra application cores into throughput; a layer's low per-process throughput may instead be
+addressed by additional application processes until another bottleneck is reached --- over the
+tested 1-to-4-worker range aggregate throughput rose roughly in proportion to workers, though
+this run measures no database-side saturation (Supplement Tables~S4, S24). Memory differences are smaller
 (Supplement Table~S10): the query builder and lightest ORMs are cheapest (Knex 215, Objection
 221, TypeORM 225~MB peak RSS), while Drizzle, Prisma, and MikroORM use more (297--356~MB),
 which governs how many replicas a given load requires~\cite{vaquero2011scaling}.

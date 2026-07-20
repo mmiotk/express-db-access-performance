@@ -314,16 +314,21 @@ count.
 
 \section{Multi-worker scaling}
 \label{sup:cluster}
-Table~\ref{tab:cluster} scales each of a representative subset to 1, 2, and 4 Express
-workers (a shared-port \texttt{node} cluster). Because each process uses about one
-core and gains nothing from more, throughput scales roughly linearly with workers
-until the host saturates: on PostgreSQL the native driver leads at one worker
-(\texttt{pg} 3{,}299 to Prisma's 1{,}117) and saturates near two workers as it
-becomes database-bound (4{,}055, then 3{,}961 at four), while Prisma, low per
+Table~\ref{tab:cluster} scales a representative subset (three layers per engine) to 1, 2, and 4
+Express workers (a shared-port \texttt{node} cluster), median of three runs. Because each process
+uses about one core and gains nothing from more, aggregate throughput rises roughly in proportion
+to workers over this range: on PostgreSQL the native driver leads at one worker
+(\texttt{pg} 3{,}299 to Prisma's 1{,}117); its aggregate throughput then plateaus by two
+workers (4{,}055, then 3{,}961 at four) --- whether from database contention, shared-host CPU
+competition, or the fixed-connection generator is not instrumented here --- while Prisma, low per
 process, rises 1{,}117 to 2{,}275 to 4{,}449 and reaches native-like aggregate
-throughput at four workers. A layer's low per-process throughput is therefore
-recoverable by horizontal scaling, at a proportional cost in cores---the direct
-test of the single-host resource-competition concern.
+throughput at four workers. This is a bounded check, not a demonstration of general scalability:
+it stops at four workers, measures no database-side saturation (DB CPU, connections, or wait
+events), and on MySQL horizontal scaling \emph{widens} the gap --- the native \texttt{mysql2}
+keeps scaling to 8{,}883~req/s at four workers while Prisma reaches only 2{,}427 (about
+\texttt{mysql2} at one worker). Within these limits a layer's low per-process throughput may be
+addressed by additional application processes until another bottleneck is reached, at a
+proportional cost in cores --- a partial test of the single-host resource-competition concern.
 
 \input{\tabledir cluster}
 
