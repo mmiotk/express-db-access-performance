@@ -337,4 +337,6 @@ deeper-restructuring option was declined), since the caveats are load-bearing fo
 points. The trimming took the body to 9,965 words and the total to 13,712, still under the
 15,000 limit.
 
+The round-8 revision (all of the above from point 1 through the light streamlining) is archived as release v1.6.5 (DOI 10.5281/zenodo.21455542).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

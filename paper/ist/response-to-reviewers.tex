@@ -16,133 +16,189 @@
 
 Dear Editor and Reviewer,
 
-Thank you for the sustained and careful reading of my manuscript, \emph{A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL}. This revision responds to five successive sets of comments raised over one revision cycle, spanning the estimand and scope of the claims, the CPU control and the statistical reporting, the wording of the conclusions, the abstract and a final consistency sweep, and the manuscript's length and structure. I have addressed every point, and the manuscript is materially different as a result.
+Thank you for the exceptionally thorough and constructive review of my manuscript, now titled \emph{A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js}. This round (R8, the second major revision) responds to one comprehensive review, and I have addressed every point in it: all six Essential items, the eight numbered concerns, the minor labeling and abstract points, and the requests on novelty discipline, contribution separation, reproducibility, and structure.
 
-At a high level, the paper is now a roughly \textbf{24\%-shorter main text (43 pages, 8,669 body words)}, reframed so that it reads as \emph{a reproducible benchmark methodology demonstrated through a dual-engine case study} rather than as a universal ORM ranking. Detail was \textbf{moved to a fuller supplement that now serves as the audit trail}, not deleted: the full statistical construction, the measurement internals, and the pitfalls checklist each became a dedicated supplement section. Counted under the IST rule (body + abstract + references + main-text floats at 200 words each), the manuscript totals \textbf{12,216 words}, well under the 15,000-word limit. Below I answer the five sets in turn; each response quotes the current manuscript so every change is verifiable, and cites sections by name and supplement floats by number, since line numbers drift between builds.
-
----
-
-\section*{Set 1 --- Methodology and scope of the claims}
-
-> The "default-configuration" framing over-reads what the study measures; the several > claim levels are run together; "saturated"/"overload" over-states the primary > operating point; and the reader cannot see, at a glance, the scope of each experiment.
-
-\textbf{Response.} I sharpened the estimand and separated the claim levels without changing any measurement.
-
-\textbf{(a) The estimand was renamed throughout.} Choosing the first documented API is a reproducible \emph{selection heuristic}, not the library's actual default configuration, so "default-configuration" was replaced by "documentation-selected implementation-and-strategy." The Study Design now fixes the primary treatment as
-
-> "each layer's \emph{documentation-selected implementation and query/loading strategy} --- the > API each library's documentation presents first, not a claim about the most common or > most performant one,"
-
-and states plainly that the treatment was set by a rule decided before measurement, "a reproducible selection heuristic, not evidence that the chosen API is performance-optimal or the most common production choice, so we report a documentation-selected implementation-and-strategy estimand."
-
-\textbf{(b) Three claim levels are now named and kept separate.} The Study Design estimand paragraph opens: "The comparison is read at three levels, kept separate throughout." It distinguishes the \textbf{primary} implementation-and-strategy comparison (RQ1--RQ3), the \textbf{same-SQL (raw-path) control} that "\emph{bounds} what remains once every layer executes identical SQL through its raw facility," and the \textbf{mechanisms}, which
-
-> "change together and are \emph{not} separately or causally identified; the same-SQL contrast > is a bound, not a decomposition."
-
-\textbf{(c) The full matrix is stated as the fixed high-load condition; the other two conditions are restricted to the deep fetch.} The Study Design now reads:
-
-> "\emph{Equal external demand} is the fixed 50-connection \emph{high-load} operating point --- the > full five-pattern, two-engine matrix ... The other two conditions are a \emph{limited} set > restricted to the deep fetch, the pattern on which each layer's capacity was actually > measured (Supplement Table\textasciitilde{}S32 tabulates every experiment's scope): \emph{equal utilization} > is the coordinated-omission-corrected open-loop sweep ... and an \emph{equal compute budget} > is the exploratory equal-CPU check."
-
-\textbf{(d) "capacity"/"saturating throughput"/"overload" are reserved for the deep-fetch sweep.} The primary matrix's fixed point is now "high-load," not "overload," and the Study Design justifies the term: "high-load rather than saturated, because the throughput knee is measured only for the deep fetch (Supplement Figure\textasciitilde{}S2)." RQ1 keeps the three quantities distinct:
-
-> "We keep distinct three quantities that a fixed operating point conflates: \emph{capacity} > (saturating throughput, measured by the deep-fetch concurrency sweep), \emph{high-load > latency} (the p99 under equal external demand), and \emph{latency at matched utilization} > (each layer driven at equal fractions of its own capacity)."
-
-\textbf{(e) A new experiment-scope table was added.} Supplement Table S32 tabulates, for every experiment, its access pattern(s), engine(s), layer count, and repeated runs, under the caption "Scope of every experiment: the access pattern(s), engine(s), number of access-layer implementations, and repeated runs each covers ... every other experiment is a limited condition, most restricted to the deep/nested fetch, and each conclusion is scoped accordingly."
+I want to be explicit about one thing at the outset: \textbf{no measurement was re-run and no experiment was altered in this round.} The data, the harness, the pinned versions, the raw per-cell records, and every reported number are identical to the previous build. All changes here are prose, label, and analysis-presentation revisions --- reframing the contribution, rewriting the same-SQL result in non-causal terms, reweighting how the cross-engine transfer is characterized, softening the language of the low-replicate secondary experiments, and correcting a small number of category labels. Below I answer each point in turn; every response quotes the current manuscript so that each change is verifiable, and I cite sections by name and supplement floats by number, since line numbers drift between builds.
 
 ---
 
-\section*{Set 2 --- CPU control and statistics}
+\section*{Essential 1 --- A single primary contribution, clearly stated and delimited}
 
-> The equal-CPU experiment is presented as a confirmatory control it cannot support; the > claim that cores "change throughput by at most a few percent" is not what the data show; > the bootstrap intervals are stated more broadly than they support; sub-millisecond p99 > gaps are read as real; and the raw insert distributions are hidden in the supplement.
+> The paper reads as several contributions at once (a methodology, an artifact, and an > empirical ranking); it should be reframed around one primary contribution, clearly > separated from the others.
 
-\textbf{Response.} I demoted the CPU experiment and corrected the statistical wording.
+\textbf{Response.} I agree, and I have subordinated the entire paper to \textbf{one} primary contribution --- a \emph{comparability protocol} --- and explicitly distinguished it from both the artifact and the case study. The change is carried through the title (now \emph{A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js}), the abstract, the Introduction, the Related Work positioning, the Discussion, the Conclusion, and the Highlights.
 
-\textbf{(a) The equal-CPU experiment is now an exploratory sensitivity check.} Its table caption reads "Exploratory equal-CPU sensitivity check (deep-fetch throughput, req/s, PostgreSQL, median of 3 runs, three representative layers)," and the Results text now says only that "An exploratory equal-CPU check confirms no layer converts extra application cores into throughput."
+The Introduction states the contribution and its three mechanisms directly:
 
-\textbf{(b) The false "at most a few percent" wording was corrected.} \texttt{pg} is flat across cores (3689 / 3688 / 3687), but the two ORMs wobble run-to-run with no monotonic core gain (Prisma 1079 / 1052 / 1219, dipping at two cores; MikroORM 446 / 495 / 522). The caption now states this honestly:
+> "This paper's primary contribution is a \textbf{comparability protocol for access-layer > benchmarking}: a set of controls that turn the vendor-benchmark genre --- which reports > throughput or latency numbers whose comparability is assumed --- into a controlled > experiment, by establishing three preconditions the genre otherwise leaves unmet."
 
-> "\textbackslash\{\}\texttt{pg\textbackslash\{\}} holds full throughput on a single core and gains nothing from more; Prisma and > MikroORM stay far below it and do not rise monotonically with extra cores (their per-core > values wobble by 10--17\textbackslash\{\}\% run-to-run at this replicate count)."
+The three preconditions are then named as \textbf{Semantic equivalence} ("Every layer must return \emph{byte-identical} results ... before its timing is admitted"), \textbf{Strategy attribution} ("a \emph{same-SQL control} bounds how much of an observed difference is the library's execution machinery versus the query strategy selected for it"), and \textbf{Operating-point separation} ("Capacity ..., tail latency under equal demand, and latency at matched utilization are measured and reported as \emph{distinct} quantities rather than conflated at one arbitrary load point").
 
-\textbf{(c) The bootstrap intervals are now correctly scoped.} The Analysis subsection states the percentile-bootstrap 95\% CIs
+The same paragraph then separates the contribution from the two things it is easily confused with:
 
-> "capture within-campaign, run-to-run variability on this host and configuration, not > variation across machines, versions, or deployments."
+> "We distinguish this contribution from two things it is easily confused with. The > \textbf{artifact} --- an open, reusable harness ... --- \emph{operationalizes} the protocol and is > released so it can be re-run, but is not itself the scientific claim ... The \textbf{empirical > case study} ... \emph{demonstrates} the protocol and shows why each precondition is > load-bearing."
 
-\textbf{(d) Small p99 gaps are no longer read as real.} The Analysis subsection now reads:
-
-> "Adjacent-layer p99 gaps of one or two milliseconds sit at the millisecond measurement > floor and are not read as real; conclusions rest on the large-ratio patterns, chiefly the > deep fetch."
-
-\textbf{(e) The raw per-replicate insert distributions were brought into the Results body.} The Measurement-stability subsection now points to them directly: "dispersion is larger only on the insert, where the MySQL cells are noisiest (up to \$15.9\textbackslash\{\}\%\$, bimodal under group-commit batching; raw distributions in Supplement Figure\textasciitilde{}S1)."
+The Conclusion opens on the same footing ("This paper's contribution is a \textbf{comparability protocol} that makes access-layer benchmarking a controlled experiment rather than vendor-style number-reporting"), the abstract's Objective closes with "The protocol, not any ranking, is the contribution," and the Related Work Positioning now reads "the paper's contribution is the \emph{comparability protocol} it applies." The first Highlight is now "A reusable comparability protocol turns access-layer benchmarks into experiments."
 
 ---
 
-\section*{Set 3 --- Conclusions and language}
+\section*{Essential 4 (points 2 \& 3) --- The same-SQL contrast is a compound intervention}
 
-> The conclusions occasionally speak of an isolated "access-layer overhead," recommend > thin layers as a general default, and could state their configuration-specific footing > and their novelty scope more plainly.
+> The same-SQL comparison is presented as if it isolated the library's machinery from the > query strategy, but it changes several things at once. Its construct validity as an > estimand, and the fact that it cannot attribute the residual to any single mechanism, > should be stated plainly.
 
-\textbf{Response.} I limited the causal and general-recommendation language.
+\textbf{Response.} This was the most important scientific correction, and I have rewritten the same-SQL result so that it is described consistently as a \emph{compound} contrast that \emph{bounds rather than decomposes} the difference, and added a new main-text component diagram (Table 6, \texttt{tab:samesql\_components}) that enumerates exactly what the intervention changes and what it does not.
 
-\textbf{(a) "access-layer overhead" wording was limited where it implied an isolated measurement.} The primary comparison bundles library, query strategy, round-trips, and mapping, so the Construct-validity threat now concedes that "the overhead we attribute to the \emph{access layer} may partly reflect these surrounding costs," and the same-SQL control is described as one where "the residual difference is bounded but no single factor is isolated."
+The Results "Same-SQL control" subsection now opens:
 
-\textbf{(b) The "safer default" recommendation was softened to benchmarking the specific hot path.} The Practical-guidance paragraph now reads:
+> "The \emph{same-SQL control} ... is a \emph{compound} intervention: replacing each layer's > documentation-selected relational-loading path with the same hand-written SQL through its > raw facility changes the loading API, query strategy, SQL formulation, round-trip count, > statement preparation, and result hydration \emph{together} (Table\textasciitilde{}6). ... It therefore > \emph{bounds} the combined difference these components make; it does not attribute that > difference to any one of them, and in particular does not establish how much comes from > SQL formulation or query count."
 
-> "Where a service's hot path is dominated by deep or nested fetches the access layer is > consequential and should be benchmarked for the specific application: the tested thin > paths (native driver and Knex) led here \emph{for throughput and response-time p99}, but > whether that generalizes to other implementations, schemas, or workloads is a hypothesis > for broader study, not a category law or a general default."
+The result itself is stated as a bound, not a decomposition:
 
-\textbf{(c) An explicit "configuration-specific" label was added to the Conclusion.} It now opens: "This paper replaces vendor-benchmark claims with a vendor-independent, reproducible, configuration-specific comparison of relational database access layers in Express.js."
+> "The result this supports is that the documentation-selected paths differ much more than > the raw paths executing common SQL; it does \emph{not} quantify how much of the original > difference comes from SQL formulation or query count, which change together with the API, > protocol, preparation, and hydration."
 
-\textbf{(d) Novelty phrasing was confirmed cautious throughout.} The Introduction reports "In the sources searched, we did not identify one reporting the p99 tail behavior" and claims only "a combination not identified in our documented search"; the Related Work anchors this to "a structured scoping search (not a systematic review)" and a design choice "absent from the access-layer benchmarks surveyed above." No absolute priority is claimed.
+The new \textbf{Table 6} (\texttt{tab:samesql\_components}) lists, component by component (Loading API, Query strategy, SQL formulation, Round-trip count, Statement preparation, Wire protocol, Result hydration), what the same-SQL control equalizes versus what still differs across layers, with the caption stating that "The residual difference it leaves therefore bounds their combined effect and cannot be attributed to any single one --- in particular, not to SQL formulation or query count."
 
----
-
-\section*{Set 4 --- Presentation and final control}
-
-> The Methods and Discussion carry repeated caveats; the abstract reports secondary > results and over-scopes the special conditions; and a final pass should confirm internal > consistency before submission.
-
-\textbf{Response.} I trimmed the repetition, rescoped the abstract, and ran a consistency sweep.
-
-\textbf{(a) Methods and Discussion were shortened and repeated caveats removed} (the standalone same-SQL "bounds not isolates" paragraph, the duplicated horizontal-scaling and "productivity/type-safety not measured" sentences, and a redundant single-host restatement), consolidating each recurring caveat to a single canonical statement with cross-references.
-
-\textbf{(b) The abstract dropped the secondary results and rescoped the special conditions.} It no longer reports Kendall's tau or the matched-utilization result, and it confines the open-loop and equal-compute-budget conditions to the deep fetch:
-
-> "under three operating conditions: equal demand (a fixed 50-connection high-load point) > across all patterns, and---on the deep fetch only---equal utilization (an open-loop sweep) > and an exploratory equal compute budget."
-
-The read-ordering result is stated once ("The read ordering is similar across engines (Spearman \$\textbackslash\{\}rho \textbackslash\{\}geq 0.86\$)").
-
-\textbf{(c) The methodology-not-ranking narrative was held throughout.} The abstract Objective states it directly: "the harness, not a generalized ranking, is the contribution," and the Conclusion keeps "the durable contributions are the reusable harness, the benchmark design, and the pitfalls checklist."
-
-\textbf{(d) A pre-submission consistency sweep} confirmed that the pinned library versions match \texttt{package.json}, that the DOI and GitHub link resolve, and that every headline number matches its table. It also (i) corrected a coefficient-of-variation figure, which now reads "this study's own run-to-run CV reaches \$15.9\textbackslash\{\}\%\$ on the noisiest MySQL-insert cell, within \$4.2\textbackslash\{\}\%\$ on the reads"; (ii) removed the redundant per-cell median CIs from the main-paper paired significance table (Table 6), whose caption now defers to the pattern tables ("median throughput (req/s; the per-cell bootstrap CI is in the pattern tables)"); and (iii) reconciled two loose prose phrasings --- "On MySQL the faster layers cluster within about \$5\textbackslash\{\}\%\$ near an engine-imposed floor," and, for the transactional write, that "the transactional ordering does not simply track the single-row one" (Prisma being the mover).
+For the \textbf{construct validity of the treatment}, the Threats section now carries a dedicated paragraph describing the same-SQL control as "a compound contrast that \emph{bounds}, rather than decomposes, how much of RQ1's spread comes from the documentation-selected loading strategy as opposed to the library machinery," and the introductory Results sentence anchors it as "a compound contrast that bounds rather than decomposes the difference (construct validity: Section 6 [Threats])." A new supplement section, \emph{Construct validity of the documentation-selected treatment} (Supplement Table S33), records per layer that the selected API is the library's canonical relations mechanism and disclaims representativeness: "The construct is therefore a defined, reproducible practitioner persona ... and is \emph{not} a claim about performance-tuned expert usage or measured production frequency."
 
 ---
 
-\section*{Set 5 --- Length and structure (retaining a single paper)}
+\section*{Essential 5 (point 4) --- The n=7 rank correlations are given too much weight}
 
-> The manuscript is long and could be split into two papers, or condensed.
+> The cross-engine transfer rests heavily on Spearman coefficients computed over only seven > portable layers; concrete reversals and interaction magnitudes would be more informative.
 
-\textbf{Response.} I respectfully kept the paper as a single contribution rather than splitting it. Both threads --- the reproducible methodology/harness and the dual-engine case study --- answer one research question and share one apparatus, so splitting them would read as salami-slicing and would leave each half without the other's evidence. Instead I condensed the main text by roughly \textbf{24\%} (body 11,356 $\to$ 8,669 words; main paper 51 $\to$ 43 pages) and \textbf{moved the detail into the supplement rather than deleting it}:
+\textbf{Response.} I reweighted the RQ2 treatment to lead with concrete rank reversals and with the layer$\times$engine interaction magnitudes, and demoted the Spearman coefficients to coarse descriptive summaries. The RQ2 paragraph now opens:
+
+> "The read ordering is stable across engines, but the aggregation and insert orderings > reverse at the top, so we characterize the transfer by these concrete rank reversals and by > the layer$\times$engine interaction magnitudes rather than by a correlation coefficient computed > over only seven portable layers."
+
+It then gives the reversals explicitly --- on the insert, "\textbackslash\{\}\texttt{knex\textbackslash\{\}} leads on PostgreSQL (4,841 req/s) but drops to third on MySQL (1,670), where \textbackslash\{\}\texttt{drizzle\textbackslash\{\}} takes the lead (1,730); Prisma falls furthest, from fourth on PostgreSQL (2,774) to last on MySQL (886 ...)"; on aggregation, "\textbackslash\{\}\texttt{drizzle\textbackslash\{\}} leads on PostgreSQL (6,280) but falls to fourth on MySQL (3,520), where \textbackslash\{\}\texttt{knex\textbackslash\{\}} leads (3,842)" --- and reports the interaction in magnitude (per-layer PostgreSQL$\div$MySQL ratios: reads within $\approx$1.0--1.9$\times$, insert 1.6$\times$ to 3.2$\times$, aggregation 1.4$\times$ to 1.9$\times$; Supplement Tables S27--S28). The coefficients now appear only "For completeness ... (descriptive only, and coarse at n=7)," closing with:
+
+> "but the finding rests on the reversals and interaction spreads above, not on the > coefficients."
+
+The abstract likewise now reports the read ordering once (Spearman $\rho$ $\ge$ 0.86) and leads its engine-dependence sentence with "the aggregation and insert orderings reverse: Prisma drops to last on the MySQL insert, and the per-layer engine advantage scatters 1.6--3.2$\times$."
+
+---
+
+\section*{Essential 2 (point 5) --- Narrow the five-pattern / synthetic-workload claims}
+
+> The Discussion generalizes from five probes on one synthetic schema to "ORM penalties" in > general; this over-reaches.
+
+\textbf{Response.} I narrowed the generalization. The Discussion's Practical-guidance paragraph no longer speaks of ORM penalties as a category property; it locates the difference in the tested probes and labels the finding a benchmark observation to be re-measured:
+
+> "This locates the difference among the five probes on a single synthetic schema, not across > relation-materializing workloads in general: one nested-fetch topology --- the fan-out sweep > ... varies its breadth (0--500 children) but not its depth, its schema, or the mix of such > queries in a production workload --- cannot establish a general distribution of ORM > penalties across relation-materializing traffic, so this is a benchmark observation to be > re-measured on the target workload, not an established law."
+
+The subsequent sentence keeps the guidance conditional --- "the tested thin paths (native driver and Knex) led here \emph{for throughput and response-time p99}, but whether that generalizes to other implementations, schemas, or workloads is a hypothesis for broader study, not a category law or a general default" --- and the Conclusion was scoped to match ("concentrated across the five tested patterns, not uniform").
+
+---
+
+\section*{Essential 3 (point 6) --- Weaken the horizontal-scaling claim}
+
+> "Recoverable by horizontal scaling" overstates a bounded 1$\to$4-worker check on one host with > no database-side saturation measurement, and it ignores the MySQL counter-case.
+
+\textbf{Response.} I weakened the claim at every site. The unsupported "becomes database-bound" attribution was removed, the phrasing was changed to "may be addressed by additional application processes until another bottleneck is reached," scoped to the tested range, and the MySQL counter-case and the absence of any database-side saturation measurement are now stated explicitly. In the Results:
+
+> "a layer's low per-process throughput may instead be addressed by additional application > processes until another bottleneck is reached --- over the tested 1-to-4-worker range > aggregate throughput rose roughly in proportion to workers, though this run measures no > database-side saturation."
+
+The supplement's \emph{Multi-worker scaling} section carries the full caveat, including the MySQL counter-case:
+
+> "This is a bounded check, not a demonstration of general scalability: it stops at four > workers, measures no database-side saturation (DB CPU, connections, or wait events), and on > MySQL horizontal scaling \emph{widens} the gap --- the native \textbackslash\{\}\texttt{mysql2\textbackslash\{\}} keeps scaling to > 8,883 req/s at four workers while Prisma reaches only 2,427 ... Within these limits a > layer's low per-process throughput may be addressed by additional application processes > until another bottleneck is reached."
+
+The Discussion "Compute cost and horizontal scaling" paragraph makes the same disclaimer ("it measures no database-side saturation, on MySQL the native driver keeps scaling and the gap does not close, and scaling further would eventually reach another bottleneck ... this run does not locate"), and the Threats external-validity paragraph now says the multi-worker check "measures no database-side saturation, so scaling further would eventually reach a database or connection bottleneck it does not locate."
+
+---
+
+\section*{Essential 6 (point 7) --- Cautious language for the low-replicate experiments}
+
+> Several secondary experiments run only 3--5 times but are reported with confirmatory verbs > ("confirms", "shows", "rules out").
+
+\textbf{Response.} I matched the strength of the prose to the replicate count. Inferential verbs in the low-replicate secondaries became consistency statements, while deterministic checks and the primary-rigor claims kept their stronger wording. Specifically:
 
 \begin{itemize}
-  \item a new \textbf{"Statistical methods"} supplement section gives the permutation/bootstrap
+  \item \textbf{Equal-CPU (3 runs)} --- "An exploratory equal-CPU check is consistent with no layer
 \end{itemize}
 
-construction and seed, tie handling, the layer$\times$engine interaction ANOVA, and the TOST-margin rationale;
+converting extra application cores into throughput" (Results), and the table caption now reads "the ranking does not appear to be an artifact of unequal core budgets."
 
 \begin{itemize}
-  \item a new \textbf{"Measurement details"} section gives the warm-up cold-boot numbers, the
+  \item \textbf{Pool-size (3 runs)} --- "a per-layer pool-size frontier ... is consistent with the
 \end{itemize}
 
-order-invariance ratios, the tail-estimation arithmetic, and the resource sampling;
+ordering being preserved from a pool of 1 to 50 ... so the fixed pool does not appear to drive the ranking" (Threats), with the same softening in both supplement pool-size sections.
 
 \begin{itemize}
-  \item a new \textbf{"Benchmarking-pitfalls checklist"} section gives the four confounds in full, with
+  \item \textbf{Transactional write (5 runs)} --- now labelled exploratory in the supplement:
 \end{itemize}
 
-the main-text Discussion keeping the named summary ("which we distill into a reusable checklist (full detail in the supplement's \emph{Benchmarking-pitfalls checklist})").
+"for a representative layer of each tier on PostgreSQL under default durability (median of five runs, exploratory)."
 
-The material that carries the argument stays prominent in the main text: the same-SQL control, the RQ1--RQ3 answers, and the Threats to Validity. The manuscript is now framed, in the abstract and throughout, so that "the harness, not a generalized ranking, is the contribution" and the ranking is read as a configuration-specific case study rather than a universal ORM ranking.
+\begin{itemize}
+  \item \textbf{Open-loop coordinated-omission cross-run} --- "is consistent with the tail ranking
+\end{itemize}
+
+holding under that stricter model" (Threats).
+
+\begin{itemize}
+  \item \textbf{Alternative eager-loading (5 runs)} --- "argues against a mere default-strategy artifact"
+\end{itemize}
+
+(Results, previously "rules out"), and "does not appear to be an artifact of a poor default" (Threats and the construct-validity supplement section).
+
+By contrast, the deterministic checks (byte-identity, checksums) and the primary-rigor claims keep "confirms": the 25-run matrix and its paired permutation test, and the 25+10-run durability secondary whose relaxed run "confirms the cross-engine gap is not an artifact of either configuration" (Threats).
+
+---
+
+\section*{Essential-support (point 8) --- Better discussion of the noisy, bimodal MySQL inserts}
+
+> The insert measurements are the noisiest and appear bimodal; the raw distributions should be > shown and discussed rather than reduced to a single CV.
+
+\textbf{Response.} I brought the raw per-replicate insert distributions into the Results body and added a dedicated supplement treatment. The Measurement-stability subsection now states:
+
+> "dispersion is larger only on the insert, where the MySQL cells are noisiest (up to 15.9\%, > bimodal under group-commit batching; raw distributions in Supplement Figure\textasciitilde{}S1), so the > insert rank correlation is reported conservatively."
+
+The supplement's \emph{Dispersion on MySQL} section adds Figure S1, the raw per-replicate insert throughput behind the coefficients, and explains why a single CV is inadequate: "several cells are visibly bimodal or heavy-tailed within a cell, structure a single CV cannot convey, which is why the insert rank correlation and dispersion are reported conservatively."
+
+---
+
+\section*{Minor concerns}
+
+\textbf{Abstract simplified (and the retired Prisma-version result removed from it).} The abstract's Methods clause dropped the equal-compute-budget condition (an exploratory secondary), and its Conclusion dropped the retired five-core-Prisma parenthetical --- that historical result now lives only in the Discussion and in the temporal external-validity threat, where it belongs. The structured abstract is 299 words, under the 300-word limit, and now reads more prominently on the core deep-fetch result.
+
+\textbf{"Vendor-independent" $\to$ "independently authored."} The manuscript means authorship, not design, independence, so the study description and the coverage axis now use "independently authored" / "independent authorship," and the Study Design states it plainly: "Vendor independence means authorship only: no evaluated library's maintainers were involved, though the consequential author choices (selection, schema, pool size, tuning) remain and are disclosed." The prior-art table's "No (vendor)" column, which does concern authorship, is unchanged.
+
+\textbf{"orm-lightweight" merged into "orm."} The interpretive, performance-implying label on an experimentally untested taxonomy was removed: Drizzle's Category column now reads "orm" in the six pattern/resource tables and both generators, and the methodology prose calls it "a query-builder-style ORM."
+
+\textbf{"documentation-selected" kept, and justified.} I retained the term rather than renaming the estimand a second time, because it is a reproducible operational rule and the manuscript already disclaims any typical/best/recommended connotation. The methodology states it is "a reproducible selection heuristic, not evidence that the chosen API is performance-optimal or the most common production choice," and the new construct-validity treatment frames it as "a defined, reproducible practitioner persona --- the documentation-following developer." A second rename would risk reopening the estimand discussion for no gain in precision.
+
+---
+
+\section*{Novelty discipline and contribution separation}
+
+\textbf{The strongest novelty claim is scoped to the search.} The Related Work Positioning now holds the claim to what a scoping (not systematic) search supports:
+
+> "We therefore state the strongest novelty claim the search supports --- that we did not identify a > prior study combining these properties in the documented search --- rather than a claim of priority > the scoping search cannot establish."
+
+No "first"/priority claim is made anywhere.
+
+\textbf{Novel experimental evidence is distinguished from the novel benchmark infrastructure.} The Introduction's contribution paragraph now frames the case study as contributing novel evidence that is configuration-specific, distinct from --- and less durable than --- the protocol and harness:
+
+> "The case study thus contributes novel experimental evidence ... but the resulting rankings are > configuration-specific and version-sensitive ... so the novel benchmark infrastructure (the protocol > and its harness), not any single ranking, is the more durable contribution."
+
+\textbf{The four coverage axes are named, and the HTTP-framework gap is placed beyond them.} The Introduction now names the four axes explicitly --- "access-layer taxonomy, engine, joint throughput/tail metrics, and independent authorship" --- matching the prior-art table's four columns, and presents the separate client-observed/HTTP-framework gap as "Beyond these four axes, no study we found measures client-observed performance through an HTTP framework."
+
+---
+
+\section*{Reproducibility and structure}
+
+\textbf{A reproducibility summary table.} The supplement now carries an \emph{Artifact reproducibility summary} (Supplement Table S31, \texttt{tab:reproducibility}): artifact and version, the persistent Zenodo identifier and concept DOI, the software and hardware requirements, the smoke-test and full-campaign run commands, the time and resources needed, and which results are regenerated automatically from the archived raw data ("\emph{Every} table and figure, from the archived raw data; \textbackslash\{\}\texttt{results/checksums.sha256\textbackslash\{\}} verifies the 33 raw-data files"). The Data-availability section points to it, and \textbackslash\{\}\texttt{REPRODUCE.md\textbackslash\{\}} is the single runnable entry point.
+
+\textbf{Structure and streamlining.} The load-bearing methodological detail was already relocated to the supplement in an earlier condensation (the \emph{Statistical methods}, \emph{Measurement details}, and \emph{Benchmarking-pitfalls checklist} sections). This round added only a light streamlining: the duplicated "productivity/type-safety not measured" qualification in the Practical-guidance paragraph is now stated once, and a few redundant parenthetical "(Section \ldots{})" cross-references in the densest sections (Results, Threats) were dropped where the same section was already cited nearby. No section was reordered, no float was moved, and no load-bearing caveat was removed --- the caveats carry the Essential points above.
 
 ---
 
 \section*{Closing}
 
-I believe these five sets of revisions leave the manuscript claiming exactly what a single-host, current-version, documentation-selected benchmark can support: a reproducible methodology and harness, demonstrated through a configuration-specific dual-engine case study, with a supplement that serves as a complete audit trail. The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo under the versioned DOI recorded in the manuscript; this revision is archived as release v1.6.4, with the exact DOI minted at submission. I am grateful for the depth of the review, which has measurably improved the paper, and I look forward to your assessment.
+These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{13,712 words} (IST rule) with a structured abstract of \textbf{299 words} ($\le$ 300), and, to reiterate, \textbf{every change in this round is prose, label, or analysis-presentation only --- no measurement was re-run.} The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.6.5 (DOI 10.5281/zenodo.21455542), the version this revision describes.
+
+I am grateful for the depth and precision of this review, which has materially sharpened the paper's central claim, and I look forward to your assessment.
 
 Sincerely,
 

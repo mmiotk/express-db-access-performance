@@ -62,5 +62,5 @@ changed — the revision is one of framing, scoping, and length.
   that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21444624 (release v1.6.4). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21455542 (release v1.6.5). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 33/33.
