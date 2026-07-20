@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 10264 |
+| Body text (7 sections) | 10649 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **14011** |
+| **Total (IST rule)** | **14396** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13712). The structured abstract is 299 words (under the journal's
+the abstract it is 14097). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -373,5 +373,23 @@ artifact-reproducibility table (Table S31) add the `verify-writes.mjs` command. 
 description took the body to 10,264 words and the total to 14,011, still under the 15,000 limit.
 
 The point-6.2 gate strengthening is archived as release v1.6.7 (DOI 10.5281/zenodo.21457569).
+
+A round-8 follow-up (reviewer point 6.3) specified the comparability protocol normatively,
+abstracted from the case study. A new Methodology subsection, "The comparability protocol"
+(`sec:protocol`), states it independently of the Express/access-layer setting in five parts:
+**Inputs** (treatments, workload, output semantics, operating-point definition); **mandatory
+stages, in order** (correctness oracle → treatment-definition rule → strategy-control design →
+capacity identification → demand/utilization experiments); **pass/fail** cell-admission (a cell is
+admitted only if the oracle passes — equivalent non-mutating outputs and a correct post-write
+state; non-equivalent output, an invalid write, or a degenerate plan disqualifies it); **outputs
+and their interpretation** (descriptive of the treatment-and-strategy, not a causal decomposition;
+rankings configuration- and version-specific; only relative within-condition differences travel);
+and **applicability limits** (byte-equality is a valid oracle only for deterministic, canonically
+serializable outputs — for unordered collections, floating point, timestamps, nondeterministic
+identifiers, or differently serialized equivalents the oracle must be a semantic comparator). The
+Introduction now points to this specification. The added subsection took the body to 10,649 words
+and the total to 14,396, still under the 15,000 limit.
+
+The point-6.3 protocol specification is archived as release v1.6.8 (DOI 10.5281/zenodo.21457745).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

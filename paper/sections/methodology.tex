@@ -41,6 +41,42 @@ offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput
 of cores. These answer different questions and need not agree, so we report all three and
 state which each result speaks to.
 
+\subsection{The comparability protocol}
+\label{sec:protocol}
+We state the protocol here independently of the case study; the remaining subsections instantiate
+it for the access-layer setting. It turns a set of \emph{treatments} compared on a fixed
+\emph{workload} into a controlled experiment through five parts.
+\paragraph{Inputs} the treatments (implementations under comparison); a workload of representative
+operations (not necessarily a production trace); an \emph{output semantics} defining when two
+treatments' responses to the same input are equivalent; and an \emph{operating-point definition}
+separating capacity, external demand, and utilization.
+\paragraph{Mandatory stages, in order} (1)~a \emph{correctness oracle} admits a treatment only if
+its outputs are equivalent under the output semantics and its mutating operations produce the
+intended state; (2)~a \emph{treatment-definition rule} fixes, reproducibly and in advance, the
+implementation and strategy each treatment uses; (3)~a \emph{strategy-control design} adds a
+standardized contrast holding the query strategy fixed, so the treatment spread can be read
+against a common-strategy baseline; (4)~\emph{capacity identification} locates each treatment's
+saturating throughput by a concurrency sweep; (5)~\emph{demand and utilization experiments}
+measure the tail at equal external demand and at matched fractions of each treatment's own
+capacity.
+\paragraph{Pass/fail} a (treatment, workload-point) cell is admitted only if the oracle passes ---
+equivalent non-mutating outputs and a correct post-write state, not merely a success status. A
+cell returning non-equivalent output, an invalid or unsuccessful write, or a degenerate query
+plan (for example N+1) is disqualified and excluded from timing.
+\paragraph{Outputs and their interpretation} per cell, throughput and tail latency under each
+operating point. These are \emph{descriptive} of the treatment as defined
+(implementation-and-strategy), not of any isolated internal mechanism: the standardized contrast
+reports a residual, not a causal decomposition, and cross-treatment rankings are configuration-
+and version-specific. Only \emph{relative} within-condition differences are meant to travel;
+absolute numbers reflect the substrate.
+\paragraph{Applicability limits} the oracle must match the output semantics. Byte-identical
+comparison, used here, is valid only when equivalent outputs are deterministic and canonically
+serializable. Where they are not --- unordered collections, floating-point results, timestamps,
+nondeterministic identifiers, or semantically equivalent but differently serialized responses ---
+byte-equality is inappropriate and the oracle must instead be a semantic comparator (set equality,
+numeric tolerance, canonicalization, or field projection). The case study's outputs are
+deterministic and canonically constructed, so byte-equality is a valid oracle for it.
+
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels spanning the taxonomy:
 the native drivers \texttt{pg} and \texttt{mysql2}, their tuned counterparts

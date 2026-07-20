@@ -60,6 +60,8 @@ The new \textbf{Table 6} (\texttt{tab:samesql\_components}) lists, component by 
 
 For the \textbf{construct validity of the treatment}, the Threats section now carries a dedicated paragraph describing the same-SQL control as "a compound contrast that \emph{bounds}, rather than decomposes, how much of RQ1's spread comes from the documentation-selected loading strategy as opposed to the library machinery," and the introductory Results sentence anchors it as "a compound contrast that bounds rather than decomposes the difference (construct validity: Section 6 [Threats])." A new supplement section, \emph{Construct validity of the documentation-selected treatment} (Supplement Table S33), records per layer that the selected API is the library's canonical relations mechanism and disclaims representativeness: "The construct is therefore a defined, reproducible practitioner persona ... and is \emph{not} a claim about performance-tuned expert usage or measured production frequency."
 
+(The "bound / bounds" wording quoted above is the phrasing introduced by this fix; it was subsequently refined to a "standardized (same-SQL) contrast" in response to point 6.1, so the current manuscript reads "standardized contrast" wherever this section quotes "bound" --- see the next response.)
+
 ---
 
 \section*{Point 6.1 --- The same-SQL result is a standardized contrast, not a "bound"}
@@ -95,6 +97,44 @@ You noted (a) that byte-identical responses over a finite probe set are strong o
 state (atomic rollback).
 
 All adapters pass on both engines, so no throughput number changes. Methodology now describes this and adds the honest finite-probe caveat for reads ("Byte-equality over a fixed probe set is a strong finite-probe output-equivalence check, not a proof that the implementations agree on every possible input"); the Discussion notes that a 2xx alone would not catch a silent write error, so database-state validation is the write path's correctness gate as byte-equality is the read path's. \texttt{REPRODUCE.md} and the artifact-reproducibility table (Supplement Table S31) include the new \texttt{node bench/verify-writes.mjs} command, which must print \texttt{ALL WRITES SEMANTICALLY CORRECT}.
+
+---
+
+\section*{Point 6.3 --- The protocol is now specified independently of the case study}
+
+You noted that, although the paper's contribution is a reusable comparability protocol, its concrete definition was intertwined with the Express/access-layer case study. We added a Methodology subsection, \textbf{"The comparability protocol"} (Section referenced as \texttt{sec:protocol}), that states the protocol normatively and independently; the remaining subsections then instantiate it. It is given in the five parts you asked for:
+
+\begin{itemize}
+  \item \textbf{Inputs} --- the treatments, a representative workload (not necessarily a production trace), an
+\end{itemize}
+
+\emph{output semantics} defining response equivalence, and an \emph{operating-point definition} separating capacity, external demand, and utilization.
+
+\begin{itemize}
+  \item \textbf{Mandatory stages, in order} --- (1) correctness oracle, (2) treatment-definition rule,
+\end{itemize}
+
+(3) strategy-control design, (4) capacity identification, (5) demand/utilization experiments.
+
+\begin{itemize}
+  \item \textbf{Pass/fail (cell admission)} --- a cell is admitted only if the oracle passes (equivalent
+\end{itemize}
+
+non-mutating outputs and a correct post-write state, not merely a success status); non-equivalent output, an invalid or unsuccessful write, or a degenerate query plan (e.g. N+1) disqualifies it and it is excluded from timing.
+
+\begin{itemize}
+  \item \textbf{Outputs and their interpretation} --- throughput and tail latency per operating point,
+\end{itemize}
+
+\emph{descriptive} of the treatment-and-strategy, not a causal decomposition (the standardized contrast reports a residual); rankings are configuration- and version-specific, and only relative within-condition differences are meant to travel.
+
+\begin{itemize}
+  \item \textbf{Applicability limits} --- byte-identical comparison, our oracle here, is valid only when
+\end{itemize}
+
+equivalent outputs are deterministic and canonically serializable; for unordered collections, floating-point results, timestamps, nondeterministic identifiers, or semantically equivalent but differently serialized responses, the oracle must instead be a semantic comparator (set equality, numeric tolerance, canonicalization, or field projection).
+
+The Introduction contribution statement now points to this specification, so the protocol is presented with the abstraction its role as the primary contribution requires.
 
 ---
 
@@ -232,7 +272,7 @@ No "first"/priority claim is made anywhere.
 
 \section*{Closing}
 
-These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{13,712 words} (IST rule) with a structured abstract of \textbf{299 words} ($\le$ 300), and, to reiterate, \textbf{every change in this round is prose, label, or analysis-presentation only --- no measurement was re-run.} The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.6.7 (DOI 10.5281/zenodo.21457569), the version this revision describes.
+These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{13,712 words} (IST rule) with a structured abstract of \textbf{299 words} ($\le$ 300), and, to reiterate, \textbf{every change in this round is prose, label, or analysis-presentation only --- no measurement was re-run.} The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.6.8 (DOI 10.5281/zenodo.21457745), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central claim, and I look forward to your assessment.
 

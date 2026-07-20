@@ -116,6 +116,11 @@ selected API is the library's canonical relations mechanism and disclaims repres
 "The construct is therefore a defined, reproducible practitioner persona ... and is *not* a
 claim about performance-tuned expert usage or measured production frequency."
 
+(The "bound / bounds" wording quoted above is the phrasing introduced by this fix; it was
+subsequently refined to a "standardized (same-SQL) contrast" in response to point 6.1, so the
+current manuscript reads "standardized contrast" wherever this section quotes "bound" — see the
+next response.)
+
 ---
 
 ## Point 6.1 — The same-SQL result is a standardized contrast, not a "bound"
@@ -164,6 +169,38 @@ error, so database-state validation is the write path's correctness gate as byte
 read path's. `REPRODUCE.md` and the artifact-reproducibility table (Supplement Table S31) include
 the new `node bench/verify-writes.mjs` command, which must print `ALL WRITES SEMANTICALLY
 CORRECT`.
+
+---
+
+## Point 6.3 — The protocol is now specified independently of the case study
+
+You noted that, although the paper's contribution is a reusable comparability protocol, its
+concrete definition was intertwined with the Express/access-layer case study. We added a
+Methodology subsection, **"The comparability protocol"** (Section referenced as `sec:protocol`),
+that states the protocol normatively and independently; the remaining subsections then instantiate
+it. It is given in the five parts you asked for:
+
+- **Inputs** — the treatments, a representative workload (not necessarily a production trace), an
+  *output semantics* defining response equivalence, and an *operating-point definition* separating
+  capacity, external demand, and utilization.
+- **Mandatory stages, in order** — (1) correctness oracle, (2) treatment-definition rule,
+  (3) strategy-control design, (4) capacity identification, (5) demand/utilization experiments.
+- **Pass/fail (cell admission)** — a cell is admitted only if the oracle passes (equivalent
+  non-mutating outputs and a correct post-write state, not merely a success status); non-equivalent
+  output, an invalid or unsuccessful write, or a degenerate query plan (e.g. N+1) disqualifies it
+  and it is excluded from timing.
+- **Outputs and their interpretation** — throughput and tail latency per operating point,
+  *descriptive* of the treatment-and-strategy, not a causal decomposition (the standardized
+  contrast reports a residual); rankings are configuration- and version-specific, and only relative
+  within-condition differences are meant to travel.
+- **Applicability limits** — byte-identical comparison, our oracle here, is valid only when
+  equivalent outputs are deterministic and canonically serializable; for unordered collections,
+  floating-point results, timestamps, nondeterministic identifiers, or semantically equivalent but
+  differently serialized responses, the oracle must instead be a semantic comparator (set equality,
+  numeric tolerance, canonicalization, or field projection).
+
+The Introduction contribution statement now points to this specification, so the protocol is
+presented with the abstraction its role as the primary contribution requires.
 
 ---
 
@@ -395,7 +432,7 @@ manuscript remains under the journal's limit at **13,712 words** (IST rule) with
 **299 words** (≤ 300), and, to reiterate, **every change in this round is prose, label, or
 analysis-presentation only --- no measurement was re-run.** The full replication package (harness,
 deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is
-permanently archived at Zenodo as release v1.6.7 (DOI 10.5281/zenodo.21457569), the version this revision
+permanently archived at Zenodo as release v1.6.8 (DOI 10.5281/zenodo.21457745), the version this revision
 describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
