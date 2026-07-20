@@ -4,7 +4,7 @@
 This paper's contribution is a \textbf{comparability protocol} that makes access-layer
 benchmarking a controlled experiment rather than vendor-style number-reporting: it admits a
 layer's timing only once the layer returns byte-identical results (semantic equivalence),
-reports a documentation-selected estimand bounded by a same-SQL control (strategy
+reports a documentation-selected estimand paired with a same-SQL standardized contrast (strategy
 attribution), and separates capacity, tail-under-demand, and matched-utilization latency
 (operating-point separation). An open, reusable harness operationalizes the protocol, and a
 dual-engine case study --- eleven implementations across PostgreSQL and MySQL over five
@@ -14,7 +14,7 @@ The documentation-selected implementation-and-strategy difference is concentrate
 five tested patterns, not uniform: sharpest for the deep/nested fetch that assembles a nested object graph
 application-side, and modest for point reads and aggregation
 (Section~\ref{sec:results}). Among the raw paths running common SQL the spread is far smaller,
-but because that contrast changes several mechanisms together, it bounds rather than attributes the
+but because that contrast changes several mechanisms together, it is a standardized diagnostic that neither bounds nor attributes the
 difference to any single one (Section~\ref{sec:results}). On the
 current library versions no layer's throughput scales with additional application cores and the native driver
 leads all ten engine-pattern combinations; the read ordering is similar across the two

@@ -19,11 +19,11 @@ baselines; full rationale in \texttt{METHODOLOGY.md}). The comparison is read at
 levels, kept separate throughout. The \textbf{primary comparison} (RQ1--RQ3,
 Section~\ref{sec:results}) is each layer's \emph{documentation-selected implementation and
 query/loading strategy} --- the API each library's documentation presents first, not a claim
-about the most common or most performant one. A \textbf{same-SQL (raw-path) control} then
-\emph{bounds} what remains once every layer executes identical SQL through its raw facility.
+about the most common or most performant one. A \textbf{same-SQL (raw-path) standardized
+contrast} then reports what spread remains once every layer executes identical SQL through its raw facility.
 The \textbf{mechanisms} that differ within a layer --- eager-loading strategy, wire protocol,
 round-trips, statement preparation, hydration --- change together and are \emph{not}
-separately or causally identified; the same-SQL contrast is a bound, not a decomposition (Table~\ref{tab:samesql_components} enumerates the components it moves).
+separately or causally identified; the same-SQL contrast is a standardized diagnostic, not a decomposition and not a bound on the intrinsic library effect (Table~\ref{tab:samesql_components} enumerates the components it moves).
 
 A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and
 therefore drives them to unequal \emph{utilization}, so RQ1 is characterized under three
@@ -132,8 +132,8 @@ Supplement Table~S16 and
 its round-trip count, the documented alternative we did \emph{not} use, and that query
 logging, hooks, and validation are off.
 
-To bound the combined contribution of query strategy and formulation --- the protocol's
-\emph{strategy-attribution} precondition --- every adapter also implements a \emph{same-SQL control}: identical two-statement deep-fetch SQL (and, per
+To standardize the SQL and contrast the combined contribution of query strategy and formulation --- the protocol's
+\emph{strategy-attribution} precondition --- every adapter also implements a \emph{same-SQL standardized contrast}: identical two-statement deep-fetch SQL (and, per
 engine, identical \texttt{EXPLAIN} plans) with identical row mapping, executed through the
 layer's raw-SQL facility, mirroring the aggregation control (Section~\ref{sec:results}).
 Server-side capture, synchronized to a request marker so connection handshakes are excluded,

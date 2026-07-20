@@ -48,7 +48,7 @@ benchmarks whose numbers are rarely shown to be comparable --- fragmented,
 PostgreSQL-only, and seldom reporting the tail (p99).
 \textbf{Objective:} We contribute a reusable \emph{comparability protocol} for
 access-layer benchmarking --- a semantic-equivalence correctness gate, a
-documentation-selected estimand bounded by a same-SQL control, and separated
+documentation-selected estimand paired with a same-SQL standardized contrast, and separated
 operating points --- realized in an open harness and demonstrated through a
 dual-engine PostgreSQL/MySQL case study. The protocol, not any ranking, is the
 contribution.
@@ -64,7 +64,7 @@ byte-identical responses before measurement.
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
 against only $1.68\times$ and $2.01\times$ among the raw paths running common SQL --- a
-compound control that bounds that contribution without isolating a single mechanism. The read ordering holds
+compound standardized contrast that reports the residual without isolating a single mechanism. The read ordering holds
 across engines (Spearman $\rho \geq 0.86$), but the aggregation and insert orderings
 reverse: Prisma drops to last on the MySQL insert, and the per-layer engine
 advantage scatters $1.6$--$3.2\times$. No layer exceeds

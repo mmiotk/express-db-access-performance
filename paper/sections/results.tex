@@ -15,8 +15,8 @@ within an engine; two estimands recur below: the
 \emph{documentation-selected implementation-and-strategy effect} (RQ1--RQ3) --- what a
 developer following each library's documentation obtains, not its intrinsic overhead --- and
 the \emph{same-SQL effect} (Supplement Table~S14) --- what remains when every layer runs common
-SQL through its raw facility, a compound contrast that bounds rather than decomposes the
-difference (construct validity: Section~\ref{sec:threats}).
+SQL through its raw facility, a compound standardized contrast that reports the residual spread
+rather than decomposing or bounding the difference (construct validity: Section~\ref{sec:threats}).
 
 % One combined table per access pattern: throughput (req/s) and tail latency (p99)
 % side by side, per access layer and engine. \tabledir is set by each main file
@@ -72,9 +72,13 @@ SQL through its raw facility changes the loading API, query strategy, SQL formul
 count, statement preparation, and result hydration \emph{together}
 (Table~\ref{tab:samesql_components}). Server-side capture confirms the statement text is
 byte-identical across layers on both engines while the wire protocols differ per layer, so the
-control is \emph{same SQL, protocol disclosed}, not \emph{same plan}. It therefore \emph{bounds}
-the combined difference these components make; it does not attribute that difference to any one of
-them, and in particular does not establish how much comes from SQL formulation or query count.
+control is \emph{same SQL, protocol disclosed}, not \emph{same plan}. It is therefore a
+\emph{standardized-SQL contrast}: it reports how much of the spread remains once the SQL is held
+fixed. Because raw mode changes several mechanisms at once and may interact differently with each
+library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect ---
+no ordering theorem holds without assumptions about interaction effects. It does not attribute the
+difference to any single component, and in particular does not establish how much comes from SQL
+formulation or query count.
 
 \begin{table}[htbp]
   \centering
@@ -83,9 +87,9 @@ them, and in particular does not establish how much comes from SQL formulation o
     documentation-selected path to the same hand-written SQL through its raw facility moves every
     component below at once --- equalizing the SQL text, query strategy, round-trip count, and
     result mapping, while the raw-SQL facility, statement preparation, and disclosed wire protocol
-    still differ across layers. The residual difference it leaves therefore bounds their combined
-    effect and cannot be attributed to any single one --- in particular, not to SQL formulation or
-    query count.}
+    still differ across layers. The residual difference it leaves is a standardized-SQL contrast,
+    not a bound on their combined effect, and cannot be attributed to any single component ---
+    in particular, not to SQL formulation or query count.}
   \label{tab:samesql_components}
   \begin{tabular}{@{}l p{0.33\textwidth} p{0.33\textwidth}@{}}
     \toprule

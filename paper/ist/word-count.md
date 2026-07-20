@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9965 |
+| Body text (7 sections) | 10084 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13712** |
+| **Total (IST rule)** | **13831** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13413). The structured abstract is 299 words (under the journal's
+the abstract it is 13532). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -338,5 +338,21 @@ points. The trimming took the body to 9,965 words and the total to 13,712, still
 15,000 limit.
 
 The round-8 revision (all of the above from point 1 through the light streamlining) is archived as release v1.6.5 (DOI 10.5281/zenodo.21455542).
+
+A round-8 follow-up (reviewer point 6.1) stopped calling the same-SQL result a "bound." The
+reviewer noted that the default-path and raw-path measurements evaluate two different
+combinations of factors, so — absent interaction assumptions — no ordering theorem makes the
+raw-path spread a bound on the intrinsic library effect (raw mode may interact differently with
+each library and may bypass the very mechanisms one wants to characterize). Following the
+reviewer's strong recommendation, every same-SQL "bound/bounds/bounded" was reworded to a
+**standardized (same-SQL) contrast / diagnostic** across the abstract, introduction, methodology,
+results (including the Table 6 caption and the `tab:sameplan` generator + both copies), threats,
+discussion, conclusion, related work, and supplement; a one-sentence caveat was added in Results
+("Because raw mode changes several mechanisms at once and may interact differently with each
+library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect —
+no ordering theorem holds without assumptions about interaction effects"). The compound-
+intervention framing (it changes several mechanisms together; Table 6) is unchanged; only the
+inequality/ordering implication is removed. The added caveat took the body to 10,084 words and
+the total to 13,831, still under the 15,000 limit; the structured abstract is 297 words.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
