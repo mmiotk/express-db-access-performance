@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9891 |
+| Body text (7 sections) | 9890 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13638** |
+| **Total (IST rule)** | **13637** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13339). The structured abstract is 299 words (under the journal's
+the abstract it is 13338). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -284,5 +284,23 @@ Deterministic checks (byte-identity, checksums) and the primary-rigor claims (th
 its permutation test, the 25+10-run durability secondary, and the multi-point concurrency sweep's
 "not an artifact of a single point") keep their stronger wording. The rewording took the body to
 9,891 words and the total to 13,638, still under the 15,000 limit.
+
+A round-8 minor-concerns pass addressed five readability/labeling points. The abstract was
+lightened (MC1/MC4): its Methods clause dropped "equal-compute-budget conditions" (the equal-CPU
+check is an exploratory secondary), and its Conclusion dropped the retired-five-core-Prisma
+parenthetical (that result is stated in full in the Discussion and covered by the temporal
+external-validity threat), so the abstract stays comfortably under the 300-word limit and the
+core deep-fetch result reads more prominently. "Vendor-independent"/"vendor independence" applied to the study and the
+coverage axis became "independently authored"/"independent authorship" (MC2), since the
+manuscript means authorship, not design, independence (the "No (vendor)" prior-art column is
+unchanged). Drizzle's category label "orm-lightweight" was merged into "orm" (MC3) — an
+interpretive performance-implying label on an experimentally untested taxonomy — in the Category
+column of the six pattern/resource tables (both copies), the two generators (`ci-tables.mjs` CAT
+map and `analyze.mjs` display normalization) and `config.mjs`, with the methodology prose
+softened to "a query-builder-style ORM"; raw.json's internal category field is left as-is (not
+reader-facing, so no checksum churn). No secondary material was moved to the supplement (MC5):
+the manuscript is under the word limit, so density, not length, was the concern, and the R8
+caveats are load-bearing for the other points; the abstract trim is the density fix. The body is
+9,890 words and the total 13,637, still under the 15,000 limit.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

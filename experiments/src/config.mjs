@@ -20,7 +20,7 @@ export const ADAPTERS = {
   'pg-tuned':     { category: 'native-tuned', engines: ['postgres'] }, // named prepared statements
   'mysql2-tuned': { category: 'native-tuned', engines: ['mysql'] },    // binary protocol, execute()
   knex:      { category: 'query-builder', engines: ['postgres', 'mysql'] },
-  drizzle:   { category: 'orm-lightweight', engines: ['postgres', 'mysql'] },
+  drizzle:   { category: 'orm', engines: ['postgres', 'mysql'] },
   prisma:    { category: 'orm',            engines: ['postgres', 'mysql'] },
   sequelize: { category: 'orm',            engines: ['postgres', 'mysql'] },
   typeorm:   { category: 'orm',            engines: ['postgres', 'mysql'] },

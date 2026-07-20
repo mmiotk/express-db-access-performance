@@ -12,7 +12,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const raw = JSON.parse(await readFile(join(here, '..', 'results', 'raw.json'), 'utf8'));
 const ORDER = ['pg', 'mysql2', 'pg-tuned', 'mysql2-tuned', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
 const PATTERNS = { point_read: 'Point read', range_scan: 'Keyset range scan', deep_fetch: 'Deep/nested fetch', aggregation: 'Aggregation', write: 'Insert' };
-const CAT = { pg: 'native-driver', mysql2: 'native-driver', 'pg-tuned': 'native-tuned', 'mysql2-tuned': 'native-tuned', knex: 'query-builder', drizzle: 'orm-lightweight', prisma: 'orm', sequelize: 'orm', typeorm: 'orm', objection: 'orm', mikroorm: 'orm' };
+const CAT = { pg: 'native-driver', mysql2: 'native-driver', 'pg-tuned': 'native-tuned', 'mysql2-tuned': 'native-tuned', knex: 'query-builder', drizzle: 'orm', prisma: 'orm', sequelize: 'orm', typeorm: 'orm', objection: 'orm', mikroorm: 'orm' };
 
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function fnv1a(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }

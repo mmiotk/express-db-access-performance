@@ -57,8 +57,8 @@ documentation-selected access layers and two tuned native baselines, over five a
 patterns, on the latest stable versions (July 2026 freeze).
 We report throughput with
 client-observed response-time p99 from 25 repeated runs per cell at a fixed
-50-connection high-load point across all patterns, with equal-utilization (open-loop)
-and equal-compute-budget conditions on the deep fetch. An automated cross-check verifies
+50-connection high-load point across all patterns, with an equal-utilization (open-loop)
+tail cross-check on the deep fetch below saturation. An automated cross-check verifies
 byte-identical responses before measurement.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
@@ -71,9 +71,8 @@ advantage scatters $1.6$--$3.2\times$. No layer exceeds
 $\approx\!110\%$ of one core; the native driver leads all ten engine-pattern
 combinations and Prisma~7 sits mid-pack.
 \textbf{Conclusion:} The case study shows why the protocol matters: access-layer
-rankings are configuration-specific and version-sensitive (one earlier five-core
-result did not survive the re-run), so the durable contribution is the protocol and
-its harness, not any single ranking.
+rankings are configuration-specific and version-sensitive, so the durable
+contribution is the protocol and its harness, not any single ranking.
 \end{abstract}
 
 \begin{keyword}

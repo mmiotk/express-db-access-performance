@@ -44,4 +44,4 @@ export default async function createAdapter({ engine, config }) {
 - **No caching layer** in front of the DB.
 
 The `category` field feeds the paper's grouping (native-driver, query-builder,
-orm-lightweight, orm).
+orm).

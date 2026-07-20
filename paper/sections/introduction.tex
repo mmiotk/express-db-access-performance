@@ -35,7 +35,7 @@ surveys each).
 
 In the sources we searched (Section~\ref{sec:related}) this leaves a gap along four
 axes (Table~\ref{tab:prior_art}): no access-layer comparison we found includes MySQL, and no
-PostgreSQL/MySQL benchmark varies the access layer; no vendor-independent study spans the
+PostgreSQL/MySQL benchmark varies the access layer; no independently authored study spans the
 taxonomy broadly (the broad-coverage comparisons are vendor-authored, academic work covering
 at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}); we did not identify one
 reporting throughput and the p99 tail jointly (the sole vendor suite stops at a single P95 at
@@ -51,9 +51,9 @@ arbitrary load point conflates capacity, tail latency under demand, and per-requ
 Comparing access layers meaningfully requires establishing that comparability first --- the
 problem this paper takes up.
 
-This paper addresses these gaps with a \emph{comparability protocol} and a
-vendor-independent case study that applies it (authorship only;
-Section~\ref{sec:methodology} defines the term): an
+This paper addresses these gaps with a \emph{comparability protocol} and an
+independently authored case study that applies it
+(Section~\ref{sec:methodology} defines the term): an
 \emph{identical} Express application served through all nine access layers
 (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
 Objection, MikroORM) over five representative access patterns rather than a

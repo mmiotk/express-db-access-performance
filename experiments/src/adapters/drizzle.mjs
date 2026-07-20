@@ -58,7 +58,7 @@ export default async function createAdapter({ engine, config }) {
 
   return {
     name: 'drizzle',
-    category: 'orm-lightweight',
+    category: 'orm',
 
     async getPost(id) {
       const rows = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
