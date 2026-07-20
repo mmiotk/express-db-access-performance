@@ -192,7 +192,13 @@ Ranking the five patterns by native-relative spread gives, on PostgreSQL, deep f
 $4.96\times$, aggregation $1.72\times$ last) while the insert and point read swap in the middle,
 the insert compressing because MySQL's engine floor, not the access layer, sets its ceiling
 (RQ2). The deep/nested fetch is thus the most consequential pattern on both engines and
-aggregation the least. The primary deep-fetch workload uses posts with roughly ten comments; a
+aggregation the least. Because a fixed 50-connection demand could in principle place fast and slow
+patterns at different fractions of their capacity --- confounding this spread ranking --- we measured
+that it does not: a per-pattern concurrency sweep (Supplement Table~S35) puts every pattern's
+throughput knee at or below 50 connections on both engines, so all five sit at high utilization of
+their own capacity (median 97--100\% across layers) and the ranking compares them at comparable, not
+unknown, relative utilization.
+The primary deep-fetch workload uses posts with roughly ten comments; a
 fan-out sweep from 0 to 500 comments shows the native-relative spread is a roughly fixed
 multiplier with graph size rather than growing with it (exploratory; an earlier three-run sweep
 suggesting a growing spread did not survive replication).

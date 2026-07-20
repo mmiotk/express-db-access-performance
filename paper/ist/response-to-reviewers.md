@@ -256,6 +256,39 @@ back to documentation-primary by definition.
 
 ---
 
+## Point 6.5 — Capacity is now characterized for all five patterns, not only the deep fetch
+
+You observed that the operating-point protocol is strongest for the deep fetch: the full five-pattern
+matrix is measured at a fixed 50 connections, but capacity sweeps existed only for the deep fetch, so
+cross-pattern p99 and spread comparisons could be affected by unknown relative utilization for the
+other four patterns. You offered two resolutions --- demonstrate the separation across all five
+workloads, or explicitly scope it to the deep-fetch case. I took the first, and scoped honestly the
+one part I did not extend.
+
+I swept every access layer over a connection ladder (1, 4, 8, 16, 32, 50, 100, 200) on **all five
+patterns** and both engines (`bench/scaling-patterns.mjs` → `results/scaling_patterns.json`), and for
+each layer computed its saturating throughput (the ladder maximum), its utilization at 50 connections
+(throughput at 50 / saturating), and its knee (the smallest connection count reaching 95% of
+saturation). The new **Supplement Table S35** reports, per pattern and engine, the median knee and
+the median and minimum utilization at 50 connections.
+
+The result closes the gap: the knee lies at or below 50 connections for **every** pattern on both
+engines, so the fixed 50-connection point places all five patterns at high utilization of their own
+capacity. The relative utilization is therefore now **measured**, not assumed, and the RQ3
+cross-pattern spread ranking compares the five at comparable (high) relative utilization. The binding
+constraint is the ten-connection pool shared by every pattern, which is why the knee clusters well
+below 50 connections regardless of a pattern's absolute throughput. Study Design and the RQ3 results
+now state this; capacity identification --- a mandatory stage of the protocol --- is thus demonstrated
+across all five patterns, not only the deep fetch.
+
+I kept an explicit, honest scope on the two conditions I did **not** extend: the equal-utilization
+open-loop tail and the exploratory equal-compute check each require a per-layer
+saturating-throughput *target* and remain demonstrated on the deep fetch (the pattern with the
+largest layer spread). The manuscript now labels that as deep-fetch-only rather than implying it is
+general.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -462,7 +495,7 @@ found measures client-observed performance through an HTTP framework."
 and concept DOI, the software and hardware requirements, the smoke-test and full-campaign run commands,
 the time and resources needed, and which results are regenerated automatically from the archived raw
 data ("*Every* table and figure, from the archived raw data; \`results/checksums.sha256\` verifies the
-34 raw-data files"). The Data-availability section points to it, and \`REPRODUCE.md\` is the single
+35 raw-data files"). The Data-availability section points to it, and \`REPRODUCE.md\` is the single
 runnable entry point.
 
 **Structure and streamlining.** The load-bearing methodological detail was already relocated to the
@@ -480,13 +513,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,755 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,903 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.6.9 (DOI 10.5281/zenodo.21459069), the version this revision describes.
+as release v1.7.0 (DOI 10.5281/zenodo.21461236), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

@@ -417,4 +417,22 @@ structured abstract is unchanged at 297 words. The supplement now holds thirty-f
 
 The point-6.4 follow-up (narrowed RQ1 construct + performance-conscious co-primary regime) is archived as release v1.6.9 (DOI 10.5281/zenodo.21459069).
 
+A follow-up (reviewer point 6.5) demonstrated **capacity identification across all five patterns**,
+not only the deep fetch. The operating-point protocol requires that capacity be identified so the
+fixed 50-connection point can be read against it, but capacity sweeps previously existed only for the
+deep fetch, leaving the relative utilization of the other four patterns unmeasured. A per-pattern
+concurrency sweep (`bench/scaling-patterns.mjs`, connection ladder 1--200, every layer, both engines
+→ `results/scaling_patterns.json`, the thirty-fifth raw-data file) locates each pattern's throughput
+knee at or below 50 connections, with median utilization at the 50-connection point of 97--100\%
+across layers (minimum 82\%); the fixed point therefore places all five patterns at high utilization
+of their own capacity, so the cross-pattern p99/spread comparison is one at comparable, measured
+relative utilization rather than unknown fractions of capacity. Study Design and the RQ3 results now
+state this, the new Supplement Table S35 reports the per-pattern knee and utilization, and the
+equal-utilization open-loop tail and exploratory equal-compute check are labeled as remaining
+demonstrated on the deep fetch. The added prose took the body to 11,156 words and the total to
+14,903, still under the 15,000 limit; the structured abstract is unchanged at 297 words. The
+supplement now holds thirty-five tables (S1--S35) plus two figures.
+
+The point-6.5 follow-up (per-pattern capacity/utilization sweep) is archived as release v1.7.0 (DOI 10.5281/zenodo.21461236).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

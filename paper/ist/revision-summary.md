@@ -10,7 +10,7 @@ successive sets of comments — on methodology and the scope of claims, on the C
 statistical reporting, on the conclusions and language, on presentation, and on the paper's
 length. A full point-by-point reply, each with a quotation of the revised text, is in the
 separate Response to Reviewers; the essential changes are summarized below. The main revision
-changed no measurement — it is one of framing, scoping, and length; the two deeper follow-up
+changed no measurement — it is one of framing, scoping, and length; the deeper follow-up
 points noted at the end add clearly-scoped *supplementary* measurements that leave the primary
 matrix untouched.
 
@@ -63,9 +63,9 @@ matrix untouched.
   removed redundant per-cell median confidence intervals from the paired significance table
   that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
-## Deeper follow-up points (6.1–6.4)
+## Deeper follow-up points (6.1–6.5)
 
-Four deeper follow-up points were addressed after the main revision and released incrementally:
+Five deeper follow-up points were addressed after the main revision and released incrementally:
 
 - **6.1** — the same-SQL result is renamed a **standardized (same-SQL) contrast**, not a "bound":
   absent interaction assumptions, the raw-path spread does not bound the intrinsic library effect.
@@ -82,11 +82,19 @@ Four deeper follow-up points were addressed after the main revision and released
   S34). The finding reinforces rather than overturns the documentation-primary reading: the
   documented strategy is already the faster one for most layers, and where it is not (Objection on
   MySQL) the performance-conscious ORM deep fetch still sits below the native driver.
+- **6.5** — **capacity is now characterized for all five patterns**, not only the deep fetch. A
+  per-pattern concurrency sweep (connection ladder 1--200, every layer, both engines; new Supplement
+  Table S35) locates each pattern's throughput knee at or below 50 connections, so the fixed
+  50-connection operating point places all five patterns at high utilization of their own capacity ---
+  making the cross-pattern p99/spread comparison one at comparable, measured relative utilization
+  rather than unknown fractions of capacity. The equal-utilization open-loop tail and the exploratory
+  equal-compute check remain demonstrated on the deep fetch, and the manuscript now labels those as
+  deep-fetch-only.
 
-Points 6.2 and 6.4 add new, clearly-scoped *supplementary* measurements (a write-state oracle and a
-deep-fetch regime); the primary measurement matrix and every previously reported primary number are
-unchanged.
+Points 6.2, 6.4, and 6.5 add new, clearly-scoped *supplementary* measurements (a write-state oracle, a
+deep-fetch regime, and a per-pattern capacity sweep); the primary measurement matrix and every
+previously reported primary number are unchanged.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21459069 (release v1.6.9). Every table reproduces from the archived raw
-data, whose checksum manifest verifies 34/34.
+DOI 10.5281/zenodo.21461236 (release v1.7.0). Every table reproduces from the archived raw
+data, whose checksum manifest verifies 35/35.

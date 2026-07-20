@@ -30,16 +30,21 @@ therefore drives them to unequal \emph{utilization}, so RQ1 is characterized und
 operating conditions rather than one privileged point --- the protocol's
 \emph{operating-point separation}. \emph{Equal external demand} is the
 fixed 50-connection \emph{high-load} operating point --- the full five-pattern, two-engine
-matrix; high-load rather than saturated, because the throughput knee is measured only for the
-deep fetch (Supplement Figure~S2), while 50 connections against a ten-connection pool keep
-about forty requests queued regardless of pattern (Controls, below). The other two conditions
-are a \emph{limited} set restricted to the deep fetch, the pattern on which each layer's
-capacity was actually measured (Supplement Table~S32 tabulates every experiment's scope):
-\emph{equal utilization} is the coordinated-omission-corrected open-loop sweep, each layer
-offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput, and an
-\emph{equal compute budget} is the exploratory equal-CPU check, the server confined to a fixed number
-of cores. These answer different questions and need not agree, so we report all three and
-state which each result speaks to.
+matrix. To fix the relative utilization at that point rather than leave it unknown, a per-pattern
+concurrency sweep (connection ladder 1--200 for every layer on both engines;
+Supplement Table~S35) locates each pattern's throughput knee: it lies at or below 50 connections
+for all five patterns, so the fixed point places every pattern at high utilization of its own
+capacity (median 97--100\% across layers on both engines), while 50 connections against a
+ten-connection pool keep about forty requests queued
+regardless of pattern (Controls, below). Capacity is thus \emph{measured} for all five patterns,
+not only the deep fetch; the deep-fetch concurrency curve (Supplement Figure~S2) is kept for its
+per-layer detail. The remaining two conditions, which need a per-layer \emph{saturating-throughput}
+target, are a \emph{limited} set demonstrated on the deep fetch (Supplement Table~S32 tabulates
+every experiment's scope): \emph{equal utilization} is the coordinated-omission-corrected open-loop
+sweep, each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput,
+and an \emph{equal compute budget} is the exploratory equal-CPU check, the server confined to a
+fixed number of cores. These answer different questions and need not agree, so we report all three
+and state which each result speaks to.
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
