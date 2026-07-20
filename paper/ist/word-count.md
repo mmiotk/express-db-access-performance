@@ -355,4 +355,6 @@ intervention framing (it changes several mechanisms together; Table 6) is unchan
 inequality/ordering implication is removed. The added caveat took the body to 10,084 words and
 the total to 13,831, still under the 15,000 limit; the structured abstract is 297 words.
 
+The point-6.1 follow-up (same-SQL standardized contrast, not a bound) is archived as release v1.6.6 (DOI 10.5281/zenodo.21456366).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

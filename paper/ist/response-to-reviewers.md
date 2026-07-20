@@ -118,6 +118,28 @@ claim about performance-tuned expert usage or measured production frequency."
 
 ---
 
+## Point 6.1 — The same-SQL result is a standardized contrast, not a "bound"
+
+You observed that the default-path and raw-path measurements evaluate two *different*
+combinations of the factors that determine throughput, so — without assumptions about
+interaction effects — no ordering theorem makes the raw-path spread a bound on the intrinsic
+library effect, nor makes (default minus raw) a bound on the strategy contribution; raw mode may
+interact differently with each library and may bypass exactly the mechanisms one wishes to
+characterize. Following your strong recommendation, we did not attempt a formal proof but
+renamed the quantity throughout. Every "bound / bounds / bounded" applied to the same-SQL result
+is now a **standardized (same-SQL) contrast / diagnostic** — in the abstract, introduction,
+methodology, results (including the Table 6 caption and the same-SQL ratio table), threats,
+discussion, conclusion, related work, and the supplement; the only remaining "bound" mentions are
+explicit negations. Results now states your argument as the reason for the change:
+
+> "Because raw mode changes several mechanisms at once and may interact differently with each library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect --- no ordering theorem holds without assumptions about interaction effects."
+
+The compound-intervention framing (the contrast changes several mechanisms together; Table 6
+enumerates the components it moves) is unchanged; only the inequality/ordering implication has
+been removed.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -346,7 +368,7 @@ manuscript remains under the journal's limit at **13,712 words** (IST rule) with
 **299 words** (≤ 300), and, to reiterate, **every change in this round is prose, label, or
 analysis-presentation only --- no measurement was re-run.** The full replication package (harness,
 deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is
-permanently archived at Zenodo as release v1.6.5 (DOI 10.5281/zenodo.21455542), the version this revision
+permanently archived at Zenodo as release v1.6.6 (DOI 10.5281/zenodo.21456366), the version this revision
 describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central

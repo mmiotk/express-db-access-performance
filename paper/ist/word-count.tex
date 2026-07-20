@@ -80,6 +80,8 @@ The round-8 revision (all of the above from point 1 through the light streamlini
 
 A round-8 follow-up (reviewer point 6.1) stopped calling the same-SQL result a "bound." The reviewer noted that the default-path and raw-path measurements evaluate two different combinations of factors, so --- absent interaction assumptions --- no ordering theorem makes the raw-path spread a bound on the intrinsic library effect (raw mode may interact differently with each library and may bypass the very mechanisms one wants to characterize). Following the reviewer's strong recommendation, every same-SQL "bound/bounds/bounded" was reworded to a \textbf{standardized (same-SQL) contrast / diagnostic} across the abstract, introduction, methodology, results (including the Table 6 caption and the \texttt{tab:sameplan} generator + both copies), threats, discussion, conclusion, related work, and supplement; a one-sentence caveat was added in Results ("Because raw mode changes several mechanisms at once and may interact differently with each library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect --- no ordering theorem holds without assumptions about interaction effects"). The compound- intervention framing (it changes several mechanisms together; Table 6) is unchanged; only the inequality/ordering implication is removed. The added caveat took the body to 10,084 words and the total to 13,831, still under the 15,000 limit; the structured abstract is 297 words.
 
+The point-6.1 follow-up (same-SQL standardized contrast, not a bound) is archived as release v1.6.6 (DOI 10.5281/zenodo.21456366).
+
 Highlights (5 bullets, each $\le$ 85 characters) are in \texttt{highlights.tex}.
 
 \end{document}
