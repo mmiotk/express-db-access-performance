@@ -140,6 +140,33 @@ been removed.
 
 ---
 
+## Point 6.2 — The semantic-equivalence gate now validates write state, not just a 2xx
+
+You noted (a) that byte-identical responses over a finite probe set are strong output
+equivalence over the tested inputs, not a proof of full implementation equivalence, and (b) that
+a non-2xx check catches a failure like the MikroORM HTTP 500 but not a *silently incorrect*
+write. Following the option to strengthen (rather than rename), we added a companion check,
+`bench/verify-writes.mjs`, that validates post-write database state through an independent
+native-driver connection, for every adapter on both engines:
+
+- the single-row insert wrote exactly the requested field values and generated identifier
+  (exactly one `posts` row added, no stray comments);
+- the transactional write inserted the post and its five comments with the exact field values
+  (exactly one `posts` row and five `comments` rows added --- one intended logical operation);
+- a transaction whose last comment violates the author foreign key throws and leaves no partial
+  state (atomic rollback).
+
+All adapters pass on both engines, so no throughput number changes. Methodology now describes
+this and adds the honest finite-probe caveat for reads ("Byte-equality over a fixed probe set is
+a strong finite-probe output-equivalence check, not a proof that the implementations agree on
+every possible input"); the Discussion notes that a 2xx alone would not catch a silent write
+error, so database-state validation is the write path's correctness gate as byte-equality is the
+read path's. `REPRODUCE.md` and the artifact-reproducibility table (Supplement Table S31) include
+the new `node bench/verify-writes.mjs` command, which must print `ALL WRITES SEMANTICALLY
+CORRECT`.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -368,7 +395,7 @@ manuscript remains under the journal's limit at **13,712 words** (IST rule) with
 **299 words** (≤ 300), and, to reiterate, **every change in this round is prose, label, or
 analysis-presentation only --- no measurement was re-run.** The full replication package (harness,
 deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is
-permanently archived at Zenodo as release v1.6.6 (DOI 10.5281/zenodo.21456366), the version this revision
+permanently archived at Zenodo as release v1.6.7 (DOI 10.5281/zenodo.21457569), the version this revision
 describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central

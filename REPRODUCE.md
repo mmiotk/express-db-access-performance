@@ -43,7 +43,8 @@ npm ci
 #                 or Docker path:          npm run db:up
 npm run migrate && npm run seed          # deterministic seed (2k/100k/1M rows)
 npm run bench:quick                       # 4 layers, PostgreSQL, 3s runs
-node bench/verify.mjs                     # byte-equivalence cross-check must print ALL MATCH
+node bench/verify.mjs                     # read byte-equivalence -> ALL BYTE-IDENTICAL
+node bench/verify-writes.mjs              # write-state correctness -> ALL WRITES SEMANTICALLY CORRECT
 ```
 
 ## 3. Full primary matrix (hours)
@@ -92,7 +93,11 @@ tarball; every other table regenerates from archived data.
 
 - `results/raw.json`: 90 primary cells, each with 25 (`repeats`) per-run
   `rps_samples` / `p99_samples`.
-- `bench/verify.mjs`: `ALL MATCH` on the four non-mutating patterns across all layers
-  and both engines.
+- `bench/verify.mjs`: `ALL BYTE-IDENTICAL` on the four non-mutating patterns across all
+  layers and both engines.
+- `bench/verify-writes.mjs`: `ALL WRITES SEMANTICALLY CORRECT` — for every adapter on both
+  engines, an independent native-driver verifier confirms the single-row insert and the
+  transactional write produce the exact field values, identifiers, and row-count changes, and
+  that a foreign-key-violating transaction rolls back with no partial state.
 - `npm test`: 19/19 estimator unit tests pass (`bench/stats.test.mjs`).
 - The rebuilt `paper/ist/ist_main.pdf` and `paper/supplement.pdf`.

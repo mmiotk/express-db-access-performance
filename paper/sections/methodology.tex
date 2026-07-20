@@ -147,8 +147,19 @@ issues N+1 queries, an automated cross-check (\texttt{bench/verify.mjs}) funnels
 adapter's rows through shared canonical constructors and asserts full JSON byte equality
 against the native-driver baseline, on both engines, across 12 probes per adapter spanning
 the four non-mutating patterns and the same-SQL control, before any timing is collected --- the
-protocol's \emph{semantic-equivalence} precondition. This check caught two defects during development (a fan-out aggregation bug and a driver
-result-shape mismatch; see Section~\ref{sec:discussion}).
+protocol's \emph{semantic-equivalence} precondition. Byte-equality over a fixed probe set is a
+strong \emph{finite-probe} output-equivalence check, not a proof that the implementations agree on
+every possible input. For the mutating patterns a companion check
+(\texttt{bench/verify-writes.mjs}) validates database \emph{state}, not the HTTP status alone:
+through an independent native-driver connection it confirms, for every adapter on both engines,
+that the single-row insert wrote exactly the field values and generated identifier requested
+(exactly one \texttt{posts} row added, no stray comments), that the transactional write inserted
+the post and its five comments with the exact field values (exactly one \texttt{posts} and five
+\texttt{comments} rows added --- one intended logical operation), and that a transaction whose
+last comment violates the author foreign key throws and leaves no partial state (atomic
+rollback); all adapters pass on both engines. The read cross-check caught two defects during
+development (a fan-out aggregation bug and a driver result-shape mismatch; see
+Section~\ref{sec:discussion}).
 
 \subsection{Controls}
 Four controls isolate the access layer as the only variable. \emph{(i)~Pool size} is fixed at

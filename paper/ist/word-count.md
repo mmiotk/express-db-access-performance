@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 10084 |
+| Body text (7 sections) | 10264 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13831** |
+| **Total (IST rule)** | **14011** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13532). The structured abstract is 299 words (under the journal's
+the abstract it is 13712). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -356,5 +356,22 @@ inequality/ordering implication is removed. The added caveat took the body to 10
 the total to 13,831, still under the 15,000 limit; the structured abstract is 297 words.
 
 The point-6.1 follow-up (same-SQL standardized contrast, not a bound) is archived as release v1.6.6 (DOI 10.5281/zenodo.21456366).
+
+A round-8 follow-up (reviewer point 6.2) strengthened the semantic-equivalence gate rather than
+renaming it. The reviewer noted that finite-probe byte-equality is not full implementation
+equivalence and that a non-2xx check catches an HTTP 500 (the MikroORM case) but not a silently
+incorrect write. A new harness check, `bench/verify-writes.mjs`, validates post-write database
+state through an independent native-driver connection, for every adapter on both engines: the
+single-row insert wrote exactly the requested field values and generated identifier (one `posts`
+row, no stray comments); the transactional write inserted the post and its five comments with the
+exact fields (one `posts` and five `comments` rows — one intended logical operation); and a
+transaction whose last comment violates the author foreign key throws and rolls back with no
+partial state. All adapters pass on both engines, so no throughput number changes. Methodology
+now describes the write gate and adds an honest finite-probe caveat for reads; the Introduction
+contribution bullet and the Discussion MikroORM note were updated; `REPRODUCE.md` and the
+artifact-reproducibility table (Table S31) add the `verify-writes.mjs` command. The added
+description took the body to 10,264 words and the total to 14,011, still under the 15,000 limit.
+
+The point-6.2 gate strengthening is archived as release v1.6.7 (DOI 10.5281/zenodo.21457569).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

@@ -73,8 +73,11 @@ table, a query-plan artifact masquerading as an access-layer
 effect~\cite{leis2015optimizers}. The write path needs its own gate: MikroORM~7's removal of
 \texttt{persistAndFlush} made every MikroORM insert throw a 500 that returned faster than a
 real insert, briefly \emph{leading} the MySQL write ranking until the non-2xx counter flagged
-it, so the error counter is the write path's correctness gate as byte-equality is the read
-path's. None of the four is schema-specific; each is a generic failure mode extending the
+it. A successful 2xx alone, however, would not catch a \emph{silently} incorrect write, so the
+write gate also validates post-write database state --- inserted field values, generated
+identifiers, exact row-count changes, and transactional rollback
+(Section~\ref{sec:methodology}) --- making database-state validation the write path's
+correctness gate as byte-equality is the read path's. None of the four is schema-specific; each is a generic failure mode extending the
 database-benchmarking pitfalls of Fruth et al.~\cite{fruth2022tail} and Raasveldt et
 al.~\cite{raasveldt2018fair} to the access-layer sub-genre, and at least one plausibly explains
 part of the gap between some vendor-reported and independently verified figures in this space.

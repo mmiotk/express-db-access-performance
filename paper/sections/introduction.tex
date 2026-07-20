@@ -77,8 +77,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.6.6 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21456366}.}
+v1.6.7 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21457569}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -104,8 +104,10 @@ controlled experiment, by establishing three preconditions the genre otherwise l
 unmet.
 \begin{itemize}[leftmargin=*]
   \item \textbf{Semantic equivalence.} Every layer must return \emph{byte-identical}
-        results (and every write a real 2xx) before its timing is admitted, so a layer
-        that silently returns less, or errors faster than it works, cannot appear faster
+        results, and every write must produce the intended database state --- validated field
+        values, generated identifiers, exact row-count changes, and transactional rollback, not
+        merely a 2xx --- before its timing is admitted, so a layer
+        that silently returns less, writes wrong, or errors faster than it works, cannot appear faster
         (Section~\ref{sec:methodology}).
   \item \textbf{Strategy attribution.} The treatment is a \emph{documentation-selected
         implementation-and-strategy} estimand, and a \emph{same-SQL standardized contrast} reports how
