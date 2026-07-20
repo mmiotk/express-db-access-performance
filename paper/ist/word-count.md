@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9982 |
+| Body text (7 sections) | 9965 |
 | Structured abstract | 299 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (62 entries) | 1,848 |
-| **Total (IST rule)** | **13729** |
+| **Total (IST rule)** | **13712** |
 
 This is under the journal's 15,000-word limit (with the abstract counted; excluding
-the abstract it is 13430). The structured abstract is 299 words (under the journal's
+the abstract it is 13413). The structured abstract is 299 words (under the journal's
 300-word structured-abstract limit). Thirty-two tables and two figures are placed in the
 numbered online supplement (`supplement.pdf`, Supplement Tables S1–S32 and Supplement
 Figures S1–S2), which is submitted with the manuscript and archived under the same Zenodo
@@ -319,5 +319,22 @@ taxonomy, engine, joint throughput/tail metrics, independent authorship) and the
 HTTP-framework/client-observed gap is presented as "beyond these four axes" rather than as a
 fourth axis, matching the prior-art table's four columns. The additions took the body to
 9,982 words and the total to 13,729, still under the 15,000 limit.
+
+A round-8 closing pass responded to the reviewer's summary and the point-12 list. All six
+Essential items were already addressed in R8 points 1–7 (sharpen contribution; narrow the
+five-pattern-workload claims; weaken horizontal scaling; same-SQL as a compound intervention;
+reduce the weight on the n=7 rank correlations; downgrade low-replicate sensitivity
+conclusions), and the strongly-recommended distributional write presentation (Supplement
+Figure S1) and artifact-provenance table (Supplement Table S31) are in place. "Documentation-
+selected" is kept: the construct-validity treatment already disclaims representativeness, so the
+term is justified, and a second rename would risk reopening the estimand discussion. For the
+"over-engineered rhetoric" concern the main text got a light, safe streamlining that removed no
+load-bearing caveat: the duplicated "productivity/type-safety not measured" qualification in the
+Practical-guidance paragraph is now stated once, and a few redundant parenthetical
+"(Section~…)" cross-references in the densest sections (Results, Threats) were dropped where the
+same section was already cited nearby. No section was reordered and no float moved (the
+deeper-restructuring option was declined), since the caveats are load-bearing for the Essential
+points. The trimming took the body to 9,965 words and the total to 13,712, still under the
+15,000 limit.
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

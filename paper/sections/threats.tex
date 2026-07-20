@@ -63,13 +63,13 @@ documentation-selected eager-loading strategy on the deep-fetch endpoint
 (Section~\ref{sec:methodology}). The byte-level correctness cross-check above
 caught two defects during development, both fixed before the measurements
 reported here (the checklist in Section~\ref{sec:discussion}). Explicit warm-up
-phases per cell (Section~\ref{sec:methodology}), set to exceed the slowest
+phases per cell, set to exceed the slowest
 layer's cold-start stabilization, absorb JIT, pool-fill, and plan-cache effects,
 guarding against environmentally induced measurement
 bias~\cite{mytkowicz2009producing}; two further controls rule out non-layer
 confounds --- benchmark rows reset before every cell (physically rebuilt for
-writes), and one correlated-subquery plan for aggregation across layers
-(Section~\ref{sec:methodology}). Every layer and engine within a replicate is
+writes), and one correlated-subquery plan for aggregation across layers.
+Every layer and engine within a replicate is
 driven by the identical, PRNG-seeded id sequence, and a forward-versus-reversed
 cell-order check found no detectable history effect
 (Section~\ref{sec:methodology}), addressing the concern that processing order

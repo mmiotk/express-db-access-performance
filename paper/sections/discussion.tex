@@ -96,11 +96,10 @@ paths (native driver and Knex) led here \emph{for throughput and response-time p
 whether that generalizes to other implementations, schemas, or workloads is a hypothesis for
 broader study, not a category law or a general default. Where the workload is read-simple or
 write-bound (especially on MySQL, whose commit floor dominates layer differences under default
-durability) the throughput cost is small, so a full ORM's productivity and type safety --- not
-measured here --- may reasonably decide the choice, and a layer's low per-process throughput may be addressed by
+durability) the throughput cost is small, and a layer's low per-process throughput may be addressed by
 additional application processes until another bottleneck (database contention or connection
 limits) is reached. These are performance findings only: the decision also turns
-on correctness, maintainability, security, and developer productivity, which this study does
+on correctness, maintainability, security, type safety, and developer productivity, which this study does
 not measure and which may outweigh the differences reported here; the recommendations rest on
 the single host, default durability, and pinned versions of Section~\ref{sec:threats}, and the
 same-SQL results bound the documentation-selected cost rather than licensing raw SQL in
