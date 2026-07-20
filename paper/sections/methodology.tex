@@ -3,7 +3,7 @@
 
 The case study's goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
 database access layer of an Express.js service \emph{for the purpose of}
-quantifying its performance cost \emph{with respect to} throughput and
+quantifying the performance of its documentation-selected implementation strategy \emph{with respect to} throughput and
 response-time p99 \emph{from the point of view of} an application developer choosing a layer
 \emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. This section
 specifies the study's \emph{comparability protocol} (Section~\ref{sec:introduction}) --- the
@@ -176,9 +176,21 @@ Server-side capture, synchronized to a request marker so connection handshakes a
 confirms the two control statements are byte-identical across every layer on both engines;
 what differs is the wire protocol each driver negotiates (per-layer protocols in Supplement
 Table~S14). The
-six ORMs split both ways on the join-versus-select-in default; a loading-strategy sensitivity
-check (Section~\ref{sec:results}) switches join-default data-mapper ORMs to select-in wherever
-the alternative is a byte-identical drop-in. To ensure no adapter silently returns less or
+six ORMs split both ways on the join-versus-select-in default. Because the native driver's
+documentation-selected default is a hand-authored join while an ORM's is whatever relation
+loader its documentation presents first (the driver-versus-ORM asymmetry noted above), the deep
+fetch --- the one pattern exposing a documented strategy choice --- admits two \emph{co-primary}
+regimes, which we measure on one harness and report side by side (Section~\ref{sec:results},
+Supplement Table~S34). The \emph{documentation-primary} regime is the strategy fixed by the
+adapter-selection rule above. The \emph{performance-conscious} regime applies a predefined
+\emph{tuning budget}: the faster of a layer's two documented deep-fetch loading strategies (join
+versus select-in), admitted only where it is byte-identical to the documentation-primary output
+under the same \texttt{bench/verify.mjs} oracle. The budget is deliberately narrow --- it tunes
+only the loading strategy, only on the deep fetch, and never rewrites SQL, adds caching, or
+changes the schema --- so it separates what the documentation leads a developer to from what the
+library can reasonably achieve within a documented, semantically-equivalent choice. A
+loading-strategy sensitivity check (Section~\ref{sec:results}) accordingly switches join-default
+data-mapper ORMs to select-in wherever that alternative is a byte-identical drop-in. To ensure no adapter silently returns less or
 issues N+1 queries, an automated cross-check (\texttt{bench/verify.mjs}) funnels every
 adapter's rows through shared canonical constructors and asserts full JSON byte equality
 against the native-driver baseline, on both engines, across 12 probes per adapter spanning

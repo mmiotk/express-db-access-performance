@@ -392,4 +392,29 @@ and the total to 14,396, still under the 15,000 limit.
 
 The point-6.3 protocol specification is archived as release v1.6.8 (DOI 10.5281/zenodo.21457745).
 
+A round-8 follow-up (reviewer point 6.4) narrowed the RQ1 construct and added a
+performance-conscious co-primary regime. **Part A** reworded the GQM goal from "quantifying its
+performance cost" to "quantifying the performance of its documentation-selected implementation
+strategy," tying RQ1 to the selected strategy (the driver-versus-ORM asymmetry — native hand-SQL
+versus the ORM's documented relation loader — was already stated in Study Design). **Part B**
+added, on the deep fetch (the only one of the five patterns exposing a documented strategy
+choice), a second co-primary regime: the performance-conscious regime takes the faster of a
+layer's two documented loading strategies, admitted only where byte-identical to the
+documentation-primary output under the `bench/verify.mjs` oracle (a defined, narrow tuning budget
+that never rewrites SQL, adds caching, or changes the schema). A new harness
+(`scripts/deepfetch-regimes.mjs`, a warmup pass then 25 timed repeats each) measures both regimes
+for the four data-mapper ORMs on one footing (`results/deepfetch-regimes.json`, added to the
+checksum manifest — now thirty-four raw-data files); Study Design defines the tuning budget,
+Results reports the two regimes, and a new supplement float (Table S34) tabulates them. The
+finding reinforces rather than overturns the documentation-primary reading: for Sequelize and
+MikroORM the documented join is already the faster strategy (the two regimes coincide), only
+Objection on MySQL gains (its documented single-join alternative beats its select-in default),
+and even there the performance-conscious ORM deep fetch stays below the native driver (a
+same-harness native reference row, 3,347/2,274 req/s, is included in Table S34). The added
+prose took the body to 11,008 words and the total to 14,755, still under the 15,000 limit; the
+structured abstract is unchanged at 297 words. The supplement now holds thirty-four tables
+(S1–S34) plus two figures.
+
+The point-6.4 follow-up (narrowed RQ1 construct + performance-conscious co-primary regime) is archived as release v1.6.9 (DOI 10.5281/zenodo.21459069).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

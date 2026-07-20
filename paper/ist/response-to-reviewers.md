@@ -9,13 +9,15 @@ comprehensive review, and I have addressed every point in it: all six Essential 
 the eight numbered concerns, the minor labeling and abstract points, and the requests
 on novelty discipline, contribution separation, reproducibility, and structure.
 
-I want to be explicit about one thing at the outset: **no measurement was re-run and no
-experiment was altered in this round.** The data, the harness, the pinned versions, the
-raw per-cell records, and every reported number are identical to the previous build. All
-changes here are prose, label, and analysis-presentation revisions --- reframing the
-contribution, rewriting the same-SQL result in non-causal terms, reweighting how the
-cross-engine transfer is characterized, softening the language of the low-replicate
-secondary experiments, and correcting a small number of category labels. Below I answer
+I want to be explicit about scope at the outset: **the primary measurement matrix --- the
+data, harness, pinned versions, raw per-cell records, and every previously reported primary
+number --- is unchanged in this round.** Most changes are prose, label, and
+analysis-presentation revisions --- reframing the contribution, rewriting the same-SQL result
+in non-causal terms, reweighting how the cross-engine transfer is characterized, softening the
+language of the low-replicate secondary experiments, and correcting a small number of category
+labels. Two points add new, clearly-scoped *supplementary* measurements that leave the primary
+matrix untouched: point 6.2 adds an independent write-state validation check, and point 6.4
+adds a performance-conscious co-primary deep-fetch regime measured on its own harness. Below I answer
 each point in turn; every response quotes the current manuscript so that each change is
 verifiable, and I cite sections by name and supplement floats by number, since line
 numbers drift between builds.
@@ -201,6 +203,56 @@ it. It is given in the five parts you asked for:
 
 The Introduction contribution statement now points to this specification, so the protocol is
 presented with the abstraction its role as the primary contribution requires.
+
+---
+
+## Point 6.4 — RQ1 narrowed to the *implementation strategy*, and a performance-conscious co-primary regime added
+
+You made two requests. **(Part A, required)** that RQ1 be read as the performance of the
+*selected implementation strategy* rather than the "performance cost of the access layer,"
+because the native driver's default is hand-authored SQL while an ORM's is whatever loader its
+documentation presents first --- an asymmetry, with Drizzle borderline and Objection's MySQL
+default slower than its documented alternative. **(Part B, the stronger design you suggested)**
+that the study report two co-primary regimes --- documentation-primary, and
+performance-conscious-but-semantically-equivalent under a predefined tuning budget --- to
+separate "what the docs lead a developer to" from "what the technology can reasonably achieve."
+I have done both.
+
+**Part A.** The GQM goal now reads "quantifying the performance of its *documentation-selected
+implementation strategy*" (previously "quantifying its performance cost"). The driver-versus-ORM
+asymmetry is stated explicitly in Study Design ("the native default is hand-authored SQL, the ORM
+default the library's relation loader"), and the construct-validity supplement already names the
+concrete cases (Drizzle's borderline builder-versus-relational-query choice; Objection's documented
+select-in default being the slower option on MySQL). I verified that no "performance cost / overhead
+of the access layer" phrasing remains anywhere in the manuscript; RQ1 in the Introduction already
+spoke of the "difference of the benchmarked implementations."
+
+**Part B.** The deep/nested fetch is the only one of the five patterns that exposes a documented
+strategy choice (join versus select-in eager loading); on the other four each layer has a single
+documented path, so the two regimes coincide there by construction. For the deep fetch I added:
+
+- A **tuning budget**, defined in Study Design: the performance-conscious regime takes the faster of
+  a layer's two *documented* deep-fetch loading strategies, admitted **only** where it is
+  byte-identical to the documentation-primary output under the same `bench/verify.mjs` oracle (now
+  extended to probe the alternative strategy at the three primary post ids on both engines). It never
+  rewrites SQL, adds caching, or changes the schema.
+- A **new harness** (`scripts/deepfetch-regimes.mjs`) that measures both regimes for the four
+  data-mapper ORMs on one footing (fixed post id, a warmup pass, then 25 timed repeats each), written
+  to `results/deepfetch-regimes.json` and added to the reproducibility checksum manifest.
+- A **new supplement float (Table S34)** and a Results paragraph reporting the two regimes side by side.
+
+The finding reinforces, rather than overturns, the documentation-primary reading, and I say so
+plainly. For Sequelize and MikroORM the documentation-selected join is already the *faster* strategy,
+so the performance-conscious regime returns the identical configuration and the two coincide. The
+only cell that gains is Objection on MySQL, whose documented single-join alternative beats its
+select-in default (801 → 1,262 req/s, +58%) --- the one case where the documentation leads to the
+slower option. Even there the performance-conscious ORM deep fetch remains below the native driver
+(1,262 versus the native \`mysql2\` baseline of 2,274 req/s on the same harness, 0.55×; Table S34
+carries that reference row), so the deep-fetch gap is a property of the libraries' documented
+strategies, not a poor-default artifact. TypeORM's alternative
+errors on the ordered nested fetch and Objection's diverges from byte-identity on PostgreSQL; both are
+disclosed as non-drop-ins (a portability caveat), and there the performance-conscious regime falls
+back to documentation-primary by definition.
 
 ---
 
@@ -410,7 +462,7 @@ found measures client-observed performance through an HTTP framework."
 and concept DOI, the software and hardware requirements, the smoke-test and full-campaign run commands,
 the time and resources needed, and which results are regenerated automatically from the archived raw
 data ("*Every* table and figure, from the archived raw data; \`results/checksums.sha256\` verifies the
-33 raw-data files"). The Data-availability section points to it, and \`REPRODUCE.md\` is the single
+34 raw-data files"). The Data-availability section points to it, and \`REPRODUCE.md\` is the single
 runnable entry point.
 
 **Structure and streamlining.** The load-bearing methodological detail was already relocated to the
@@ -428,12 +480,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **13,712 words** (IST rule) with a structured abstract of
-**299 words** (≤ 300), and, to reiterate, **every change in this round is prose, label, or
-analysis-presentation only --- no measurement was re-run.** The full replication package (harness,
-deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is
-permanently archived at Zenodo as release v1.6.8 (DOI 10.5281/zenodo.21457745), the version this revision
-describes.
+manuscript remains under the journal's limit at **14,755 words** (IST rule) with a structured abstract of
+**297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
+primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
+additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
+which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
+adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
+as release v1.6.9 (DOI 10.5281/zenodo.21459069), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

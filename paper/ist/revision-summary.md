@@ -9,8 +9,10 @@ I thank the reviewer for a thorough, multi-part reading. This revision addresses
 successive sets of comments — on methodology and the scope of claims, on the CPU and
 statistical reporting, on the conclusions and language, on presentation, and on the paper's
 length. A full point-by-point reply, each with a quotation of the revised text, is in the
-separate Response to Reviewers; the essential changes are summarized below. No measurement
-changed — the revision is one of framing, scoping, and length.
+separate Response to Reviewers; the essential changes are summarized below. The main revision
+changed no measurement — it is one of framing, scoping, and length; the two deeper follow-up
+points noted at the end add clearly-scoped *supplementary* measurements that leave the primary
+matrix untouched.
 
 ## Scope of claims and methodology
 
@@ -61,6 +63,30 @@ changed — the revision is one of framing, scoping, and length.
   removed redundant per-cell median confidence intervals from the paired significance table
   that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
+## Deeper follow-up points (6.1–6.4)
+
+Four deeper follow-up points were addressed after the main revision and released incrementally:
+
+- **6.1** — the same-SQL result is renamed a **standardized (same-SQL) contrast**, not a "bound":
+  absent interaction assumptions, the raw-path spread does not bound the intrinsic library effect.
+- **6.2** — the semantic-equivalence gate is **strengthened to validate write state** (a new
+  `bench/verify-writes.mjs` confirms exact field values, row-count changes, and transactional
+  rollback through an independent native-driver connection), not merely a 2xx status.
+- **6.3** — the **comparability protocol is specified normatively** and independently of the case
+  study, in a new Methodology subsection (inputs; mandatory stages; pass/fail cell admission;
+  output interpretation; applicability limits).
+- **6.4** — RQ1 is narrowed to the performance of each layer's **documentation-selected
+  implementation strategy**, and a second **performance-conscious co-primary regime** — the faster
+  of a layer's two documented deep-fetch loading strategies, admitted only where byte-identical to
+  the documentation-primary output — is measured on one harness and reported (new Supplement Table
+  S34). The finding reinforces rather than overturns the documentation-primary reading: the
+  documented strategy is already the faster one for most layers, and where it is not (Objection on
+  MySQL) the performance-conscious ORM deep fetch still sits below the native driver.
+
+Points 6.2 and 6.4 add new, clearly-scoped *supplementary* measurements (a write-state oracle and a
+deep-fetch regime); the primary measurement matrix and every previously reported primary number are
+unchanged.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21457745 (release v1.6.8). Every table reproduces from the archived raw
-data, whose checksum manifest verifies 33/33.
+DOI 10.5281/zenodo.21459069 (release v1.6.9). Every table reproduces from the archived raw
+data, whose checksum manifest verifies 34/34.

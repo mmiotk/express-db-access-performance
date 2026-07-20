@@ -16,7 +16,7 @@
 
 \textbf{Manuscript:} A Reproducible Benchmark of Relational Database Access-Layer Performance in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL \textbf{Author:} Mateusz Miotk (University of Gdańsk) \textbf{Journal:} Information and Software Technology
 
-I thank the reviewer for a thorough, multi-part reading. This revision addresses five successive sets of comments --- on methodology and the scope of claims, on the CPU and statistical reporting, on the conclusions and language, on presentation, and on the paper's length. A full point-by-point reply, each with a quotation of the revised text, is in the separate Response to Reviewers; the essential changes are summarized below. No measurement changed --- the revision is one of framing, scoping, and length.
+I thank the reviewer for a thorough, multi-part reading. This revision addresses five successive sets of comments --- on methodology and the scope of claims, on the CPU and statistical reporting, on the conclusions and language, on presentation, and on the paper's length. A full point-by-point reply, each with a quotation of the revised text, is in the separate Response to Reviewers; the essential changes are summarized below. The main revision changed no measurement --- it is one of framing, scoping, and length; the two deeper follow-up points noted at the end add clearly-scoped \emph{supplementary} measurements that leave the primary matrix untouched.
 
 \section*{Scope of claims and methodology}
 
@@ -86,6 +86,36 @@ one research question), the main text is \textbf{condensed by about 24\% (51 $\t
 
 lockfile, the DOI and repository link resolve, and every headline number matches its table; it corrected a coefficient-of-variation figure ("within 4.2\%", not 4.0\%, on the reads), removed redundant per-cell median confidence intervals from the paired significance table that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
-The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21457745 (release v1.6.8). Every table reproduces from the archived raw data, whose checksum manifest verifies 33/33.
+\section*{Deeper follow-up points (6.1--6.4)}
+
+Four deeper follow-up points were addressed after the main revision and released incrementally:
+
+\begin{itemize}
+  \item \textbf{6.1} --- the same-SQL result is renamed a \textbf{standardized (same-SQL) contrast}, not a "bound":
+\end{itemize}
+
+absent interaction assumptions, the raw-path spread does not bound the intrinsic library effect.
+
+\begin{itemize}
+  \item \textbf{6.2} --- the semantic-equivalence gate is \textbf{strengthened to validate write state} (a new
+\end{itemize}
+
+\texttt{bench/verify-writes.mjs} confirms exact field values, row-count changes, and transactional rollback through an independent native-driver connection), not merely a 2xx status.
+
+\begin{itemize}
+  \item \textbf{6.3} --- the \textbf{comparability protocol is specified normatively} and independently of the case
+\end{itemize}
+
+study, in a new Methodology subsection (inputs; mandatory stages; pass/fail cell admission; output interpretation; applicability limits).
+
+\begin{itemize}
+  \item \textbf{6.4} --- RQ1 is narrowed to the performance of each layer's **documentation-selected
+\end{itemize}
+
+implementation strategy\textbf{, and a second }performance-conscious co-primary regime** --- the faster of a layer's two documented deep-fetch loading strategies, admitted only where byte-identical to the documentation-primary output --- is measured on one harness and reported (new Supplement Table S34). The finding reinforces rather than overturns the documentation-primary reading: the documented strategy is already the faster one for most layers, and where it is not (Objection on MySQL) the performance-conscious ORM deep fetch still sits below the native driver.
+
+Points 6.2 and 6.4 add new, clearly-scoped \emph{supplementary} measurements (a write-state oracle and a deep-fetch regime); the primary measurement matrix and every previously reported primary number are unchanged.
+
+The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21459069 (release v1.6.9). Every table reproduces from the archived raw data, whose checksum manifest verifies 34/34.
 
 \end{document}

@@ -119,6 +119,24 @@ ORMs (Sequelize, MikroORM) to select-in makes them slower, whereas Objection's
 batched-select-in default is about $1.6\times$ slower than a single join on MySQL, so part of
 \emph{its} deficit there is a strategy choice rather than a fixed cost.
 
+Because the deep fetch is the only pattern exposing a documented strategy choice, we report RQ1
+there under \emph{two co-primary regimes} (Section~\ref{sec:methodology}): the
+documentation-primary strategy and a performance-conscious regime that takes the faster of a
+layer's two documented loading strategies wherever it is byte-identical to the
+documentation-primary output (Supplement Table~S34). The performance-conscious regime shifts the
+picture only marginally. For the join-default ORMs (Sequelize, MikroORM) the documentation-selected
+strategy is already the faster one, so the two regimes return the \emph{identical} configuration;
+the only cell that gains is Objection on MySQL, whose documented single-join alternative beats its
+select-in default. Even under the performance-conscious regime the ORM deep fetch stays well below
+the native driver on both engines (Supplement Table~S34 carries a same-harness native reference
+row), so the deep-fetch gap reflects the libraries' documented strategies rather than a
+poor-default artifact. TypeORM's alternative errors on the ordered nested fetch and
+Objection's diverges from byte-identity on PostgreSQL; both are excluded as non-drop-ins, so there
+the two regimes coincide by definition. This makes RQ1's construct explicit: the numbers below
+report the performance of each layer's \emph{documentation-selected implementation strategy}, and
+the performance-conscious regime bounds how much a developer could recover within a narrow,
+semantically-equivalent tuning budget.
+
 
 \subsection{RQ2: engine dependence of the ranking}
 The read ordering is stable across engines, but the aggregation and insert

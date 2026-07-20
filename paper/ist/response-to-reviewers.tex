@@ -18,7 +18,7 @@ Dear Editor and Reviewer,
 
 Thank you for the exceptionally thorough and constructive review of my manuscript, now titled \emph{A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js}. This round (R8, the second major revision) responds to one comprehensive review, and I have addressed every point in it: all six Essential items, the eight numbered concerns, the minor labeling and abstract points, and the requests on novelty discipline, contribution separation, reproducibility, and structure.
 
-I want to be explicit about one thing at the outset: \textbf{no measurement was re-run and no experiment was altered in this round.} The data, the harness, the pinned versions, the raw per-cell records, and every reported number are identical to the previous build. All changes here are prose, label, and analysis-presentation revisions --- reframing the contribution, rewriting the same-SQL result in non-causal terms, reweighting how the cross-engine transfer is characterized, softening the language of the low-replicate secondary experiments, and correcting a small number of category labels. Below I answer each point in turn; every response quotes the current manuscript so that each change is verifiable, and I cite sections by name and supplement floats by number, since line numbers drift between builds.
+I want to be explicit about scope at the outset: \textbf{the primary measurement matrix --- the data, harness, pinned versions, raw per-cell records, and every previously reported primary number --- is unchanged in this round.} Most changes are prose, label, and analysis-presentation revisions --- reframing the contribution, rewriting the same-SQL result in non-causal terms, reweighting how the cross-engine transfer is characterized, softening the language of the low-replicate secondary experiments, and correcting a small number of category labels. Two points add new, clearly-scoped \emph{supplementary} measurements that leave the primary matrix untouched: point 6.2 adds an independent write-state validation check, and point 6.4 adds a performance-conscious co-primary deep-fetch regime measured on its own harness. Below I answer each point in turn; every response quotes the current manuscript so that each change is verifiable, and I cite sections by name and supplement floats by number, since line numbers drift between builds.
 
 ---
 
@@ -135,6 +135,34 @@ non-mutating outputs and a correct post-write state, not merely a success status
 equivalent outputs are deterministic and canonically serializable; for unordered collections, floating-point results, timestamps, nondeterministic identifiers, or semantically equivalent but differently serialized responses, the oracle must instead be a semantic comparator (set equality, numeric tolerance, canonicalization, or field projection).
 
 The Introduction contribution statement now points to this specification, so the protocol is presented with the abstraction its role as the primary contribution requires.
+
+---
+
+\section*{Point 6.4 --- RQ1 narrowed to the \emph{implementation strategy}, and a performance-conscious co-primary regime added}
+
+You made two requests. \textbf{(Part A, required)} that RQ1 be read as the performance of the \emph{selected implementation strategy} rather than the "performance cost of the access layer," because the native driver's default is hand-authored SQL while an ORM's is whatever loader its documentation presents first --- an asymmetry, with Drizzle borderline and Objection's MySQL default slower than its documented alternative. \textbf{(Part B, the stronger design you suggested)} that the study report two co-primary regimes --- documentation-primary, and performance-conscious-but-semantically-equivalent under a predefined tuning budget --- to separate "what the docs lead a developer to" from "what the technology can reasonably achieve." I have done both.
+
+\textbf{Part A.} The GQM goal now reads "quantifying the performance of its \emph{documentation-selected implementation strategy}" (previously "quantifying its performance cost"). The driver-versus-ORM asymmetry is stated explicitly in Study Design ("the native default is hand-authored SQL, the ORM default the library's relation loader"), and the construct-validity supplement already names the concrete cases (Drizzle's borderline builder-versus-relational-query choice; Objection's documented select-in default being the slower option on MySQL). I verified that no "performance cost / overhead of the access layer" phrasing remains anywhere in the manuscript; RQ1 in the Introduction already spoke of the "difference of the benchmarked implementations."
+
+\textbf{Part B.} The deep/nested fetch is the only one of the five patterns that exposes a documented strategy choice (join versus select-in eager loading); on the other four each layer has a single documented path, so the two regimes coincide there by construction. For the deep fetch I added:
+
+\begin{itemize}
+  \item A \textbf{tuning budget}, defined in Study Design: the performance-conscious regime takes the faster of
+\end{itemize}
+
+a layer's two \emph{documented} deep-fetch loading strategies, admitted \textbf{only} where it is byte-identical to the documentation-primary output under the same \texttt{bench/verify.mjs} oracle (now extended to probe the alternative strategy at the three primary post ids on both engines). It never rewrites SQL, adds caching, or changes the schema.
+
+\begin{itemize}
+  \item A \textbf{new harness} (\texttt{scripts/deepfetch-regimes.mjs}) that measures both regimes for the four
+\end{itemize}
+
+data-mapper ORMs on one footing (fixed post id, a warmup pass, then 25 timed repeats each), written to \texttt{results/deepfetch-regimes.json} and added to the reproducibility checksum manifest.
+
+\begin{itemize}
+  \item A \textbf{new supplement float (Table S34)} and a Results paragraph reporting the two regimes side by side.
+\end{itemize}
+
+The finding reinforces, rather than overturns, the documentation-primary reading, and I say so plainly. For Sequelize and MikroORM the documentation-selected join is already the \emph{faster} strategy, so the performance-conscious regime returns the identical configuration and the two coincide. The only cell that gains is Objection on MySQL, whose documented single-join alternative beats its select-in default (801 $\to$ 1,262 req/s, +58\%) --- the one case where the documentation leads to the slower option. Even there the performance-conscious ORM deep fetch remains below the native driver (1,262 versus the native \textbackslash\{\}\texttt{mysql2\textbackslash\{\}} baseline of 2,274 req/s on the same harness, 0.55$\times$; Table S34 carries that reference row), so the deep-fetch gap is a property of the libraries' documented strategies, not a poor-default artifact. TypeORM's alternative errors on the ordered nested fetch and Objection's diverges from byte-identity on PostgreSQL; both are disclosed as non-drop-ins (a portability caveat), and there the performance-conscious regime falls back to documentation-primary by definition.
 
 ---
 
@@ -264,7 +292,7 @@ No "first"/priority claim is made anywhere.
 
 \section*{Reproducibility and structure}
 
-\textbf{A reproducibility summary table.} The supplement now carries an \emph{Artifact reproducibility summary} (Supplement Table S31, \texttt{tab:reproducibility}): artifact and version, the persistent Zenodo identifier and concept DOI, the software and hardware requirements, the smoke-test and full-campaign run commands, the time and resources needed, and which results are regenerated automatically from the archived raw data ("\emph{Every} table and figure, from the archived raw data; \textbackslash\{\}\texttt{results/checksums.sha256\textbackslash\{\}} verifies the 33 raw-data files"). The Data-availability section points to it, and \textbackslash\{\}\texttt{REPRODUCE.md\textbackslash\{\}} is the single runnable entry point.
+\textbf{A reproducibility summary table.} The supplement now carries an \emph{Artifact reproducibility summary} (Supplement Table S31, \texttt{tab:reproducibility}): artifact and version, the persistent Zenodo identifier and concept DOI, the software and hardware requirements, the smoke-test and full-campaign run commands, the time and resources needed, and which results are regenerated automatically from the archived raw data ("\emph{Every} table and figure, from the archived raw data; \textbackslash\{\}\texttt{results/checksums.sha256\textbackslash\{\}} verifies the 34 raw-data files"). The Data-availability section points to it, and \textbackslash\{\}\texttt{REPRODUCE.md\textbackslash\{\}} is the single runnable entry point.
 
 \textbf{Structure and streamlining.} The load-bearing methodological detail was already relocated to the supplement in an earlier condensation (the \emph{Statistical methods}, \emph{Measurement details}, and \emph{Benchmarking-pitfalls checklist} sections). This round added only a light streamlining: the duplicated "productivity/type-safety not measured" qualification in the Practical-guidance paragraph is now stated once, and a few redundant parenthetical "(Section \ldots{})" cross-references in the densest sections (Results, Threats) were dropped where the same section was already cited nearby. No section was reordered, no float was moved, and no load-bearing caveat was removed --- the caveats carry the Essential points above.
 
@@ -272,7 +300,7 @@ No "first"/priority claim is made anywhere.
 
 \section*{Closing}
 
-These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{13,712 words} (IST rule) with a structured abstract of \textbf{299 words} ($\le$ 300), and, to reiterate, \textbf{every change in this round is prose, label, or analysis-presentation only --- no measurement was re-run.} The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.6.8 (DOI 10.5281/zenodo.21457745), the version this revision describes.
+These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{14,755 words} (IST rule) with a structured abstract of \textbf{297 words} ($\le$ 300), and, to reiterate, \textbf{the primary measurement matrix and every previously reported primary number are unchanged}; the only new measurements are the two clearly-scoped supplementary additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4), which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.6.9 (DOI 10.5281/zenodo.21459069), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central claim, and I look forward to your assessment.
 
