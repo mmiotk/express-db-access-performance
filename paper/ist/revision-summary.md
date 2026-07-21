@@ -63,9 +63,9 @@ matrix untouched.
   removed redundant per-cell median confidence intervals from the paired significance table
   that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
-## Deeper follow-up points (6.1–6.5)
+## Deeper follow-up points (6.1–6.6)
 
-Five deeper follow-up points were addressed after the main revision and released incrementally:
+Six deeper follow-up points were addressed after the main revision and released incrementally:
 
 - **6.1** — the same-SQL result is renamed a **standardized (same-SQL) contrast**, not a "bound":
   absent interaction assumptions, the raw-path spread does not bound the intrinsic library effect.
@@ -90,11 +90,18 @@ Five deeper follow-up points were addressed after the main revision and released
   rather than unknown fractions of capacity. The equal-utilization open-loop tail and the exploratory
   equal-compute check remain demonstrated on the deep fetch, and the manuscript now labels those as
   deep-fetch-only.
+- **6.6** — the over-strong claim that four controls "isolate the access layer as the only variable"
+  is **corrected** (prose only). The controls hold the shared conditions fixed (pool, logical task,
+  physical state, observer) so the *configured access-layer implementation bundle* is the only
+  deliberately varied factor; they do not isolate the library alone, since the bundled differences
+  (SQL, query count, protocol, loading strategy, hydration) are the treatment, not confounds. Two
+  related-work "isolates" usages were reworded to "treats"/"varies"; the isolation *disclaimers*
+  elsewhere were verified correct.
 
 Points 6.2, 6.4, and 6.5 add new, clearly-scoped *supplementary* measurements (a write-state oracle, a
-deep-fetch regime, and a per-pattern capacity sweep); the primary measurement matrix and every
-previously reported primary number are unchanged.
+deep-fetch regime, and a per-pattern capacity sweep); point 6.6 is a wording correction only. The
+primary measurement matrix and every previously reported primary number are unchanged.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21461236 (release v1.7.0). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21470118 (release v1.7.1). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

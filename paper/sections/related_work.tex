@@ -80,13 +80,13 @@ store, not the access layer. On the Node.js side, Chaniotis et
 al.~\cite{chaniotis2015nodejs} established Node's viability as a web platform,
 Kuffel and Walter~\cite{kuffel2025nodejs} tracked how its back-end performance
 drifts under sustained load, and do Carmo et al.~\cite{carmo2024backend} compared
-back-end frameworks more broadly. None isolates the database access layer as an
+back-end frameworks more broadly. None treats the database access layer as an
 independent variable, let alone varies it across the taxonomy studied here.
 
 \subsection{Standard benchmarks and benchmarking methodology}
 Standard benchmarks define how database systems are measured: YCSB~\cite{cooper2010ycsb} for
 cloud-serving stores and the TPC-C/TPC-E suites for OLTP. These target the \emph{engine} and its
-transaction mix, saying nothing about the driver, query builder, or ORM this study isolates, but
+transaction mix, saying nothing about the driver, query builder, or ORM this study varies, but
 they set the methodological bar for controlled, repeatable load. A separate methodological
 literature explains why the vendor benchmarks' single-metric habit is itself a problem: Fruth et
 al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair} catalog database-benchmarking

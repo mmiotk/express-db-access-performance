@@ -15,9 +15,10 @@ number --- is unchanged in this round.** Most changes are prose, label, and
 analysis-presentation revisions --- reframing the contribution, rewriting the same-SQL result
 in non-causal terms, reweighting how the cross-engine transfer is characterized, softening the
 language of the low-replicate secondary experiments, and correcting a small number of category
-labels. Two points add new, clearly-scoped *supplementary* measurements that leave the primary
-matrix untouched: point 6.2 adds an independent write-state validation check, and point 6.4
-adds a performance-conscious co-primary deep-fetch regime measured on its own harness. Below I answer
+labels. Three points add new, clearly-scoped *supplementary* measurements that leave the primary
+matrix untouched: point 6.2 adds an independent write-state validation check, point 6.4 adds a
+performance-conscious co-primary deep-fetch regime, and point 6.5 adds a per-pattern capacity
+sweep --- each measured on its own harness. Below I answer
 each point in turn; every response quotes the current manuscript so that each change is
 verifiable, and I cite sections by name and supplement floats by number, since line
 numbers drift between builds.
@@ -289,6 +290,33 @@ general.
 
 ---
 
+## Point 6.6 — "Isolate the access layer as the only variable" corrected to the configured bundle
+
+You are right that the Controls sentence "four controls isolate the access layer as the only
+variable" was too strong and inconsistent with the paper's own account of the treatment, which
+bundles differing SQL, query counts, protocols, loading strategies, driver adapters, and hydration.
+Those differences are the treatment, not confounds, so "isolate the library alone" mis-states the
+causal interpretation. I have corrected the wording where it appeared.
+
+The Controls subsection (Study Design) now reads: the four controls "hold the shared conditions
+fixed --- connection pool, logical task, physical dataset state, and observer --- so that the
+*configured access-layer implementation bundle* is the only *deliberately varied* factor; they do
+not isolate the library alone, since each bundle's differing SQL, query count, protocol, loading
+strategy, and hydration are intentionally part of the treatment (the documentation-selected
+implementation-and-strategy estimand, Table 6), not confounds to be removed." Two related-work
+sentences that used "isolates" for the study's factor were reworded to "treats … as an independent
+variable" and "the driver, query builder, or ORM this study varies," so the manuscript consistently
+describes a *configured-bundle* comparison rather than an isolated-library one.
+
+I checked the remaining occurrences of "isolat*": the abstract's "reports the difference without
+isolating a single mechanism," the introduction's "changing … together rather than isolating any
+one," and Methodology's "not of any isolated internal mechanism" are all *disclaimers* of isolation
+and are correct as written; "write isolation," the "resource-isolation" CPU-pinning run, and
+"isolate the durability mechanism" (a genuine single-flag toggle holding the layer fixed) use the
+term in unrelated, accurate senses. No causal claim of isolating the library alone now remains.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -513,13 +541,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,903 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,957 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.7.0 (DOI 10.5281/zenodo.21461236), the version this revision describes.
+as release v1.7.1 (DOI 10.5281/zenodo.21470118), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

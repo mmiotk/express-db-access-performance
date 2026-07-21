@@ -215,7 +215,12 @@ development (a fan-out aggregation bug and a driver result-shape mismatch; see
 Section~\ref{sec:discussion}).
 
 \subsection{Controls}
-Four controls isolate the access layer as the only variable. \emph{(i)~Pool size} is fixed at
+Four controls hold the shared conditions fixed --- connection pool, logical task, physical
+dataset state, and observer --- so that the \emph{configured access-layer implementation bundle}
+is the only \emph{deliberately varied} factor; they do not isolate the library alone, since each
+bundle's differing SQL, query count, protocol, loading strategy, and hydration are intentionally
+part of the treatment (the documentation-selected implementation-and-strategy estimand,
+Table~\ref{tab:samesql_components}), not confounds to be removed. \emph{(i)~Pool size} is fixed at
 ten connections for every adapter, so the comparison reflects the access-layer choice, not
 pool tuning~\cite{gupta2017pooling,laigner2021microservices} (for Prisma, whose default pool
 is core-count-derived, this is pinned via \texttt{connection\_limit}). Because the load

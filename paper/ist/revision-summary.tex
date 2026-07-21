@@ -86,9 +86,9 @@ one research question), the main text is \textbf{condensed by about 24\% (51 $\t
 
 lockfile, the DOI and repository link resolve, and every headline number matches its table; it corrected a coefficient-of-variation figure ("within 4.2\%", not 4.0\%, on the reads), removed redundant per-cell median confidence intervals from the paired significance table that had disagreed with the pattern table, and reconciled two loose prose phrasings.
 
-\section*{Deeper follow-up points (6.1--6.5)}
+\section*{Deeper follow-up points (6.1--6.6)}
 
-Five deeper follow-up points were addressed after the main revision and released incrementally:
+Six deeper follow-up points were addressed after the main revision and released incrementally:
 
 \begin{itemize}
   \item \textbf{6.1} --- the same-SQL result is renamed a \textbf{standardized (same-SQL) contrast}, not a "bound":
@@ -120,8 +120,14 @@ implementation strategy\textbf{, and a second }performance-conscious co-primary 
 
 per-pattern concurrency sweep (connection ladder 1--200, every layer, both engines; new Supplement Table S35) locates each pattern's throughput knee at or below 50 connections, so the fixed 50-connection operating point places all five patterns at high utilization of their own capacity --- making the cross-pattern p99/spread comparison one at comparable, measured relative utilization rather than unknown fractions of capacity. The equal-utilization open-loop tail and the exploratory equal-compute check remain demonstrated on the deep fetch, and the manuscript now labels those as deep-fetch-only.
 
-Points 6.2, 6.4, and 6.5 add new, clearly-scoped \emph{supplementary} measurements (a write-state oracle, a deep-fetch regime, and a per-pattern capacity sweep); the primary measurement matrix and every previously reported primary number are unchanged.
+\begin{itemize}
+  \item \textbf{6.6} --- the over-strong claim that four controls "isolate the access layer as the only variable"
+\end{itemize}
 
-The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21461236 (release v1.7.0). Every table reproduces from the archived raw data, whose checksum manifest verifies 35/35.
+is \textbf{corrected} (prose only). The controls hold the shared conditions fixed (pool, logical task, physical state, observer) so the \emph{configured access-layer implementation bundle} is the only deliberately varied factor; they do not isolate the library alone, since the bundled differences (SQL, query count, protocol, loading strategy, hydration) are the treatment, not confounds. Two related-work "isolates" usages were reworded to "treats"/"varies"; the isolation \emph{disclaimers} elsewhere were verified correct.
+
+Points 6.2, 6.4, and 6.5 add new, clearly-scoped \emph{supplementary} measurements (a write-state oracle, a deep-fetch regime, and a per-pattern capacity sweep); point 6.6 is a wording correction only. The primary measurement matrix and every previously reported primary number are unchanged.
+
+The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21470118 (release v1.7.1). Every table reproduces from the archived raw data, whose checksum manifest verifies 35/35.
 
 \end{document}

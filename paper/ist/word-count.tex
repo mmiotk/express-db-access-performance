@@ -98,6 +98,10 @@ A follow-up (reviewer point 6.5) demonstrated \textbf{capacity identification ac
 
 The point-6.5 follow-up (per-pattern capacity/utilization sweep) is archived as release v1.7.0 (DOI 10.5281/zenodo.21461236).
 
+A follow-up (reviewer point 6.6) corrected an over-strong causal claim without changing any measurement. The Controls subsection previously said four controls "isolate the access layer as the only variable," inconsistent with the treatment being a bundle of differing SQL, query counts, protocols, loading strategies, adapters, and hydration. It now reads that the four controls hold the shared conditions fixed (pool, logical task, physical state, observer) so the \emph{configured access-layer implementation bundle} is the only deliberately varied factor, not the library alone --- the bundled differences being the treatment, not confounds. Two related-work sentences using "isolates" for the study's factor were reworded to "treats"/"varies"; the isolation \emph{disclaimers} in the abstract, introduction, and methodology, and the unrelated "write-isolation", "resource-isolation", and "isolate the durability mechanism" uses, were verified correct and kept. The added clause took the body to 11,210 words and the total to 14,957, still under the 15,000 limit (a 43-word margin); the structured abstract is unchanged at 297 words. No supplement float was added, so the supplement stays at thirty-five tables (S1--S35) plus two figures.
+
+The point-6.6 follow-up (corrected the "isolate the access layer" over-claim) is archived as release v1.7.1 (DOI 10.5281/zenodo.21470118).
+
 Highlights (5 bullets, each $\le$ 85 characters) are in \texttt{highlights.tex}.
 
 \end{document}
