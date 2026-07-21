@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Express.js remains the most widely used web framework for Node.js, and almost
+Express.js has long been among the most widely used web frameworks for Node.js, and almost
 every non-trivial service built on it eventually reaches a relational database
 through some \emph{access layer}. The choice is not settled by the language or
 the framework: access layers trade raw performance for ergonomics,
@@ -35,7 +35,7 @@ surveys each).
 
 In the sources we searched (Section~\ref{sec:related}) this leaves a gap along the four coverage
 axes of Table~\ref{tab:prior_art} --- access-layer taxonomy, engine, joint throughput/tail
-metrics, and independent authorship: no access-layer comparison we found includes MySQL, and no
+metrics, and vendor involvement: no access-layer comparison we found includes MySQL, and no
 PostgreSQL/MySQL benchmark varies the access layer; no independently authored study spans the
 taxonomy broadly (the broad-coverage comparisons are vendor-authored, academic work covering
 at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}); and we did not identify one
@@ -77,8 +77,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.7.1 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21470118}.}
+v1.7.2 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21470361}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:

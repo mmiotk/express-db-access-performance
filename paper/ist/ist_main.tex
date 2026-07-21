@@ -69,7 +69,7 @@ across engines (Spearman $\rho \geq 0.86$), but the aggregation and insert order
 reverse: Prisma drops to last on the MySQL insert, and the per-layer engine
 advantage scatters $1.6$--$3.2\times$. No layer exceeds
 $\approx\!110\%$ of one core; the native driver leads all ten engine-pattern
-combinations and Prisma~7 sits mid-pack.
+combinations.
 \textbf{Conclusion:} The case study shows why the protocol matters: access-layer
 rankings are configuration-specific and version-sensitive, so the durable
 contribution is the protocol and its harness, not any single ranking.
@@ -109,8 +109,8 @@ deterministic seed, all adapter implementations, the byte-level correctness cros
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.7.1
-(\url{https://doi.org/10.5281/zenodo.21470118}). A reproducibility summary --- versions,
+archived at Zenodo as release v1.7.2
+(\url{https://doi.org/10.5281/zenodo.21470361}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}.

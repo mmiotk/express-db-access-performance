@@ -16,13 +16,13 @@ authors:
     given-names: Mateusz
     affiliation: "Faculty of Mathematics, Physics and Informatics, University of Gdańsk"
     orcid: "https://orcid.org/0000-0003-2768-7861"
-version: 1.7.1
+version: 1.7.2
 date-released: "2026-07-20"
-doi: 10.5281/zenodo.21470118
+doi: 10.5281/zenodo.21470361
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.21470118
-    description: "Zenodo archive of release v1.7.1"
+    value: 10.5281/zenodo.21470361
+    description: "Zenodo archive of release v1.7.2"
   - type: doi
     value: 10.5281/zenodo.21313858
     description: "Concept DOI resolving to the latest version"

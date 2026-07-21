@@ -96,8 +96,8 @@ version choices are disclosed rather than resolved: Sequelize runs on its stable
 is prerelease), and Prisma's MySQL path uses the MariaDB driver adapter, since Prisma ships no
 \texttt{mysql2} adapter. What re-establishes a current ranking is the protocol, not the
 table, so only the \emph{relative} ordering within an engine is intended to travel; absolute
-req/s reflect this substrate. The working set is memory-resident, a hot-cache regime that
-maximizes layer differences; as a workload becomes I/O-bound the spreads should compress toward
+req/s reflect this substrate. The working set is memory-resident, a hot-cache regime expected to
+make application/access-layer overhead more visible; as a workload becomes I/O-bound the spreads should compress toward
 $1\times$, and the fan-out sweep (Section~\ref{sec:results}) shows the small deep-fetch graph
 is representative of a 0--500-child range. Three same-host concerns are checked and found not to
 drive the ranking: a resource-isolation run pinning application, database, and generator to

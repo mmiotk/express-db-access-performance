@@ -2,7 +2,7 @@
 \label{sec:related}
 
 We survey prior work along four \emph{coverage} axes --- taxonomy coverage, engine coverage,
-joint throughput/tail reporting, and independent authorship --- along which access-layer
+joint throughput/tail reporting, and vendor involvement --- along which access-layer
 benchmarks vary and which our case study spans (Table~\ref{tab:prior_art}); more fundamentally,
 as Section~\ref{sec:related} argues, prior work leaves the comparability of its numbers
 unestablished, the gap our protocol addresses. We located it with a structured scoping search (not a
@@ -120,7 +120,7 @@ authorship, PostgreSQL-only coverage, and a single reported metric family.
 In the sources searched through July 2026 (protocol archived with the
 replication package), the access-layer benchmarks report throughput or latency numbers whose
 comparability is assumed rather than established, and we did not identify a study combining broad
-taxonomy coverage, both engines, joint throughput/tail reporting, and independent authorship ---
+taxonomy coverage, both engines, joint throughput/tail reporting, and vendor involvement ---
 each we found covers at most two or three of these four properties (Table~\ref{tab:prior_art}).
 We therefore state the strongest novelty claim the search supports --- that we did not identify a
 prior study combining these properties in the documented search --- rather than a claim of
@@ -139,23 +139,25 @@ access-layer studies from engine-only work such as~\cite{salunke2024pgmysql}.
     is the comparability protocol of Section~\ref{sec:introduction}, not this coverage.
     ``Layers covered'' aggregates native drivers, query builders, and ORMs
     into one count; ``none'' marks studies that vary the engine or
-    framework but not the access layer.}
+    framework but not the access layer. \emph{Vendor involvement} marks maintainer-authored
+    studies --- a conflict-of-interest property of the source, not a methodological guarantee that
+    an independently authored benchmark is unbiased.}
   \label{tab:prior_art}
   \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{@{}llllc@{}}
     \toprule
-    Study & Layers covered & Engines & Metrics & Independent? \\
+    Study & Layers covered & Engines & Metrics & Vendor involvement \\
     \midrule
-    Colley et al.~\cite{colley2018orm} & 8 ORMs, 4 languages (no JS) & not stated & query latency & Yes \\
-    Procedia CS~\cite{prisma_rawsql_2025}$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & Yes \\
-    JCCT~\cite{orm_compare_jcct_2025} & 3 ORMs & PostgreSQL & latency, memory, CPU & Yes \\
-    JCSI~\cite{zhadko2025orm} & 3 ORMs & PostgreSQL & per-stage latency & Yes \\
-    Salunke and Ouda~\cite{salunke2024pgmysql} & none (engine only) & PostgreSQL + MySQL & throughput, latency & Yes \\
-    Drizzle~\cite{drizzle_benchmarks} & 9 (broad) & PostgreSQL & throughput, latency, P95 & No (vendor) \\
-    Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & No (vendor) \\
-    IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & No (vendor) \\
+    Colley et al.~\cite{colley2018orm} & 8 ORMs, 4 languages (no JS) & not stated & query latency & None \\
+    Procedia CS~\cite{prisma_rawsql_2025}$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & None \\
+    JCCT~\cite{orm_compare_jcct_2025} & 3 ORMs & PostgreSQL & latency, memory, CPU & None \\
+    JCSI~\cite{zhadko2025orm} & 3 ORMs & PostgreSQL & per-stage latency & None \\
+    Salunke and Ouda~\cite{salunke2024pgmysql} & none (engine only) & PostgreSQL + MySQL & throughput, latency & None \\
+    Drizzle~\cite{drizzle_benchmarks} & 9 (broad) & PostgreSQL & throughput, latency, P95 & Vendor \\
+    Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & Vendor \\
+    IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & Vendor \\
     \midrule
-    \textbf{This study} & \textbf{9 documentation-selected (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + response-time p99} & \textbf{Yes} \\
+    \textbf{This study} & \textbf{9 documentation-selected (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + response-time p99} & \textbf{None} \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

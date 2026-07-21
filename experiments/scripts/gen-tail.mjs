@@ -32,7 +32,7 @@ for (const en of ['postgres', 'mysql']) {
 const cap = `Longer-window tail sensitivity on the deep/nested fetch. Each cell's primary p99 is
     measured over a 12~s window ($\\approx$60 tail observations per run in the slowest
     cells); the re-measurement uses a 60~s window ($\\approx$300 tail observations) at the
-    same 50-connection operating point, 10 independent runs. The p99 ranking is preserved
+    same 50-connection operating point, 10 repeated runs. The p99 ranking is preserved
     exactly (Spearman $\\rho=1.00$ on both engines), the per-cell p99 barely moves, the
     p97.5 ordering matches the p99 ordering ($\\rho=1.00$), and the run-to-run p99 CV stays
     small (max ${stats.postgres.maxcv.toFixed(1)}\\% PostgreSQL, ${stats.mysql.maxcv.toFixed(1)}\\% MySQL),

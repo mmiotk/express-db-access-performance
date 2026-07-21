@@ -10,7 +10,7 @@ and the raw-data hashes in [`experiments/results/checksums.sha256`](experiments/
 ## 0. What is reproduced
 
 - **Primary** (confirmatory): throughput + closed-loop p99 across 5 access patterns ×
-  2 engines at the 50-connection operating point, 25 independent runs per cell
+  2 engines at the 50-connection operating point, 25 repeated runs per cell
   (`results/raw.json`).
 - **Secondary / exploratory**: the same-SQL bound, open-loop and utilization-matched
   tail, layer×engine interaction, CPU accounting, durability, fan-out, pool-size,

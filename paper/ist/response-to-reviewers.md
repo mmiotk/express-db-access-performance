@@ -317,6 +317,40 @@ term in unrelated, accurate senses. No causal claim of isolating the library alo
 
 ---
 
+## Point 7 — Minor concerns (six wording/labeling corrections)
+
+I addressed all six, none of which changed a measurement.
+
+1. **Abstract overloaded — "Prisma 7 sits mid-pack" removed.** The version-specific clause is gone
+   from the abstract (it remains, in context, in the Results and Discussion where it belongs). This
+   de-loads the abstract and drops it from 297 to ~292 words.
+2. **"Most widely used" softened and temporally qualified.** "Express.js remains the most widely used
+   web framework for Node.js" now reads "Express.js *has long been among* the most widely used web
+   frameworks for Node.js" — a defensible, temporally-scoped claim rather than a point-in-time
+   superlative.
+3. **Table 1 "Independent?" relabelled "Vendor involvement."** You are right that independent
+   authorship is not a methodological property comparable to engine or measurement coverage. The
+   column is now **"Vendor involvement"** (values *None* / *Vendor*), the fourth coverage axis is
+   renamed "vendor involvement," and the caption states it "marks maintainer-authored studies --- a
+   conflict-of-interest property of the source, not a methodological guarantee that an independently
+   authored benchmark is unbiased."
+4. **"Maximizes layer differences" softened.** The threats sentence now reads "a hot-cache regime
+   *expected to make application/access-layer overhead more visible*" rather than "that maximizes
+   layer differences," since the stronger claim is not directly demonstrated.
+5. **The incomplete Drizzle cell is now noted in the primary text.** Methodology's measurement
+   procedure now states that "one cell, Drizzle's MySQL insert, has 24 [runs] after a failed health
+   check; the median and interval accommodate it," so the 24-of-25 disclosure is no longer
+   supplement-only.
+6. **"Independent runs" reworded to "repeated runs."** The body already said "repeated runs"; the
+   remaining "independent runs" in three figure/table captions and `REPRODUCE.md` were changed to
+   "repeated runs" (in the generators and both table copies), since, as the manuscript itself notes,
+   all repetitions share one host and one campaign and are therefore not statistically independent.
+
+To keep the manuscript under the 15,000-word limit after these additions, the point-6.6 Controls
+sentence and the new Table 1 caption note were tightened; the total is 14,990 words.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -541,13 +575,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,957 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,990 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.7.1 (DOI 10.5281/zenodo.21470118), the version this revision describes.
+as release v1.7.2 (DOI 10.5281/zenodo.21470361), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
