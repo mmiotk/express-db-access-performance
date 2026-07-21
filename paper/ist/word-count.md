@@ -628,4 +628,20 @@ limit. The supplement now holds thirty-eight tables (S1--S38) plus three figures
 
 The major-concern-6.3 pass (four-level semantic-equivalence framing; property-based randomized gate) is archived as release v1.11.0 (DOI 10.5281/zenodo.21479555).
 
+A follow-up (reviewer **strongly-recommended point 6.4** --- environmental replication is absent)
+sharpened the External Validity paragraph without adding a fabricated second environment: the only
+host available for this revision is the same virtualized machine that produced the primary data, so
+no same-host re-run is presented as independent-substrate replication. The paragraph now states that
+the same-host checks bound only *within-host* drift (post-restart re-run up to 16%, ranking intact,
+Supplement Table S20) and partitions which qualitative conclusions should survive a substrate change
+(the architectural ones --- within-engine ordering and operating-point separation) versus which should
+not (absolute req/s, gap magnitudes, cross-engine RQ2 ordering), naming an independent-host deep-fetch
+replication as future work and noting that the protocol's stages are substrate-independent
+experimental-design controls (Table 2, Supplement Table S37). This is a prose-only change: no data,
+tables, or floats changed. The added argument was offset by tightening the pool, version-disclosure,
+multi-worker, and freeze-rule clauses, so the body is **11,453** words and the total **14,993**, under
+the 15,000-word limit.
+
+The strongly-recommended-6.4 pass (environmental-replication framing; which conclusions survive a substrate change) is archived as release v1.11.1 (DOI 10.5281/zenodo.21479860).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

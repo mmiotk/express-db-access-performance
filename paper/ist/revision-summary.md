@@ -227,9 +227,21 @@ Introduction's byte-identical claim was softened to hold "on the protocol's conf
 gate (`bench/verify-property.mjs`) draws a fixed-seed sample of thousands of random and edge-case
 inputs across the full key range and asserts every adapter is byte-identical to the native-driver
 oracle on all five read methods: 30,400 comparisons per engine, 60,800 across both, zero divergences
-(new Supplement Table S38). It is inexpensive because the dataset is deterministic and finite. The
-manuscript is 14,996 words, under the 15,000-word limit.
+(new Supplement Table S38). It is inexpensive because the dataset is deterministic and finite.
+
+Addressing reviewer **strongly-recommended point 6.4** (environmental replication is absent), the
+External Validity treatment was sharpened rather than backed by a fabricated second environment: the
+only host available for this revision is the same virtualized machine that produced the primary data,
+so no same-host re-run is presented as environmental replication. The Threats section now states that
+the same-host checks bound only *within-host* drift (post-restart re-run: up to 16% absolute change,
+ranking intact, Supplement Table S20), and partitions the conclusions --- a substrate change should
+preserve the *architectural* ones (within-engine relative ordering, operating-point separation) while
+possibly moving absolute req/s, gap magnitudes, and the cross-engine RQ2 ordering; an independent-host
+replication of the core deep fetch is named as future work. It also notes that the protocol's stages
+are experimental-design controls argued necessary analytically (Table 2, Supplement Table S37), so
+single-host measurement bounds the case study, not the protocol. This was offset by tightening the
+paragraph, so the manuscript is 14,993 words, under the 15,000-word limit.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21479555 (release v1.11.0). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21479860 (release v1.11.1). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -682,6 +682,39 @@ database, alongside `verify.mjs` and `verify-writes.mjs`.
 
 ---
 
+## Strongly recommended 6.4 — Environmental replication is absent
+
+I agree this is the narrowest part of the empirical evidence, and I want to be transparent rather
+than paper over it. In full honesty: the machine available to me for this revision is the *same*
+virtualized host that produced the primary data (an Intel Xeon Gold 6140 VMware VM), so I could not
+run a *genuinely independent* substrate, and I have deliberately not dressed up a same-host re-run
+as environmental replication — that would be exactly the kind of false comparability this paper
+argues against. What I have done instead is sharpen the External Validity treatment so it states the
+limitation precisely and says which qualitative conclusions should and should not survive a substrate
+change — which, as you note, is the real objective.
+
+The Threats section now reads: the same-host checks (resource isolation, multi-worker, sustained
+load, and the post-restart re-run) "bound only *within-host* drift (the post-restart re-run moved
+absolute throughput up to 16% with the ranking intact, Supplement Table S20), not variation across a
+different host or hypervisor." It then partitions the conclusions explicitly: "A substrate change
+should preserve the *architectural* conclusions --- the within-engine relative ordering and the
+operating-point separation --- while possibly moving absolute req/s, gap magnitudes, and the
+cross-engine ordering of RQ2; an independent-host replication of the core deep fetch ... [is] future
+work." The reasoning is that ordering and the capacity/tail/utilization separation follow from
+round-trip count, hydration, and measurement design, which a faster or slower host rescales but does
+not reorder, whereas absolute numbers and the CPU-versus-I/O-sensitive cross-engine ranking (RQ2)
+genuinely depend on the substrate.
+
+Finally, I distinguish the two things your comment bears on. The **protocol** validation does not
+rest on this host at all: its stages are experimental-design controls whose necessity is argued
+analytically over this study *and* eight prior benchmarks (main-text Table 2; Supplement Table S37),
+so single-host measurement bounds the **case study's** external validity, not the protocol
+contribution. The manuscript now says exactly that. I have left the independent-substrate deep-fetch
+replication as clearly-scoped future work, and the harness is public and turnkey (`REPRODUCE.md`)
+precisely so that a third party on a different host can perform it.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -906,14 +939,14 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,996 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,993 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.11.0 (DOI 10.5281/zenodo.21479555), the version this revision describes.
+as release v1.11.1 (DOI 10.5281/zenodo.21479860), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
