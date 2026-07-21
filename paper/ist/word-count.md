@@ -509,4 +509,19 @@ change to the body, so the count is unchanged at body 11,362 / total **14,902**.
 
 The point-9 reproducibility/artifact pass is archived as release v1.7.4 (DOI 10.5281/zenodo.21472130).
 
+A follow-up (reviewer **point 10, novelty and related-work assessment** — the novelty case is
+"credible but should remain carefully bounded") bounded the *methodological*-novelty claim. The
+Introduction now states explicitly, after the three preconditions, that "these preconditions are not
+new to benchmarking in general" — correctness, workload equivalence, warm-up, coordinated-omission
+correction, capacity curves, and reproducibility are long established in the performance-evaluation
+literature — and that the contribution is their *domain-specific synthesis and operationalization*
+for the access-layer genre, not the invention of these principles; the "novel benchmark
+infrastructure" phrasing was reworded to "the protocol's domain-specific synthesis of established
+benchmarking principles, and its harness." The scoped "in the sources searched" novelty wording is
+preserved throughout, as the reviewer recommended, and the same-SQL "bound" is already a "standardized
+contrast" (point 6.1). The added framing took the body to 11,419 words and the total to **14,959**,
+still under the 15,000-word limit (a 41-word margin).
+
+The point-10 novelty-framing pass is archived as release v1.7.5 (DOI 10.5281/zenodo.21472308).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

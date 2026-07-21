@@ -77,8 +77,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.7.4 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21472130}.}
+v1.7.5 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21472308}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -120,6 +120,12 @@ unmet.
         reported as \emph{distinct} quantities rather than conflated at one arbitrary load
         point.
 \end{itemize}
+These preconditions are not new to benchmarking in general: correctness, workload equivalence,
+warm-up, coordinated-omission correction, capacity curves, and reproducibility are long established
+in the performance-evaluation literature (Section~\ref{sec:related})~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}.
+The contribution is their \emph{domain-specific synthesis and operationalization} for the
+access-layer genre --- which assumes comparability rather than establishing it --- not the invention
+of these principles.
 We distinguish this contribution from two things it is easily confused with. The
 \textbf{artifact} --- an open, reusable harness (a uniform adapter contract, a
 deterministic seed, a randomized-block matrix runner, the automated correctness
@@ -136,8 +142,8 @@ dissolved once
 layers were compared at matched utilization. The case study thus contributes novel experimental evidence --- a dual-engine,
 throughput-and-p99, documentation-selected access-layer comparison we did not identify in the
 searched sources --- but the resulting rankings are configuration-specific and version-sensitive
-(one earlier headline did not survive a re-run on newer libraries), so the novel benchmark
-infrastructure (the protocol and its harness), not any single ranking, is the more durable
-contribution. The case study also yields a
+(one earlier headline did not survive a re-run on newer libraries), so the benchmark
+infrastructure --- the protocol's domain-specific synthesis of established benchmarking principles,
+and its harness --- not any single ranking, is the more durable contribution. The case study also yields a
 practitioner-oriented checklist of genre-specific benchmarking pitfalls
 (Section~\ref{sec:discussion}), each an instance of a precondition the protocol enforces.

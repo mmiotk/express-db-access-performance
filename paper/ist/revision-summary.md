@@ -142,6 +142,17 @@ point, the declaration was **split** into the Elsevier-standard writing declarat
 *AI-assisted research software* statement (author responsibility; the AI-assisted analytical code
 passes 19/19 estimator unit tests). No body change; the AI declarations are excluded metadata.
 
+## Point 10 (novelty and related-work assessment)
+
+The reviewer found the novelty case "credible but should remain carefully bounded" and endorsed the
+scoped wording. I bounded the *methodological*-novelty claim: the Introduction now states explicitly
+that the three preconditions "are not new to benchmarking in general" (correctness, workload
+equivalence, warm-up, coordinated-omission correction, capacity curves, and reproducibility are long
+established), and that the contribution is their **domain-specific synthesis and operationalization**
+for the access-layer genre, not the invention of these principles; "novel benchmark infrastructure"
+was reworded accordingly. The scoped "in the sources searched" novelty wording is preserved, and the
+same-SQL "bound" is already a "standardized contrast" (point 6.1).
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21472130 (release v1.7.4). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21472308 (release v1.7.5). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -140,6 +140,10 @@ The reviewer's assessment was favourable ("substantially above the level of many
 
 The reviewer rated this "one of the manuscript's strongest dimensions." I verified the five-item pre-submission checklist --- all satisfied: (1) the Zenodo tarball byte-matches \texttt{git archive} of the tag (identical sha256); (2) every statistic traces to archived raw data (\texttt{MANIFEST.md}, 35 files), the one disclosed exception being the deterministic S2 query-count table; (3) \texttt{environment.txt} and \texttt{db-config.md} capture kernel/runtime, CPU/NUMA topology, governor/turbo, virtualization, lockfile hash, and database configuration; (4) tables rebuild from raw data with pinned dependencies and no network; (5) an explicit dual license (MIT code, CC BY 4.0 paper/data). For the AI-declaration policy point, the declaration was \textbf{split} into the Elsevier-standard writing declaration and a separate \emph{AI-assisted research software} statement (author responsibility; the AI-assisted analytical code passes 19/19 estimator unit tests). No body change; the AI declarations are excluded metadata.
 
-The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21472130 (release v1.7.4). Every table reproduces from the archived raw data, whose checksum manifest verifies 35/35.
+\section*{Point 10 (novelty and related-work assessment)}
+
+The reviewer found the novelty case "credible but should remain carefully bounded" and endorsed the scoped wording. I bounded the \emph{methodological}-novelty claim: the Introduction now states explicitly that the three preconditions "are not new to benchmarking in general" (correctness, workload equivalence, warm-up, coordinated-omission correction, capacity curves, and reproducibility are long established), and that the contribution is their \textbf{domain-specific synthesis and operationalization} for the access-layer genre, not the invention of these principles; "novel benchmark infrastructure" was reworded accordingly. The scoped "in the sources searched" novelty wording is preserved, and the same-SQL "bound" is already a "standardized contrast" (point 6.1).
+
+The replication package for this revision is archived at Zenodo, DOI 10.5281/zenodo.21472308 (release v1.7.5). Every table reproduces from the archived raw data, whose checksum manifest verifies 35/35.
 
 \end{document}

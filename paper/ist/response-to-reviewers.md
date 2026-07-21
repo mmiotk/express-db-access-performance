@@ -347,7 +347,7 @@ I addressed all six, none of which changed a measurement.
    all repetitions share one host and one campaign and are therefore not statistically independent.
 
 To keep the manuscript under the 15,000-word limit after these additions, the point-6.6 Controls
-sentence and the new Table 1 caption note were tightened; the total is 14,902 words.
+sentence and the new Table 1 caption note were tightened; the total is 14,959 words.
 
 ---
 
@@ -383,7 +383,7 @@ measurement.
    evidence* on the tested subset, not as claims about all eleven implementations."
 
 Moving Table 7 to the supplement reduces the main-text float count from eight to seven; the total is
-14,902 words.
+14,959 words.
 
 ---
 
@@ -422,6 +422,30 @@ estimators pass 19 unit tests against hand-computed values and closed-form prope
 (`bench/stats.test.mjs`; `npm test` reports 19/19), every table cell traces to raw data, and the
 byte-level correctness cross-check gates every timing. This matches Elsevier's writing-declaration
 language precisely while keeping the research-tool use fully transparent.
+
+---
+
+## Point 10 — Novelty and related-work assessment
+
+Thank you; I preserved the scoped wording you endorsed and bounded the methodological-novelty claim
+as you asked.
+
+You noted that the paper risks overstating methodological novelty by implying the general
+benchmarking literature does not already address comparable-work requirements. It does, and the
+manuscript now says so explicitly. After the three preconditions, the Introduction adds: "These
+preconditions are not new to benchmarking in general: correctness, workload equivalence, warm-up,
+coordinated-omission correction, capacity curves, and reproducibility are long established in the
+performance-evaluation literature (Section [Related Work]). The contribution is their *domain-specific
+synthesis and operationalization* for the access-layer genre --- which assumes comparability rather
+than establishing it --- not the invention of these principles." The "novel benchmark infrastructure"
+phrasing became "the benchmark infrastructure --- the protocol's *domain-specific synthesis of
+established benchmarking principles*, and its harness." The Related Work "Standard benchmarks and
+benchmarking methodology" subsection already credits this literature (Fruth, Raasveldt, Dean &
+Barroso, reproducibility surveys) and frames the paper's choices as taken *from* it.
+
+On the other two points: the "same-SQL bound" is already renamed a "standardized (same-SQL) contrast"
+(point 6.1); and the scoped novelty wording --- "in the sources searched," "we did not identify," and
+the documented scoping-search protocol --- is preserved throughout, as you recommend.
 
 ---
 
@@ -649,13 +673,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,902 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,959 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.7.4 (DOI 10.5281/zenodo.21472130), the version this revision describes.
+as release v1.7.5 (DOI 10.5281/zenodo.21472308), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
