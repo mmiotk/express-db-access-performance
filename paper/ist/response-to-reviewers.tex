@@ -32,7 +32,7 @@ The Introduction states the contribution and its three mechanisms directly:
 
 > "This paper's primary contribution is a \textbf{comparability protocol for access-layer > benchmarking}: a set of controls that turn the vendor-benchmark genre --- which reports > throughput or latency numbers whose comparability is assumed --- into a controlled > experiment, by establishing three preconditions the genre otherwise leaves unmet."
 
-The three preconditions are then named as \textbf{Semantic equivalence} ("Every layer must return \emph{byte-identical} results ... before its timing is admitted"), \textbf{Strategy attribution} ("a \emph{same-SQL control} bounds how much of an observed difference is the library's execution machinery versus the query strategy selected for it"), and \textbf{Operating-point separation} ("Capacity ..., tail latency under equal demand, and latency at matched utilization are measured and reported as \emph{distinct} quantities rather than conflated at one arbitrary load point").
+The three preconditions are then named as \textbf{Semantic equivalence} ("Every layer must return \emph{byte-identical} results ... before its timing is admitted"), \textbf{Strategy attribution} ("a \emph{same-SQL standardized contrast} reports how much of an observed difference remains once the SQL is held fixed --- a diagnostic contrast, not an attribution to the library's execution machinery versus the query strategy"), and \textbf{Operating-point separation} ("Capacity ..., tail latency under equal demand, and latency at matched utilization are measured and reported as \emph{distinct} quantities rather than conflated at one arbitrary load point").
 
 The same paragraph then separates the contribution from the two things it is easily confused with:
 
@@ -402,6 +402,32 @@ abstract \textasciitilde{}292 + references 1,848 + seven main-text floats (1,400
 
 ---
 
+\section*{Point 15 --- Final recommendation (major revision)}
+
+I appreciate the recommendation and the clear statement of what is required. The central concern --- that the manuscript moved from the valid observation (differences shrink when all layers run common SQL through their raw APIs) to the stronger \emph{attributional} claim that this "bounds" strategy versus library machinery, which does not follow without assumptions about interaction effects --- is exactly the correction I have made, and it is now consistent across all three advertised pillars.
+
+\begin{itemize}
+  \item \textbf{The same-SQL experiment is treated as a standardized diagnostic contrast} (point 6.1). Every
+\end{itemize}
+
+"bound" on the same-SQL result was reworded to a "standardized (same-SQL) contrast"; an audit of the current manuscript finds no positive bound claim remaining (only explicit negations, e.g. "not a bound on the intrinsic library effect"). The Introduction's \textbf{Strategy attribution} pillar now reads "a \emph{same-SQL standardized contrast} reports how much of an observed difference remains once the SQL is held fixed --- a diagnostic contrast, not an attribution to the library's execution machinery versus the query strategy," and Results adds that "no ordering theorem holds without assumptions about interaction effects." (The Essential-4 reply above quotes the intermediate "bound" phrasing that this fix superseded; its bridging note marks the evolution.)
+
+\begin{itemize}
+  \item \textbf{Write correctness is strengthened} (point 6.2): \texttt{bench/verify-writes.mjs} validates post-write
+\end{itemize}
+
+database state --- field values, generated identifiers, exact row-count changes, and transactional rollback --- for every adapter on both engines (9/9 pass); this is the correctness oracle's write half in the protocol.
+
+\begin{itemize}
+  \item \textbf{The reusable protocol is formalized} (points 6.3, 11, 12): Study Design gives the normative
+\end{itemize}
+
+specification and a compact formal box separating mandatory from recommended stages, with cell-admission, output-interpretation, and applicability rules.
+
+These three are precisely the changes identified as making the manuscript "considerably stronger," and I hope the revision now reads that way.
+
+---
+
 \section*{Essential 5 (point 4) --- The n=7 rank correlations are given too much weight}
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven > portable layers; concrete reversals and interaction magnitudes would be more informative.
@@ -536,7 +562,7 @@ No "first"/priority claim is made anywhere.
 
 \section*{Closing}
 
-These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{14,971 words} (IST rule) with a structured abstract of \textbf{297 words} ($\le$ 300), and, to reiterate, \textbf{the primary measurement matrix and every previously reported primary number are unchanged}; the only new measurements are the two clearly-scoped supplementary additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4), which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.8.1 (DOI 10.5281/zenodo.21472829), the version this revision describes.
+These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{14,971 words} (IST rule) with a structured abstract of \textbf{297 words} ($\le$ 300), and, to reiterate, \textbf{the primary measurement matrix and every previously reported primary number are unchanged}; the only new measurements are the two clearly-scoped supplementary additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4), which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.8.2 (DOI 10.5281/zenodo.21473103), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central claim, and I look forward to your assessment.
 

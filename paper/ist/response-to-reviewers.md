@@ -47,8 +47,9 @@ The Introduction states the contribution and its three mechanisms directly:
 
 The three preconditions are then named as **Semantic equivalence** ("Every layer must
 return *byte-identical* results ... before its timing is admitted"), **Strategy
-attribution** ("a *same-SQL control* bounds how much of an observed difference is the
-library's execution machinery versus the query strategy selected for it"), and
+attribution** ("a *same-SQL standardized contrast* reports how much of an observed difference
+remains once the SQL is held fixed --- a diagnostic contrast, not an attribution to the library's
+execution machinery versus the query strategy"), and
 **Operating-point separation** ("Capacity ..., tail latency under equal demand, and latency
 at matched utilization are measured and reported as *distinct* quantities rather than
 conflated at one arbitrary load point").
@@ -540,6 +541,36 @@ natural future enhancement.
 
 ---
 
+## Point 15 — Final recommendation (major revision)
+
+I appreciate the recommendation and the clear statement of what is required. The central concern ---
+that the manuscript moved from the valid observation (differences shrink when all layers run common
+SQL through their raw APIs) to the stronger *attributional* claim that this "bounds" strategy versus
+library machinery, which does not follow without assumptions about interaction effects --- is exactly
+the correction I have made, and it is now consistent across all three advertised pillars.
+
+- **The same-SQL experiment is treated as a standardized diagnostic contrast** (point 6.1). Every
+  "bound" on the same-SQL result was reworded to a "standardized (same-SQL) contrast"; an audit of the
+  current manuscript finds no positive bound claim remaining (only explicit negations, e.g. "not a
+  bound on the intrinsic library effect"). The Introduction's **Strategy attribution** pillar now reads
+  "a *same-SQL standardized contrast* reports how much of an observed difference remains once the SQL
+  is held fixed --- a diagnostic contrast, not an attribution to the library's execution machinery
+  versus the query strategy," and Results adds that "no ordering theorem holds without assumptions
+  about interaction effects." (The Essential-4 reply above quotes the intermediate "bound" phrasing
+  that this fix superseded; its bridging note marks the evolution.)
+- **Write correctness is strengthened** (point 6.2): `bench/verify-writes.mjs` validates post-write
+  database state --- field values, generated identifiers, exact row-count changes, and transactional
+  rollback --- for every adapter on both engines (9/9 pass); this is the correctness oracle's write
+  half in the protocol.
+- **The reusable protocol is formalized** (points 6.3, 11, 12): Study Design gives the normative
+  specification and a compact formal box separating mandatory from recommended stages, with
+  cell-admission, output-interpretation, and applicability rules.
+
+These three are precisely the changes identified as making the manuscript "considerably stronger,"
+and I hope the revision now reads that way.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -770,7 +801,7 @@ primary number are unchanged**; the only new measurements are the two clearly-sc
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.8.1 (DOI 10.5281/zenodo.21472829), the version this revision describes.
+as release v1.8.2 (DOI 10.5281/zenodo.21473103), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

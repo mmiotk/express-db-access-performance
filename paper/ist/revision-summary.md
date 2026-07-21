@@ -1,7 +1,7 @@
 # Summary of Revisions
 
-**Manuscript:** A Reproducible Benchmark of Relational Database Access-Layer Performance
-in Express.js: A Configuration-Specific Comparison on PostgreSQL and MySQL
+**Manuscript:** A Comparability Protocol for Benchmarking Relational Database Access Layers
+in Express.js
 **Author:** Mateusz Miotk (University of Gdańsk)
 **Journal:** Information and Software Technology
 
@@ -182,6 +182,18 @@ semantically-equivalent alternative); version-sensitivity echoes in Introduction
 trimmed; word count reported quantitatively (14,971). Optional (visual schematic, second host,
 I/O-bound run) declined as future work — the formal protocol box already carries the schematic content.
 
+## Point 15 (final recommendation: major revision)
+
+The reviewer's central reason for major revision was the same-SQL "bound" attribution claim, one of the
+three advertised pillars. It is fully corrected: every "bound" on the same-SQL result is a "standardized
+(same-SQL) contrast" (point 6.1), the Strategy-attribution pillar reads "a diagnostic contrast, not an
+attribution," and an audit finds no positive bound claim remaining. The other two changes the reviewer
+named as making the manuscript "considerably stronger" — a strengthened write-correctness oracle (6.2)
+and a formalized reusable protocol (6.3, 11, 12) — are in place. This pass reconciled the submission
+package to that state: a stale "bounds" quotation in the Response's Essential-1 pillar was corrected, one
+Results word changed ("bounds" → "caps" for the tuning-budget ceiling), and the cover letter was
+refreshed to the current title, the three major-revision changes, and the current 14,971-word count.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21472829 (release v1.8.1). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21473103 (release v1.8.2). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.
