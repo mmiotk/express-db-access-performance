@@ -387,6 +387,44 @@ Moving Table 7 to the supplement reduces the main-text float count from eight to
 
 ---
 
+## Point 9 — Reproducibility and artifact assessment
+
+Thank you for this assessment. I verified all five checklist items before this submission and split
+the AI declaration for policy precision.
+
+1. **Zenodo matches the git tag.** The archived tarball is a `git archive` of the tagged commit, and I
+   confirmed byte-identity: `sha256(git archive v1.7.4)` equals the `sha256` of the published Zenodo
+   tarball. The Data-availability footnote cites the exact release tag and DOI.
+2. **Raw observations complete.** Every main-text and supplement statistic traces to an archived
+   `results/*.json` raw file through a committed generator (`MANIFEST.md`), and
+   `results/checksums.sha256` verifies all 35 files. The single documented exception is the
+   round-trip-count table (Supplement S2), which counts SQL statements from transient server logs (a
+   deterministic property of the code, not a measurement) and therefore ships pre-generated — disclosed
+   in `REPRODUCE.md`.
+3. **Environment capture is comprehensive.** `results/environment.txt` records the kernel/runtime
+   (`6.17.0-29-generic`, Node 24.18.0), CPU model and count, NUMA topology, CPU governor and turbo
+   state, process affinity, virtualization (`vmware`), the git commit, and a hash of the dependency
+   lockfile; database configuration (pinned engine content digests, `shared_buffers`/InnoDB settings,
+   and durability) is in `experiments/schema/db-config.md`.
+4. **Clean-room rebuild uses only pinned dependencies.** The table generators use Node built-ins with
+   no network access, and `npm ci` installs from the committed `package-lock.json`, so every table
+   regenerates from the archived raw data without reaching any mutable "latest" dependency
+   (`REPRODUCE.md`, §4).
+5. **Explicit dual license.** Code is MIT (`LICENSE-code`); the paper text, working notes, and
+   measurement datasets are CC BY 4.0 (`LICENSE-text`).
+
+On the **AI-declaration policy point**, I split the single declaration into two: (a) the
+Elsevier-standard *Declaration of generative AI and AI-assisted technologies in the writing process*,
+scoped to drafting/editing and language; and (b) a separate *AI-assisted research software* statement
+covering the harness implementation and analysis, which states the author's full responsibility and
+that all AI-assisted analytical code is independently inspectable and verified — the statistical
+estimators pass 19 unit tests against hand-computed values and closed-form properties
+(`bench/stats.test.mjs`; `npm test` reports 19/19), every table cell traces to raw data, and the
+byte-level correctness cross-check gates every timing. This matches Elsevier's writing-declaration
+language precisely while keeping the research-tool use fully transparent.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -617,7 +655,7 @@ primary number are unchanged**; the only new measurements are the two clearly-sc
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.7.3 (DOI 10.5281/zenodo.21471541), the version this revision describes.
+as release v1.7.4 (DOI 10.5281/zenodo.21472130), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

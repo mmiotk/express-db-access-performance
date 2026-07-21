@@ -270,6 +270,44 @@ Moving Table 7 to the supplement reduces the main-text float count from eight to
 
 ---
 
+\section*{Point 9 --- Reproducibility and artifact assessment}
+
+Thank you for this assessment. I verified all five checklist items before this submission and split the AI declaration for policy precision.
+
+\begin{enumerate}
+  \item \textbf{Zenodo matches the git tag.} The archived tarball is a \texttt{git archive} of the tagged commit, and I
+\end{enumerate}
+
+confirmed byte-identity: \texttt{sha256(git archive v1.7.4)} equals the \texttt{sha256} of the published Zenodo tarball. The Data-availability footnote cites the exact release tag and DOI.
+
+\begin{enumerate}
+  \item \textbf{Raw observations complete.} Every main-text and supplement statistic traces to an archived
+\end{enumerate}
+
+\texttt{results/*.json} raw file through a committed generator (\texttt{MANIFEST.md}), and \texttt{results/checksums.sha256} verifies all 35 files. The single documented exception is the round-trip-count table (Supplement S2), which counts SQL statements from transient server logs (a deterministic property of the code, not a measurement) and therefore ships pre-generated --- disclosed in \texttt{REPRODUCE.md}.
+
+\begin{enumerate}
+  \item \textbf{Environment capture is comprehensive.} \texttt{results/environment.txt} records the kernel/runtime
+\end{enumerate}
+
+(\texttt{6.17.0-29-generic}, Node 24.18.0), CPU model and count, NUMA topology, CPU governor and turbo state, process affinity, virtualization (\texttt{vmware}), the git commit, and a hash of the dependency lockfile; database configuration (pinned engine content digests, \texttt{shared\_buffers}/InnoDB settings, and durability) is in \texttt{experiments/schema/db-config.md}.
+
+\begin{enumerate}
+  \item \textbf{Clean-room rebuild uses only pinned dependencies.} The table generators use Node built-ins with
+\end{enumerate}
+
+no network access, and \texttt{npm ci} installs from the committed \texttt{package-lock.json}, so every table regenerates from the archived raw data without reaching any mutable "latest" dependency (\texttt{REPRODUCE.md}, \S{}4).
+
+\begin{enumerate}
+  \item \textbf{Explicit dual license.} Code is MIT (\texttt{LICENSE-code}); the paper text, working notes, and
+\end{enumerate}
+
+measurement datasets are CC BY 4.0 (\texttt{LICENSE-text}).
+
+On the \textbf{AI-declaration policy point}, I split the single declaration into two: (a) the Elsevier-standard \emph{Declaration of generative AI and AI-assisted technologies in the writing process}, scoped to drafting/editing and language; and (b) a separate \emph{AI-assisted research software} statement covering the harness implementation and analysis, which states the author's full responsibility and that all AI-assisted analytical code is independently inspectable and verified --- the statistical estimators pass 19 unit tests against hand-computed values and closed-form properties (\texttt{bench/stats.test.mjs}; \texttt{npm test} reports 19/19), every table cell traces to raw data, and the byte-level correctness cross-check gates every timing. This matches Elsevier's writing-declaration language precisely while keeping the research-tool use fully transparent.
+
+---
+
 \section*{Essential 5 (point 4) --- The n=7 rank correlations are given too much weight}
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven > portable layers; concrete reversals and interaction magnitudes would be more informative.
@@ -404,7 +442,7 @@ No "first"/priority claim is made anywhere.
 
 \section*{Closing}
 
-These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{14,902 words} (IST rule) with a structured abstract of \textbf{297 words} ($\le$ 300), and, to reiterate, \textbf{the primary measurement matrix and every previously reported primary number are unchanged}; the only new measurements are the two clearly-scoped supplementary additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4), which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.7.3 (DOI 10.5281/zenodo.21471541), the version this revision describes.
+These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The manuscript remains under the journal's limit at \textbf{14,902 words} (IST rule) with a structured abstract of \textbf{297 words} ($\le$ 300), and, to reiterate, \textbf{the primary measurement matrix and every previously reported primary number are unchanged}; the only new measurements are the two clearly-scoped supplementary additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4), which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo as release v1.7.4 (DOI 10.5281/zenodo.21472130), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central claim, and I look forward to your assessment.
 

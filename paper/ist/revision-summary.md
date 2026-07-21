@@ -129,6 +129,19 @@ secondary experiments on layer subsets or few replicates (Supplement Table S32) 
 *sensitivity evidence* on the tested subset, not claims about all eleven implementations. Moving Table
 7 drops the main-text float count from eight to seven.
 
+## Point 9 (reproducibility and artifact assessment)
+
+The reviewer rated this "one of the manuscript's strongest dimensions." I verified the five-item
+pre-submission checklist — all satisfied: (1) the Zenodo tarball byte-matches `git archive` of the
+tag (identical sha256); (2) every statistic traces to archived raw data (`MANIFEST.md`, 35 files),
+the one disclosed exception being the deterministic S2 query-count table; (3) `environment.txt` and
+`db-config.md` capture kernel/runtime, CPU/NUMA topology, governor/turbo, virtualization, lockfile
+hash, and database configuration; (4) tables rebuild from raw data with pinned dependencies and no
+network; (5) an explicit dual license (MIT code, CC BY 4.0 paper/data). For the AI-declaration policy
+point, the declaration was **split** into the Elsevier-standard writing declaration and a separate
+*AI-assisted research software* statement (author responsibility; the AI-assisted analytical code
+passes 19/19 estimator unit tests). No body change; the AI declarations are excluded metadata.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21471541 (release v1.7.3). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21472130 (release v1.7.4). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

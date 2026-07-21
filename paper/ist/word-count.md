@@ -492,4 +492,21 @@ S1--S36).
 
 The point-8 statistical-assessment pass is archived as release v1.7.3 (DOI 10.5281/zenodo.21471541).
 
+A follow-up (reviewer **point 9, reproducibility and artifact assessment** — "one of the manuscript's
+strongest dimensions") verified the five-item pre-submission checklist, all satisfied: the Zenodo
+tarball byte-matches `git archive` of the tag (identical sha256); every main-text and supplement
+statistic traces to archived raw data via `MANIFEST.md` (the one disclosed exception, the S2
+query-count table, counts SQL statements deterministically, not measurements); `results/environment.txt`
+plus `experiments/schema/db-config.md` capture kernel/runtime, CPU model/count, NUMA topology, governor,
+turbo, virtualization (`vmware`), process affinity, lockfile hash, and the database configuration;
+tables rebuild from raw data with Node built-ins and `npm ci` from the committed lockfile, no network;
+and the repository carries an explicit dual license (MIT for code, CC BY 4.0 for the paper and data).
+For the AI-declaration policy point, the single declaration was **split** into the Elsevier-standard
+*Declaration of generative AI … in the writing process* (writing only) and a separate *AI-assisted
+research software* statement (harness implementation/analysis, author responsibility, 19/19 estimator
+unit tests). The AI declarations are excluded metadata (not article content), and points 1--5 needed no
+change to the body, so the count is unchanged at body 11,362 / total **14,902**.
+
+The point-9 reproducibility/artifact pass is archived as release v1.7.4 (DOI 10.5281/zenodo.21472130).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

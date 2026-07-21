@@ -109,8 +109,8 @@ deterministic seed, all adapter implementations, the byte-level correctness cros
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.7.3
-(\url{https://doi.org/10.5281/zenodo.21471541}). A reproducibility summary --- versions,
+archived at Zenodo as release v1.7.4
+(\url{https://doi.org/10.5281/zenodo.21472130}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}.
@@ -119,18 +119,22 @@ Table~S31 and \texttt{REPRODUCE.md}.
 This research did not receive any specific grant from funding agencies in the
 public, commercial, or not-for-profit sectors.
 
-\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
-During the preparation of this work the author used a large language model
-(Claude, Anthropic) to assist with drafting and editing the manuscript and with
-implementing and analyzing the benchmark harness. After using this tool, the author
-reviewed and edited the content as needed and takes full responsibility for the
-content of the published article. All AI-assisted code was verified: the
-statistical estimators carry unit tests against hand-computed values and known
-closed-form properties (\texttt{bench/stats.test.mjs}, run by \texttt{npm test}),
-every reported table cell traces to a raw per-cell record through a committed
-generator (\texttt{MANIFEST.md}), and the byte-level correctness cross-check
-independently confirms that all layers return identical responses before any
-timing is trusted.
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+During the preparation of this work the author used a large language model (Claude,
+Anthropic) in order to draft and edit the manuscript text and improve its readability
+and language. After using this tool, the author reviewed and edited the content as needed
+and takes full responsibility for the content of the published article.
+
+\section*{AI-assisted research software}
+Separately from the writing above, a large language model (Claude, Anthropic) also assisted
+the author in implementing and analyzing the benchmark harness. This is research tooling for
+which the author takes full responsibility, and all AI-assisted analytical code is
+independently inspectable and verified: the statistical estimators carry unit tests against
+hand-computed values and known closed-form properties (\texttt{bench/stats.test.mjs}, run by
+\texttt{npm test}), every reported table cell traces to a raw per-cell record through a
+committed generator (\texttt{MANIFEST.md}), and the byte-level correctness cross-check
+independently confirms that all layers return identical responses before any timing is
+trusted.
 
 %% ------------------------------------------------------------------
 \bibliographystyle{elsarticle-num}
