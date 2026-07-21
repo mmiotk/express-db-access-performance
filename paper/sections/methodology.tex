@@ -89,6 +89,17 @@ byte-equality is inappropriate and the oracle must instead be a semantic compara
 numeric tolerance, canonicalization, or field projection). The case study's outputs are
 deterministic and canonically constructed, so byte-equality is a valid oracle for it.
 
+\smallskip
+Table~\ref{tab:protocol_mapping} makes the protocol's contribution explicit: each row pairs a generic
+benchmarking principle with its access-layer manifestation, the failure that follows if the stage is
+skipped, and the evidence that the stage was load-bearing here. We do not invent these principles, but
+in the sources searched found no prior access-layer benchmark applying all five together; the stages
+are complete (admission through interpretation), individually necessary (omission changes the
+conclusion), and distinguishable, yet transferable --- Supplement Table~S37 shows analytically how
+each prior benchmark's conclusion becomes uninterpretable once its absent stages are named.
+
+\input{\tabledir protocol_mapping}
+
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels spanning the taxonomy:
 the native drivers \texttt{pg} and \texttt{mysql2}, their tuned counterparts

@@ -194,6 +194,21 @@ package to that state: a stale "bounds" quotation in the Response's Essential-1 
 Results word changed ("bounds" → "caps" for the tuning-budget ceiling), and the cover letter was
 refreshed to the current title, the three major-revision changes, and the current 14,971-word count.
 
+## Major concern 6.1 (protocol novelty and validation)
+
+The reviewer noted that framing the protocol as a synthesis/operationalization raises the evidentiary
+bar (it must be shown complete, necessary, distinguishable, transferable) and required a formal
+mapping table, ideally with a retrospective application to prior benchmarks. Both were added. A
+**main-text mapping table (Table 2)** maps each of the five protocol stages to its generic principle,
+access-layer-specific manifestation, failure-if-omitted, and the evidence it was load-bearing here. A
+**supplement retrospective table (Table S37)** applies the protocol *analytically* (nothing re-run, no
+figures disputed) to the eight prior benchmarks in the sources searched, naming each study's absent
+stages and the one conclusion that becomes uninterpretable without them --- showing the protocol has
+diagnostic power over other work, not only this study. To fit the main text, the peripheral CPU figure
+moved to the supplement (Figure S3) and the Resource-footprint paragraph was condensed; the main-text
+float count is unchanged at seven. Both new tables are analytical (authored, not data-derived; noted in
+`REPRODUCE.md`), so the primary data and checksums are unchanged.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21473103 (release v1.8.2). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21473952 (release v1.9.0). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

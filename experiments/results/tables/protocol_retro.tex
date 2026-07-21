@@ -1,0 +1,45 @@
+\begin{table}[htbp]
+  \centering
+  \caption{Retrospective application of the comparability protocol to the eight prior benchmarks located in the sources searched. The exercise is analytical only: nothing was re-run and no reported figure is disputed. For each study we name the protocol stages that are absent and state why its headline conclusion is not interpretable as a general access-layer claim without them.}
+  \label{tab:protocol_retro}
+  \begin{adjustbox}{max width=\textwidth}
+  \footnotesize
+  \begin{tabular}{p{2.3cm} p{3.0cm} p{9.3cm}}
+    \toprule
+    \textbf{Study} & \textbf{Stages absent} & \textbf{Conclusion not interpretable without them} \\
+    \midrule
+    Colley et al. (2018) &
+    1 (oracle), 3 (same-SQL control), 4 (capacity), 5 (demand/utilization) &
+    Its cross-language ORM latency ranking cannot be read as a general access-layer ordering: with no capacity sweep (4), each latency sits at an unlocated operating point. \\
+    \addlinespace
+    Procedia CS (prisma\_rawsql\_2025) &
+    1 (oracle), 3 (cross-layer control), 4 (capacity), 5 (demand/utilization) &
+    ``Optimized raw SQL beats Prisma'' does not generalize to ORMs-versus-raw broadly, because only one library family (Prisma) is sampled and no capacity sweep (4) locates where the compared operating point sits relative to saturation. \\
+    \addlinespace
+    JCCT (orm\_compare\_jcct\_2025) &
+    1 (oracle), 3 (same-SQL control), 4 (capacity), 5 (demand/utilization) &
+    Its three-ORM response-time comparison is not interpretable as a library ordering without a same-SQL control (stage 3), since nothing separates each ORM's default loading strategy from the library machinery itself. \\
+    \addlinespace
+    JCSI (zhadko2025orm) &
+    1 (oracle), 3 (same-SQL control), 4 (capacity), 5 (client-observed tail) &
+    The concurrency-dependent Prisma ranking flip cannot be read as client-facing: internal query stages, not client-observed request tails (5), were timed, and saturation was never located (4). \\
+    \addlinespace
+    Salunke \& Ouda (2024) &
+    Not applicable: no access-layer treatment, so stages 2 and 3 have no referent &
+    They compare the PostgreSQL and MySQL engines head-to-head, not application access layers, so the protocol's unit of comparison is absent by design; their (valid) engine result yields no access-layer conclusion. \\
+    \addlinespace
+    Drizzle (vendor) &
+    1 (oracle), 3 (same-SQL control), 4 (capacity), 5 (matched-utilization) &
+    Without a capacity sweep (stage 4) to locate the fixed k6 load point against each target's saturation throughput, the Drizzle suite's req/s and P95 ranking of the nine targets is not interpretable as a general access-layer claim. \\
+    \addlinespace
+    Prisma (vendor) &
+    1 (oracle), 3 (same-SQL control), 4 (capacity), 5 (tail/utilization) &
+    Because the Prisma vendor benchmark reports only median query latency over 500 iterations---no latency percentile and no throughput---its ``lowest median latency'' finding is not interpretable as a statement about behavior under load: no tail at equal demand or matched utilization (stage 5) and no saturating-capacity identification (stage 4) are reported. \\
+    \addlinespace
+    IMDBench / Gel Data (vendor) &
+    1 (oracle), 3 (same-SQL control), 4 (capacity), 5 (matched-utilization) &
+    Its throughput/latency ordering over three CRUD operations is uninterpretable as a general access-layer ranking because no capacity sweep (4) fixes the operating point across layers. \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

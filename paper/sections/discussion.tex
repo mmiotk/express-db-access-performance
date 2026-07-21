@@ -28,7 +28,7 @@ how many statements it issues.
 Under current versions the throughput differences are no longer bought with extra
 application cores: every layer sits at roughly one application core, and the native driver's
 lead comes from issuing lean SQL that pushes work onto the database tier
-(Section~\ref{sec:results}; Figure~\ref{fig:cpu_tradeoff}). A low per-process throughput is
+(Section~\ref{sec:results}; Supplement Figure~S3). A low per-process throughput is
 not a fixed ceiling over the range tested: on PostgreSQL Prisma's aggregate throughput rises
 roughly in proportion to workers (1{,}117 to 4{,}449 over one to four workers), reaching
 native-like throughput in this run, trading footprint and energy for

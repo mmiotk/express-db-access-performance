@@ -84,10 +84,13 @@ npm run sync:tables && (cd ../paper && make)
 Every main-text and supplement table regenerates from the archived `results/*.json`
 with node built-ins and the committed generators; the estimators are seeded
 (`mulberry32`), so the bootstrap intervals and permutation p-values are bit-reproducible.
-**One caveat:** the round-trip-count table (Supplement S2) is derived from transient
+**Caveats:** the round-trip-count table (Supplement S2) is derived from transient
 server statement logs that are not archived, so its committed `.tex`
 (`results/tables/query_counts.tex`) ships pre-generated rather than regenerable from the
-tarball; every other table regenerates from archived data.
+tarball; and the two protocol tables --- the stage-by-stage mapping (main-text Table 2,
+`protocol_mapping.tex`) and the retrospective application to prior benchmarks (Supplement
+Table S37, `protocol_retro.tex`) --- are *analytical* (authored, not data-derived) and
+likewise ship pre-authored. Every other table regenerates from the archived `results/*.json`.
 
 ## 5. Expected outputs
 

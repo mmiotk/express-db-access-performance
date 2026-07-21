@@ -575,4 +575,22 @@ and reports the current 14,971-word count and the split AI declaration.
 
 The point-15 pass (major-revision reconciliation: pillar-quote fix, cover-letter refresh) is archived as release v1.8.2 (DOI 10.5281/zenodo.21473103).
 
+A follow-up (reviewer **major concern 6.1** --- the protocol's novelty and validation are
+under-demonstrated) added the two artifacts the reviewer required. A **main-text mapping table
+(Table 2)** pairs each of the five protocol stages with its generic principle, its access-layer-specific
+manifestation, the failure if omitted, and the evidence it was load-bearing here --- arguing the
+protocol is complete, individually necessary, distinguishable from generic methodology, and
+transferable. A **supplement retrospective table (Table S37)** applies the protocol analytically to
+the eight prior benchmarks in the searched sources, naming for each the absent stages and the one
+conclusion that becomes uninterpretable (a fairness-audited, non-disputing exercise, built with a
+multi-agent workflow whose per-benchmark claims were adversarially checked). To stay under the word
+limit, the peripheral application-tier CPU figure was moved to the supplement (Figure S3) and the
+Resource-footprint paragraph condensed, so the main-text float count is **unchanged at seven** and the
+mapping table is `\input` from `tables/` (counted once as a float, its cells not in the body texcount).
+Both new tables are analytical (authored, not data-derived), noted in `REPRODUCE.md`. The body is
+11,428 words and the total **14,968**, under the 15,000-word limit; the supplement now holds
+thirty-seven tables (S1--S37) plus three figures (S1--S3).
+
+The major-concern-6.1 pass (protocol mapping table + retrospective validation) is archived as release v1.9.0 (DOI 10.5281/zenodo.21473952).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

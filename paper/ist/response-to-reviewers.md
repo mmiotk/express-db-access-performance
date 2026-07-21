@@ -348,7 +348,7 @@ I addressed all six, none of which changed a measurement.
    all repetitions share one host and one campaign and are therefore not statistically independent.
 
 To keep the manuscript under the 15,000-word limit after these additions, the point-6.6 Controls
-sentence and the new Table 1 caption note were tightened; the total is 14,971 words.
+sentence and the new Table 1 caption note were tightened; the total is 14,968 words.
 
 ---
 
@@ -384,7 +384,7 @@ measurement.
    evidence* on the tested subset, not as claims about all eleven implementations."
 
 Moving Table 7 to the supplement reduces the main-text float count from eight to seven; the total is
-14,971 words.
+14,968 words.
 
 ---
 
@@ -473,7 +473,7 @@ and trimmed only the gratuitous echoes.
 
 **Word-count compliance, verified quantitatively.** Under the IST rule (references and appendices
 count; each main-text float counts 200), the manuscript is body 11,373 + abstract ~292 + references
-1,848 + seven main-text floats (1,400) = **14,971 words**, under the 15,000-word Research Paper limit
+1,848 + seven main-text floats (1,400) = **14,968 words**, under the 15,000-word Research Paper limit
 (an 87-word margin). Moving the paired-significance table to the supplement (point 8) reduced the
 main-text float count from eight to seven; the protocol box is inline body text, not a float. The
 structured abstract satisfies the five-part requirement and is ~292 words (< 300). The full
@@ -568,6 +568,46 @@ the correction I have made, and it is now consistent across all three advertised
 
 These three are precisely the changes identified as making the manuscript "considerably stronger,"
 and I hope the revision now reads that way.
+
+---
+
+## Major concern 6.1 — The protocol's novelty and validation (mapping table + retrospective)
+
+You are right that framing the protocol as a *synthesis and operationalization* rather than an
+invention raises the evidentiary bar --- it must be shown complete, necessary, distinguishable from
+general benchmark methodology, and transferable. I added the two artifacts you specified.
+
+**A formal mapping table (main-text Table 2, `tab:protocol_mapping`).** For each of the five protocol
+stages it gives, across the columns you named, the benchmark decision -> the generic performance
+principle it draws on -> its access-layer-specific manifestation -> the failure if the stage is
+omitted -> the evidence that the stage was load-bearing *in this study*. For example, the correctness
+oracle keeps a broken/fast-error layer off the top (the MikroORM MySQL write led the insert ranking
+until the write-state gate excluded it); the strategy control keeps a query-strategy artifact from
+being attributed to the library (the 7.15x/4.96x documentation-selected spread narrows to 1.68x/2.01x
+among raw paths on common SQL); and capacity identification with demand/utilization separate a
+queueing effect from intrinsic latency (the 20-to-116 ms high-load tail converges to ~2-5 ms at
+matched utilization). The access-layer-manifestation column is what makes this *not* generic: each
+stage is trivial or unnecessary for a pure engine benchmark (one canonical result, one query
+language, one saturating throughput) and load-bearing only because access layers vary in output
+shape, query strategy, and capacity. The table thus argues completeness (admission through
+interpretation), individual necessity (each omission changes a conclusion), distinguishability, and
+transferability directly, rather than by assertion.
+
+**A retrospective validation (Supplement Table S37, `tab:protocol_retro`).** As you suggest, I applied
+the protocol *analytically* --- re-running nothing, disputing no reported figure --- to the eight
+prior benchmarks in the searched sources, naming for each the stages it omits and the one conclusion
+that thereby becomes uninterpretable as a general access-layer claim. For instance, the Prisma vendor
+benchmark reports only a median query latency (no percentile, no throughput, no capacity), so its
+"lowest median latency" says nothing about behaviour under load; the Drizzle suite's req/s and P95
+ranking sits at one k6 load point with no capacity sweep, so it is not locatable against saturation;
+and Salunke and Ouda benchmark the *engines*, not access layers, so the protocol's unit of comparison
+is absent by design (a fair observation, not a criticism of their valid engine result). This shows the
+protocol has diagnostic power over *other* work, not only this study --- the strongest available
+evidence that it is a methodological contribution rather than a checklist attached to one benchmark.
+
+To fit the main text under the word limit, the peripheral application-tier CPU figure was moved to the
+supplement (Figure S3) and the Resource-footprint paragraph condensed, so the mapping table is added
+with the main-text float count unchanged at seven.
 
 ---
 
@@ -795,13 +835,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,971 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,968 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.8.2 (DOI 10.5281/zenodo.21473103), the version this revision describes.
+as release v1.9.0 (DOI 10.5281/zenodo.21473952), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

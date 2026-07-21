@@ -1,0 +1,48 @@
+\begin{table}[htbp]
+  \centering
+  \caption{The comparability protocol, stage by stage. Each row pairs a generic benchmarking principle with its concrete manifestation for relational database access layers, the failure that follows if the stage is omitted, and the evidence that the stage was load-bearing in this study. We do not claim to originate these principles; in the sources searched we found no prior access-layer benchmark applying all five together. Throughputs abbreviated PG (PostgreSQL) and MySQL; ``conns'' denotes client connections.}
+  \label{tab:protocol_mapping}
+  \begin{adjustbox}{max width=\textwidth}
+  \footnotesize
+  \begin{tabular}{p{1.7cm} p{2.3cm} p{2.5cm} p{3.3cm} p{2.5cm} p{3.4cm}}
+    \toprule
+    \textbf{Stage} & \textbf{Benchmark decision} & \textbf{Generic principle} & \textbf{Access-layer manifestation} & \textbf{Failure if omitted} & \textbf{Evidence it was load-bearing} \\
+    \midrule
+    Correctness oracle &
+    Which treatments are timed at all &
+    Validity precedes speed; never time incorrect results &
+    Layers differ in output shape and mutation semantics; a ``fast'' cell may be a silent error doing less work, whereas engines return one canonical result &
+    Broken/incomplete layers look fastest and top the ranking &
+    Broken MikroORM MySQL write led the insert ranking until the write-state gate excluded it (silent 500s); a read cross-check caught a fan-out aggregation bug and a driver result-shape mismatch \\
+    \addlinespace
+    Treatment-definition rule &
+    Which API and loading strategy of each layer is measured &
+    Pre-register and fix the system-under-test configuration reproducibly &
+    One library exposes many equally-official query paths with different round-trip counts; a pure engine has one query language, so no selection rule is needed &
+    Arbitrary/cherry-picked API choice; spread reflects the tester, not the defaults &
+    Documentation-selected deep fetch spreads $7.15\times$ (PG) / $4.96\times$ (MySQL); round-trips differ 1--4 by design; Drizzle is the documented tie-break case \\
+    \addlinespace
+    Strategy control &
+    Separate query-strategy effect from raw-execution effect &
+    Hold confounds constant via a common-baseline contrast &
+    Access-layer time mixes loading strategy with execution machinery; engines have no ORM loading strategy to confound, so no same-SQL baseline is meaningful &
+    Attribute strategy-driven spread to library ``overhead'' &
+    The $7.15\times$/$4.96\times$ spread narrows to $1.68\times$ (PG) / $2.01\times$ (MySQL) among raw paths on common SQL, so most spread is query strategy, not raw execution \\
+    \addlinespace
+    Capacity identification &
+    Locate each layer's saturating throughput before fixing an operating point &
+    Interpret latency relative to capacity, not at an arbitrary fixed load &
+    Layers saturate at very different throughputs, so a fixed connection count lands them at different capacity fractions; a single engine saturates near one throughput &
+    A fixed load compares layers at unequal utilization &
+    A per-pattern sweep (1--200) puts every knee at or below 50 conns; median utilization 97--100\% at the 50-conn point; native $\sim$$7\times$ the slowest ORM's capacity \\
+    \addlinespace
+    Demand \& utilization &
+    Report tail at equal demand and at matched own-capacity fractions, as distinct quantities &
+    Distinguish demand from utilization; correct coordinated omission &
+    Because layer capacities differ, an equal-demand tail conflates queueing with intrinsic latency; engines at similar capacity make the two nearly coincide &
+    Read a capacity/queueing gap as an intrinsic latency difference &
+    At 50 conns deep-fetch p99 runs pg 20\,ms to MikroORM 116\,ms; at 50\% of each layer's own capacity the tails converge to $\sim$2--5\,ms, so the gap is capacity-and-queueing, not intrinsic latency \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

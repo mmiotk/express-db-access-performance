@@ -249,23 +249,15 @@ native driver. The 50-connection operating point sits above the knee for every
 layer on the deep fetch, so the RQ1 ranking is not an artifact of a single point.
 
 \subsection{Resource footprint}
-On the current library generation the application-side CPU cost is uniform (Supplement
-Tables~S5, S10): on the deep/nested fetch every layer draws about one core (100--110\% of one
-logical core, the maximum MikroORM's 110\%), so no layer buys throughput with extra
-application cores. What differs is database-side load: the native \texttt{pg} driver runs at
-roughly 100\% application CPU but issues lean SQL that drives the database harder
-($\approx355\%$ database CPU on the PostgreSQL deep fetch), whereas the ORMs sit at the same
-application CPU and drive lower database CPU. The native driver therefore leads on throughput
-and end-to-end compute efficiency at once --- counting combined application-plus-database CPU
-per request, \texttt{mysql2} completes 1{,}254~req per combined-CPU-second on the MySQL deep
-fetch against Prisma's 384 and MikroORM's 356 (Supplement Table~S5) --- so the slower layers
-are also less compute-efficient. An exploratory equal-CPU check is consistent with no layer converting
-extra application cores into throughput; a layer's low per-process throughput may instead be
-addressed by additional application processes until another bottleneck is reached --- over the
-tested 1-to-4-worker range aggregate throughput rose roughly in proportion to workers, though
-this run measures no database-side saturation (Supplement Tables~S4, S24). Memory differences are smaller
-(Supplement Table~S10): the query builder and lightest ORMs are cheapest (Knex 215, Objection
-221, TypeORM 225~MB peak RSS), while Drizzle, Prisma, and MikroORM use more (297--356~MB),
-which governs how many replicas a given load requires~\cite{vaquero2011scaling}.
+On the current library generation the application-side CPU cost is uniform (Supplement Tables~S5,
+S10; the trade-off is plotted in Supplement Figure~S3): every layer draws about one core on the deep
+fetch (100--110\%), so none buys throughput with extra application cores. What differs is
+database-side load --- the native \texttt{pg} driver issues lean SQL that drives the database harder
+--- so the native driver leads throughput and end-to-end compute efficiency at once
+(\texttt{mysql2} 1{,}254 versus Prisma 384 and MikroORM 356~req per combined-CPU-second on the MySQL
+deep fetch; Supplement Table~S5). An exploratory equal-CPU check and a 1-to-4-worker cluster check
+(Supplement Tables~S4, S24) are consistent with low per-process throughput being addressed by
+additional application processes until another bottleneck is reached, with no database-side
+saturation measured. Peak memory ranges 215--356~MB, lowest for the query builder and lightest ORMs
+(Supplement Table~S10)~\cite{vaquero2011scaling}.
 
-\input{\tabledir fig_cpu_tradeoff}
