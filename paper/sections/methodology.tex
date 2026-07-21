@@ -50,30 +50,35 @@ and state which each result speaks to.
 \label{sec:protocol}
 We state the protocol here independently of the case study; the remaining subsections instantiate
 it for the access-layer setting. It turns a set of \emph{treatments} compared on a fixed
-\emph{workload} into a controlled experiment through five parts.
-\paragraph{Inputs} the treatments (implementations under comparison); a workload of representative
-operations (not necessarily a production trace); an \emph{output semantics} defining when two
-treatments' responses to the same input are equivalent; and an \emph{operating-point definition}
-separating capacity, external demand, and utilization.
-\paragraph{Mandatory stages, in order} (1)~a \emph{correctness oracle} admits a treatment only if
-its outputs are equivalent under the output semantics and its mutating operations produce the
-intended state; (2)~a \emph{treatment-definition rule} fixes, reproducibly and in advance, the
-implementation and strategy each treatment uses; (3)~a \emph{strategy-control design} adds a
-standardized contrast holding the query strategy fixed, so the treatment spread can be read
-against a common-strategy baseline; (4)~\emph{capacity identification} locates each treatment's
-saturating throughput by a concurrency sweep; (5)~\emph{demand and utilization experiments}
+\emph{workload} into a controlled experiment; the box below states its inputs, mandatory stages,
+cell-admission rule, and output interpretation compactly, and the remaining subsections instantiate
+them for the access-layer setting.
+
+\smallskip
+\noindent\fbox{\parbox{0.97\linewidth}{\small
+\textbf{The comparability protocol.}\par
+\textbf{Inputs.} Treatments (implementations under comparison); a representative workload (not
+necessarily a production trace); an \emph{output-equivalence semantics}; and an
+\emph{operating-point definition} separating capacity, external demand, and utilization.\par
+\textbf{Mandatory stages, in order.} (1)~\emph{correctness oracle} --- admit a treatment only if
+its outputs are equivalent under the semantics and its mutations produce the intended state;
+(2)~\emph{treatment-definition rule} --- fix each treatment's implementation and strategy
+reproducibly, in advance; (3)~\emph{strategy control} --- add a standardized contrast holding the
+query strategy fixed, read against a common-strategy baseline; (4)~\emph{capacity identification}
+--- locate saturating throughput by a concurrency sweep; (5)~\emph{demand and utilization} ---
 measure the tail at equal external demand and at matched fractions of each treatment's own
-capacity.
-\paragraph{Pass/fail} a (treatment, workload-point) cell is admitted only if the oracle passes ---
-equivalent non-mutating outputs and a correct post-write state, not merely a success status. A
-cell returning non-equivalent output, an invalid or unsuccessful write, or a degenerate query
-plan (for example N+1) is disqualified and excluded from timing.
-\paragraph{Outputs and their interpretation} per cell, throughput and tail latency under each
-operating point. These are \emph{descriptive} of the treatment as defined
-(implementation-and-strategy), not of any isolated internal mechanism: the standardized contrast
-reports a residual, not a causal decomposition, and cross-treatment rankings are configuration-
-and version-specific. Only \emph{relative} within-condition differences are meant to travel;
-absolute numbers reflect the substrate.
+capacity.\par
+\textbf{Cell admission.} Time a (treatment, workload-point) cell only if the oracle passes ---
+equivalent non-mutating outputs and a correct post-write state, not merely a success status;
+non-equivalent output, an invalid or unsuccessful write, or a degenerate plan (e.g.\ N+1)
+disqualifies it.\par
+\textbf{Outputs.} Throughput and tail latency per operating point, \emph{descriptive} of the
+treatment as defined --- the standardized contrast reports a residual, not a causal decomposition
+--- with rankings configuration- and version-specific and only \emph{relative} within-condition
+differences meant to travel.
+}}
+\smallskip
+
 \paragraph{Applicability limits} the oracle must match the output semantics. Byte-identical
 comparison, used here, is valid only when equivalent outputs are deterministic and canonically
 serializable. Where they are not --- unordered collections, floating-point results, timestamps,

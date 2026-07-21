@@ -347,7 +347,7 @@ I addressed all six, none of which changed a measurement.
    all repetitions share one host and one campaign and are therefore not statistically independent.
 
 To keep the manuscript under the 15,000-word limit after these additions, the point-6.6 Controls
-sentence and the new Table 1 caption note were tightened; the total is 14,959 words.
+sentence and the new Table 1 caption note were tightened; the total is 14,913 words.
 
 ---
 
@@ -383,7 +383,7 @@ measurement.
    evidence* on the tested subset, not as claims about all eleven implementations."
 
 Moving Table 7 to the supplement reduces the main-text float count from eight to seven; the total is
-14,959 words.
+14,913 words.
 
 ---
 
@@ -446,6 +446,37 @@ Barroso, reproducibility surveys) and frames the paper's choices as taken *from*
 On the other two points: the "same-SQL bound" is already renamed a "standardized (same-SQL) contrast"
 (point 6.1); and the scoped novelty wording --- "in the sources searched," "we did not identify," and
 the documented scoping-search protocol --- is preserved throughout, as you recommend.
+
+---
+
+## Point 11 — Presentation (a formal protocol box; density; word-count compliance)
+
+Thank you. I addressed all three parts.
+
+**A compact formal protocol box.** Because the protocol is the contribution, the *comparability
+protocol* subsection of Study Design now opens with a **boxed, formal statement** --- Inputs, the five
+mandatory stages in order, the cell-admission rule, and the output interpretation --- so the exact
+treatment-selection and admission procedure is established in the main text at a glance, not left to
+`METHODOLOGY.md` or supplementary tables. The verbose paragraph-by-paragraph prose it replaces was
+condensed, which also cuts density.
+
+**Reduced repetition.** I consolidated the most-repeated framing: the "protocol, not the ranking, is
+the contribution" line is stated once per location (abstract, Introduction, the Discussion paragraph
+heading, Conclusion) rather than echoed within a paragraph --- the Discussion heading and its closing
+clause no longer both carry it. I should be candid about a tension: several of the recurring caveats
+you list are *load-bearing for earlier points in this same review* --- the same-SQL result is "not a
+bound on the intrinsic library effect" (point 6.1), the deep-fetch gap is "not a poor-default
+artifact" (point 6.4), and the documentation-selected treatment is not intrinsic ORM overhead. I kept
+one statement of each in its relevant context, since removing them would undo those requested caveats,
+and trimmed only the gratuitous echoes.
+
+**Word-count compliance, verified quantitatively.** Under the IST rule (references and appendices
+count; each main-text float counts 200), the manuscript is body 11,373 + abstract ~292 + references
+1,848 + seven main-text floats (1,400) = **14,913 words**, under the 15,000-word Research Paper limit
+(an 87-word margin). Moving the paired-significance table to the supplement (point 8) reduced the
+main-text float count from eight to seven; the protocol box is inline body text, not a float. The
+structured abstract satisfies the five-part requirement and is ~292 words (< 300). The full
+declaration is in the separate `word-count.pdf`.
 
 ---
 
@@ -673,13 +704,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,959 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,913 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.7.5 (DOI 10.5281/zenodo.21472308), the version this revision describes.
+as release v1.8.0 (DOI 10.5281/zenodo.21472649), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

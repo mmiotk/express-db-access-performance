@@ -524,4 +524,23 @@ still under the 15,000-word limit (a 41-word margin).
 
 The point-10 novelty-framing pass is archived as release v1.7.5 (DOI 10.5281/zenodo.21472308).
 
+A follow-up (reviewer **point 11, presentation** — "generally well written, technically mature,
+unusually careful about claim scope"; main weakness density) added a **compact formal protocol box**
+and cut density. Because the protocol is the contribution, the *comparability protocol* subsection of
+Study Design now opens with a boxed, formal statement (Inputs; the five mandatory stages in order; the
+cell-admission rule; the output interpretation), which replaces the verbose paragraph-by-paragraph
+prose and is **inline body text, not a float**, so the exact treatment-selection and admission
+procedure is in the main text rather than left to `METHODOLOGY.md` and supplementary tables. The
+most-repeated "protocol, not the ranking, is the contribution" framing was consolidated to one
+statement per location (the Discussion heading and its closing clause no longer both carry it); the
+recurring caveats that are load-bearing for earlier points in this review (same-SQL "not a bound",
+point 6.1; deep-fetch "not a poor-default artifact", point 6.4) are kept once each, since removing them
+would undo those requested caveats. Net, the box replacement plus the trims took the body to 11,373
+words. Under the IST rule the total is body 11,373 + abstract ~292 + references 1,848 + **seven**
+main-text floats (1,400) = **14,913**, under the 15,000-word limit (an 87-word margin), verified
+quantitatively as the reviewer asked; the structured abstract satisfies the five-part requirement at
+~292 words (< 300).
+
+The point-11 presentation pass (compact protocol box, reduced density) is archived as release v1.8.0 (DOI 10.5281/zenodo.21472649).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
