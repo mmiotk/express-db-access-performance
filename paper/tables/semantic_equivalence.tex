@@ -1,0 +1,32 @@
+% hand-authored from the committed gate run (bench/verify-property.mjs ->
+% experiments/semantic-equivalence.json); re-runnable against the seeded DB.
+\begin{table}[htbp]
+  \centering
+  \caption{Randomized differential semantic-equivalence coverage
+    (\texttt{bench/verify-property.mjs}). A fixed-seed generator (mulberry32, seed
+    99005011) draws inputs across the full key range; the native driver is the oracle and every
+    adapter response must be byte-identical to it, with any thrown error captured as a comparable
+    value so an input-dependent crash also counts as a divergence. The gate is re-run against the
+    seeded database (2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments), not derived from
+    \texttt{results/raw.json}.}
+  \label{tab:semantic_equivalence}
+  \begin{tabular}{l l}
+    \toprule
+    Dimension & Coverage \\
+    \midrule
+    Read methods checked & \texttt{getPost}; deep fetch (\texttt{getThread}); same-SQL deep \\
+                         & fetch (\texttt{getThreadRaw}); aggregation (\texttt{authorSummary}); \\
+                         & keyset range scan (\texttt{listPosts}) \\
+    \midrule
+    Seeded-random inputs & 1{,}000 post IDs $+$ 1{,}000 author IDs, uniform over the full range \\
+    Edge cases           & 9 post IDs (0, $-1$, 1, 2, 99{,}999, 100{,}000, 100{,}001, \\
+                         & 101{,}000, $2^{31}{-}1$); 7 author IDs (0, $-1$, 1, 1{,}999, 2{,}000, \\
+                         & 2{,}001, 3{,}000); 8 keyset pages (empty / boundary; limit 0, 1, 100) \\
+    Distinct inputs / adapter & 3{,}800 (after de-duplication) \\
+    \midrule
+    Adapters vs.\ baseline & 8 per engine \\
+    Comparisons          & 30{,}400 per engine; 60{,}800 across PostgreSQL and MySQL \\
+    Divergences          & \textbf{0} (\textsc{all byte-identical}) \\
+    \bottomrule
+  \end{tabular}
+\end{table}

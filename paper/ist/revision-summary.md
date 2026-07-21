@@ -217,8 +217,19 @@ definition were genericised accordingly). The performance-conscious comparison t
 construct's weakness was promoted from Supplement S34 to a new main-text table beside the co-primary
 paragraph in Results; to keep the main-text float count at seven and avoid renumbering the supplement,
 the roadmap/outcomes table moved the other way into the vacated S34 slot (net-zero swap). No raw data
-changed. The manuscript is 14,986 words, under the 15,000-word limit.
+changed.
+
+Addressing reviewer **major concern 6.3** (the semantic-equivalence gate is finite), Study Design now
+distinguishes four levels of the precondition rather than asserting a universal property ---
+specification, finite pre-measurement conformance (the 12-probe `verify.mjs`), exhaustive equivalence
+(infeasible and not claimed), and property-based/randomized differential testing --- and the
+Introduction's byte-identical claim was softened to hold "on the protocol's conformance suite." A new
+gate (`bench/verify-property.mjs`) draws a fixed-seed sample of thousands of random and edge-case
+inputs across the full key range and asserts every adapter is byte-identical to the native-driver
+oracle on all five read methods: 30,400 comparisons per engine, 60,800 across both, zero divergences
+(new Supplement Table S38). It is inexpensive because the dataset is deterministic and finite. The
+manuscript is 14,996 words, under the 15,000-word limit.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21475921 (release v1.10.0). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21479555 (release v1.11.0). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

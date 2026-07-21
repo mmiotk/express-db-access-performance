@@ -646,6 +646,42 @@ count at seven and avoid renumbering the supplement, the swap is net-zero: the r
 
 ---
 
+## Major concern 6.3 — The semantic-equivalence gate is finite; add property-based / randomized checking
+
+You are right that "every layer must return byte-identical results" read as a verified universal
+property, whereas the case study checked only 12 fixed probes before timing. I addressed both halves
+of the required revision: I sharpened the language into the four distinctions you named, and I added
+a broad randomized check and ran it on both engines.
+
+**The precondition is now stated at four explicit levels, not as a universal property.** Study Design
+now establishes semantic equivalence as: (i)~*specification* — shared canonical constructors that fix
+each response's intended field set, key order, and serialization; (ii)~*finite pre-measurement
+conformance* — the fast 12-probe gate (`bench/verify.mjs`) run before any timing; (iii)~*exhaustive
+equivalence*, which is infeasible for arbitrary code and is explicitly **not** claimed; and
+(iv)~*property-based / randomized differential testing* — the new gate below. The Introduction's
+Semantic-equivalence precondition was softened correspondingly to "byte-identical results **on the
+protocol's conformance suite** (fixed probes plus a seeded property-based input sweep)," so the claim
+is no longer readable as a proof over all inputs.
+
+**A property-based randomized gate now exercises thousands of inputs, and it passed on both engines.**
+The new `bench/verify-property.mjs` is differential property-based testing: the property is
+`adapter(input) === baseline(input)` (byte-for-byte), the native driver is the oracle, and any thrown
+error is captured as a comparable value so an input-dependent crash also counts as a divergence. A
+fixed seed (mulberry32) draws 1,000 random post IDs and 1,000 random author IDs across the full key
+range, plus an explicit edge set — nonexistent, boundary, negative, and 32-bit-overflow IDs; empty and boundary
+keyset pages; limits 0/1/100 — over all five read methods (point read, deep fetch, same-SQL deep fetch,
+aggregation, keyset scan). As you note, because the dataset is deterministic and finite this is
+inexpensive: the whole sweep runs in well under two minutes per engine, against a ~25-hour measurement
+campaign. The result: **3,800 distinct inputs per adapter, 30,400 adapter-versus-baseline comparisons
+per engine, 60,800 across PostgreSQL and MySQL, with zero divergences** (new Supplement Table S38,
+`tab:semantic_equivalence`; coverage recorded in `experiments/semantic-equivalence.json`). This does
+not prove equivalence on every possible input — I say so explicitly — but it broadens the finite check
+by more than two orders of magnitude and targets exactly the boundary and error-path inputs most likely
+to expose an input-dependent divergence. The gate is committed and re-runnable against the seeded
+database, alongside `verify.mjs` and `verify-writes.mjs`.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -870,14 +906,14 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,986 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,996 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.10.0 (DOI 10.5281/zenodo.21475921), the version this revision describes.
+as release v1.11.0 (DOI 10.5281/zenodo.21479555), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

@@ -43,9 +43,18 @@ npm ci
 #                 or Docker path:          npm run db:up
 npm run migrate && npm run seed          # deterministic seed (2k/100k/1M rows)
 npm run bench:quick                       # 4 layers, PostgreSQL, 3s runs
-node bench/verify.mjs                     # read byte-equivalence -> ALL BYTE-IDENTICAL
+node bench/verify.mjs                     # read byte-equivalence (12 fixed probes) -> ALL BYTE-IDENTICAL
 node bench/verify-writes.mjs              # write-state correctness -> ALL WRITES SEMANTICALLY CORRECT
+ENGINE=postgres node bench/verify-property.mjs   # randomized differential gate (thousands of inputs + edge cases) -> ALL BYTE-IDENTICAL
 ```
+
+The property gate (`verify-property.mjs`) is the broadened, property-based level of the
+semantic-equivalence check: a fixed-seed sweep of ~1,000 random post and ~1,000 random author IDs plus
+an explicit edge set, differentially compared byte-for-byte against the native driver. Run it per
+engine (`ENGINE=postgres` / `ENGINE=mysql`; regenerate the Prisma client with
+`npm run prisma:generate:<engine>` when switching). It writes a coverage summary to
+`experiments/semantic-equivalence.json` — a DB-derived verification artifact, re-runnable against the
+seeded database and therefore kept outside the 35-file `results/` measurement manifest.
 
 ## 3. Full primary matrix (hours)
 
@@ -102,5 +111,8 @@ likewise ship pre-authored. Every other table regenerates from the archived `res
   engines, an independent native-driver verifier confirms the single-row insert and the
   transactional write produce the exact field values, identifiers, and row-count changes, and
   that a foreign-key-violating transaction rolls back with no partial state.
+- `bench/verify-property.mjs`: `ALL BYTE-IDENTICAL` over the randomized/edge input sweep —
+  3,800 distinct inputs per adapter, 30,400 adapter-versus-baseline comparisons per engine
+  (60,800 across both), zero divergences; coverage written to `experiments/semantic-equivalence.json`.
 - `npm test`: 19/19 estimator unit tests pass (`bench/stats.test.mjs`).
 - The rebuilt `paper/ist/ist_main.pdf` and `paper/supplement.pdf`.

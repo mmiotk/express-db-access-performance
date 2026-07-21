@@ -138,6 +138,10 @@ A follow-up (reviewer \textbf{major concern 6.2} --- "documentation-selected" is
 
 The major-concern-6.2 pass (documentation-selected reframed as a case-study policy; performance-conscious comparison promoted to the main text) is archived as release v1.10.0 (DOI 10.5281/zenodo.21475921).
 
+A follow-up (reviewer \textbf{major concern 6.3} --- the semantic-equivalence gate is strong but finite and incomplete) sharpened the language and broadened the check. The Study-Design correctness paragraph now distinguishes four levels of the precondition (specification; finite pre-measurement conformance; exhaustive equivalence, infeasible and not claimed; property-based/randomized differential testing) rather than asserting a universal property, and the Introduction's Semantic-equivalence contribution was softened to "byte-identical results on the protocol's conformance suite (fixed probes plus a seeded property-based input sweep)." A new gate (\texttt{bench/verify-property.mjs}) draws a fixed-seed sample of 1,000 random post and 1,000 random author IDs plus an explicit edge set and asserts byte-equality to the native-driver oracle on all five read methods: 30,400 comparisons per engine, 60,800 across both, zero divergences (new \textbf{Supplement Table S38}, appended after S37 so S1--S37 are unchanged; coverage recorded in \texttt{experiments/semantic-equivalence.json}, a DB-derived verification artifact outside the 35-file measurement manifest). The reframe added body prose offset by tightening the correctness and tuning-budget passages; the body is \textbf{11,456} words and the total \textbf{14,996}, under the 15,000-word limit. The supplement now holds thirty-eight tables (S1--S38) plus three figures.
+
+The major-concern-6.3 pass (four-level semantic-equivalence framing; property-based randomized gate) is archived as release v1.11.0 (DOI 10.5281/zenodo.21479555).
+
 Highlights (5 bullets, each $\le$ 85 characters) are in \texttt{highlights.tex}.
 
 \end{document}

@@ -77,8 +77,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.10.0 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21475921}.}
+v1.11.0 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21479555}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -106,7 +106,8 @@ controlled experiment, by establishing three preconditions the genre otherwise l
 unmet.
 \begin{itemize}[leftmargin=*]
   \item \textbf{Semantic equivalence.} Every layer must return \emph{byte-identical}
-        results, and every write must produce the intended database state --- validated field
+        results on the protocol's conformance suite (fixed probes plus a seeded property-based input
+        sweep), and every write must produce the intended database state --- validated field
         values, generated identifiers, exact row-count changes, and transactional rollback, not
         merely a 2xx --- before its timing is admitted, so a layer
         that silently returns less, writes wrong, or errors faster than it works, cannot appear faster
