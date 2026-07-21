@@ -471,4 +471,25 @@ stays at thirty-five tables (S1--S35).
 
 The point-7 minor-concerns pass is archived as release v1.7.2 (DOI 10.5281/zenodo.21470361).
 
+A follow-up (reviewer **point 8, methodological/statistical assessment** — favourable, "no clear
+statistical error requiring rejection") applied five precision/scoping fixes, no measurement changed:
+(1) Methodology now states explicitly that **"p99" throughout denotes the *median run-level p99***
+(the median across replicates of each run's own p99), not the p99 of the pooled request distribution,
+which the design does not estimate; (2) the within-campaign scope of the bootstrap intervals (already
+in Study Design) is reinforced where they are used, so they are not read as deployment-general
+uncertainty; (3) the coarse millisecond p99 resolution is noted not to finely separate near-adjacent
+layers; (4) following the reviewer's suggestion to simplify the post-hoc rank tests and foreground
+effect sizes, the paired-significance table (former main-text **Table 7**) was **moved to the
+supplement (new Table S36)** with a one-line pointer, and the main text now leads with the paired
+geometric-mean ratios and per-replicate dominance, noting the tests' inference is conditional on the
+ranking that selects the pairs; (5) the secondary experiments restricted to layer subsets or few
+replicates (Supplement Table S32) are labelled *sensitivity evidence* on the tested subset, not claims
+about all eleven implementations. Moving Table 7 drops the main-text float count from **eight to
+seven** (1,600 → 1,400 words under the IST rule), which more than offsets the added prose. The body is
+11,362 words, the structured abstract ~292, and with seven main-text floats the total is **14,902**,
+under the 15,000-word limit (a 98-word margin). The supplement gains one table (now thirty-six,
+S1--S36).
+
+The point-8 statistical-assessment pass is archived as release v1.7.3 (DOI 10.5281/zenodo.21471541).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

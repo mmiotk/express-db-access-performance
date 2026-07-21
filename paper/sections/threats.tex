@@ -115,7 +115,7 @@ Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficien
 and bootstrap 95\% confidence intervals as stability signals and, because the design is a
 randomized block, compares adjacently ranked layers with \emph{paired} tests on their
 per-replicate throughput ratios (paired sign-flip permutation, cross-checked with Wilcoxon;
-Table~\ref{tab:significance}). Two bounds reinforce the ordering: the widest spreads dwarf the
+Supplement Table~S36). Two bounds reinforce the ordering: the widest spreads dwarf the
 run-to-run CV (deep-fetch throughput varies by at most $\approx4.0\%$ across the 25 repeated
 runs on either engine; Supplement Tables~S1, S9), and the ordering holds across the
 concurrency sweep at $\geq32$ connections (Supplement Figure~S2). Rather than assert a
@@ -128,4 +128,7 @@ check (six pairs at the resolution floor, all seven surviving Bonferroni). Booti
 process per replicate prevents persistent process state from carrying across
 replicates~\cite{kalibera2013rigorous}, but the replicates share one host and one campaign, so
 we treat replicate index and measurement order as blocks rather than claiming full
-independence; more replicates or longer runs would tighten the intervals further.
+independence; more replicates or longer runs would tighten the intervals further. The secondary
+experiments that cover only a layer subset or few replicates (open-loop tail, equal-CPU, pool-size,
+transactional write, and cluster checks; Supplement Table~S32) are read as \emph{sensitivity
+evidence} on the tested subset, not as claims about all eleven implementations.

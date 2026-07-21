@@ -347,7 +347,43 @@ I addressed all six, none of which changed a measurement.
    all repetitions share one host and one campaign and are therefore not statistically independent.
 
 To keep the manuscript under the 15,000-word limit after these additions, the point-6.6 Controls
-sentence and the new Table 1 caption note were tightened; the total is 14,990 words.
+sentence and the new Table 1 caption note were tightened; the total is 14,902 words.
+
+---
+
+## Point 8 — Methodological and statistical assessment (five precision/scoping fixes)
+
+Thank you for the generous assessment ("substantially above the level of many benchmark studies …
+no clear statistical error requiring rejection"). I addressed all five issues; none changed a
+measurement.
+
+1. **Estimand made explicit.** Methodology now states: "Throughout, *p99* denotes this *median
+   run-level p99* — the median across replicates of each run's own p99 — not the p99 of the pooled
+   request distribution across runs, which the design does not estimate." The shorthand "p99"
+   elsewhere is thereby anchored to this estimand.
+2. **Bootstrap intervals kept within-campaign.** Study Design already states the intervals "capture
+   within-campaign, run-to-run variability on this host and configuration, not variation across
+   machines, versions, or deployments." I reinforced this at the point of use in Results ("the
+   bootstrap intervals behind these ratios are within-campaign, not deployment-general") and in the
+   new supplement table's note, so they are not read — visually or rhetorically — as general
+   deployment-uncertainty intervals.
+3. **Coarse p99 resolution acknowledged for near-adjacent layers.** The tail subsection now says the
+   paired p99 analysis "resolves every adjacent pair on both engines except two near-ties *that the
+   millisecond p99 resolution does not finely separate*," so fine-grained ordering of near-adjacent
+   layers is not claimed.
+4. **Post-hoc rank tests simplified and demoted.** Following your suggestion, I moved the
+   paired-significance table (former main-text **Table 7**) to the supplement (new **Table S36**) and
+   the main text now **foregrounds paired effect sizes** — geometric-mean per-replicate ratios and
+   per-replicate dominance — stating that "the post-hoc adjacent-pair permutation and Wilcoxon tests …
+   are reported only descriptively, in the supplement, since the ranking itself selects the pairs
+   tested and their inference is therefore conditional."
+5. **Subset experiments labelled sensitivity evidence.** Threats now states that "the secondary
+   experiments that cover only a layer subset or few replicates (open-loop tail, equal-CPU,
+   pool-size, transactional write, and cluster checks; Supplement Table S32) are read as *sensitivity
+   evidence* on the tested subset, not as claims about all eleven implementations."
+
+Moving Table 7 to the supplement reduces the main-text float count from eight to seven; the total is
+14,902 words.
 
 ---
 
@@ -575,13 +611,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,990 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,902 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.7.2 (DOI 10.5281/zenodo.21470361), the version this revision describes.
+as release v1.7.3 (DOI 10.5281/zenodo.21471541), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

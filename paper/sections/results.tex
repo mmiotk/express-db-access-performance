@@ -57,7 +57,7 @@ leads outright on both engines --- no tie at the top --- and the data-mapper
 ORMs, especially MikroORM, trail furthest (Table~\ref{tab:deep_fetch}). The
 comparison is paired (Section~\ref{sec:methodology}); every adjacent step of the
 MySQL ranking is large relative to its bootstrap interval
-(Table~\ref{tab:significance}).
+(Supplement Table~S36).
 
 \textbf{Aggregation} is the least layer-sensitive pattern: the native-relative
 spread is only $1.83\times$ on PostgreSQL and $1.72\times$ on MySQL (Supplement
@@ -210,7 +210,8 @@ high-load point tail latency tracks throughput: on the deep/nested fetch, Postgr
 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (Table~\ref{tab:deep_fetch}), monotonic
 below the native driver --- a penalty throughput-only vendor benchmarks miss --- and a paired
 p99 analysis (Supplement Table~S30) resolves every adjacent pair on both engines except two
-near-ties, otherwise mirroring the throughput ranking. Driving the deep fetch under the
+near-ties that the millisecond p99 resolution does not finely separate, otherwise mirroring the
+throughput ranking. Driving the deep fetch under the
 coordinated-omission-corrected open-loop harness (Supplement Tables~S6, S17) reproduces this
 ordering: below saturation the corrected tails are flat and small, and beyond each layer's
 capacity the tail collapses rather than degrading gracefully, the data-mapper ORMs earliest.
@@ -229,12 +230,14 @@ rank correlation is reported conservatively. Every measured request succeeded (z
 non-2xx across all 90 cells); those counters are load-bearing, since a broken cell returning
 errors faster than real work can spuriously lead a ranking (Section~\ref{sec:discussion}), and
 a post-restart re-measurement reproduced the ranking with absolute throughput up to $16\%$
-lower (Supplement Table~S20). The effect sizes carry the ordering (Table~\ref{tab:significance}):
-six of the seven adjacent MySQL deep-fetch steps are geometric-mean ratios $\geq 1.15$ with the
-faster layer ahead in every replicate, well above the $\leq 4.0\%$ CV, while the narrowest
-(Sequelize over Objection, $1.05$) sits at the $\pm5\%$ practical-equivalence margin; the
-permutation and Wilcoxon tests agree (Bonferroni intact) but descriptively, as a post-hoc check
-on the deep fetch, not independent confirmation.
+lower (Supplement Table~S20). We foreground paired effect sizes over significance tests: six of the
+seven adjacent MySQL deep-fetch steps are geometric-mean paired ratios $\geq 1.15$ with the faster
+layer ahead in \emph{every} replicate, well above the $\leq 4.0\%$ CV, while the narrowest
+(Sequelize over Objection, $1.05$) sits at the $\pm5\%$ practical-equivalence margin; the bootstrap
+intervals behind these ratios are within-campaign, not deployment-general
+(Section~\ref{sec:threats}). The post-hoc adjacent-pair permutation and Wilcoxon tests (which agree,
+Bonferroni intact) are reported only descriptively, in the supplement (Supplement Table~S36), since
+the ranking itself selects the pairs tested and their inference is therefore conditional.
 
 \subsection{Scaling with concurrency}
 A concurrency sweep from 1 to 256 connections (Supplement Figure~S2) shows the
@@ -265,5 +268,4 @@ this run measures no database-side saturation (Supplement Tables~S4, S24). Memor
 221, TypeORM 225~MB peak RSS), while Drizzle, Prisma, and MikroORM use more (297--356~MB),
 which governs how many replicas a given load requires~\cite{vaquero2011scaling}.
 
-\input{\tabledir significance_deep_fetch}
 \input{\tabledir fig_cpu_tradeoff}

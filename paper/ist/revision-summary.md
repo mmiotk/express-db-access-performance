@@ -113,6 +113,22 @@ differences" became "expected to make application/access-layer overhead more vis
 now discloses the one Drizzle/MySQL-insert cell with 24 rather than 25 runs; and "independent runs" was
 reworded to "repeated runs" in the captions and REPRODUCE (all repetitions share a host and campaign).
 
+## Point 8 (methodological and statistical assessment)
+
+The reviewer's assessment was favourable ("substantially above the level of many benchmark studies …
+no clear statistical error requiring rejection"). Five precision/scoping fixes, no measurement
+changed: (1) Methodology now states explicitly that **"p99" throughout is the *median run-level p99***
+(median across replicates of each run's p99), not the p99 of the pooled request distribution; (2) the
+within-campaign scope of the bootstrap intervals is reinforced where they are used, so they are not
+read as deployment-general; (3) the coarse millisecond p99 resolution is noted not to finely separate
+near-adjacent layers; (4) following the reviewer's suggestion to foreground effect sizes, the
+paired-significance table (former main-text **Table 7**) was **moved to the supplement (new Table
+S36)**, the main text now leading with paired geometric-mean ratios and per-replicate dominance and
+noting the post-hoc tests' inference is conditional on the ranking that selects the pairs; (5) the
+secondary experiments on layer subsets or few replicates (Supplement Table S32) are labelled
+*sensitivity evidence* on the tested subset, not claims about all eleven implementations. Moving Table
+7 drops the main-text float count from eight to seven.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21470361 (release v1.7.2). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21471541 (release v1.7.3). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.
