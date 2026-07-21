@@ -63,9 +63,11 @@ fetch, per-author aggregation, and insert; Section~\ref{sec:methodology}).
 Seven layers run against \emph{both} engines under an identical schema,
 dataset, and pool size; two tuned native-driver baselines mark what hand-tuned
 driver use achieves. Every (layer, engine, pattern) combination reports
-throughput (req/s) and client-observed response-time p99 at the fixed
-50-connection high-load operating point jointly, from 25 repeated runs, with a
-utilization-controlled open-loop tail measured below saturation. The study
+throughput (req/s) and the \emph{high-load response-time p99 under equal closed-loop demand} at the
+fixed 50-connection operating point, from 25 repeated runs. At this near-saturation point the p99
+largely tracks capacity and queueing, so a lower-capacity layer looks worse on the tail even when its
+intrinsic latency is not; we therefore also report the tail at \emph{matched utilization}, where it
+converges --- the more informative view of tail behavior. The study
 separates two estimands: the \emph{documentation-selected implementation-and-strategy} effect of each layer
 (RQ1--RQ3), and a controlled \emph{same-SQL} standardized contrast that
 reports the residual difference once every layer executes identical SQL ---
@@ -77,8 +79,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.11.1 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21479860}.}
+v1.11.2 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21480179}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -86,11 +88,10 @@ implementations under the specified operating point:
   \item \emph{(performance difference):} How large is the throughput and
         response-time-p99 \emph{difference} of the benchmarked implementations
         relative to the native-driver baseline, and how does it vary across the
-        five access patterns? We keep distinct three quantities that a fixed
-        operating point conflates: \emph{capacity} (saturating throughput,
-        measured by the deep-fetch concurrency sweep), \emph{high-load latency}
-        (the p99 under equal external demand), and \emph{latency at matched
-        utilization} (each layer driven at equal fractions of its own capacity).
+        five access patterns? We keep distinct three quantities a fixed
+        operating point conflates: \emph{capacity} (saturating throughput),
+        \emph{high-load latency} (p99 under equal demand), and \emph{latency at
+        matched utilization} (equal fractions of each layer's own capacity).
   \item \emph{(engine dependence):} Does the observed layer ordering transfer
         across PostgreSQL and MySQL, or is it engine-dependent?
   \item \emph{(consequential patterns):} For which access patterns is the choice of
@@ -117,10 +118,9 @@ unmet.
         \emph{same-SQL standardized contrast} reports how
         much of an observed difference remains once the SQL is held fixed --- a diagnostic contrast,
         not an attribution to the library's execution machinery versus the query strategy.
-  \item \textbf{Operating-point separation.} Capacity (saturating throughput), tail
-        latency under equal demand, and latency at matched utilization are measured and
-        reported as \emph{distinct} quantities rather than conflated at one arbitrary load
-        point.
+  \item \textbf{Operating-point separation.} Capacity, high-load tail under equal demand, and
+        tail at matched utilization are reported as \emph{distinct} quantities, not conflated at one
+        load point.
 \end{itemize}
 These preconditions are not new to benchmarking in general: correctness, workload equivalence,
 warm-up, coordinated-omission correction, capacity curves, and reproducibility are long established

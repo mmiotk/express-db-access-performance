@@ -242,6 +242,18 @@ are experimental-design controls argued necessary analytically (Table 2, Supplem
 single-host measurement bounds the case study, not the protocol. This was offset by tightening the
 paragraph, so the manuscript is 14,993 words, under the 15,000-word limit.
 
+Addressing reviewer **strongly-recommended point 6.5** (closed-loop p99 is over-prominent relative to
+its interpretation), the primary p99 is now labelled *high-load response-time p99 under equal
+closed-loop demand* in both the Abstract and the Introduction and immediately distinguished from the
+tail at *equal utilization*, with the coupling stated at first contact (near saturation the p99 tracks
+capacity and queueing, so a lower-capacity layer looks worse on the tail without a worse intrinsic
+tail). The matched-utilization experiment was promoted to a new main-text table (`tab:tail_regimes`,
+generated from the same raw data) that places the equal-demand p99 beside the matched-50%-utilization
+p99 per layer, making the collapse of the PostgreSQL ladder (`pg` 20 to MikroORM 116 ms down to
+a 2-5 ms band) visible directly; to keep the main-text float count at seven, the descriptive
+five-pattern table moved to the supplement (new Supplement Table S39, net-zero swap). No raw data
+changed; the manuscript is 14,994 words.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21479860 (release v1.11.1). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21480179 (release v1.11.2). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

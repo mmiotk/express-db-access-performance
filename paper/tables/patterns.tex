@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+  \centering
+  \caption{The five access patterns and what each stresses.}
+  \label{tab:patterns}
+  \begin{tabular}{l l l}
+    \toprule
+    Endpoint & Pattern & Stresses \\
+    \midrule
+    \texttt{GET /posts/:id}          & point read (PK)       & per-query overhead \\
+    \texttt{GET /posts?before=}      & keyset range scan     & index seek + hydration \\
+    \texttt{GET /posts/:id/thread}   & deep/nested fetch     & join strategy, N+1 avoidance \\
+    \texttt{GET /authors/:id/summary}& aggregation           & grouped counts / raw SQL \\
+    \texttt{POST /posts}             & insert                & write path \\
+    \bottomrule
+  \end{tabular}
+\end{table}

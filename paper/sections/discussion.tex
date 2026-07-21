@@ -33,10 +33,8 @@ not a fixed ceiling over the range tested: on PostgreSQL Prisma's aggregate thro
 roughly in proportion to workers (1{,}117 to 4{,}449 over one to four workers), reaching
 native-like throughput in this run, trading footprint and energy for
 throughput~\cite{bonvoisin2024orm}. This is a bounded 1-to-4-worker check on a single host,
-not a demonstration of general scalability: it measures no database-side saturation, on MySQL
-the native driver keeps scaling and the gap does not close, and scaling further would
-eventually reach another bottleneck --- database contention or connection limits --- this run
-does not locate. The open-loop cross-run further indicates that a closed-loop
+not general scalability: on MySQL the native driver keeps scaling and the gap does not close, and
+it locates no database-side saturation bottleneck. The open-loop cross-run further indicates that a closed-loop
 benchmark alone would underestimate how abruptly, not just how much, a heavyweight ORM's tail
 degrades once offered load crosses its capacity.
 

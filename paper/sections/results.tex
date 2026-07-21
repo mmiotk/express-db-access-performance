@@ -199,26 +199,28 @@ their own capacity (median 97--100\% across layers) and the ranking compares the
 unknown, relative utilization.
 The primary deep-fetch workload uses posts with roughly ten comments; a
 fan-out sweep from 0 to 500 comments shows the native-relative spread is a roughly fixed
-multiplier with graph size rather than growing with it (exploratory; an earlier three-run sweep
-suggesting a growing spread did not survive replication).
+multiplier with graph size rather than growing with it (exploratory; an earlier growing-spread
+finding did not replicate).
 
 \subsection{Tail latency}
-We report the closed-loop p99 for every cell at the 50-connection operating point, so the tail
-includes connection-acquisition queueing --- the tail a deployment sees under load. At this
-high-load point tail latency tracks throughput: on the deep/nested fetch, PostgreSQL's p99
-ladder runs from \texttt{pg} 20 to MikroORM 116~ms (Table~\ref{tab:deep_fetch}), monotonic
-below the native driver --- a penalty throughput-only vendor benchmarks miss --- and a paired
-p99 analysis (Supplement Table~S30) resolves every adjacent pair on both engines except two
-near-ties that the millisecond p99 resolution does not finely separate, otherwise mirroring the
-throughput ranking. Driving the deep fetch under the
+We report the high-load p99 under equal closed-loop demand for every cell at the 50-connection
+point, so the tail includes connection-acquisition queueing --- the tail a deployment sees under
+load. At this high-load point tail latency tracks throughput: on the deep/nested fetch, PostgreSQL's
+p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (Table~\ref{tab:deep_fetch}), mirroring the
+throughput ranking; a paired p99 analysis (Supplement Table~S30) resolves every adjacent pair on both
+engines except two near-ties at the millisecond resolution. Driving the deep fetch under the
 coordinated-omission-corrected open-loop harness (Supplement Tables~S6, S17) reproduces this
 ordering: below saturation the corrected tails are flat and small, and beyond each layer's
-capacity the tail collapses rather than degrading gracefully, the data-mapper ORMs earliest.
+capacity the tail collapses, the data-mapper ORMs earliest.
 Offering each layer 50/70/85/95\% of \emph{its own} saturating throughput (Supplement
 Tables~S21--S22), the tails converge (near $2$--$5$~ms at 50\% utilization on both engines), so
 the large high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at matched
 utilization: it is a capacity-and-queueing effect, not a difference in tail latency at
-comparable utilization.
+comparable utilization. Table~\ref{tab:tail_regimes} shows both readings per layer, making the
+collapse from the equal-demand ladder to the matched-utilization band --- and the false
+``intrinsically worse tail'' reading it averts --- visible directly.
+
+\input{\tabledir tail_regimes}
 
 \subsection{Measurement stability and effect sizes}
 Across the 25 repeated runs the coefficient of variation of deep-fetch throughput is at most

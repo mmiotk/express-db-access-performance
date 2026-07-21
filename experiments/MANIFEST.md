@@ -24,9 +24,9 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | Paper label | File | Generator | Input data |
 |---|---|---|---|
 | `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
+| `tab:tail_regimes` | `tail_regimes.tex` | `scripts/gen-tail-regimes.mjs` | `results/raw.json`, `results/utilization.{postgres,mysql}.json` |
 | `tab:resources_main` | `resources_main.tex` | `bench/analyze.mjs` (`resourceMainTable`) | `results/raw.json` |
-| `tab:outcomes` | `outcomes.tex` | hand-authored (analysis-plan map) | — |
-| `tab:patterns` | inline in `sections/methodology.tex` | hand-authored | — |
+| `tab:patterns` (moved to Supplement S39) | `patterns.tex` | hand-authored | — |
 | `tab:significance` | `significance_deep_fetch.tex` | `bench/analyze.mjs` (`significanceTable`, paired) | `results/raw.json` |
 | `tab:prior_art` | inline in `sections/related_work.tex` | hand-authored | literature search (`notes/related-work-search.md`) |
 | `fig:scaling` | `fig_scaling.tex` | `bench/scaling.mjs` | `results/scaling.json` |

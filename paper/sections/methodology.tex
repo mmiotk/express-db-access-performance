@@ -118,7 +118,7 @@ already covered by Knex (\texttt{METHODOLOGY.md} gives the full criteria). Vendo
 independence means authorship only: no evaluated library's maintainers were involved, though
 the consequential author choices (selection, schema, pool size, tuning) remain and are
 disclosed. The \emph{engine} has two levels, PostgreSQL~18.4 and MySQL~9.7.1, and the
-\emph{access pattern} has five, realized as HTTP endpoints (Table~\ref{tab:patterns}). The
+\emph{access pattern} has five, realized as HTTP endpoints (Supplement Table~S39). The
 four native and tuned baselines are engine-specific
 (\texttt{pg}/\texttt{pg-tuned} on PostgreSQL, \texttt{mysql2}/\texttt{mysql2-tuned} on
 MySQL); the other seven layers run on both, giving $4 + 7\times 2 = 18$
@@ -127,28 +127,11 @@ Table~S29 records which factors are held constant, vary, or are uncontrolled on 
 virtualized host --- the reason we report results for this configuration rather than as
 general library performance.
 
-\begin{table}[htbp]
-  \centering
-  \caption{The five access patterns and what each stresses.}
-  \label{tab:patterns}
-  \begin{tabular}{l l l}
-    \toprule
-    Endpoint & Pattern & Stresses \\
-    \midrule
-    \texttt{GET /posts/:id}          & point read (PK)       & per-query overhead \\
-    \texttt{GET /posts?before=}      & keyset range scan     & index seek + hydration \\
-    \texttt{GET /posts/:id/thread}   & deep/nested fetch     & join strategy, N+1 avoidance \\
-    \texttt{GET /authors/:id/summary}& aggregation           & grouped counts / raw SQL \\
-    \texttt{POST /posts}             & insert                & write path \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
 \subsection{Objects: schema, workload, and data}
 The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts} $1\!-\!*$
 \texttt{comments} $*\!-\!1$ \texttt{authors}), exercising a one-to-many relationship and a
 two-hop join for the deep fetch. The five endpoints implement five representative access
-patterns~\cite{cooper2010ycsb} (Table~\ref{tab:patterns}): the keyset page uses \texttt{WHERE
+patterns~\cite{cooper2010ycsb} (Supplement Table~S39): the keyset page uses \texttt{WHERE
 id < cursor ORDER BY id DESC LIMIT}~$n$ against the primary-key index rather than a large
 \texttt{OFFSET}; the deep/nested fetch returns a post with its author and every comment, each
 with its own comment-author; and the aggregation reports post count, comment count, and total
