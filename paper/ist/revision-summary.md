@@ -209,6 +209,16 @@ moved to the supplement (Figure S3) and the Resource-footprint paragraph was con
 float count is unchanged at seven. Both new tables are analytical (authored, not data-derived; noted in
 `REPRODUCE.md`), so the primary data and checksums are unchanged.
 
+Addressing reviewer **major concern 6.2**, the "documentation-selected" treatment was reframed as
+*this case study's* selection policy rather than something intrinsic to the general protocol: the
+protocol now requires only a predeclared, reproducible treatment-selection rule and privileges none
+(the mandatory protocol-box stage, the Strategy-attribution contribution, and the Study-Design
+definition were genericised accordingly). The performance-conscious comparison that speaks to the
+construct's weakness was promoted from Supplement S34 to a new main-text table beside the co-primary
+paragraph in Results; to keep the main-text float count at seven and avoid renumbering the supplement,
+the roadmap/outcomes table moved the other way into the vacated S34 slot (net-zero swap). No raw data
+changed. The manuscript is 14,986 words, under the 15,000-word limit.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21473952 (release v1.9.0). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21475921 (release v1.10.0). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

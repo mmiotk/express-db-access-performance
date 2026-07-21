@@ -63,8 +63,9 @@ necessarily a production trace); an \emph{output-equivalence semantics}; and an
 \textbf{Stages.} \emph{Mandatory} (a comparison is valid only if both hold): (1)~\emph{correctness
 oracle} --- admit a treatment only if its outputs are equivalent under the semantics and its
 mutations produce the intended state; (2)~\emph{treatment-definition rule} --- fix each treatment's
-implementation and strategy reproducibly, in advance, with an explicit tie-breaker when several
-documented paths are equally prominent. \emph{Recommended} (they enrich the comparison and each may
+implementation and strategy by a rule declared reproducibly in advance; the protocol requires such a
+rule but privileges none (this case study's is documentation-first, with a tie-breaker; Study Design
+below). \emph{Recommended} (they enrich the comparison and each may
 be scoped to a representative workload point rather than the whole matrix): (3)~\emph{strategy
 control} --- add a standardized contrast holding the query strategy fixed, read against a
 common-strategy baseline; (4)~\emph{capacity identification} --- locate saturating throughput by a
@@ -189,6 +190,9 @@ that the chosen API is performance-optimal or the most common production choice,
 a documentation-selected implementation-and-strategy estimand that models the choice of a
 developer following the official documentation --- a construct whose corroboration and limits are
 set out in the supplement's Construct-validity section (Table~S33) and Section~\ref{sec:threats}.
+This documentation-first rule is the case study's \emph{treatment-selection policy} --- one
+instance of the protocol's mandatory predeclared, reproducible rule (Section~\ref{sec:protocol}),
+which privileges no particular rule; a study targeting expert-tuned usage would substitute its own.
 Supplement Table~S16 and
 \texttt{METHODOLOGY.md} record, per layer, that API with its documentation page and version,
 its round-trip count, the documented alternative we did \emph{not} use, and that query
@@ -207,7 +211,7 @@ documentation-selected default is a hand-authored join while an ORM's is whateve
 loader its documentation presents first (the driver-versus-ORM asymmetry noted above), the deep
 fetch --- the one pattern exposing a documented strategy choice --- admits two \emph{co-primary}
 regimes, which we measure on one harness and report side by side (Section~\ref{sec:results},
-Supplement Table~S34). The \emph{documentation-primary} regime is the strategy fixed by the
+Table~\ref{tab:deepfetch_regimes}). The \emph{documentation-primary} regime is the strategy fixed by the
 adapter-selection rule above. The \emph{performance-conscious} regime applies a predefined
 \emph{tuning budget}: the faster of a layer's two documented deep-fetch loading strategies (join
 versus select-in), admitted only where it is byte-identical to the documentation-primary output
@@ -304,11 +308,9 @@ closed-loop tail (Section~\ref{sec:results}).
 \subsection{Analysis}
 We separate \emph{primary} outcomes, which carry the paired inference and the
 research-question claims, from \emph{secondary} and \emph{exploratory} outcomes, reported
-descriptively as controls and sensitivity analyses (Table~\ref{tab:outcomes}): the primary
+descriptively as controls and sensitivity analyses (Supplement Table~S34): the primary
 outcomes are throughput and the closed-loop p99 on the five patterns against both engines
 at the fixed operating point.
-
-\input{\tabledir outcomes}
 
 Because absolute throughput is hardware-specific, we analyze \emph{relative} differences
 within an engine; a pattern's \emph{spread} is the documentation-selected native driver's

@@ -611,6 +611,41 @@ with the main-text float count unchanged at seven.
 
 ---
 
+## Major concern 6.2 — "Documentation-selected" reframed as a case-study policy, and the performance-conscious comparison moved into the main text
+
+You are right on both counts: "documentation-selected" is a reproducible but weak behavioural
+construct, and it was made to look intrinsic to the general protocol when it is really this study's
+particular treatment-selection rule; and the performance-conscious comparison that speaks directly to
+that weakness was relegated to Supplement S34. I addressed each.
+
+**The protocol now requires a predeclared, reproducible treatment-selection rule but privileges no
+particular one.** The mandatory stage of the protocol box that fixes each treatment (stage 2,
+"treatment-definition rule") now reads: fix each treatment's implementation and strategy by a rule
+declared reproducibly in advance; the protocol requires such a rule but privileges none. The
+Strategy-attribution contribution in the Introduction was genericised the same way ("the treatment is
+fixed by a predeclared, reproducible selection rule --- documentation-selected here; the protocol
+privileges none"). And where the Study Design defines the documentation-selected rule, a sentence now
+states explicitly that this documentation-first rule is *this case study's* treatment-selection
+policy --- one instance of the protocol's mandatory predeclared-and-reproducible rule, which privileges
+no particular rule; a study targeting expert-tuned or most-common-production usage would substitute its
+own without changing the protocol. So the protocol requirement (a fixed, reproducible rule) and the
+case-study instantiation (documentation-first, with a tie-breaker) are now cleanly separated, and the
+weakness of the documentation-first construct is confined to the case study, not the method.
+
+**The performance-conscious comparison is now a main-text result, not Supplement S34.** The two
+co-primary deep-fetch regimes --- documentation-primary and performance-conscious --- are now measured
+and reported in the Results section beside the co-primary paragraph, as a new main-text table
+(`tab:deepfetch_regimes`): each layer's documentation-selected loading strategy versus the faster of
+its documented strategies where that is byte-identical, with a same-harness native reference row. This
+places the evidence that the documentation-first construct does not distort the deep-fetch ranking
+(the performance-conscious ORM deep fetch still sits well below the native driver; only Objection on
+MySQL gains) next to the primary results rather than in the supplement. To keep the main-text float
+count at seven and avoid renumbering the supplement, the swap is net-zero: the roadmap/outcomes table
+(previously main-text) moved to the supplement at the vacated S34 position (new Supplement Table S34,
+"Results roadmap"), so S35--S37 are unchanged.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -835,13 +870,14 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,968 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,986 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
-additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
-which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
+additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
+leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
+the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.9.0 (DOI 10.5281/zenodo.21473952), the version this revision describes.
+as release v1.10.0 (DOI 10.5281/zenodo.21475921), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

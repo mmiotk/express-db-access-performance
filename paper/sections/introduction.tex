@@ -77,8 +77,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.9.0 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21473952}.}
+v1.10.0 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21475921}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -111,8 +111,9 @@ unmet.
         merely a 2xx --- before its timing is admitted, so a layer
         that silently returns less, writes wrong, or errors faster than it works, cannot appear faster
         (Section~\ref{sec:methodology}).
-  \item \textbf{Strategy attribution.} The treatment is a \emph{documentation-selected
-        implementation-and-strategy} estimand, and a \emph{same-SQL standardized contrast} reports how
+  \item \textbf{Strategy attribution.} The treatment is fixed by a predeclared, reproducible
+        selection rule (\emph{documentation-selected} here; the protocol privileges none), and a
+        \emph{same-SQL standardized contrast} reports how
         much of an observed difference remains once the SQL is held fixed --- a diagnostic contrast,
         not an attribution to the library's execution machinery versus the query strategy.
   \item \textbf{Operating-point separation.} Capacity (saturating throughput), tail
