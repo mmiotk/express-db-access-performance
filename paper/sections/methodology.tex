@@ -50,9 +50,9 @@ and state which each result speaks to.
 \label{sec:protocol}
 We state the protocol here independently of the case study; the remaining subsections instantiate
 it for the access-layer setting. It turns a set of \emph{treatments} compared on a fixed
-\emph{workload} into a controlled experiment; the box below states its inputs, mandatory stages,
-cell-admission rule, and output interpretation compactly, and the remaining subsections instantiate
-them for the access-layer setting.
+\emph{workload} into a controlled experiment; the box below states its inputs, its mandatory and
+recommended stages, the cell-admission rule, and the output interpretation compactly, and the
+remaining subsections instantiate them for the access-layer setting.
 
 \smallskip
 \noindent\fbox{\parbox{0.97\linewidth}{\small
@@ -60,14 +60,16 @@ them for the access-layer setting.
 \textbf{Inputs.} Treatments (implementations under comparison); a representative workload (not
 necessarily a production trace); an \emph{output-equivalence semantics}; and an
 \emph{operating-point definition} separating capacity, external demand, and utilization.\par
-\textbf{Mandatory stages, in order.} (1)~\emph{correctness oracle} --- admit a treatment only if
-its outputs are equivalent under the semantics and its mutations produce the intended state;
-(2)~\emph{treatment-definition rule} --- fix each treatment's implementation and strategy
-reproducibly, in advance; (3)~\emph{strategy control} --- add a standardized contrast holding the
-query strategy fixed, read against a common-strategy baseline; (4)~\emph{capacity identification}
---- locate saturating throughput by a concurrency sweep; (5)~\emph{demand and utilization} ---
-measure the tail at equal external demand and at matched fractions of each treatment's own
-capacity.\par
+\textbf{Stages.} \emph{Mandatory} (a comparison is valid only if both hold): (1)~\emph{correctness
+oracle} --- admit a treatment only if its outputs are equivalent under the semantics and its
+mutations produce the intended state; (2)~\emph{treatment-definition rule} --- fix each treatment's
+implementation and strategy reproducibly, in advance, with an explicit tie-breaker when several
+documented paths are equally prominent. \emph{Recommended} (they enrich the comparison and each may
+be scoped to a representative workload point rather than the whole matrix): (3)~\emph{strategy
+control} --- add a standardized contrast holding the query strategy fixed, read against a
+common-strategy baseline; (4)~\emph{capacity identification} --- locate saturating throughput by a
+concurrency sweep; (5)~\emph{demand and utilization} --- measure the tail at equal external demand
+and at matched fractions of each treatment's own capacity.\par
 \textbf{Cell admission.} Time a (treatment, workload-point) cell only if the oracle passes ---
 equivalent non-mutating outputs and a correct post-write state, not merely a success status;
 non-equivalent output, an invalid or unsuccessful write, or a degenerate plan (e.g.\ N+1)
@@ -168,7 +170,10 @@ per-endpoint counts differ by design (Supplement Table~S2: the deep fetch takes 
 Sequelize and MikroORM, two in the native drivers, Knex, Drizzle, and TypeORM, and four in
 Prisma and Objection). The documentation-selected API was fixed by a rule decided
 \emph{before} measurement --- the eager-loading API each layer's official documentation
-presents first for the pinned version --- a reproducible selection heuristic, not evidence
+presents first for the pinned version, breaking ties (where several official paths are equally
+prominent, as for Drizzle's SQL-style builder versus its higher-level relational-query API) toward
+the API at the library's own taxonomy tier and recording the rest as documented alternatives ---
+a reproducible selection heuristic, not evidence
 that the chosen API is performance-optimal or the most common production choice, so we report
 a documentation-selected implementation-and-strategy estimand that models the choice of a
 developer following the official documentation --- a construct whose corroboration and limits are

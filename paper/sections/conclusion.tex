@@ -20,10 +20,9 @@ current library versions no layer's throughput scales with additional applicatio
 leads all ten engine-pattern combinations; the read ordering is similar across the two
 engines while the aggregation and insert orderings reverse (Prisma drops from mid-pack to
 last on the MySQL insert), a caution against generalizing single-engine results
-(Section~\ref{sec:discussion}). That
-access-layer rankings can be version-sensitive is, here, a measured result, not a
-hypothesis: an earlier version's headline did not survive re-running the same
-harness on newer versions. Development also surfaced a
+(Section~\ref{sec:discussion}). Access-layer rankings can also be version-sensitive:
+an earlier version's headline did not survive re-running the harness on newer releases
+(Section~\ref{sec:discussion}). Development also surfaced a
 reusable checklist of benchmarking pitfalls specific to this genre, one of them,
 a fast-but-wrong write path that passed the read-level cross-check, added by this
 very re-run (Section~\ref{sec:discussion}).

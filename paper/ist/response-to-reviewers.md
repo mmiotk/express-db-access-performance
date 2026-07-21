@@ -347,7 +347,7 @@ I addressed all six, none of which changed a measurement.
    all repetitions share one host and one campaign and are therefore not statistically independent.
 
 To keep the manuscript under the 15,000-word limit after these additions, the point-6.6 Controls
-sentence and the new Table 1 caption note were tightened; the total is 14,913 words.
+sentence and the new Table 1 caption note were tightened; the total is 14,971 words.
 
 ---
 
@@ -383,7 +383,7 @@ measurement.
    evidence* on the tested subset, not as claims about all eleven implementations."
 
 Moving Table 7 to the supplement reduces the main-text float count from eight to seven; the total is
-14,913 words.
+14,971 words.
 
 ---
 
@@ -472,11 +472,71 @@ and trimmed only the gratuitous echoes.
 
 **Word-count compliance, verified quantitatively.** Under the IST rule (references and appendices
 count; each main-text float counts 200), the manuscript is body 11,373 + abstract ~292 + references
-1,848 + seven main-text floats (1,400) = **14,913 words**, under the 15,000-word Research Paper limit
+1,848 + seven main-text floats (1,400) = **14,971 words**, under the 15,000-word Research Paper limit
 (an 87-word margin). Moving the paired-significance table to the supplement (point 8) reduced the
 main-text float count from eight to seven; the protocol box is inline body text, not a float. The
 structured abstract satisfies the five-part requirement and is ~292 words (< 300). The full
 declaration is in the separate `word-count.pdf`.
+
+---
+
+## Point 12 — Essential, strongly recommended, and optional revisions
+
+Every Essential item is addressed; most were carried out in the point-by-point responses above, and I
+map them here.
+
+**Essential.**
+
+1. **Remove/justify "bound" claims (same-SQL).** Done (point 6.1): every "bound" was reworded to a
+   "standardized (same-SQL) contrast"; the only remaining uses are explicit negations ("not a bound on
+   the intrinsic library effect"). I verified no positive bound claim survives.
+2. **Strengthen the write oracle to validate database state.** Done (point 6.2):
+   `bench/verify-writes.mjs` validates post-write field values, generated identifiers, exact row-count
+   changes, and transactional rollback through an independent native driver (9/9 pass) --- now the
+   correctness oracle's write half, not an ad hoc check.
+3. **Rewrite the protocol as an explicit reusable procedure, mandatory vs optional, with
+   interpretation rules.** Done (points 6.3 + 11 + this one): Study Design carries the normative
+   protocol and now a compact formal **box** that separates **mandatory** stages (correctness oracle;
+   treatment-definition rule --- a comparison is valid only if both hold) from **recommended** stages
+   (strategy control; capacity identification; demand/utilization --- which enrich the comparison and
+   may be scoped to a representative point), with the output-interpretation and applicability rules
+   stated explicitly.
+4. **Replace "only variable" with the configured implementation-and-strategy treatment.** Done (point
+   6.6): the four controls now hold the shared conditions fixed so the "configured access-layer
+   implementation bundle" is the only deliberately varied factor; they "do not isolate the library
+   alone."
+5. **Align operating-point claims with the experiments.** Done (point 6.5): a per-pattern capacity
+   sweep (Supplement Table S35) identifies capacity for all five patterns, while the equal-utilization
+   open-loop tail and equal-CPU check are explicitly labelled deep-fetch-only.
+
+**Strongly recommended.**
+
+- **Alternative-strategy analysis beyond the subset.** The subset is the *complete* set of layers whose
+  documented alternative is a byte-identical drop-in; the excluded cells (TypeORM's alt errors;
+  Objection's PostgreSQL alt diverges) have no semantically-equivalent alternative to measure ---
+  measuring them would compare non-equivalent outputs, which the correctness oracle forbids. This is
+  stated in Results and Supplement Table S34.
+- **Define "documentation-selected" more precisely, with tie-breaking.** Done: the selection rule now
+  states the tie-breaker --- where several official paths are equally prominent (as for Drizzle's
+  SQL-style builder versus its relational-query API), select the API at the library's own taxonomy tier
+  and record the rest as documented alternatives.
+- **Add state-level write verification to the public harness as part of the protocol.** Done (point 6.2
+  and the box): the correctness oracle mandates "mutations produce the intended state," realized by
+  `verify-writes.mjs`.
+- **Reduce repeated version-sensitivity discussion; move peripheral sensitivity experiments to the
+  supplement.** Done: the version-sensitivity echoes in the Introduction and Conclusion are trimmed to a
+  single brief mention each (the full treatment stays in the Discussion); the peripheral sensitivity
+  experiments (open-loop, equal-CPU, pool-size, cluster, mixed) already live in the supplement (Tables
+  S21--S35) with one-line main-text pointers.
+- **Report exact word count under IST rules.** Done (point 11 and `word-count.pdf`): body 11,431 +
+  abstract ~292 + references 1,848 + seven main-text floats (1,400) = **14,971**, under the 15,000-word
+  limit, verified quantitatively.
+
+**Optional.** A second-host replication and an explicitly I/O-bound (larger-than-memory) condition
+remain declared future work in Threats to Validity. For the visual protocol schematic, the compact
+formal protocol box (point 11) already presents the treatment-definition, correctness-gating,
+operating-point, measurement, and interpretation content in the main text; a graphical version is a
+natural future enhancement.
 
 ---
 
@@ -704,13 +764,13 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,913 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,971 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions (the write-state validation of point 6.2 and the co-primary deep-fetch regime of point 6.4),
 which leave the primary matrix untouched. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.8.0 (DOI 10.5281/zenodo.21472649), the version this revision describes.
+as release v1.8.1 (DOI 10.5281/zenodo.21472829), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

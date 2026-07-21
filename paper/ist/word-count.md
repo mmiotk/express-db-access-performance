@@ -543,4 +543,22 @@ quantitatively as the reviewer asked; the structured abstract satisfies the five
 
 The point-11 presentation pass (compact protocol box, reduced density) is archived as release v1.8.0 (DOI 10.5281/zenodo.21472649).
 
+A follow-up (reviewer **point 12, the consolidated Essential/strongly-recommended/optional list**)
+confirmed and closed the list. All five Essential items were already carried out in points 6.1--6.6,
+8, and 11 (bound → standardized contrast; write-state oracle; normative protocol; configured-bundle
+treatment; per-pattern capacity). This pass closed the one remaining gap by separating the protocol
+box's **mandatory** stages (correctness oracle; treatment-definition rule) from its **recommended**
+stages (strategy control; capacity identification; demand/utilization), and added a **tie-breaking
+rule** for "documentation-selected" (where several official paths are equally prominent, as for
+Drizzle's SQL-style builder versus its relational-query API, select the API at the library's own
+taxonomy tier and record the rest as alternatives). Following the strongly-recommended density note,
+the version-sensitivity echoes in the Introduction and Conclusion were trimmed to one brief mention
+each (the full treatment stays in the Discussion). The optional visual schematic was declined --- the
+compact formal protocol box already carries that content --- as were the optional second-host and
+I/O-bound replications, which stay declared future work. Net of the trims, the mandatory/optional split
+plus the tie-breaker took the body to 11,431 words; the total is body 11,431 + abstract ~292 +
+references 1,848 + seven main-text floats (1,400) = **14,971**, under the 15,000-word limit.
+
+The point-12 pass (mandatory/optional protocol split, tie-breaking rule, Essential-list confirmation) is archived as release v1.8.1 (DOI 10.5281/zenodo.21472829).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
