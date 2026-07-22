@@ -252,8 +252,18 @@ generated from the same raw data) that places the equal-demand p99 beside the ma
 p99 per layer, making the collapse of the PostgreSQL ladder (`pg` 20 to MikroORM 116 ms down to
 a 2-5 ms band) visible directly; to keep the main-text float count at seven, the descriptive
 five-pattern table moved to the supplement (new Supplement Table S39, net-zero swap). No raw data
-changed; the manuscript is 14,994 words.
+changed.
+
+Addressing reviewer **strongly-recommended point 6.6** (the protocol is only partially exercised
+across the workload matrix), Study Design now names five explicit *compliance levels* --- the mandatory
+validity core, capacity characterization, and the standardized-strategy, utilization-controlled, and
+resource-normalized extensions --- and states that the first two hold across all five patterns on both
+engines while the three extensions are demonstrated on the deep fetch as a representative-point
+instantiation, not full-matrix coverage. New Supplement Table S40 maps each cell to the levels it
+satisfies precisely, turning the protocol into a reusable object against which a later study can report
+its own per-cell compliance. Prose-plus-one-supplement-table only; the earlier coverage paragraph was
+tightened, so the manuscript is 14,991 words.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21480179 (release v1.11.2). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21485139 (release v1.11.3). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -36,15 +36,13 @@ Supplement Table~S35) locates each pattern's throughput knee: it lies at or belo
 for all five patterns, so the fixed point places every pattern at high utilization of its own
 capacity (median 97--100\% across layers on both engines), while 50 connections against a
 ten-connection pool keep about forty requests queued
-regardless of pattern (Controls, below). Capacity is thus \emph{measured} for all five patterns,
-not only the deep fetch; the deep-fetch concurrency curve (Supplement Figure~S2) is kept for its
-per-layer detail. The remaining two conditions, which need a per-layer \emph{saturating-throughput}
-target, are a \emph{limited} set demonstrated on the deep fetch (Supplement Table~S32 tabulates
-every experiment's scope): \emph{equal utilization} is the coordinated-omission-corrected open-loop
-sweep, each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating throughput,
-and an \emph{equal compute budget} is the exploratory equal-CPU check, the server confined to a
-fixed number of cores. These answer different questions and need not agree, so we report all three
-and state which each result speaks to.
+regardless of pattern (Controls, below). Capacity is thus \emph{measured} for all five patterns
+(the deep-fetch concurrency curve, Supplement Figure~S2, is kept for its per-layer detail). The two
+utilization-dependent conditions, which need a per-layer \emph{saturating-throughput} target, are
+demonstrated on the deep fetch: \emph{equal utilization} is the coordinated-omission-corrected
+open-loop sweep, each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating
+throughput, and an \emph{equal compute budget} is the exploratory equal-CPU check. These answer
+different questions and need not agree, so we report all three.
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
@@ -84,11 +82,18 @@ differences meant to travel.
 
 \paragraph{Applicability limits} the oracle must match the output semantics. Byte-identical
 comparison, used here, is valid only when equivalent outputs are deterministic and canonically
-serializable. Where they are not --- unordered collections, floating-point results, timestamps,
-nondeterministic identifiers, or semantically equivalent but differently serialized responses ---
-byte-equality is inappropriate and the oracle must instead be a semantic comparator (set equality,
-numeric tolerance, canonicalization, or field projection). The case study's outputs are
+serializable. Where they are not (unordered collections, floats, timestamps, nondeterministic
+identifiers, or differently serialized equivalents), byte-equality is inappropriate and the oracle
+must instead be a semantic comparator (set equality, numeric tolerance, or canonicalization). The case study's outputs are
 deterministic and canonically constructed, so byte-equality is a valid oracle for it.
+
+\paragraph{Compliance levels} An instantiation need not exercise every stage on every cell. We name
+five \emph{compliance levels} --- the \emph{mandatory validity core}, \emph{capacity
+characterization}, and the \emph{standardized-strategy}, \emph{utilization-controlled}, and
+\emph{resource-normalized} extensions. Here the first two hold across all five patterns on both
+engines, while the three extensions are demonstrated on the deep fetch --- the most consequential
+pattern --- as a representative-point instantiation, not full-matrix coverage; Supplement Table~S40
+maps each cell to the levels it satisfies.
 
 \smallskip
 Table~\ref{tab:protocol_mapping} makes the protocol's contribution explicit: each row pairs a generic

@@ -85,17 +85,14 @@ The practical synthesis follows from RQ1--RQ3 and applies to the benchmarked imp
 this configuration, workload, and host rather than to access-layer categories in general. The
 native driver leads throughput on every pattern on both engines, and the documentation-selected
 ORM spread was largest on the one deep/nested-fetch shape tested and much smaller on the
-read-simple patterns and aggregation. This locates the difference among the five probes on a
-single synthetic schema, not across relation-materializing workloads in general: one nested-fetch
-topology --- the fan-out sweep (Section~\ref{sec:results}) varies its breadth (0--500 children)
-but not its depth, its schema, or the mix of such queries in a production workload --- cannot
-establish a general distribution of ORM penalties across relation-materializing traffic, so this
-is a benchmark observation to be re-measured on the target workload, not an established law.
+read-simple patterns and aggregation. This locates the difference among five probes on one
+synthetic schema, not across relation-materializing workloads in general: the fan-out sweep
+(Section~\ref{sec:results}) varies breadth (0--500 children) but not depth, schema, or query mix, so
+this is a benchmark observation to be re-measured on the target workload, not an established law.
 Where a service's hot path is dominated by deep or nested fetches the access
 layer is consequential and should be benchmarked for the specific application: the tested thin
 paths (native driver and Knex) led here \emph{for throughput and response-time p99}, but
-whether that generalizes to other implementations, schemas, or workloads is a hypothesis for
-broader study, not a category law or a general default. Where the workload is read-simple or
+whether that generalizes is a hypothesis for broader study. Where the workload is read-simple or
 write-bound (especially on MySQL, whose commit floor dominates layer differences under default
 durability) the throughput cost is small, and a layer's low per-process throughput may be addressed by
 additional application processes until another bottleneck (database contention or connection

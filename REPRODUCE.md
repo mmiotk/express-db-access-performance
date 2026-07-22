@@ -96,10 +96,13 @@ with node built-ins and the committed generators; the estimators are seeded
 **Caveats:** the round-trip-count table (Supplement S2) is derived from transient
 server statement logs that are not archived, so its committed `.tex`
 (`results/tables/query_counts.tex`) ships pre-generated rather than regenerable from the
-tarball; and the two protocol tables --- the stage-by-stage mapping (main-text Table 2,
-`protocol_mapping.tex`) and the retrospective application to prior benchmarks (Supplement
-Table S37, `protocol_retro.tex`) --- are *analytical* (authored, not data-derived) and
-likewise ship pre-authored. Every other table regenerates from the archived `results/*.json`.
+tarball; and the three protocol tables --- the stage-by-stage mapping (main-text Table 2,
+`protocol_mapping.tex`), the retrospective application to prior benchmarks (Supplement Table S37,
+`protocol_retro.tex`), and the compliance-levels coverage map (Supplement Table S40,
+`protocol_compliance.tex`) --- are *analytical* (authored, not data-derived) and likewise ship
+pre-authored, as does the descriptive five-pattern table (Supplement Table S39, `patterns.tex`). Every
+other table regenerates from the archived `results/*.json` (the tail-regime table, `tail_regimes.tex`,
+from `raw.json` plus the utilization sweeps).
 
 ## 5. Expected outputs
 

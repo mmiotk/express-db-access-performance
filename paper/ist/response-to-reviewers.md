@@ -744,6 +744,32 @@ headline ladder in the Results prose, which was trimmed accordingly.
 
 ---
 
+## Strongly recommended 6.6 — The protocol is only partially exercised across the workload matrix
+
+You are right: the mandatory core and capacity are checked matrix-wide, but the standardized-strategy,
+utilization-controlled, and resource-normalized comparisons are demonstrated only on the deep fetch,
+and the manuscript occasionally read as though the whole protocol had been instantiated everywhere. I
+did exactly what you asked --- defined explicit compliance levels and stated precisely which cells
+satisfy each.
+
+**Five named compliance levels.** Study Design now names them, in increasing strength: the *mandatory
+validity core*, *capacity characterization*, and the *standardized-strategy*, *utilization-controlled*,
+and *resource-normalized* extensions (the same five levels your comment lists). The prose states that
+the first two hold across all five patterns on both engines, while the three extensions are
+demonstrated on the deep fetch --- the most consequential pattern --- as a *representative-point
+instantiation, not full-matrix coverage*.
+
+**A precise cell-by-level coverage map.** New Supplement Table S40 (`tab:protocol_compliance`) tabulates,
+per level, the requirement it adds, the exact cells that satisfy it here (all five patterns x two
+engines for the core and capacity; deep fetch x two engines for each extension), and the evidence
+(Table S38 and the write gate; the per-pattern sweep S35; the same-SQL table and S14; the tail-regime
+table and S21-S22; the equal-CPU tables S4/S5). Stating the levels and their coverage explicitly is
+what turns the protocol into a reusable object: a later study can report its own compliance level per
+cell against the same ladder. This is prose-plus-one-supplement-table only --- no measurement changed,
+and the earlier coverage paragraph was tightened so the manuscript stays under the word limit.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -968,14 +994,14 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,994 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,991 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.11.2 (DOI 10.5281/zenodo.21480179), the version this revision describes.
+as release v1.11.3 (DOI 10.5281/zenodo.21485139), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

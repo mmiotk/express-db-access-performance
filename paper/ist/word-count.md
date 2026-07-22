@@ -660,4 +660,19 @@ thirty-nine tables (S1--S39).
 
 The strongly-recommended-6.5 pass (p99 relabelled and distinguished; matched-utilization promoted to a main-text table) is archived as release v1.11.2 (DOI 10.5281/zenodo.21480179).
 
+A follow-up (reviewer **strongly-recommended point 6.6** --- the protocol is presented as general but
+only partially exercised across the workload matrix) defined explicit compliance levels and their
+coverage. Study Design now names five *compliance levels* (mandatory validity core; capacity
+characterization; standardized-strategy, utilization-controlled, and resource-normalized extensions)
+and states that the first two hold across all five patterns on both engines while the three extensions
+are demonstrated on the deep fetch as a representative-point instantiation, not full-matrix coverage. A
+new **Supplement Table S40** (`protocol_compliance.tex`, an analytical/authored table appended after
+S39 so S1--S39 are unchanged) maps each cell to the levels it satisfies. This is prose-plus-one-
+supplement-table only (no main float added, no raw data changed, checksums 35/35); the ~65 body words
+were offset by tightening the earlier coverage paragraph, the applicability-limits examples, and
+duplicated scope-hedging in the Discussion, so the body is **11,454** words and the total **14,991**.
+The supplement now holds forty tables (S1--S40).
+
+The strongly-recommended-6.6 pass (five explicit protocol compliance levels + a cell-by-level coverage map) is archived as release v1.11.3 (DOI 10.5281/zenodo.21485139).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

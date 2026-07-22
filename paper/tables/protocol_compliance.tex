@@ -1,0 +1,33 @@
+% hand-authored analytical table (authored, not data-generated): protocol
+% compliance levels and the workload cells that satisfy each in this case study.
+\begin{table}[htbp]
+  \centering
+  \caption{Protocol compliance levels and which workload cells satisfy each in this case study. The
+    mandatory validity core and capacity characterization are exercised across the \emph{whole}
+    matrix; the three extensions are demonstrated on the deep fetch --- the most consequential pattern
+    (main text, Results) --- as a representative-point instantiation, not a claim of full-matrix
+    coverage. This is what the protocol box means by recommended stages that ``may be scoped to a
+    representative workload point.''}
+  \label{tab:protocol_compliance}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{l p{0.30\linewidth} p{0.26\linewidth} p{0.24\linewidth}}
+    \toprule
+    Compliance level & Requirement it adds & Cells satisfying it here & Evidence \\
+    \midrule
+    Mandatory validity core & Correctness oracle (byte-identical outputs $+$ correct write state) and a
+      predeclared treatment rule, on \emph{every} timed cell & All five patterns $\times$ two engines
+      (all 90 cells) & Study Design; Table~S38; \texttt{verify-writes.mjs} \\
+    \midrule
+    Capacity characterization & Locate saturating throughput by a concurrency sweep at each workload
+      point & All five patterns $\times$ two engines & Table~S35 \\
+    \midrule
+    Standardized-strategy extension & Add a same-SQL standardized contrast against a common-strategy
+      baseline & Deep fetch $\times$ two engines & Main-text same-SQL table; Table~S14 \\
+    Utilization-controlled extension & Measure the tail at matched fractions of each treatment's own
+      capacity & Deep fetch $\times$ two engines & Main-text tail-regime table; Tables~S21--S22 \\
+    Resource-normalized extension & Compare under an equal compute budget & Deep fetch $\times$ two
+      engines & Tables~S4, S5 \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}
