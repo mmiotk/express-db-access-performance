@@ -108,11 +108,14 @@ deterministic seed, all adapter implementations, the byte-level correctness cros
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.11.7
-(\url{https://doi.org/10.5281/zenodo.21487096}). A reproducibility summary --- versions,
+archived at Zenodo as release v1.11.8
+(\url{https://doi.org/10.5281/zenodo.21487281}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
-Table~S31 and \texttt{REPRODUCE.md}.
+Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
+(PostgreSQL~18.4 and MySQL~9.7.1), installed via the user-space conda path documented in
+\texttt{REPRODUCE.md}; the convenience Docker path pins \emph{older} engines (PostgreSQL~16,
+MySQL~8.4) and reproduces the workflow but not the published numbers.
 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the

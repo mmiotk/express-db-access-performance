@@ -1123,6 +1123,26 @@ are consistently described as within-campaign repeatability, not deployment-gene
 
 ---
 
+## Point 9 (reproducibility and artifact) — make the container-engine caveat conspicuous in the main artifact section
+
+Thank you for the assessment. The one actionable qualification --- that the convenience Docker path pins
+older database engines and so does not reproduce the exact published environment, a distinction disclosed
+only in the supplement/`REPRODUCE.md` --- is now made conspicuous in the main-text Data-availability
+section of both builds. It reads: "**Exact reproduction requires the reference engines** (PostgreSQL 18.4
+and MySQL 9.7.1), installed via the user-space conda path documented in `REPRODUCE.md`; the convenience
+Docker path pins *older* engines (PostgreSQL 16, MySQL 8.4) and reproduces the workflow but not the
+published numbers." The Data-availability section is a declaration and is not counted against the word
+limit, so this change does not affect the manuscript length (14,991 words).
+
+On the remaining observations: you correctly note that your assessment verifies the described
+reproducibility provisions rather than a clean-room re-run, which is exactly how we frame the artifact
+(the clean-room path in `REPRODUCE.md` regenerates every non-raw table from the archived `raw.json` with
+seeded estimators). On the IST data-deposit requirement, the research data is deposited and citable via
+the Zenodo concept DOI (10.5281/zenodo.21313858, resolving to the latest version) with a Data-availability
+statement; the version-specific DOI and repository link are entered in the submission metadata.
+
+---
+
 ## Closing
 
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
@@ -1135,7 +1155,7 @@ additions from earlier rounds (the write-state validation and the co-primary dee
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.11.7 (DOI 10.5281/zenodo.21487096), the version this revision describes.
+as release v1.11.8 (DOI 10.5281/zenodo.21487281), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

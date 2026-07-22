@@ -317,6 +317,14 @@ to a general claim), now softened to "consistent with." The new table and figure
 (the main-text float count is unchanged at seven); no primary measurement changed. The manuscript is
 14,991 words.
 
+For reviewer point 9 (reproducibility), the one actionable qualification --- that the convenience Docker
+path pins older database engines and so does not reproduce the exact published environment, disclosed
+only in the supplement/`REPRODUCE.md` --- is now conspicuous in the main-text Data-availability section
+of both builds: "Exact reproduction requires the reference engines (PostgreSQL 18.4 and MySQL 9.7.1) ...
+the convenience Docker path pins older engines (PostgreSQL 16, MySQL 8.4) and reproduces the workflow but
+not the published numbers." The Data-availability section is a declaration, so this does not change the
+manuscript length (14,991 words).
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21487096 (release v1.11.7). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21487281 (release v1.11.8). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

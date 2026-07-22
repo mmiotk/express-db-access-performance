@@ -747,4 +747,15 @@ consolidating the now-duplicated adjacent-pair effect-size recap in Results and 
 
 The point-8 statistical pass (predefined native-driver contrasts S41; p99-spread figure S4; TOST caveat at first use; inferential-phrasing audit) is archived as release v1.11.7 (DOI 10.5281/zenodo.21487096).
 
+Reviewer **point 9** (reproducibility and artifact) required only that the container-engine caveat
+--- the convenience Docker path pins older engines (PostgreSQL 16, MySQL 8.4) and does not reproduce the
+published numbers, whereas the reference conda path uses PostgreSQL 18.4 / MySQL 9.7.1 --- be made
+conspicuous in the main artifact section, rather than only in the supplement/`REPRODUCE.md`. A
+bold-led sentence was added to the Data-availability section of both builds (`express_db_access.tex` and
+`ist_main.tex`). Because the Data-availability section is a **declaration** (excluded metadata, like
+CRediT/funding/AI declarations), it is **not** part of the counted body, so the manuscript length is
+unchanged at **14,991** words (body 11,454). No data, tables, or floats changed (checksums 35/35).
+
+The point-9 pass (container-engine reproducibility caveat made conspicuous in the main Data-availability section) is archived as release v1.11.8 (DOI 10.5281/zenodo.21487281).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

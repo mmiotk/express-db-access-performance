@@ -97,11 +97,14 @@ The complete replication package (benchmark harness, database schema and
 deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table and figure) is
 available at \texttt{https://github.com/mmiotk/express-db-access-performance};
-release v1.11.7 is permanently archived at Zenodo
-(\texttt{https://doi.org/10.5281/zenodo.21487096}). A reproducibility summary --- versions,
+release v1.11.8 is permanently archived at Zenodo
+(\texttt{https://doi.org/10.5281/zenodo.21487281}). A reproducibility summary --- versions,
 requirements, run commands, time and resources, and which results the harness regenerates
 automatically from the archived raw data --- is in Supplement Table~S31 and
-\texttt{REPRODUCE.md}. This is the generic build; the Elsevier submission build is
+\texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
+(PostgreSQL~18.4 and MySQL~9.7.1), installed via the user-space conda path documented in
+\texttt{REPRODUCE.md}; the convenience Docker path pins \emph{older} engines
+(PostgreSQL~16, MySQL~8.4) and reproduces the workflow but not the published numbers. This is the generic build; the Elsevier submission build is
 \texttt{ist/ist\_main.tex}.
 
 \section*{CRediT authorship contribution statement}
