@@ -56,6 +56,8 @@ mandatory and recommended stages, the cell-admission rule, and the output interp
 % \usetikzlibrary is idempotent and valid in the body (tikz is pulled in by pgfplots).
 \input{\tabledir fig_protocol}
 
+\paragraph{Admission versus diagnosis} The admission gate turns on three concerns that must not be conflated. \emph{Semantic correctness} always disqualifies: a non-mutating output not equivalent under the oracle, or a mutation that reaches the wrong state, excludes the cell. \emph{Workload conformance} disqualifies only where the study \emph{explicitly declares} a workload constraint (e.g.\ a round-trip bound) that the cell then violates. \emph{Strategy characteristics} --- query count, N+1, joins, eager versus lazy loading --- are instead \emph{reported}, not gated, being captured by server-side statement logging (here the per-endpoint counts of Supplement Table~S2); this study declares no ``no-N+1'' or query-count constraint --- the documentation-selected estimand's treatment \emph{is} whatever the official documentation leads to --- so no cell is excluded for its query strategy, and an N+1 plan would be admitted and reported like any other.
+
 \paragraph{Applicability limits} the oracle must match the output semantics. Byte-identical
 comparison, used here, is valid only when equivalent outputs are deterministic and canonically
 serializable. Where they are not (unordered collections, floats, timestamps, nondeterministic
@@ -193,7 +195,7 @@ adapter-selection rule above. The \emph{performance-conscious} regime applies a 
 versus select-in), admitted only where it is byte-identical to the documentation-primary output
 under the same \texttt{bench/verify.mjs} oracle. The budget is deliberately narrow --- it tunes
 only the loading strategy, only on the deep fetch, and never rewrites SQL, adds caching, or
-changes the schema (Section~\ref{sec:results} reports the resulting regimes). To ensure no adapter silently returns less or issues N+1 queries, the protocol's
+changes the schema (Section~\ref{sec:results} reports the resulting regimes). To ensure no adapter silently returns less, the protocol's
 \emph{semantic-equivalence} precondition is established at four levels rather than asserted as a
 universal property: (i)~\emph{specification}, shared canonical constructors that fix each response's
 field set, key order, and serialization; (ii)~\emph{finite pre-measurement conformance}, a

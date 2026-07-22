@@ -19,8 +19,8 @@
 protocol:
   name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
   author: "Mateusz Miotk, University of Gdansk"
-  release: "1.12.3"
-  doi: "10.5281/zenodo.21494005"
+  release: "1.12.4"
+  doi: "10.5281/zenodo.21494495"
   spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
 
 inputs:
@@ -72,7 +72,6 @@ cell_admission:
   disqualifiers:
     - "non-equivalent output"
     - "invalid or unsuccessful write"
-    - "degenerate plan (e.g. an N+1 query pattern)"
 
 outputs:
   reports: "Throughput and tail latency per operating point."

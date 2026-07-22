@@ -381,7 +381,7 @@ abstracted from the case study. A new Methodology subsection, "The comparability
 stages, in order** (correctness oracle → treatment-definition rule → strategy-control design →
 capacity identification → demand/utilization experiments); **pass/fail** cell-admission (a cell is
 admitted only if the oracle passes — equivalent non-mutating outputs and a correct post-write
-state; non-equivalent output, an invalid write, or a degenerate plan disqualifies it); **outputs
+state; non-equivalent output or an invalid write disqualifies it); **outputs
 and their interpretation** (descriptive of the treatment-and-strategy, not a causal decomposition;
 rankings configuration- and version-specific; only relative within-condition differences travel);
 and **applicability limits** (byte-equality is a valid oracle only for deterministic, canonically
@@ -866,6 +866,10 @@ floats (1,600) = **~14,758 words**, under the 15,000-word limit.
 
 The point-6.2 pass (replaced "intrinsic latency/tail" with sub-saturation / matched-offered-load terms;
 kept the legitimate intrinsic-library-overhead disclaimers) is archived as release v1.12.3 (DOI
-10.5281/zenodo.21494005).
+10.5281/zenodo.21494005). 
+
+Reviewer **point 6.3** --- the admission rule conflated semantic validity with strategy. Figure 1 listed a "degenerate plan (N+1)" as a disqualifier; but an N+1 plan can be semantically correct and may be the documentation-selected behaviour under evaluation, so excluding it changes the treatment. The admission rule and Figure 1 are rewritten to separate three concerns --- semantic correctness (wrong output/write disqualifies), workload conformance (excludes only a violation of an explicitly declared constraint), and strategy diagnosis (query count, N+1, joins, eager/lazy loading are reported, not gated; here the S2 query counts). A new "Admission versus diagnosis" paragraph in Study Design states this, the Figure 1 reject node/caption and the checklist drop N+1, and the semantic-equivalence gate is decoupled from N+1 in the methodology (byte-equality cannot detect an N+1 plan). The added paragraph took the body from 10,959 to 11,085 words, so the exact IST total is body 11,085 + abstract 299 + references ~1,900 + eight main floats (1,600) = **~14,884 words**, under the 15,000-word limit. Prose-and-figure only; no data changed (checksums 35/35).
+
+The point-6.3 pass (N+1 removed from the admission gate; the three-concept admission-versus-diagnosis distinction) is archived as release v1.12.4 (DOI 10.5281/zenodo.21494495).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

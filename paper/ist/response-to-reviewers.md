@@ -191,8 +191,8 @@ it. It is given in the five parts you asked for:
   (3) strategy-control design, (4) capacity identification, (5) demand/utilization experiments.
 - **Pass/fail (cell admission)** — a cell is admitted only if the oracle passes (equivalent
   non-mutating outputs and a correct post-write state, not merely a success status); non-equivalent
-  output, an invalid or unsuccessful write, or a degenerate query plan (e.g. N+1) disqualifies it
-  and it is excluded from timing.
+  output or an invalid or unsuccessful write disqualifies it
+  and it is excluded from timing; a query strategy such as N+1 is a reported characteristic, not an admission failure.
 - **Outputs and their interpretation** — throughput and tail latency per operating point,
   *descriptive* of the treatment-and-strategy, not a causal decomposition (the standardized
   contrast reports a residual); rankings are configuration- and version-specific, and only relative
@@ -1196,7 +1196,7 @@ matter) *without* reordering the sections, so no cross-references were destabili
 one-page flow diagram: declared inputs feed the two *mandatory* stages (solid boxes) --- the
 correctness oracle and the treatment-definition rule --- which govern a per-cell *admission gate* (a
 decision node: a cell is timed only if its non-mutating outputs are equivalent and its post-write
-state correct; a non-equivalent output, an invalid write, or a degenerate N+1 plan disqualifies it);
+state correct; a non-equivalent output or an invalid write disqualifies it);
 admitted cells traverse three *recommended* stages (dashed boxes); outputs are descriptive of the
 treatment. The exact admission-and-selection procedure now sits in the main text as a figure, where the
 prose previously buried it.
@@ -1382,6 +1382,32 @@ library's intrinsic overhead," "not a bound on the intrinsic library effect," an
 (the RQ1/same-SQL disclaimer, your point 6.1), not a measured quantity. This is a prose-and-caption
 change only; no measurement changed (checksums 35/35).
 
+## Point 6.3 (follow-up: admission must not conflate semantic validity with strategy)
+
+You are right: Figure 1 listed a "degenerate plan (N+1)" alongside non-equivalent output and invalid
+writes as a disqualifier, which conflates semantic validity with performance-strategy admissibility. An
+N+1 implementation can be semantically correct and may be exactly the documentation-selected behaviour
+under evaluation, so excluding it would *change* the treatment rather than validate it --- and would risk
+systematically protecting inefficient libraries from their documented behaviour.
+
+The admission rule and Figure 1 are rewritten to separate three concerns:
+
+- **Semantic correctness** --- a non-mutating output not equivalent under the oracle, or a mutation that
+  reaches the wrong state, disqualifies the cell.
+- **Workload conformance** --- a cell may be excluded only where the study *explicitly declares* a
+  workload constraint (e.g. a round-trip bound) that it then violates.
+- **Strategy diagnosis** --- query count, N+1, joins, eager-versus-lazy loading are *reported*
+  characteristics (here the per-endpoint query counts of Supplement Table S2), not admission criteria.
+
+This study declares no "no-N+1" or query-count constraint --- the documentation-selected estimand's
+treatment *is* whatever the official documentation leads to --- so no cell is excluded for its query
+strategy, and an N+1 plan would be admitted and reported like any other. A new "Admission versus
+diagnosis" paragraph in Study Design states this, the Figure 1 reject node and caption no longer list
+N+1, and the machine-readable checklist's admission disqualifiers drop it. I also decoupled the
+semantic-equivalence gate from N+1 in the methodology (byte-equality cannot detect an N+1 plan, which
+returns identical bytes; query count is captured by server-side statement logging and reported).
+Prose-and-figure only; no measurement changed (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1389,14 +1415,14 @@ change only; no measurement changed (checksums 35/35).
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,758 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,884 words** (IST rule) with a structured abstract of
 **299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.3 (DOI 10.5281/zenodo.21494005), the version this revision describes.
+as release v1.12.4 (DOI 10.5281/zenodo.21494495), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
