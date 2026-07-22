@@ -26,6 +26,8 @@ rather than decomposing or bounding the difference (construct validity: Section~
 \input{\tabledir deep_fetch}
 \input{\tabledir write}
 
+\input{\tabledir analysis_roster}
+
 \subsection{RQ1: performance difference relative to the native baseline}
 The native driver leads all ten engine-pattern combinations: on PostgreSQL
 \texttt{pg} (or its tuned counterpart) is fastest on all five patterns, and
@@ -70,48 +72,20 @@ The \emph{same-SQL control} (Section~\ref{sec:methodology}) is a \emph{compound}
 replacing each layer's documentation-selected relational-loading path with the same hand-written
 SQL through its raw facility changes the loading API, query strategy, SQL formulation, round-trip
 count, statement preparation, and result hydration \emph{together}
-(Table~\ref{tab:samesql_components}). Server-side capture confirms the statement text is
+(Supplement Table~S42). Server-side capture confirms the statement text is
 byte-identical across layers on both engines while the wire protocols differ per layer, so the
 control is \emph{same SQL, protocol disclosed}, not \emph{same plan}. It is therefore a
 \emph{standardized-SQL contrast}: it reports how much of the spread remains once the SQL is held
 fixed. Because raw mode changes several mechanisms at once and may interact differently with each
-library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect ---
-no ordering theorem holds without assumptions about interaction effects. It does not attribute the
-difference to any single component, and in particular does not establish how much comes from SQL
-formulation or query count.
+library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect.
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{The \emph{same-SQL control} is a compound intervention: switching each layer from its
-    documentation-selected path to the same hand-written SQL through its raw facility moves every
-    component below at once --- equalizing the SQL text, query strategy, round-trip count, and
-    result mapping, while the raw-SQL facility, statement preparation, and disclosed wire protocol
-    still differ across layers. The residual difference it leaves is a standardized-SQL contrast,
-    not a bound on their combined effect, and cannot be attributed to any single component ---
-    in particular, not to SQL formulation or query count.}
-  \label{tab:samesql_components}
-  \begin{tabular}{@{}l p{0.33\textwidth} p{0.33\textwidth}@{}}
-    \toprule
-    Component & Documentation-selected path & Same-SQL (raw-path) control \\
-    \midrule
-    Loading API & the ORM's eager-load API (\texttt{include}, \texttt{populate}, \ldots) or a builder join & the layer's raw-SQL facility \\
-    Query strategy & per layer: single join, batched select-in, or multi-query & one hand-written two-statement join, identical across layers \\
-    SQL formulation & per-ORM generated statement text & byte-identical statement text (server-side confirmed) \\
-    Round-trip count & one to four statements & two statements \\
-    Statement preparation & ORM-managed & the raw facility's default \\
-    Wire protocol & per driver (extended/simple, text/binary) & per driver, unchanged and disclosed \\
-    Result hydration & the ORM's object-graph mapping & shared canonical constructors, identical across layers \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 Among the raw paths running common SQL, the deep-fetch native-relative spread is far smaller ---
 $1.68\times$ (PostgreSQL) and $2.01\times$ (MySQL), against the documentation-selected $7.15\times$
 and $4.96\times$ (Supplement Table~S14). The result this supports is that the documentation-selected
 paths differ much more than the raw paths executing common SQL; it does \emph{not} quantify how much
 of the original difference comes from SQL formulation or query count, which change together with the
-API, protocol, preparation, and hydration (Table~\ref{tab:samesql_components}). Prisma is the slowest layer on the raw path itself; we conjecture this
+API, protocol, preparation, and hydration (Supplement Table~S42). Prisma is the slowest layer on the raw path itself; we conjecture this
 reflects dispatch and marshalling overhead in its raw API rather than SQL execution, a
 hypothesis the composite contrast cannot confirm. A loading-strategy sensitivity check
 (Supplement Table~S18) argues against a mere default-strategy artifact: switching the join-default
@@ -122,19 +96,15 @@ batched-select-in default is about $1.6\times$ slower than a single join on MySQ
 Because the deep fetch is the only pattern exposing a documented strategy choice, we report RQ1
 there under \emph{two co-primary regimes} (Section~\ref{sec:methodology}): the
 documentation-primary strategy and a performance-conscious regime taking the faster
-byte-identical documented strategy (Table~\ref{tab:deepfetch_regimes}). The performance-conscious regime shifts the
+byte-identical documented strategy (Supplement Table~S43). The performance-conscious regime shifts the
 picture only marginally. For the join-default ORMs (Sequelize, MikroORM) the documentation-selected
 strategy is already the faster one, so the two regimes return the \emph{identical} configuration;
 the only cell that gains is Objection on MySQL, whose documented single-join alternative beats its
 select-in default. Even so the performance-conscious ORM deep fetch stays well below
 the native driver on both engines, so the deep-fetch gap reflects the libraries' documented
 strategies rather than a poor-default artifact. TypeORM's alternative errors and Objection's
-diverges from byte-identity on PostgreSQL, so those cells are excluded as non-drop-ins. This makes RQ1's construct explicit: the numbers below
-report the performance of each layer's \emph{documentation-selected implementation strategy}, and
-the performance-conscious regime caps how much a developer could recover within a narrow,
+diverges from byte-identity on PostgreSQL, so those cells are excluded as non-drop-ins. The performance-conscious regime caps how much a developer could recover within a narrow,
 semantically-equivalent tuning budget.
-
-\input{\tabledir deepfetch_regimes}
 
 
 \subsection{RQ2: engine dependence of the ranking}
@@ -218,10 +188,8 @@ Offering each layer 50/70/85/95\% of \emph{its own} saturating throughput (Suppl
 Tables~S21--S22), the tails converge (near $2$--$5$~ms at 50\% utilization on both engines), so
 the large high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at matched
 utilization: it is a capacity-and-queueing effect, not a difference in tail latency at
-comparable utilization. Table~\ref{tab:tail_regimes} shows both readings per layer, so the false
+comparable utilization. Supplement Table~S44 shows both readings per layer, so the false
 ``intrinsically worse tail'' reading is averted directly.
-
-\input{\tabledir tail_regimes}
 
 \subsection{Measurement stability and effect sizes}
 Across the 25 repeated runs the coefficient of variation of deep-fetch throughput is at most

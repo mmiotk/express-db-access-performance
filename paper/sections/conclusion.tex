@@ -13,9 +13,7 @@ access patterns --- demonstrates it (Section~\ref{sec:introduction}).
 The documentation-selected implementation-and-strategy difference is concentrated across the
 five tested patterns, not uniform: sharpest for the deep/nested fetch that assembles a nested object graph
 application-side, and modest for point reads and aggregation
-(Section~\ref{sec:results}). Among the raw paths running common SQL the spread is far smaller,
-but because that contrast changes several mechanisms together, it is a standardized diagnostic that neither bounds nor attributes the
-difference to any single one (Section~\ref{sec:results}). On the
+(Section~\ref{sec:results}). Among the raw paths running common SQL the spread is far smaller --- a standardized diagnostic, not a bound (Section~\ref{sec:results}). On the
 current library versions no layer's throughput scales with additional application cores and the native driver
 leads all ten engine-pattern combinations; the read ordering is similar across the two
 engines while the aggregation and insert orderings reverse (Prisma drops from mid-pack to

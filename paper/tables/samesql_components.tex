@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{The \emph{same-SQL control} is a compound intervention: switching each layer from its
+    documentation-selected path to the same hand-written SQL through its raw facility moves every
+    component below at once --- equalizing the SQL text, query strategy, round-trip count, and
+    result mapping, while the raw-SQL facility, statement preparation, and disclosed wire protocol
+    still differ across layers. The residual difference it leaves is a standardized-SQL contrast,
+    not a bound on their combined effect, and cannot be attributed to any single component ---
+    in particular, not to SQL formulation or query count.}
+  \label{tab:samesql_components}
+  \begin{tabular}{@{}l p{0.33\textwidth} p{0.33\textwidth}@{}}
+    \toprule
+    Component & Documentation-selected path & Same-SQL (raw-path) control \\
+    \midrule
+    Loading API & the ORM's eager-load API (\texttt{include}, \texttt{populate}, \ldots) or a builder join & the layer's raw-SQL facility \\
+    Query strategy & per layer: single join, batched select-in, or multi-query & one hand-written two-statement join, identical across layers \\
+    SQL formulation & per-ORM generated statement text & byte-identical statement text (server-side confirmed) \\
+    Round-trip count & one to four statements & two statements \\
+    Statement preparation & ORM-managed & the raw facility's default \\
+    Wire protocol & per driver (extended/simple, text/binary) & per driver, unchanged and disclosed \\
+    Result hydration & the ORM's object-graph mapping & shared canonical constructors, identical across layers \\
+    \bottomrule
+  \end{tabular}
+\end{table}

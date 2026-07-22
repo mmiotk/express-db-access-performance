@@ -778,4 +778,26 @@ detail across the Colley/Salunke/Lorenz/vendor passages). The body is **11,389**
 
 The point-10 pass (methodological positioning vs benchmark-quality frameworks; three references; post-freeze search) is archived as release v1.11.9 (DOI 10.5281/zenodo.21488397).
 
+Reviewer **point 11** (presentation --- the manuscript ``over-defended'' and its methodological
+qualifications dispersed) realized the reviewer's three-layer structure (protocol, then case-study
+instantiation, then evidence the individual controls matter) through concrete deliverables, without
+reordering sections. The verbose framed protocol box became a one-page **protocol flow figure**
+(Figure~1: inputs, the mandatory versus recommended stages, the cell-admission gate, and outputs); a
+new **estimands table** (Table~3) consolidates, in one place, every estimand and what it does and does
+not identify; and a new **analysis-roster table** (Table~6) separates the primary analyses from the
+robustness/sensitivity ones. The repeated defense of the same-SQL comparison was cut to one canonical
+statement with back-references, and three secondary result tables --- the same-SQL components, the
+deep-fetch regimes, and the matched-utilization tail --- were moved to the supplement (Tables
+S42--S44), catalogued in the new roster. The main-text float count is **unchanged at seven** (six
+tables plus one figure): the figure and the two new tables offset the three moved out (a net-zero
+swap). Converting the ~500-word box to a figure and trimming ~200 words of over-defensive prose cut
+the body from 11,389 to **10,938** words. Under the IST rule the exact word-equivalent total the
+reviewer asked for is body 10,938 + abstract ~292 + references (65 entries) ~1,900 + seven main-text
+floats (1,400) = **~14,530 words**, under the 15,000-word limit with a ~470-word margin. No data
+changed (checksums 35/35); the supplement now holds forty-four tables (S1--S44) plus four figures.
+
+The point-11 presentation pass (protocol flow figure; estimands and analysis-roster consolidation
+tables; reduced same-SQL defense; three secondary tables moved to the supplement; exact
+word-equivalent recomputation) is archived as release v1.12.0 (DOI 10.5281/zenodo.21491886).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

@@ -24,12 +24,17 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | Paper label | File | Generator | Input data |
 |---|---|---|---|
 | `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
-| `tab:tail_regimes` | `tail_regimes.tex` | `scripts/gen-tail-regimes.mjs` | `results/raw.json`, `results/utilization.{postgres,mysql}.json` |
+| `tab:tail_regimes` (moved to Supplement S44) | `tail_regimes.tex` | `scripts/gen-tail-regimes.mjs` | `results/raw.json`, `results/utilization.{postgres,mysql}.json` |
 | `tab:resources_main` | `resources_main.tex` | `bench/analyze.mjs` (`resourceMainTable`) | `results/raw.json` |
 | `tab:patterns` (moved to Supplement S39) | `patterns.tex` | hand-authored | — |
 | `tab:significance` | `significance_deep_fetch.tex` | `bench/analyze.mjs` (`significanceTable`, paired) | `results/raw.json` |
 | `tab:native_contrasts` (Supp. S41) | `native_contrasts.tex` | `scripts/gen-native-contrasts.mjs` | `results/raw.json` |
 | `fig:p99_spread` (Supp. Fig. S4) | `fig_p99_spread.tex` | `scripts/gen-p99-spread.mjs` | `results/raw.json` |
+| `tab:deepfetch_regimes` (moved to Supplement S43) | `deepfetch_regimes.tex` | `scripts/gen-deepfetch-table.mjs` | `results/deepfetch-regimes.json` |
+| `tab:samesql_components` (moved to Supplement S42) | `samesql_components.tex` | hand-authored (component enumeration) | `results/sameplan.*` (server-side capture) |
+| `fig:protocol` (Figure 1) | `fig_protocol.tex` | hand-authored (protocol flow diagram, TikZ) | — |
+| `tab:estimands` (Table 3) | `estimands.tex` | hand-authored (estimand consolidation) | — |
+| `tab:analysis_roster` (Table 6) | `analysis_roster.tex` | hand-authored (primary vs sensitivity roster) | — |
 | `tab:prior_art` | inline in `sections/related_work.tex` | hand-authored | literature search (`notes/related-work-search.md`) |
 | `fig:scaling` | `fig_scaling.tex` | `bench/scaling.mjs` | `results/scaling.json` |
 | `fig:cpu_tradeoff` | `fig_cpu_tradeoff.tex` | `scripts/gen-tables.mjs` | `results/raw.json` |

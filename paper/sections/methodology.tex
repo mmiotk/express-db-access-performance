@@ -23,7 +23,7 @@ about the most common or most performant one. A \textbf{same-SQL (raw-path) stan
 contrast} then reports what spread remains once every layer executes identical SQL through its raw facility.
 The \textbf{mechanisms} that differ within a layer --- eager-loading strategy, wire protocol,
 round-trips, statement preparation, hydration --- change together and are \emph{not}
-separately or causally identified; the same-SQL contrast is a standardized diagnostic, not a decomposition and not a bound on the intrinsic library effect (Table~\ref{tab:samesql_components} enumerates the components it moves).
+separately or causally identified; the same-SQL contrast is a standardized diagnostic, not a decomposition and not a bound on the intrinsic library effect (Supplement Table~S42 enumerates the components it moves).
 
 A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and
 therefore drives them to unequal \emph{utilization}, so RQ1 is characterized under three
@@ -48,37 +48,13 @@ different questions and need not agree, so we report all three.
 \label{sec:protocol}
 We state the protocol here independently of the case study; the remaining subsections instantiate
 it for the access-layer setting. It turns a set of \emph{treatments} compared on a fixed
-\emph{workload} into a controlled experiment; the box below states its inputs, its mandatory and
-recommended stages, the cell-admission rule, and the output interpretation compactly, and the
-remaining subsections instantiate them for the access-layer setting.
+\emph{workload} into a controlled experiment; Figure~\ref{fig:protocol} states its inputs, its
+mandatory and recommended stages, the cell-admission rule, and the output interpretation compactly.
 
-\smallskip
-\noindent\fbox{\parbox{0.97\linewidth}{\small
-\textbf{The comparability protocol.}\par
-\textbf{Inputs.} Treatments (implementations under comparison); a \emph{declared workload model}
-(stated access patterns, not a production trace); an \emph{output-equivalence semantics}; and an
-\emph{operating-point definition} separating capacity, external demand, and utilization.\par
-\textbf{Stages.} \emph{Mandatory} (a comparison is valid only if both hold): (1)~\emph{correctness
-oracle} --- admit a treatment only if its outputs are equivalent under the semantics and its
-mutations produce the intended state; (2)~\emph{treatment-definition rule} --- fix each treatment's
-implementation and strategy by a rule declared reproducibly in advance; the protocol requires such a
-rule but privileges none (this case study's is documentation-first, with a tie-breaker; Study Design
-below). \emph{Recommended} (they enrich the comparison and each may
-be scoped to a representative workload point rather than the whole matrix): (3)~\emph{strategy
-control} --- add a standardized contrast holding the query strategy fixed, read against a
-common-strategy baseline; (4)~\emph{capacity identification} --- locate saturating throughput by a
-concurrency sweep; (5)~\emph{demand and utilization} --- measure the tail at equal external demand
-and at matched fractions of each treatment's own capacity.\par
-\textbf{Cell admission.} Time a (treatment, workload-point) cell only if the oracle passes ---
-equivalent non-mutating outputs and a correct post-write state, not merely a success status;
-non-equivalent output, an invalid or unsuccessful write, or a degenerate plan (e.g.\ N+1)
-disqualifies it.\par
-\textbf{Outputs.} Throughput and tail latency per operating point, \emph{descriptive} of the
-treatment as defined --- the standardized contrast reports a residual, not a causal decomposition
---- with rankings configuration- and version-specific and only \emph{relative} within-condition
-differences meant to travel.
-}}
-\smallskip
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
+% The line is repeated here so the figure is self-contained if pasted alone;
+% \usetikzlibrary is idempotent and valid in the body (tikz is pulled in by pgfplots).
+\input{\tabledir fig_protocol}
 
 \paragraph{Applicability limits} the oracle must match the output semantics. Byte-identical
 comparison, used here, is valid only when equivalent outputs are deterministic and canonically
@@ -105,6 +81,8 @@ conclusion), and distinguishable, yet transferable --- Supplement Table~S37 show
 each prior benchmark's conclusion becomes uninterpretable once its absent stages are named.
 
 \input{\tabledir protocol_mapping}
+
+\input{\tabledir estimands}
 
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels across three tiers
@@ -207,10 +185,9 @@ what differs is the wire protocol each driver negotiates (per-layer protocols in
 Table~S14). The
 six ORMs split both ways on the join-versus-select-in default. Because the native driver's
 documentation-selected default is a hand-authored join while an ORM's is whatever relation
-loader its documentation presents first (the driver-versus-ORM asymmetry noted above), the deep
+loader its documentation presents first, the deep
 fetch --- the one pattern exposing a documented strategy choice --- admits two \emph{co-primary}
-regimes, which we measure on one harness and report side by side (Section~\ref{sec:results},
-Table~\ref{tab:deepfetch_regimes}). The \emph{documentation-primary} regime is the strategy fixed by the
+regimes, which we measure on one harness and report side by side (Section~\ref{sec:results}; Supplement Table~S43). The \emph{documentation-primary} regime is the strategy fixed by the
 adapter-selection rule above. The \emph{performance-conscious} regime applies a predefined
 \emph{tuning budget}: the faster of a layer's two documented deep-fetch loading strategies (join
 versus select-in), admitted only where it is byte-identical to the documentation-primary output
@@ -241,7 +218,7 @@ Four controls hold the shared conditions fixed --- connection pool, logical task
 dataset state, and observer --- so that the \emph{configured access-layer implementation bundle}
 is the only \emph{deliberately varied} factor; they do not isolate the library alone: the bundled
 differences in SQL, query count, protocol, loading strategy, and hydration are the treatment
-(Table~\ref{tab:samesql_components}), not confounds to be removed. \emph{(i)~Pool size} is fixed at
+(Supplement Table~S42), not confounds to be removed. \emph{(i)~Pool size} is fixed at
 ten connections for every adapter, so the comparison reflects the access-layer choice, not
 pool tuning~\cite{gupta2017pooling,laigner2021microservices} (for Prisma, whose default pool
 is core-count-derived, this is pinned via \texttt{connection\_limit}). Because the load

@@ -339,6 +339,20 @@ competing implementations. A final pre-submission search past the 2026-07-15 fre
 access-layer prior art. Three references were added (Kounev et al.; Hasselbring; Rigger and Su); the
 paragraph was offset by tightening the survey subsections, so the manuscript is 14,985 words.
 
+**Point 11 (presentation).** The manuscript's density was addressed by realizing the reviewer's
+three-layer structure (protocol, then case-study instantiation, then evidence the controls matter)
+through concrete artifacts rather than a section reorder. The verbose framed protocol box became a
+one-page **protocol flow figure** (Figure 1); a new **estimands table** (Table 3) consolidates every
+estimand and what it does and does not identify; a new **analysis-roster table** (Table 6) separates
+the primary analyses from the robustness/sensitivity ones. The repeated same-SQL "not a bound" defense
+was reduced to one canonical statement with back-references, and three secondary result tables (same-SQL
+components, deep-fetch regimes, matched-utilization tail) were moved to the supplement (Tables S42--S44),
+catalogued in the roster. The main-text float count is unchanged at seven (six tables plus one figure);
+converting the box to a figure and trimming over-defensive prose cut the body from 11,389 to 10,938
+words, so the exact IST total is body 10,938 + abstract ~292 + references ~1,900 + seven floats (1,400)
+= ~14,530 words, well under 15,000. No data changed (checksums 35/35); the supplement now holds
+forty-four tables (S1--S44) plus four figures.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21488397 (release v1.11.9). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21491886 (release v1.12.0). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -47,15 +47,13 @@ presents first --- for the ORMs, the library's canonical eager-loading API --- n
 layer in \texttt{METHODOLOGY.md}). Second, the \emph{same-SQL control} makes every
 layer run common SQL through its raw facility, so the raw-path spread (deep fetch $1.68\times$,
 against $7.15\times$ documentation-selected; Section~\ref{sec:results}) is far smaller --- a
-compound \emph{standardized contrast} that reports how much of RQ1's spread narrows once every layer
-runs common SQL, rather than decomposing or bounding how much comes from the documentation-selected
+compound \emph{standardized contrast}, not a decomposition or bound on how much comes from the documentation-selected
 loading strategy as opposed to the library machinery. Third, where the documented
 alternative is a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows the
 documentation-selected default is the \emph{faster} strategy for the join-default ORMs, so their
 deficit does not appear to be an artifact of a poor default; the one exception, Objection's slower select-in
 default on MySQL, is disclosed rather than corrected. RQ1 therefore answers what a documentation-following
-developer obtains, not the library's intrinsic overhead --- which this design \emph{contrasts under
-standardized SQL} rather than \emph{bounds or measures}.
+developer obtains, not the library's intrinsic overhead.
 
 \paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for

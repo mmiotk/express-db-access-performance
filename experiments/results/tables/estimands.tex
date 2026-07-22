@@ -1,0 +1,56 @@
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Estimands defined in this study, consolidating the identification qualifications
+    stated across Sections~\ref{sec:methodology} and~\ref{sec:results}. Each quantity is
+    \emph{descriptive} of the treatment as defined; only relative within-condition differences are
+    meant to travel, and rankings are configuration- and version-specific.}
+  \label{tab:estimands}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{@{}p{2.7cm} p{4.0cm} p{4.0cm} p{2.7cm}@{}}
+    \toprule
+    \textbf{Estimand / quantity} & \textbf{What it identifies} & \textbf{What it does \emph{not} identify} & \textbf{Where reported} \\
+    \midrule
+    Documentation-selected implementation-and-strategy effect (RQ1, primary) &
+    Performance a developer following each library's documentation obtains (throughput, p99), as defined &
+    Intrinsic library overhead; the most common or most performant usage &
+    Tables~\ref{tab:deep_fetch},~\ref{tab:write} \\
+    \addlinespace
+    Same-SQL (raw-path) standardized contrast (diagnostic) &
+    Residual spread once every layer runs common SQL through its raw facility &
+    A causal decomposition or a bound on the library effect; the share from SQL formulation or query count &
+    Supplement Table~S42 \\
+    \addlinespace
+    Performance-conscious deep-fetch regime &
+    Speed recoverable within a narrow byte-equivalent tuning budget (faster documented loading strategy) &
+    Gains from SQL rewrites, caching, or schema change; non-drop-in strategies (excluded) &
+    Supplement Table~S43 \\
+    \addlinespace
+    Per-pattern capacity (saturating throughput) &
+    Each pattern's throughput knee per layer and engine, locating relative utilization at the operating point &
+    Tail latency; a throughput quantity, not a demand- or utilization-dependent comparison on its own &
+    Supplement Table~S35, Figure~S2 \\
+    \addlinespace
+    High-load p99 under equal closed-loop demand (primary tail) &
+    The tail a deployment sees at fixed 50-connection demand, including acquisition queueing &
+    The tail at comparable utilization; the pooled cross-run p99 &
+    Table~\ref{tab:deep_fetch} \\
+    \addlinespace
+    Matched-utilization tail (p99 at matched fractions of own capacity) &
+    p99 when each layer is offered equal fractions (50/70/85/95\%) of its \emph{own} saturating throughput &
+    The tail under equal external demand; the capacity-and-queueing component it removes &
+    Supplement Table~S44 \\
+    \addlinespace
+    Layer$\times$engine interaction magnitude (RQ2) &
+    The spread of each layer's PostgreSQL$\div$MySQL advantage and the concrete rank reversals &
+    The interaction's size from the permutation test (bounds existence only); its sign (every layer faster on PostgreSQL) &
+    Supplement Table~S28; \S\ref{sec:results} (RQ2) \\
+    \addlinespace
+    Cross-engine rank correlations ($n=7$, coarse descriptive) &
+    Descriptive agreement of the layer ordering across engines (Spearman~$\rho$, Kendall~$\tau$) &
+    Reliable cross-engine transfer at $n=7$; the RQ2 finding, which rests on the reversals and interaction spread &
+    \S\ref{sec:results} (RQ2) \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table}

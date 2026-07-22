@@ -33,7 +33,7 @@ rather than varying it~\cite{colley2018orm,prisma_rawsql_2025,
 orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql} (Section~\ref{sec:related}
 surveys each).
 
-In the sources we searched (Section~\ref{sec:related}) this leaves a gap along the four coverage
+This leaves a gap along the four coverage
 axes of Table~\ref{tab:prior_art} --- access-layer taxonomy, engine, joint throughput/tail
 metrics, and vendor involvement: no access-layer comparison we found includes MySQL, and no
 PostgreSQL/MySQL benchmark varies the access layer; no independently authored study spans the
@@ -59,7 +59,7 @@ independently authored case study that applies it
 (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
 Objection, MikroORM) over five representative access patterns rather than a
 measured production workload (point read, keyset range scan, deep/nested
-fetch, per-author aggregation, and insert; Section~\ref{sec:methodology}).
+fetch, per-author aggregation, and insert).
 Seven layers run against \emph{both} engines under an identical schema,
 dataset, and pool size; two tuned native-driver baselines mark what hand-tuned
 driver use achieves. Every (layer, engine, pattern) combination reports
@@ -79,8 +79,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.11.9 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21488397}.}
+v1.12.0 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21491886}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -101,8 +101,7 @@ implementations under the specified operating point:
 This paper's primary contribution is a \textbf{comparability protocol for
 access-layer benchmarking}, specified normatively --- inputs, mandatory stages, cell-admission
 criteria, output interpretation, and applicability limits --- in Section~\ref{sec:protocol}: a set
-of controls that turn the vendor-benchmark genre ---
-which reports throughput or latency numbers whose comparability is assumed --- into a
+of controls that turn the vendor-benchmark genre into a
 controlled experiment, by establishing three preconditions the genre otherwise leaves
 unmet.
 \begin{itemize}[leftmargin=*]
@@ -117,7 +116,7 @@ unmet.
         selection rule (\emph{documentation-selected} here; the protocol privileges none), and a
         \emph{same-SQL standardized contrast} reports how
         much of an observed difference remains once the SQL is held fixed --- a diagnostic contrast,
-        not an attribution to the library's execution machinery versus the query strategy.
+        not a causal attribution.
   \item \textbf{Operating-point separation.} Capacity, high-load tail under equal demand, and
         tail at matched utilization are reported as \emph{distinct} quantities, not conflated at one
         load point.
@@ -141,11 +140,11 @@ precondition is load-bearing: a broken MikroORM cell briefly \emph{led} the MySQ
 ranking until the equivalence gate excluded it, the sevenfold documentation-selected deep-fetch spread
 was only $1.7\times$ among the raw paths running common SQL, and a large high-load tail gap
 dissolved once
-layers were compared at matched utilization. The case study thus contributes novel experimental evidence --- a dual-engine,
+layers were compared at matched utilization. The case study thus contributes novel experimental evidence: a dual-engine,
 throughput-and-p99, documentation-selected access-layer comparison we did not identify in the
-searched sources --- but the resulting rankings are configuration-specific and version-sensitive,
+searched sources. But the resulting rankings are configuration-specific and version-sensitive,
 so the benchmark infrastructure --- the protocol's domain-specific synthesis of established
-benchmarking principles, and its harness --- not any single ranking, is the more durable
+benchmarking principles and its harness --- not any single ranking, is the more durable
 contribution. The case study also yields a
 practitioner-oriented checklist of genre-specific benchmarking pitfalls
 (Section~\ref{sec:discussion}), each an instance of a precondition the protocol enforces.

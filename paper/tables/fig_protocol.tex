@@ -1,0 +1,77 @@
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  node distance=5mm and 7mm,
+  io/.style={rectangle, rounded corners=4pt, draw=black, very thick, fill=black!6,
+             align=center, inner sep=4pt, text width=8.4cm},
+  mand/.style={rectangle, draw=black, thick, fill=white,
+               align=center, inner sep=4pt, text width=7.6cm},
+  rec/.style={rectangle, draw=black, thick, dashed, fill=white,
+              align=center, inner sep=4pt, text width=7.6cm},
+  gate/.style={diamond, aspect=2, draw=black, very thick, fill=black!6,
+               align=center, inner sep=1pt},
+  reject/.style={rectangle, draw=black, thick, fill=black!10,
+                 align=center, inner sep=4pt, text width=3.2cm},
+  grp/.style={rounded corners=3pt, draw=black!30, inner sep=3mm},
+  glab/.style={font=\scriptsize\bfseries, text width=2.2cm, align=right, black!55},
+  arr/.style={-{Latex[length=2mm,width=1.6mm]}, thick},
+]
+% --- INPUTS ---
+\node[io] (in) {\textbf{Inputs.} treatments $\cdot$ declared workload model $\cdot$
+  output-equivalence semantics $\cdot$ operating-point definition
+  (capacity $\mid$ demand $\mid$ utilization)};
+% --- MANDATORY stages (solid) ---
+\node[mand, below=of in] (m1) {\textbf{(1)~Correctness oracle}\\[1pt]
+  outputs equivalent under the semantics; mutations reach intended state};
+\node[mand, below=of m1] (m2) {\textbf{(2)~Treatment-definition rule}\\[1pt]
+  implementation \& strategy fixed by a rule declared in advance
+  (here: documentation-first)};
+% --- CELL-ADMISSION gate (decision) ---
+\node[gate, below=of m2] (g) {\textbf{Cell}\\\textbf{admission?}};
+% --- RECOMMENDED stages (dashed) ---
+\node[rec, below=16mm of g] (r3) {\textbf{(3)~Strategy control}\\[1pt]
+  standardized same-SQL contrast vs.\ common-strategy baseline};
+\node[rec, below=of r3] (r4) {\textbf{(4)~Capacity identification}\\[1pt]
+  locate saturating throughput via concurrency sweep};
+\node[rec, below=of r4] (r5) {\textbf{(5)~Demand \& utilization}\\[1pt]
+  tail at equal demand and at matched fractions of own capacity};
+% --- OUTPUTS ---
+\node[io, below=of r5] (out) {\textbf{Outputs.} throughput $+$ tail per operating point;
+  \emph{descriptive} of the treatment; rankings configuration- \& version-specific;
+  only \emph{relative} within-condition differences travel};
+% --- disqualification branch ---
+\node[reject, right=of g] (rej)
+  {\textbf{Cell disqualified}\\[1pt] non-equivalent output, invalid write,
+   or degenerate plan (N+1)};
+% --- group brackets + side labels ---
+\node[grp, fit=(m1)(m2)] (mg) {};
+\node[grp, dashed, fit=(r3)(r4)(r5)] (rg) {};
+\node[glab, left=of mg] {Mandatory stages};
+\node[glab, left=of rg] {Recommended stages};
+% --- flow ---
+\draw[arr] (in) -- (m1);
+\draw[arr] (m1) -- (m2);
+\draw[arr] (m2) -- (g);
+\draw[arr] (g) -- node[right=1pt, text width=2.5cm, font=\scriptsize, align=left]
+  {\textbf{pass:} equivalent non-mutating output \& correct post-write state} (r3);
+\draw[arr] (r3) -- (r4);
+\draw[arr] (r4) -- (r5);
+\draw[arr] (r5) -- (out);
+\draw[arr] (g) -- node[above, font=\scriptsize\bfseries]{fail} (rej);
+\end{tikzpicture}
+\end{adjustbox}
+\caption{The comparability protocol as a flow. Declared \emph{inputs} feed two
+\emph{mandatory} stages (solid); the correctness oracle governs a per-cell
+\emph{admission} gate---a (treatment,\,workload-point) cell is timed only if its
+non-mutating outputs are equivalent and its post-write state correct, while a
+non-equivalent output, an invalid write, or a degenerate N+1 plan disqualifies it.
+Admitted cells may traverse three \emph{recommended} stages (dashed) that enrich but
+do not gate the comparison. \emph{Outputs} are descriptive of the treatment as
+defined: throughput and tail per operating point, with configuration- and
+version-specific rankings and only relative within-condition differences meant to
+travel.}
+\label{fig:protocol}
+\end{figure}
