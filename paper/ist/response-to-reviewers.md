@@ -1564,6 +1564,14 @@ main-text cross-reference is unaffected. The supplement drops from 42 to 39 page
 section remains in it, and the four main-text mentions of these sections now cite the replication
 package. No numbered supplement table or figure was removed or renumbered (checksums 35/35).
 
+## Point 11 (condensation) and the length/word-count concern
+
+The manuscript has been condensed: the seven body sections were tightened section by section, removing repeated re-establishment of the protocol/artifact/rankings distinction, duplicated estimand and methodological-stage prose that the tables already carry, and general filler. The body drops from 11,143 to **9,173 words** (a ~18\% cut; the main article from 54 to **49 pages**), while every load-bearing caveat from the earlier rounds was preserved (an adversarially-verified check confirmed all of them survive) and no table, figure, or cross-reference was removed. The recurring "the protocol, not any ranking, is the contribution" is now stated once (the Abstract), with the Conclusion making the same point without repetition.
+
+On the submission-compliance concern: under the IST rule (references and appendices counted, each float 200 words) the manuscript is now body 9,173 + structured abstract 273 + reference list ~1,900 + eight main-text floats (1,600) = **~12,946 words**, comfortably under the 15,000-word limit. The structured abstract keeps its five required dimensions (Context, Objective, Methods, Results, Conclusion) at 273 words (< 300).
+
+Prose-only: no measurement changed (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1578,7 +1586,7 @@ additions from earlier rounds (the write-state validation and the co-primary dee
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.11 (DOI 10.5281/zenodo.21497964), the version this revision describes.
+as release v1.12.12 (DOI 10.5281/zenodo.21498786), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

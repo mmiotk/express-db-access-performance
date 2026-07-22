@@ -1,128 +1,107 @@
 \section{Related Work}
 \label{sec:related}
 
-We survey prior work along four \emph{coverage} axes --- taxonomy coverage, engine coverage,
-joint throughput/tail reporting, and vendor involvement --- along which access-layer
-benchmarks vary and which our case study spans (Table~\ref{tab:prior_art}); more fundamentally,
-prior work leaves the comparability of its numbers unestablished, the gap our protocol addresses.
-We located it with a structured scoping search (not a systematic review) of the ACM Digital Library,
-IEEE Xplore, Scopus, and Google Scholar (July~2026), crossing access-layer terms (ORM, query builder,
-the seven library names) with Node.js, engine, and measurement terms over 2006--July~2026, then
-backward and forward citation chaining. We retained empirical comparisons of relational access layers
-or engines and excluded non-empirical, non-relational, and single-library studies; the exact strings,
-per-source dates, and screening decisions are archived with the replication package
-(\texttt{notes/related-work-search.md}). Because this is a scoping rather than exhaustive
-search, we scope every resulting gap claim to the sources searched.
+We survey prior work along four \emph{coverage} axes --- taxonomy, engine, joint throughput/tail
+reporting, and vendor involvement --- our case study spans (Table~\ref{tab:prior_art}); it leaves the
+comparability of its numbers unestablished, the gap our protocol addresses. A structured
+scoping search (not a systematic review) of the ACM Digital Library, IEEE Xplore, Scopus, and Google
+Scholar (2006--July~2026) retained empirical comparisons of relational access layers or engines, with
+search details archived in the replication package (\texttt{notes/related-work-search.md}); being
+scoping rather than exhaustive, we scope every gap claim to the sources searched.
 
 \subsection{Object-relational mapping and the access-layer spectrum}
-Access layers bridge the object-relational impedance mismatch between the
-relational model and the object graphs an application
-manipulates~\cite{ireland2009impedance}, spanning native
-drivers, query builders, and ORMs following patterns such as Data Mapper and
-Active Record~\cite{fowler2002patterns} (Section~\ref{sec:introduction}).
-Torres et al.~\cite{torres2017orm} survey two decades of ORM patterns; the
-trade-off they document --- developer productivity against a hard-to-predict
-runtime cost --- is the one this paper quantifies, holding the store choice
-(relational vs.\ non-relational~\cite{sadalage2012nosql}) fixed while varying only the access layer.
+Access layers bridge the object-relational impedance mismatch between the relational model and an
+application's object graphs~\cite{ireland2009impedance}, spanning native drivers, query builders, and
+ORMs following Data Mapper / Active Record patterns~\cite{fowler2002patterns}
+(Section~\ref{sec:introduction}). Torres et al.~\cite{torres2017orm} survey two decades of ORM
+patterns; their trade-off --- productivity against a hard-to-predict runtime cost --- is what we
+quantify, holding the store choice (relational vs.\ non-relational~\cite{sadalage2012nosql}) fixed
+while varying only the access layer.
 
 \subsection{ORM performance and data-access anti-patterns}
-A parallel line studies ORM performance from the opposite direction, detecting and repairing
-the inefficient SQL that mapping frameworks emit rather than benchmarking layers. The costliest
-pattern is the N+1 query problem (Section~\ref{sec:introduction}); it and related
-redundant-query anti-patterns are pervasive across real-world web
-applications~\cite{yang2018dbapps,yan2017inefficiencies,shao2020antipatterns}, and their
-performance impact has been quantified in ORM-backed systems~\cite{chen2016redundant,chen2014orm}
-and shown often \emph{removable} by query synthesis, round-trip batching, or
-caching~\cite{cheung2013querysynthesis,cheung2014sloth,chen2016cacheoptimizer} (with a JavaScript
-analogue in mis-sequenced \texttt{async}/\texttt{await}~\cite{turcotte2022asyncjs}). Closest to our design, Lorenz et al.~\cite{lorenz2017orm} show
-the best O/R mapping strategy depends on the database technology, van Zyl et
-al.~\cite{vanzyl2009optimisations} that ORM performance is highly tuning-sensitive, and a recent
-study adds an energy dimension~\cite{bonvoisin2024orm}. This literature establishes \emph{where}
-ORM overhead concentrates and that it is configurable, not fixed --- consistent with our per-pattern
-results in this configuration --- but does not compare drivers, query builders, and ORMs head-to-head
-under controlled load, our aim here.
+A parallel line studies ORM performance in reverse, repairing the inefficient SQL frameworks emit. The
+costliest is the N+1 query problem (Section~\ref{sec:introduction}); it and related redundant-query
+anti-patterns pervade real-world web
+applications~\cite{yang2018dbapps,yan2017inefficiencies,shao2020antipatterns}, their impact quantified
+in ORM-backed systems~\cite{chen2016redundant,chen2014orm} and often \emph{removable} by query
+synthesis, batching, or caching~\cite{cheung2013querysynthesis,cheung2014sloth,chen2016cacheoptimizer}
+(with a JavaScript \texttt{async}/\texttt{await} analogue~\cite{turcotte2022asyncjs}). Closest to our
+design, Lorenz et al.~\cite{lorenz2017orm} show the best mapping strategy depends on database technology,
+van Zyl et al.~\cite{vanzyl2009optimisations} that it is tuning-sensitive, and a recent study adds an
+energy dimension~\cite{bonvoisin2024orm}. Overhead is thus configurable, not fixed --- as
+our per-pattern results confirm --- but this line never compares drivers, query builders, and ORMs
+head-to-head under load, our aim.
 
 \subsection{Peer-reviewed access-layer comparisons}
-The peer-reviewed literature that measures access layers head-to-head is narrow.
-Colley et al.~\cite{colley2018orm} give the earliest
-systematic cross-language account, benchmarking eight ORM frameworks across Java,
-C\#, Python, and PHP against a common schema, but \emph{deliberately excludes
-JavaScript}, leaving it without an academic baseline for nearly a decade. Three recent studies partially address
-this: one, in \emph{Procedia Computer Science}, compares Prisma against optimized
-raw SQL over eight query patterns on a containerized PostgreSQL
-setup~\cite{prisma_rawsql_2025} (differing versions, hardware, and workload, so we
-neither build on nor dispute its figures); a second compares Prisma, TypeORM, and Sequelize
-across four relation types, also on PostgreSQL, by response time, memory, and
-CPU~\cite{orm_compare_jcct_2025}; and the most recent instruments the same three
-ORMs on PostgreSQL inside a NestJS service, timing internal query stages rather
-than client-observed requests~\cite{zhadko2025orm}, independently observing the
-concurrency-dependent Prisma ranking flip we also report. A further Express-based study optimizes a
-single stack (pooling, batching, caching) rather than comparing access
+Peer-reviewed head-to-head access-layer measurement is scarce. Colley et al.~\cite{colley2018orm} give
+the earliest cross-language account --- eight ORMs across Java, C\#, Python, and PHP on a common schema
+--- but \emph{deliberately exclude JavaScript}, leaving it without an academic baseline for nearly a
+decade. Three recent studies partially address this: one in
+\emph{Procedia Computer Science} compares Prisma against optimized raw SQL over eight query patterns on
+PostgreSQL~\cite{prisma_rawsql_2025} (differing versions, hardware, and workload, so we neither build on
+nor dispute its figures); a second compares Prisma, TypeORM, and Sequelize across four relation types,
+also on PostgreSQL, by response time, memory, and CPU~\cite{orm_compare_jcct_2025}; the most recent times
+internal query stages of the same three ORMs rather than client-observed
+requests~\cite{zhadko2025orm}, independently observing the concurrency-dependent Prisma ranking flip we
+also report. A further Express study optimizes one stack rather than comparing access
 layers~\cite{imamsakti2025async}.
 
 \subsection{Database-engine, SQL/NoSQL, and Node.js performance}
-A second, largely disjoint line benchmarks the layers immediately below and above
-the access layer without varying it directly. Salunke and
-Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL head-to-head under
-standard OLTP workloads (the only dual-engine precedent found), but benchmark the
-\emph{engines themselves}, so they cannot say how an access layer would change it;
-SQL/NoSQL comparisons~\cite{li2013sqlnosql} likewise measure the store, not the layer. On the Node.js side, prior work establishes Node's web
-viability~\cite{chaniotis2015nodejs}, tracks its back-end performance drift under sustained
-load~\cite{kuffel2025nodejs}, and compares back-end frameworks broadly~\cite{carmo2024backend}, but
-none treats the database access layer as an independent variable, let alone varies it across the
-taxonomy studied here.
+A second, disjoint line benchmarks the layers below and above the access layer without varying it.
+Salunke and Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL under standard OLTP
+workloads (the only dual-engine precedent found), but benchmark the \emph{engines themselves}, so cannot
+say how an access layer changes it; SQL/NoSQL comparisons~\cite{li2013sqlnosql} likewise measure the
+store, not the layer. On the Node.js side, work establishes Node's web
+viability~\cite{chaniotis2015nodejs}, tracks back-end drift under sustained load~\cite{kuffel2025nodejs},
+and compares frameworks broadly~\cite{carmo2024backend}, but none treats the access layer as an
+independent variable across the taxonomy studied here.
 
 \subsection{Standard benchmarks and benchmarking methodology}
-Standard benchmarks define how database systems are measured: YCSB~\cite{cooper2010ycsb} for
-cloud-serving stores and the TPC-C/TPC-E suites for OLTP. These target the \emph{engine}, saying
-nothing about the driver, query builder, or ORM this study varies, but set the bar for controlled,
-repeatable load. A separate methodological literature explains why single-metric reporting is a
-problem: Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair} catalog
-database-benchmarking pitfalls (coordinated omission, warm-up, tool-induced distortion); Dean and
-Barroso~\cite{dean2013tail} show the tail, not the mean, determines user-perceived latency under
-fan-out; and Li et al.~\cite{li2014tales} trace its sources. Such measurement is often ad
-hoc~\cite{jiang2015load,leitner2017exploratory} and hard to
-reproduce~\cite{collberg2016repeatability}, motivating a reusable harness built for relevance,
-repeatability, and fairness~\cite{huppler2009benchmark,sim2003benchmark}. From it we take a design
-choice absent from the access-layer benchmarks above: report throughput \emph{and} p99 for the same
-run, not a single metric chosen after the fact.
+Standard benchmarks define how systems are measured: YCSB~\cite{cooper2010ycsb} for cloud-serving
+stores and TPC-C/TPC-E for OLTP. These target the \emph{engine}, not the driver, query builder, or ORM
+this study varies, but set the bar for controlled, repeatable load. A methodological literature
+explains why single-metric reporting fails: Fruth et al.~\cite{fruth2022tail} and Raasveldt et
+al.~\cite{raasveldt2018fair} catalog benchmarking pitfalls (coordinated omission, warm-up); Dean and
+Barroso~\cite{dean2013tail} show the tail, not the mean, drives user-perceived latency under fan-out;
+and Li et al.~\cite{li2014tales} trace its sources. Such measurement is often ad
+hoc~\cite{jiang2015load,leitner2017exploratory} and hard to reproduce~\cite{collberg2016repeatability},
+motivating a harness built for relevance, repeatability, and
+fairness~\cite{huppler2009benchmark,sim2003benchmark}. We take a choice absent above: report throughput
+\emph{and} p99 for the same run, not a single after-the-fact metric.
 
 \subsection{Practitioner and vendor benchmarks}
-A larger body of evidence comes from practitioners and vendors, each authored by
-a party with a stake in one of the compared products. Drizzle publishes a
-Northwind micro-suite (nine targets, pooled and unpooled) and an official k6 load test
-reporting req/s, average latency, P95, and CPU~\cite{drizzle_benchmarks}. Prisma's own site compares
-Prisma, Drizzle, and TypeORM by median query latency over 500 iterations, reporting neither throughput
-nor any latency percentile~\cite{prisma_benchmarks}. IMDBench adds Sequelize and node-postgres,
-reporting throughput and latency on three CRUD operations~\cite{imdbench}. Together
-these three cover more of the taxonomy than the entire peer-reviewed literature
-combined, yet share the defects noted in Section~\ref{sec:introduction}: vendor
-authorship, PostgreSQL-only coverage, and a single reported metric family.
+A larger body comes from practitioners and vendors, each authored by a party with a stake in a compared
+product. Drizzle publishes a Northwind micro-suite (nine targets) and a k6 load test reporting req/s,
+average latency, P95, and CPU~\cite{drizzle_benchmarks}. Prisma's site
+compares Prisma, Drizzle, and TypeORM by median query latency over 500 iterations, reporting neither
+throughput nor any percentile~\cite{prisma_benchmarks}. IMDBench adds Sequelize and node-postgres,
+reporting throughput and latency on three CRUD operations~\cite{imdbench}. Together these cover more
+taxonomy than the peer-reviewed literature combined, yet share the defects of
+Section~\ref{sec:introduction}: vendor authorship, PostgreSQL-only coverage, and a single metric family.
 
 \subsection{Positioning}
-In the sources searched through July 2026 the access-layer benchmarks report numbers whose
-comparability is assumed rather than established, and we did not identify a study combining broad
-taxonomy coverage, both engines, joint throughput/tail reporting, and non-vendor authorship --- each
-covers at most two or three (Table~\ref{tab:prior_art}) --- the strongest claim the scoping search
-supports, not a claim of priority. But coverage is not the contribution, and the methodological point is a bounded one: the protocol
-operationalizes established experimental principles for the access-layer genre, not a new principle of
-its own. Kounev et al.'s systems-benchmarking criteria~\cite{kounev2020benchmarking}, Hasselbring's
-software-engineering benchmarking standard~\cite{hasselbring2021benchmarking}, and Raasveldt and
-M\"uhleisen's database fair-benchmarking guidance~\cite{raasveldt2018fair} supply the principles it
-rests on --- fairness, verifiability, experimental design, validate-then-report --- but at an abstract
-level, operationalizing neither of its access-layer constructs: none prescribes a documentation-selected,
-predeclared rule for \emph{what code represents a library} or a same-SQL contrast holding the query
-strategy fixed, and their correctness norms (``verify results'', construct validity) stop short of a
-per-cell admission gate requiring byte-identical responses and verified write-state \emph{before} timing.
-Correctness-before-timing has precedents (SPEC output validation, TPC ACID, SQLancer's equivalence
-oracles~\cite{rigger2020sqlancer}), but each validates one program or engine against its own reference,
-not equivalence \emph{across competing implementations of one task} as an admission precondition.
-Combined, the three constructs --- predeclared treatment-selection, cross-implementation admission-gated
-equivalence, and a same-SQL diagnostic --- yield one domain-specific property that general frameworks
-assume or leave to the practitioner: an admission-and-attribution discipline making \emph{competing
+In the sources searched, access-layer benchmarks report numbers whose comparability is assumed, not
+established, and we found no study combining broad taxonomy, both engines, joint throughput/tail
+reporting, and non-vendor authorship --- each covers at most two or three
+(Table~\ref{tab:prior_art}), the strongest claim the scoping search supports, not one of priority. But
+coverage is not the contribution: the protocol operationalizes established experimental principles for
+this genre, not a new one. Kounev et al.'s systems-benchmarking
+criteria~\cite{kounev2020benchmarking}, Hasselbring's software-engineering
+standard~\cite{hasselbring2021benchmarking}, and Raasveldt and M\"uhleisen's fair-benchmarking
+guidance~\cite{raasveldt2018fair} supply its principles, but abstractly: none prescribes a
+documentation-selected, predeclared rule for
+\emph{what code represents a library} or a same-SQL contrast holding the query strategy fixed, and their
+correctness norms (``verify results'', construct validity) stop short of a per-cell admission gate
+requiring byte-identical responses and verified write-state \emph{before} timing. Correctness-before-timing
+has precedents (SPEC validation, TPC ACID, SQLancer's equivalence oracles~\cite{rigger2020sqlancer}), but
+each validates one program against its own reference, not equivalence \emph{across competing
+implementations of one task}. Together these three constructs --- predeclared treatment-selection,
+cross-implementation admission-gated equivalence, and a same-SQL diagnostic --- yield one
+domain-specific property general frameworks leave to the practitioner: an admission-and-attribution
+discipline making \emph{competing
 implementations of one task} mutually comparable. That domain specialization, realized in the open
-harness (Section~\ref{sec:introduction}), is the contribution --- not the invention of the underlying
-principles; a pre-submission search past the July~2026 freeze surfaced no new access-layer prior art.
+harness (Section~\ref{sec:introduction}), is the contribution, not the invention of the underlying
+principles; a post-freeze pre-submission search surfaced no new prior art.
 
 \begin{table}[htbp]
   \centering

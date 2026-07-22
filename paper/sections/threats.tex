@@ -8,112 +8,114 @@ categories~\cite{cook1979quasi,wohlin2012experimentation}.
 Our dependent variables are HTTP-level throughput (req/s) and tail latency
 (p99) at the Express endpoint, not query-execution time at the driver or
 database boundary --- deliberate, since it captures the full request round trip
-a deployed service incurs (Express routing, JSON serialization), though the
-overhead we attribute to the \emph{access layer} may partly reflect these
-surrounding costs. We hold them near-constant: every adapter satisfies a
-documented \emph{adapter contract} and funnels its rows through shared canonical
-constructors (a fixed field set, key order, and value typing, under
-\texttt{TZ=UTC}), and the automated cross-check (\texttt{bench/verify.mjs})
-asserted full JSON byte equality against the native-driver baseline, on both
-engines, across the four non-mutating patterns before any timing run
-(Section~\ref{sec:methodology}). During development that check caught a defect:
-PostgreSQL's schema declared \texttt{created\_at} as a timezone-naive timestamp
-although the column is \texttt{timestamptz}, so Drizzle's PostgreSQL responses
-carried instants shifted by the host's UTC offset --- invisible to throughput
-and to any coarser equivalence check; it was fixed (\texttt{withTimezone: true})
-before the campaign reported here. The fixed-payload baseline floor sits well
-above the fastest measured cell (Section~\ref{sec:methodology}), so the framework
-floor compresses, rather than manufactures, between-layer differences, which are
-therefore attributable to how each layer reaches an identical response, not to
-what is returned. Writes are the one endpoint that mutates state; the reported
-finding uses each engine's \emph{default}, vendor-standard durability
-configuration (Section~\ref{sec:methodology}), not one we relaxed ourselves, so
-the write spreads (Table~\ref{tab:write}) describe a standard deployment rather
-than a tuning choice; a symmetric relaxed-durability secondary confirms the
+(Express routing, serialization), though the overhead we attribute to the
+\emph{access layer} may partly reflect these surrounding costs. We hold those
+near-constant: every adapter satisfies a documented \emph{adapter contract} and
+funnels rows through shared canonical constructors (fixed field set, key order,
+typing, under \texttt{TZ=UTC}), and the automated cross-check
+(\texttt{bench/verify.mjs}) asserted full JSON byte equality against the
+native-driver baseline, on both engines, across the four non-mutating patterns
+before any timing run (Section~\ref{sec:methodology}). That check caught a defect:
+PostgreSQL's timezone-naive \texttt{created\_at} (the column is
+\texttt{timestamptz}) shifted Drizzle's instants by the host's UTC offset,
+invisible to throughput and fixed before this campaign. The fixed-payload baseline
+floor sits above the fastest cell (Section~\ref{sec:methodology}), so the framework
+compresses rather than manufactures between-layer differences, attributable to how
+each layer reaches an identical response, not to what is returned. The reported
+write finding uses each engine's \emph{default} vendor-standard durability
+(Section~\ref{sec:methodology}), not one we relaxed, so the write spreads
+(Table~\ref{tab:write}) describe a standard deployment, not a tuning choice; a
+symmetric relaxed-durability secondary confirms the
 cross-engine gap is not an artifact of either configuration
 (Section~\ref{sec:discussion}, Supplement Table~S3).
 
 \paragraph{Construct validity of the treatment}
-RQ1's treatment is each layer's \emph{documentation-selected} implementation and eager-loading
-strategy: an operational rule --- the API the official documentation presents first --- that we
-do not validate against surveyed, typical, or performance-tuned usage. It is an intentionally artificial, predeclared selection policy, not a validated practitioner persona or a claim that documentation ordering equals idiomatic or performance-conscious practice; where a layer's
-documentation-first API differs from what a performance-conscious developer would choose, RQ1's
-spread mixes the library's execution machinery with that strategy choice, a mixture made material
-by the one-to-four statement range on the deep fetch (Supplement Table~S2). Three things constrain it.
-First, the selected API is in every case the relations mechanism the official documentation
-presents first --- for the ORMs, the library's canonical eager-loading API --- not an obscure one (Supplement Table~S33, corroborated against the official documentation recorded per
-layer in \texttt{METHODOLOGY.md}). Second, the \emph{same-SQL standardized contrast} makes every
-layer run common SQL through its raw facility, so the raw-path spread (deep fetch $1.68\times$,
-against $7.15\times$ documentation-selected; Section~\ref{sec:results}) is far smaller --- a
-compound \emph{standardized contrast}, not a decomposition or bound on how much comes from the documentation-selected
-loading strategy as opposed to the library machinery. Third, where the documented
-alternative is a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows the
-documentation-selected default is the \emph{faster} strategy for the join-default ORMs, so their
-deficit does not appear to be an artifact of a poor default; the one exception, Objection's slower select-in
-default on MySQL, is disclosed rather than corrected. RQ1 therefore answers what this documentation-selected policy yields, not the library's intrinsic overhead.
+RQ1's treatment is each layer's \emph{documentation-selected} implementation and
+eager-loading strategy: an operational rule --- the API the official
+documentation presents first --- not validated against surveyed, typical, or
+performance-tuned usage. It is an intentionally artificial, predeclared selection
+policy, not a validated practitioner persona; where it differs from what a
+performance-conscious developer would choose, RQ1's spread mixes the library's
+execution machinery with that strategy choice, made material by the one-to-four
+statement range on the deep fetch (Supplement Table~S2). Three things
+constrain it. First, the selected API is never obscure --- for the ORMs it is the
+canonical eager-loading API (Supplement Table~S33, corroborated per layer in
+\texttt{METHODOLOGY.md}). Second, the \emph{same-SQL standardized contrast} runs
+common SQL through every layer's raw facility, so the raw-path spread (deep fetch
+$1.68\times$, against $7.15\times$ documentation-selected;
+Section~\ref{sec:results}) is far smaller --- a compound \emph{standardized
+contrast}, not a decomposition or bound on how much comes from the loading
+strategy versus the library machinery. Third, where the documented alternative is
+a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows
+the documentation-selected default is the \emph{faster} strategy for the
+join-default ORMs, so their deficit is not an artifact of a poor default; the lone
+exception, Objection's slower select-in default on MySQL, is disclosed rather than
+corrected. RQ1 therefore answers what this documentation-selected policy yields,
+not the library's intrinsic overhead.
 
 \paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
-reasons unrelated to its inherent cost; every adapter must use its layer's
+reasons unrelated to its inherent cost, so every adapter uses its layer's
 documentation-selected eager-loading strategy on the deep-fetch endpoint
-(Section~\ref{sec:methodology}). The byte-level correctness cross-check caught two
-defects before measurement (Section~\ref{sec:discussion}). Explicit warm-up
-phases per cell, set to exceed the slowest
-layer's cold-start stabilization, absorb JIT, pool-fill, and plan-cache effects,
-guarding against environmentally induced measurement
-bias~\cite{mytkowicz2009producing}; two further controls rule out non-layer
-confounds --- benchmark rows reset before every cell (physically rebuilt for
-writes), and one correlated-subquery plan for aggregation across layers.
-Every layer and engine within a replicate is
-driven by the identical, PRNG-seeded id sequence, and a forward-versus-reversed
-cell-order check found no detectable history effect
-(Section~\ref{sec:methodology}), addressing the concern that processing order
-could confound layer identity with run position. A residual risk is coordinated
-omission in the load generator, which can under-report tail latency at
-saturation~\cite{fruth2022tail,tene2015latency}; a native,
-coordinated-omission-corrected constant-arrival cross-run on the deep fetch
-(Section~\ref{sec:methodology}) is consistent with the tail ranking holding under that
-stricter model (Section~\ref{sec:results}; Supplement Table~S6).
+(Section~\ref{sec:methodology}), and the byte-level cross-check caught two defects
+before measurement (Section~\ref{sec:discussion}). Per-cell warm-up phases
+exceeding the slowest layer's cold-start stabilization absorb JIT, pool-fill, and
+plan-cache effects~\cite{mytkowicz2009producing}; two further controls rule out
+non-layer confounds --- benchmark rows reset before every cell (physically rebuilt
+for writes), and one correlated-subquery aggregation plan across layers. Within a
+replicate every layer and engine runs the identical PRNG-seeded id sequence, and a
+forward-versus-reversed cell-order check found no history effect
+(Section~\ref{sec:methodology}), so order does not confound layer identity with
+run position. A residual risk is coordinated omission in the load generator, which
+can under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency};
+a native, coordinated-omission-corrected constant-arrival cross-run on the deep
+fetch (Section~\ref{sec:methodology}) is consistent with the tail ranking holding
+under that stricter model (Section~\ref{sec:results}; Supplement Table~S6).
 
 \paragraph{External validity}
-All measurements come from a single schema, dataset size, and 16-vCPU virtualized host, a pool fixed
-at ten, and specific engine and library versions (PostgreSQL~18.4, MySQL~9.7.1; the latest stable
-releases compatible with the harness, Supplement Table~S11). The fixed pool does not drive the
-ranking: the pool-size frontier (Supplement Tables~S7, S25) preserves the ordering from 1 to 50
-connections, and a mixed read/write workload (S26) preserves the read ordering. Two choices are
-disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is prerelease), and Prisma's
-MySQL path on the MariaDB adapter, as Prisma ships no \texttt{mysql2} adapter --- an
-implementation$\times$engine asymmetry. Only the \emph{relative} within-engine ordering is intended to
-travel; absolute req/s reflect this substrate and may not transfer to larger working sets, other pool
-sizes, or other versions. The memory-resident working set is a hot-cache regime that makes
-access-layer overhead more visible; as a workload becomes I/O-bound the spreads should compress toward
-$1\times$. Same-host checks bound only within-host drift, not an independent substrate: an equal-CPU
-pinning agrees with the shared-host medians within about 2\%, a multi-worker check (Supplement
-Table~S24) shows the low-per-process layers scale out roughly linearly over one to four workers, a
-ten-minute run moves throughput by at most $\pm1.4\%$, and a post-restart re-run moved absolute
-throughput up to $16\%$ with the ranking intact (Supplement Table~S20). A substrate change should
-preserve the \emph{architectural} conclusions --- the within-engine relative ordering and the
-operating-point separation --- while possibly moving absolute req/s, gap magnitudes, and the
-cross-engine RQ2 ordering; an independent-host replication of the core deep fetch remains future work.
-The protocol's stages are experimental-design controls (Table~\ref{tab:protocol_mapping}, Supplement
-Table~S37), so single-host measurement bounds the case study, not the protocol.
+All measurements come from a single schema, dataset size, and 16-vCPU virtualized
+host, a pool fixed at ten, and specific engine and library versions
+(PostgreSQL~18.4, MySQL~9.7.1; latest harness-compatible stable, Supplement
+Table~S11). The fixed pool does not drive the ranking: the pool-size frontier
+(Supplement Tables~S7, S25) preserves the ordering from 1 to 50 connections, and a
+mixed read/write workload (S26) preserves the read ordering. Two choices are
+disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is
+prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no
+\texttt{mysql2} adapter --- an implementation$\times$engine asymmetry. The
+memory-resident working set is a hot-cache regime that makes access-layer overhead
+more visible; as a workload becomes I/O-bound the spreads should compress toward
+$1\times$. Same-host checks bound only within-host drift, not an independent
+substrate: equal-CPU pinning agrees with the shared-host medians within about
+2\%, low-per-process layers scale roughly linearly over one to four workers
+(Supplement Table~S24), a ten-minute run moves throughput by at most $\pm1.4\%$,
+and a post-restart re-run moved throughput up to $16\%$ with the ranking intact
+(Supplement Table~S20). Only the \emph{relative} within-engine ordering and
+operating-point separation are intended to travel; absolute req/s, gap magnitudes,
+and RQ2's cross-engine ordering may move with the substrate and need not transfer
+to other working sets, pool sizes, or versions, so a substrate change should
+preserve these \emph{architectural} conclusions while independent-host replication
+of the core deep fetch remains future work. Because the protocol's stages are experimental-design controls
+(Table~\ref{tab:protocol_mapping}, Supplement Table~S37), single-host measurement
+bounds the case study, not the protocol.
 
 \paragraph{Conclusion validity}
-Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of variation
-and within-campaign bootstrap 95\% intervals (repeatability, not population-general) as stability signals and, because the design is a
-randomized block, compares adjacently ranked layers with \emph{paired} tests on their
-per-replicate throughput ratios (paired sign-flip permutation, cross-checked with Wilcoxon;
-Supplement Table~S36). Two bounds reinforce the ordering: the widest spreads dwarf the
-run-to-run CV ($\leq4.0\%$; Supplement Tables~S1, S9), and the ordering holds across the
-concurrency sweep at $\geq32$ connections (Supplement Figure~S2). Rather than assert a
-specific statistical power (which would need a prospective effect-size model we did not
-prespecify), we rest the conclusions on effect sizes and interval estimates --- foremost the
-\emph{predefined} native-driver contrasts (Supplement Table~S41), with the ranking-selected
-adjacent-pair permutation tests kept only as a descriptive post-hoc check (Supplement Table~S36). Booting a fresh
-process per replicate prevents persistent process state from carrying across
-replicates~\cite{kalibera2013rigorous}, but the replicates share one host and one campaign, so
-we treat replicate index and measurement order as blocks rather than claiming full
-independence; more replicates or longer runs would tighten the intervals further. The secondary
-experiments that cover only a layer subset or few replicates (open-loop tail, equal-CPU, pool-size,
-transactional write, and cluster checks; Supplement Table~S32) are read as \emph{sensitivity
+Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient
+of variation and within-campaign bootstrap 95\% intervals (repeatability, not
+population-general) and, because the design is a randomized block, compares
+adjacently ranked layers with \emph{paired} tests on their
+per-replicate throughput ratios (paired sign-flip permutation, cross-checked with
+Wilcoxon; Supplement Table~S36). Two bounds reinforce the ordering: the widest
+spreads dwarf the run-to-run CV ($\leq4.0\%$; Supplement Tables~S1, S9), and it
+holds across the concurrency sweep at $\geq32$ connections (Supplement
+Figure~S2). Rather than assert a specific statistical power (absent a prespecified
+effect-size model), we rest the conclusions on effect sizes and interval
+estimates --- foremost the \emph{predefined} native-driver contrasts (Supplement
+Table~S41), keeping the ranking-selected adjacent-pair permutation tests only as a
+descriptive post-hoc check. Booting a fresh process per replicate prevents
+persistent state carrying across replicates~\cite{kalibera2013rigorous}, but they
+share one host and one campaign, so we treat replicate index and measurement order
+as blocks rather than claiming full independence. The secondary experiments
+covering only a layer
+subset or few replicates (open-loop tail, equal-CPU, pool-size, transactional
+write, and cluster checks; Supplement Table~S32) are read as \emph{sensitivity
 evidence} on the tested subset, not as claims about all eleven implementations.

@@ -375,5 +375,5 @@ The replication package for this revision is archived at Zenodo,
 
 **Point 6.5 (follow-up).** The documentation-selected treatment is now presented as an intentionally artificial, predeclared selection policy, not a validated practitioner persona: the Threats construct-validity paragraph, Study Design, and Results drop the persona/"a developer following the documentation obtains" framing for policy statements, keeping the disclaimers. A machine-readable selection rubric (`notes/documentation-selection.md`) archives the per-layer API, documentation URLs, versions, freeze date, tie-break decisions, and Wayback retrieval URLs for independent reassessment; Study Design points to it. Compiling it surfaced and fixed a stale version column in METHODOLOGY.md (reconciled to Table S11 / lockfile). Prose-plus-artifact (checksums 35/35); body 11,131 to 11,145, total ~14,944.
 
-DOI 10.5281/zenodo.21497964 (release v1.12.11). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21498786 (release v1.12.12). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

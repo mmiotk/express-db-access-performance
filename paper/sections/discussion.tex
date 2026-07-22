@@ -2,101 +2,82 @@
 \label{sec:discussion}
 
 \paragraph{Version-sensitivity}
-An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the
-native driver on the deep fetch while drawing about five application cores; re-running the
-\emph{identical} harness on the latest stable releases at the freeze did not reproduce it ---
-no layer now draws more than about one core, and Prisma has fallen to mid-to-low throughput
-(Section~\ref{sec:results}). The non-reproduction is a fact; its cause is a hypothesis (only
-Prisma changed architecture, so its Rust-free rewrite is the likeliest driver, but the
-re-freeze moved the whole toolchain at once). The headline is therefore
+An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the native
+driver on the deep fetch while drawing about five application cores; the \emph{identical} harness
+on the latest stable releases did not reproduce it --- no layer now draws over one core, and
+Prisma sits at mid-to-low throughput (Section~\ref{sec:results}). The non-reproduction is a fact,
+its cause a hypothesis (Prisma's Rust-free rewrite is likeliest, though the re-freeze moved the
+whole toolchain at once), so the headline is
 version-sensitive~\cite{vanzyl2009optimisations,papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice}
-RQ1 and RQ3 agree that the documentation-selected implementation-and-strategy difference is
-specific to the access \emph{pattern}, largest in these probes where a layer must hydrate rows into
-objects and resolve associations rather than merely issue SQL (the object-relational impedance
-mismatch~\cite{ireland2009impedance} made concrete): the native-relative spread is widest on
-the deep/nested fetch and narrowest on aggregation. Round-trip count alone does not set
-throughput --- on the PostgreSQL deep fetch the single-query MikroORM is the slowest of all
-while the two-query Drizzle outruns the four-query Prisma (Supplement Table~S2;
-Table~\ref{tab:deep_fetch}) --- consistent with result-graph materialization, not statement count,
-separating the layers here.
+RQ1 and RQ3 agree the documentation-selected implementation-and-strategy difference is specific to
+the access \emph{pattern}: the native-relative spread is widest on the deep/nested fetch --- where
+a layer must hydrate rows and resolve associations rather than merely issue SQL (the
+object-relational impedance mismatch~\cite{ireland2009impedance} made concrete) --- and narrowest
+on aggregation. Round-trip count alone does not set throughput --- result-graph materialization
+does: on the PostgreSQL deep fetch single-query MikroORM is slowest while two-query Drizzle
+outruns four-query Prisma (Supplement Table~S2; Table~\ref{tab:deep_fetch}).
 
 \paragraph{Compute cost and horizontal scaling}
-Under current versions, with every layer at roughly one application core, the native driver
-leads on both throughput and compute efficiency (requests per CPU-second, application-tier and
-combined; Section~\ref{sec:results}, Supplement Figure~S3 and Table~S5), consistent with its leaner
-SQL --- though CPU shares at unequal throughput do not identify where per-request work occurs. A low per-process throughput is
-not a fixed ceiling over the range tested: on PostgreSQL Prisma's aggregate throughput rises
-roughly in proportion to workers (1{,}117 to 4{,}449 over one to four workers), reaching
-native-like throughput in this run, trading footprint and energy for
-throughput~\cite{bonvoisin2024orm}. This is a bounded 1-to-4-worker check on a single host,
-not general scalability: on MySQL the native driver keeps scaling and the gap does not close, and
-it locates no database-side saturation bottleneck. The open-loop cross-run further indicates that a closed-loop
-benchmark alone would underestimate how abruptly, not just how much, a heavyweight ORM's tail
-degrades once offered load crosses its capacity.
+With every layer now near one core, the native driver leads throughput and compute efficiency
+(requests per CPU-second; Section~\ref{sec:results}, Supplement Figure~S3, Table~S5), consistent
+with its leaner SQL --- though CPU shares at unequal throughput do not identify where per-request
+work occurs. Low per-process throughput is no fixed ceiling: on PostgreSQL Prisma's aggregate
+throughput rises roughly with workers (1{,}117 to 4{,}449 over one to four) to native-like levels,
+trading footprint and energy for it~\cite{bonvoisin2024orm}, but this bounded 1-to-4-worker check
+on a single host is not general scalability: on MySQL the native driver keeps scaling, the gap not
+closing and no database-side saturation located. The open-loop cross-run further shows
+a closed-loop benchmark would underestimate how abruptly, not just how much, a heavyweight ORM's
+tail degrades once load crosses its capacity.
 
 \paragraph{Single-row inserts: a partly engine-bound cost under default durability}
-RQ2 has a clear answer on inserts, under each engine's \emph{default} durability
-configuration: the native driver leads on both engines, PostgreSQL's insert throughput stays
-strongly layer-dependent even with fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on
-MySQL the faster layers cluster within about $5\%$ near an engine-level commit floor (the
-per-commit redo-log-then-binlog double flush~\cite{harizopoulos2008oltp}; Supplement
-Table~S19), and relaxing durability does not overturn this engine contrast. The write ranking
-reverses across engines --- \texttt{knex} leads on PostgreSQL but \texttt{drizzle} on MySQL,
-and Prisma drops from fourth to last (Table~\ref{tab:write}) --- with the per-layer engine
-advantage spanning $1.6$--$3.2\times$ (Supplement Table~S28), so a single-engine write comparison
-invites the wrong generalization either way; an
-engine-only benchmark such as~\cite{salunke2024pgmysql} cannot expose this interaction,
-whereas the dual-engine design does, consistent with earlier work showing database technology
-modulates mapping-strategy cost~\cite{lorenz2017orm}. An \emph{exploratory} transactional multi-statement write (a post and five comments in one
-transaction; five replicates, representative layers) narrows the spread to about
-$3.7\times$ (Supplement Table~S8), below the widest read spread, because the single commit
-amortizes the flush across six inserts; Prisma, mid-pack on the single-row insert, falls to
-the bottom transactionally, so the transactional ordering does not simply track the
-single-row one.
+RQ2 has a clear answer on single-row inserts, under each engine's \emph{default} durability: the
+native driver leads on both, PostgreSQL's inserts staying strongly layer-dependent even with
+fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on MySQL the faster layers cluster
+within about $5\%$ near an engine-level commit floor (the per-commit redo-log-then-binlog double
+flush~\cite{harizopoulos2008oltp}; Supplement Table~S19); relaxing durability does not overturn
+this contrast. The ranking reverses across engines --- \texttt{knex} leads on PostgreSQL,
+\texttt{drizzle} on MySQL, Prisma dropping from fourth to last (Table~\ref{tab:write}) --- the
+per-layer engine advantage spanning $1.6$--$3.2\times$ (Supplement Table~S28), so a single-engine
+benchmark like~\cite{salunke2024pgmysql} misses this interaction either way, which the dual-engine
+design exposes, as prior work on database technology modulating mapping cost
+anticipates~\cite{lorenz2017orm}. An \emph{exploratory} transactional multi-statement write
+(a post and five comments; five replicates, representative layers) narrows the spread to about
+$3.7\times$ (Supplement Table~S8), below the widest read spread, because one commit amortizes the
+flush across six inserts; Prisma, mid-pack on the single-row insert, falls to the bottom
+transactionally, so the ordering does not track the single-row one.
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking}
-Reaching the figures above meant confronting four confounds that would otherwise have
-corrupted the comparison silently, which we distill into a reusable checklist (full detail in
-the replication package's benchmarking-pitfalls checklist (\texttt{notes/supplement-methods})): an \textbf{aggregation fan-out} (a
-join evaluated before \texttt{SUM}, inflating the aggregate) and a driver result-shape
-mismatch, both \emph{correctness} bugs the automated byte-equality cross-check caught;
-\textbf{OFFSET pagination} collapsing on MySQL, a pagination-strategy cost easily misread as an
-access-layer weakness; \textbf{write-workload contamination} from an unreset growing table; and
-a \textbf{query-formulation confound} where a mis-scoped pre-aggregation re-scanned the whole
-table, a query-plan artifact masquerading as an access-layer
-effect~\cite{leis2015optimizers}. The write path needs its own gate: MikroORM~7's removal of
-\texttt{persistAndFlush} made every MikroORM insert throw a 500 that returned faster than a
-real insert, briefly \emph{leading} the MySQL write ranking until the non-2xx counter flagged
-it. A successful 2xx alone, however, would not catch a \emph{silently} incorrect write, so the
-write gate also validates post-write database state --- inserted field values, generated
-identifiers, exact row-count changes, and transactional rollback
-(Section~\ref{sec:methodology}) --- making database-state validation the write path's
-correctness gate as byte-equality is the read path's. None of the four is schema-specific; each is a generic failure mode extending the
+Four confounds would otherwise have silently corrupted the comparison; we distil them into a
+reusable checklist (\texttt{notes/supplement-methods}): an \textbf{aggregation fan-out} (a join
+before \texttt{SUM} inflating the aggregate) and a driver result-shape mismatch, both
+\emph{correctness} bugs the automated byte-equality cross-check caught; \textbf{OFFSET pagination}
+collapsing on MySQL, easily misread as an access-layer weakness; \textbf{write-workload
+contamination} from an unreset growing table; and a \textbf{query-formulation confound} where a
+mis-scoped pre-aggregation re-scanned the whole table, a query-plan artifact masquerading as an
+access-layer effect~\cite{leis2015optimizers}. The write path needs its own gate: MikroORM~7's
+dropped \texttt{persistAndFlush} made every insert throw a 500 faster than a real one, briefly
+\emph{leading} MySQL until the non-2xx counter flagged it. Because a 2xx alone would miss a
+\emph{silently} incorrect write, the gate also validates post-write database state --- field
+values, identifiers, row-count changes, and rollback (Section~\ref{sec:methodology}) --- the
+write path's correctness gate as byte-equality is the read path's. None is schema-specific; each extends the
 database-benchmarking pitfalls of Fruth et al.~\cite{fruth2022tail} and Raasveldt et
 al.~\cite{raasveldt2018fair} to the access-layer sub-genre, and at least one plausibly explains
-part of the gap between some vendor-reported and independently verified figures in this space.
+part of the gap between some vendor-reported and independently verified figures.
 
 \paragraph{Practical guidance}
-The practical synthesis follows from RQ1--RQ3 and applies to the benchmarked implementations in
-this configuration, workload, and host rather than to access-layer categories in general. The
-native driver leads throughput on every pattern on both engines, and the documentation-selected
-ORM spread was largest on the one deep/nested-fetch shape tested and much smaller on the
-read-simple patterns and aggregation. This locates the difference among five probes on one
-synthetic schema, not across relation-materializing workloads in general: the fan-out sweep
-(Section~\ref{sec:results}) varies breadth (0--500 children) but not depth, schema, or query mix, so
-this is a benchmark observation to be re-measured on the target workload, not an established law.
-Where a service's hot path is dominated by deep or nested fetches the access
-layer is consequential and should be benchmarked for the specific application: the tested thin
-paths (native driver and Knex) led here \emph{for throughput and response-time p99}, but
-whether that generalizes is a hypothesis for broader study. Where the workload is read-simple or
-write-bound (especially on MySQL, whose commit floor dominates layer differences under default
-durability) the throughput cost is small, and a layer's low per-process throughput may be addressed by
-additional application processes until another bottleneck (database contention or connection
-limits) is reached. These are performance findings only: the decision also turns
-on correctness, maintainability, security, type safety, and developer productivity, which this study does
-not measure and which may outweigh the differences reported here; the recommendations rest on
-the single host, default durability, and pinned versions of Section~\ref{sec:threats}, and the
-same-SQL results are a standardized diagnostic contrast on the documentation-selected cost, not a
-licence to use raw SQL in practice.
+The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in this
+configuration and workload --- single host, default durability, pinned versions
+(Section~\ref{sec:threats}) --- not access-layer categories in general. Because the fan-out sweep
+(Section~\ref{sec:results}) varies breadth (0--500 children) but not depth, schema, or query mix,
+the documentation-selected spread's peak on the deep/nested fetch locates a difference among five
+probes on one synthetic schema --- a benchmark observation to re-measure on the target workload,
+not an established law. Where a hot path is dominated by deep or nested fetches the access layer is
+consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for
+throughput and response-time p99}. Where the workload is read-simple or write-bound (especially on
+MySQL, whose commit floor dominates under default durability) the cost is small and may be met by
+adding application processes until another bottleneck (contention, connection limits). These are performance findings only: the choice also turns on correctness,
+maintainability, security, type safety, and developer productivity, which this study does not
+measure and may outweigh them; and the same-SQL results are a standardized diagnostic contrast on
+the documentation-selected cost, not a licence to use raw SQL.

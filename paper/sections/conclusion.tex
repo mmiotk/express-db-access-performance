@@ -1,34 +1,38 @@
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-This paper's contribution is a \textbf{comparability protocol} that makes access-layer
-benchmarking a controlled experiment rather than vendor-style number-reporting: it admits a
-layer's timing only once the layer returns byte-identical results (semantic equivalence),
-reports a documentation-selected estimand paired with a same-SQL standardized contrast (strategy standardization), and separates capacity, tail-under-demand, and matched-utilization latency
-(operating-point separation). An open, reusable harness operationalizes the protocol, and a
-dual-engine case study --- eleven implementations across PostgreSQL and MySQL over five
-access patterns --- demonstrates it (Section~\ref{sec:introduction}).
+This paper's contribution is a \textbf{comparability protocol} that turns access-layer
+benchmarking into a controlled experiment rather than vendor-style number-reporting: it
+admits a layer's timing only once that layer returns byte-identical results (semantic
+equivalence), pairs a documentation-selected estimand with a same-SQL standardized contrast
+(strategy standardization), and separates capacity, tail-under-demand, and matched-utilization
+latency (operating-point separation). An open, reusable harness operationalizes it,
+demonstrated by a dual-engine case study --- eleven implementations across PostgreSQL and
+MySQL over five access patterns (Section~\ref{sec:introduction}).
 
-The documentation-selected implementation-and-strategy difference is concentrated across the
-five tested patterns, not uniform: sharpest for the deep/nested fetch that assembles a nested object graph
-application-side, and modest for point reads and aggregation
-(Section~\ref{sec:results}). Among the raw paths running common SQL the spread is far smaller --- a standardized diagnostic, not a bound (Section~\ref{sec:results}). On the
-current library versions no layer's throughput scales with additional application cores and the native driver
-leads all ten engine-pattern combinations; the read ordering is similar across the two
-engines while the aggregation and insert orderings reverse (Prisma drops from mid-pack to
-last on the MySQL insert), a caution against generalizing single-engine results
-(Section~\ref{sec:discussion}). Access-layer rankings can also be version-sensitive:
-an earlier version's headline did not survive re-running the harness on newer releases
-(Section~\ref{sec:discussion}). Development also surfaced a
-reusable checklist of benchmarking pitfalls specific to this genre, one of them,
-a fast-but-wrong write path that passed the read-level cross-check, added by this
-very re-run (Section~\ref{sec:discussion}).
+The documentation-selected implementation-and-strategy difference is concentrated, not
+uniform, across the five tested patterns: sharpest for the deep/nested fetch assembling a
+nested object graph application-side, modest for point reads and aggregation. Among the raw
+paths running common SQL the spread is far smaller --- a standardized diagnostic, not a bound
+(Section~\ref{sec:results}).
 
-These findings held under a concurrency sweep (1 to 256 connections) and rest on
-large between-layer effect sizes with non-overlapping bootstrap intervals, the
-descriptive adjacent-rank permutation tests agreeing (Section~\ref{sec:results}). Further extensions would deepen the evidence --- a two-machine cross-run to bound
-observer interference beyond the open-loop check, additional engines and dataset
-sizes, and a dedicated study of the N+1 penalty and cold-start latency --- and the
-released harness, exercised again by this revision's re-run against Prisma~7, makes
-them straightforward, addressing the repeatability gap documented in
+On current library versions throughput never scales with added application cores, and the
+native driver leads all ten engine-pattern combinations; read orderings are similar across
+engines while aggregation and insert orderings reverse (Prisma drops from mid-pack to last on
+the MySQL insert), cautioning against generalizing single-engine results. Rankings are also
+version-sensitive: an earlier headline did not survive re-running on newer releases
+(Section~\ref{sec:discussion}).
+
+Development also surfaced a reusable checklist of genre-specific benchmarking pitfalls --- one,
+a fast-but-wrong write path that passed the read-level cross-check, added by this very re-run
+(Section~\ref{sec:discussion}).
+
+These findings held under a concurrency sweep (1 to 256 connections), resting on large
+between-layer effect sizes with non-overlapping bootstrap intervals, the descriptive
+adjacent-rank permutation tests agreeing (Section~\ref{sec:results}).
+
+Extensions would deepen the evidence --- a two-machine cross-run to bound observer
+interference beyond the open-loop check, more engines and dataset sizes, and a dedicated study
+of the N+1 penalty and cold-start latency --- and the released harness, re-run against
+Prisma~7, makes these straightforward, addressing the repeatability gap documented in
 computer-systems research~\cite{collberg2016repeatability}.

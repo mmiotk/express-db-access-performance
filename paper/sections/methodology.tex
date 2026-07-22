@@ -1,57 +1,46 @@
 \section{Study Design}
 \label{sec:methodology}
 
-The case study's goal, in Goal--Question--Metric terms, is to \emph{analyze} the relational
-database access layer of an Express.js service \emph{for the purpose of}
-quantifying the performance of its documentation-selected implementation strategy \emph{with respect to} throughput and
-response-time p99 \emph{from the point of view of} an application developer choosing a layer
-\emph{in the context of} PostgreSQL and MySQL back ends~\cite{basili1988tame}. It is a controlled
-benchmark \emph{case study} of the tested implementations under one synthetic application and
-working-set regime, not statistical inference about ORMs as a population. This section
-specifies the study's \emph{comparability protocol} (Section~\ref{sec:introduction}) --- the
-semantic-equivalence cross-check, the documentation-selected estimand with its same-SQL
-control, and the separated operating conditions --- and the dual-engine case study that
-applies it. The
-design follows established guidelines for controlled experimentation in software
-engineering~\cite{wohlin2012experimentation,kitchenham2002guidelines}, crossing
-seven portable access layers with both engines and all five patterns, plus two
-engine-specific native drivers and their tuned counterparts \texttt{pg-tuned}
-and \texttt{mysql2-tuned} (eleven layers: nine documentation-selected, two tuned reference
-baselines; full rationale in \texttt{METHODOLOGY.md}). The comparison is read at three
-levels, kept separate throughout. The \textbf{primary comparison} (RQ1--RQ3,
-Section~\ref{sec:results}) is each layer's \emph{documentation-selected implementation and
-query/loading strategy} --- the API each library's documentation presents first, not a claim
-about the most common or most performant one. A \textbf{same-SQL (raw-path) standardized
-contrast} then reports what spread remains once every layer executes identical SQL through its raw facility.
-The \textbf{mechanisms} that differ within a layer --- eager-loading strategy, wire protocol,
-round-trips, statement preparation, hydration --- change together and are \emph{not}
-separately or causally identified; the same-SQL contrast is a standardized diagnostic, not a decomposition and not a bound on the intrinsic library effect (Supplement Table~S42 enumerates the components it moves).
+In Goal--Question--Metric terms the goal is to \emph{analyze} the relational database access layer of
+an Express.js service \emph{for the purpose of} quantifying its documentation-selected strategy's
+performance \emph{with respect to} throughput and response-time p99 \emph{from the point of view of} a
+developer choosing a layer \emph{in the context of} PostgreSQL and MySQL back
+ends~\cite{basili1988tame}. It is a controlled benchmark \emph{case study} of the tested
+implementations under one synthetic application and working-set regime, not statistical inference
+about ORMs as a population. This section specifies the study's \emph{comparability protocol}
+(Section~\ref{sec:introduction}) --- semantic-equivalence cross-check, documentation-selected estimand,
+separated operating conditions --- and the dual-engine case study applying it, following guidelines for
+controlled software-engineering experiments~\cite{wohlin2012experimentation,kitchenham2002guidelines}.
+The \textbf{primary comparison}
+(RQ1--RQ3) reads each layer's \emph{documentation-selected implementation and query/loading strategy}
+(the API its documentation presents first, not the most common or performant one); a \textbf{same-SQL
+(raw-path) standardized contrast} then reports the residual once every layer runs identical SQL through
+its raw facility. The \textbf{mechanisms} differing within a layer --- eager loading, wire protocol,
+round-trips, statement preparation, hydration --- change together and are \emph{not} separately or
+causally identified; the same-SQL contrast is a standardized diagnostic, not a decomposition and not a
+bound on the intrinsic library effect (Supplement Table~S42 enumerates the components it moves).
 
-A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and
-therefore drives them to unequal \emph{utilization}, so RQ1 is characterized under three
-operating conditions rather than one privileged point --- the protocol's
-\emph{operating-point separation}. \emph{Equal external demand} is the
-fixed 50-connection \emph{high-load} operating point --- the full five-pattern, two-engine
-matrix. To fix the relative utilization at that point rather than leave it unknown, a per-pattern
-concurrency sweep (connection ladder 1--200 for every layer on both engines;
-Supplement Table~S35) locates each pattern's throughput knee: it lies at or below 50 connections
-for all five patterns, so the fixed point places every pattern at high utilization of its own
-capacity (median 97--100\% across layers on both engines), while 50 connections against a
-ten-connection pool keep about forty requests queued
-regardless of pattern (Controls, below). Capacity is thus \emph{measured} for all five patterns
-(the deep-fetch concurrency curve, Supplement Figure~S2, is kept for its per-layer detail). The two
-utilization-dependent conditions, which need a per-layer \emph{saturating-throughput} target, are
-demonstrated on the deep fetch: \emph{equal utilization} is the coordinated-omission-corrected
-open-loop sweep, each layer offered a fixed fraction (50/70/85/95\%) of its \emph{own} saturating
-throughput, and an \emph{equal compute budget} is the exploratory equal-CPU check. These answer
-different questions and need not agree, so we report all three.
+A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and so drives them to
+unequal \emph{utilization}, so RQ1 is characterized under three operating conditions rather than one
+privileged point --- the protocol's \emph{operating-point separation}. \emph{Equal external demand} is
+the fixed 50-connection \emph{high-load} point (the full five-pattern, two-engine matrix); a
+per-pattern concurrency sweep (ladder 1--200, both engines; Supplement Table~S35) puts each pattern's
+throughput knee at or below 50 connections, so this point places every pattern at high utilization of
+its own capacity (median 97--100\%) --- a capacity-and-queueing, sub-saturation-latency regime, not an
+intrinsic tail --- while 50 connections against a ten-connection pool keep about forty requests queued
+(Controls, below). Capacity is thus \emph{measured} for all five patterns (deep-fetch curve, Supplement
+Figure~S2). The two utilization-dependent conditions need
+a per-layer \emph{saturating-throughput} target and are shown on the deep fetch: \emph{equal
+utilization} is the coordinated-omission-corrected open-loop sweep offering each layer a fixed
+fraction (50/70/85/95\%) of its \emph{own} saturating throughput, and an \emph{equal compute budget}
+is the exploratory equal-CPU check --- different questions that need not agree, so all three are
+reported.
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
-We state the protocol here independently of the case study; the remaining subsections instantiate
-it for the access-layer setting. It turns a set of \emph{treatments} compared on a fixed
-\emph{workload} into a controlled experiment; Figure~\ref{fig:protocol} states its inputs, its
-mandatory and recommended stages, the cell-admission rule, and the output interpretation compactly.
+We state the protocol independently of the case study, then instantiate it. It turns \emph{treatments}
+compared on a fixed \emph{workload} into a controlled experiment; Figure~\ref{fig:protocol} states its
+inputs, mandatory and recommended stages, cell-admission rule, and output interpretation.
 
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 % The line is repeated here so the figure is self-contained if pasted alone;
@@ -60,27 +49,26 @@ mandatory and recommended stages, the cell-admission rule, and the output interp
 
 \paragraph{Admission versus diagnosis} The admission gate turns on three concerns that must not be conflated. \emph{Semantic correctness} always disqualifies: a non-mutating output not equivalent under the oracle, or a mutation that reaches the wrong state, excludes the cell. \emph{Workload conformance} disqualifies only where the study \emph{explicitly declares} a workload constraint (e.g.\ a round-trip bound) that the cell then violates. \emph{Strategy characteristics} --- query count, N+1, joins, eager versus lazy loading --- are instead \emph{reported}, not gated, being captured by server-side statement logging (here the per-endpoint counts of Supplement Table~S2); this study declares no ``no-N+1'' or query-count constraint --- the documentation-selected estimand's treatment \emph{is} whatever the official documentation leads to --- so no cell is excluded for its query strategy, and an N+1 plan would be admitted and reported like any other.
 
-\paragraph{Applicability limits} the oracle must match the output semantics. Byte-identical
-comparison, used here, is valid only when equivalent outputs are deterministic and canonically
-serializable. Where they are not (unordered collections, floats, timestamps, nondeterministic
-identifiers, or differently serialized equivalents), byte-equality is inappropriate and the oracle
-must instead be a semantic comparator (set equality, numeric tolerance, or canonicalization). The case study's outputs are
-deterministic and canonically constructed, so byte-equality is a valid oracle for it.
+\paragraph{Applicability limits} the oracle must match the output semantics: byte-identical comparison,
+used here, is valid only when equivalent outputs are deterministic and canonically serializable, and
+otherwise (unordered collections, floats, timestamps, nondeterministic identifiers) needs a semantic
+comparator (set equality, tolerance, canonicalization). The case study's outputs are deterministic and
+canonically constructed, so byte-equality is valid here.
 
-\paragraph{Compliance levels} An instantiation need not exercise every stage on every cell. We name
-five \emph{compliance levels} --- the \emph{mandatory validity core}, \emph{capacity
-characterization}, and the \emph{standardized-strategy}, \emph{utilization-controlled}, and
-\emph{resource-normalized} extensions. Here the first two hold across all five patterns on both
-engines, while the three extensions are demonstrated on the deep fetch --- the widest-spread pattern tested --- as a representative-point instantiation, not full-matrix coverage; Supplement Table~S40
-maps each cell to the levels it satisfies.
+\paragraph{Compliance levels} An instantiation need not exercise every stage on every cell. Of the five
+\emph{compliance levels}, the \emph{mandatory validity core} and \emph{capacity characterization} hold
+across all five patterns on both engines, while the \emph{standardized-strategy},
+\emph{utilization-controlled}, and \emph{resource-normalized} extensions are demonstrated on the deep
+fetch (widest-spread pattern tested) as a representative point, not full-matrix coverage (Supplement
+Table~S40).
 
 \smallskip
 Table~\ref{tab:protocol_mapping} pairs each generic benchmarking principle with its access-layer
-manifestation, the failure if the stage is skipped, and the evidence it was load-bearing \emph{here};
+manifestation, the failure if the stage is skipped, and the evidence it was load-bearing \emph{here}:
 each stage was consequential in this case study (its omission would have changed a conclusion), though
-one study cannot establish universal necessity. In the sources searched we found no prior access-layer
-benchmark applying all five together, and Supplement Table~S37 shows how each prior benchmark's
-conclusion becomes uninterpretable once its absent stages are named.
+one study cannot establish universal necessity. We found no prior access-layer benchmark applying all
+five together; Supplement Table~S37 shows how each prior benchmark's conclusion becomes
+uninterpretable once its absent stages are named.
 
 \input{\tabledir protocol_mapping}
 
@@ -90,7 +78,7 @@ conclusion becomes uninterpretable once its absent stages are named.
 We vary three factors. The \emph{access layer} has eleven levels across three tiers
 (schematic below): two native drivers with two engine-specific tuned baselines
 (\texttt{pg-tuned} reuses named prepared statements, \texttt{mysql2-tuned} the binary protocol via
-\texttt{execute()}), the query builder Knex, and six ORMs. The tuned baselines are reference points,
+\texttt{execute()}), the query builder Knex, and six ORMs; the tuned baselines are reference points,
 not documentation-selected treatments, leaving \emph{nine} documentation-selected layers.
 \begin{center}\small
 \begin{tabular}{@{}l p{0.46\linewidth} l@{}}
@@ -104,228 +92,187 @@ ORM                   & Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM
 \bottomrule
 \end{tabular}
 \end{center}
-\noindent In total, 11 implementations $=$ 9 documentation-selected (2 native $+$ 1 query builder $+$
-6 ORMs) $+$ 2 tuned; the 7 portable layers run on both engines and the 4 native/tuned are
-engine-specific, so $4 + 7\times 2 = 18$ layer$\times$engine cells $\times$ 5 patterns $= 90$ measured
-configurations. We classify a library by its dominant
-interface, not its self-description (Section~\ref{sec:introduction}); Objection, for
-instance, layers an ORM over Knex. The nine documentation-selected layers are a
-representative cross-section of the three tiers, not an exhaustive catalogue --- each
-maintained, used, and, for the portable tiers, running against both engines --- which
-excludes PostgreSQL-only Slonik and pg-promise as non-portable and Kysely as a query builder
-already covered by Knex (\texttt{METHODOLOGY.md} gives the full criteria). Vendor
-independence means authorship only: no evaluated library's maintainers were involved, though
-the consequential author choices (selection, schema, pool size, tuning) remain and are
-disclosed. The \emph{engine} has two levels, PostgreSQL~18.4 and MySQL~9.7.1, and the
-\emph{access pattern} has five, realized as HTTP endpoints (Supplement Table~S39), giving the
-90 measured configurations counted in the schematic above. Supplement
-Table~S29 records which factors are held constant, vary, or are uncontrolled on this single
-virtualized host --- the reason we report results for this configuration rather than as
-general library performance.
+\noindent The 7 portable layers run on both engines and the 4 native/tuned on one, so
+$4 + 7\times 2 = 18$ layer$\times$engine cells $\times$ 5 patterns $= 90$ measured configurations. We
+classify a library by its dominant interface, not its self-description
+(Section~\ref{sec:introduction}). The nine
+documentation-selected layers are a representative cross-section, not an exhaustive catalogue --- each
+maintained, used, and (portable tiers) running on both engines --- excluding non-portable
+PostgreSQL-only Slonik and pg-promise and query-builder Kysely (covered by Knex; \texttt{METHODOLOGY.md}
+gives the criteria). \emph{Non-vendor authorship} means only that no evaluated library's maintainers
+were involved; the consequential author choices (selection, schema, pool size, tuning) remain and are
+disclosed. The \emph{engine} has two levels (PostgreSQL~18.4, MySQL~9.7.1) and the \emph{access
+pattern} five, realized as HTTP endpoints (Supplement Table~S39). Supplement Table~S29 records which
+factors are held constant, vary, or are uncontrolled on this single virtualized host --- the reason we
+report this configuration rather than general library performance.
 
 \subsection{Objects: schema, workload, and data}
 The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts} $1\!-\!*$
-\texttt{comments} $*\!-\!1$ \texttt{authors}), exercising a one-to-many relationship and a
-two-hop join for the deep fetch. The five endpoints implement five representative access
-patterns~\cite{cooper2010ycsb} (Supplement Table~S39): the keyset page uses \texttt{WHERE
-id < cursor ORDER BY id DESC LIMIT}~$n$ against the primary-key index rather than a large
-\texttt{OFFSET}; the deep/nested fetch returns a post with its author and every comment, each
-with its own comment-author; and the aggregation reports post count, comment count, and total
-views per author. The database is loaded from a deterministic seed (2{,}000 authors,
-100{,}000 posts, 1{,}000{,}000 comments) by the native driver, independently of any layer
-under test, so every engine receives the same seed \emph{data payload} (byte-identical row
-values); on-disk representation, index layout, and collation naturally differ between engines.
-The working set fits in memory, so the measurements emphasize the access layer's per-request
-instruction, protocol, and mapping cost with disk-read latency largely removed, while
-engine-side execution, buffer management, locking, and logging remain part of every
-measurement~\cite{harizopoulos2008oltp}. Every request draws its target identifier uniformly
-at random from the full seeded range (posts $1$--$100{,}000$, authors $1$--$2{,}000$), so
-load spreads across the working set rather than one hot record; a skewed, production-like key
-distribution is a planned variant (Section~\ref{sec:threats}).
+\texttt{comments} $*\!-\!1$ \texttt{authors}). The five endpoints implement five representative access
+patterns~\cite{cooper2010ycsb} (Supplement Table~S39): a keyset page (primary-key cursor, not a large
+\texttt{OFFSET}), a single-row read, a one-to-many list, the deep/nested fetch (a post with its author
+and every comment, each with its own comment-author), and a per-author aggregation. A deterministic seed
+(2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments) is loaded by the native driver,
+independently of any layer under test, so both engines receive byte-identical row values; on-disk
+representation, index layout, and collation naturally differ. The working set fits in memory,
+so measurements emphasize the access layer's per-request instruction, protocol, and mapping cost,
+disk-read latency largely removed, while engine-side execution, buffering, locking, and logging remain
+in every measurement~\cite{harizopoulos2008oltp}. Each request's target identifier
+is drawn uniformly from the seeded range (posts $1$--$100{,}000$, authors $1$--$2{,}000$), spreading
+load across the working set; a skewed, production-like distribution is a planned variant
+(Section~\ref{sec:threats}).
 
 \subsection{The adapter contract and N+1 control}
-Every access layer implements the same factory interface (five query methods plus a
-teardown), so the Express server and load runner are layer-agnostic and each returns an
-\emph{identical result shape}. Each uses that layer's \emph{documentation-selected} mechanism
-to avoid the N+1 query problem on the deep fetch --- a hand-written join for the native
-drivers, Knex, and the query-builder-style Drizzle (the tuned baselines reuse the native
-join), and relation eager loading (\texttt{include}, \texttt{withGraphFetched},
-\texttt{populate}, or \texttt{relations}) for the data-mapper ORMs. The comparison is
-therefore one of each layer's \emph{documentation-selected configuration} under a fixed
-adapter-selection rule, not a fixed query plan: a measured difference reflects the SQL each
-layer generates, its round-trip count, and how it materializes results, with one asymmetry
-inherent to any driver-versus-ORM comparison (the native default is hand-authored SQL, the
-ORM default the library's relation loader). Server-side statement logging captures the exact
-SQL, round-trip count, and \texttt{EXPLAIN} plans (released with the package); the
-per-endpoint counts differ by design (Supplement Table~S2: the deep fetch takes one query in
-Sequelize and MikroORM, two in the native drivers, Knex, Drizzle, and TypeORM, and four in
-Prisma and Objection). The documentation-selected API was fixed by a rule decided \emph{before} measurement: the
-eager-loading API each layer's official documentation presents first for the pinned version, breaking
-ties (as for Drizzle's SQL-style builder versus its relational-query API) toward the API at the
-library's own taxonomy tier. This is an intentionally artificial, predeclared \emph{policy}, not
-evidence that the chosen API is performance-optimal or the most common production choice --- one
-instance of the protocol's predeclared treatment rule (Section~\ref{sec:protocol}), which privileges
-none; a study targeting expert-tuned usage would substitute its own. Its corroboration and limits are
-in the supplement's Construct-validity section (Table~S33) and Section~\ref{sec:threats}.
-Supplement Table~S16 and
-\texttt{METHODOLOGY.md} record, per layer, that API with its documentation page and version,
-its round-trip count, the documented alternative we did \emph{not} use, and that query
-logging, hooks, and validation are off. The machine-readable selection rubric (\texttt{notes/documentation-selection.md}) records the per-layer documentation URLs, versions, and freeze date for independent reassessment against Wayback Machine snapshots.
+Every access layer implements the same factory interface (five query methods plus a teardown), so the
+server and load runner are layer-agnostic and each returns an \emph{identical result shape}. Each
+avoids the deep-fetch N+1 problem by its \emph{documentation-selected} mechanism --- a hand-written
+join for the native drivers, Knex, and query-builder-style Drizzle (tuned baselines reuse it), and
+relation eager loading (\texttt{include}, \texttt{populate}, \texttt{relations}, \ldots) for the
+data-mapper ORMs. The comparison is thus of each layer's
+\emph{documentation-selected configuration} under a fixed adapter-selection rule, not a fixed query
+plan: a measured difference reflects the SQL generated, the round-trip count, and result
+materialization. Server-side logging captures the exact SQL, round-trip count, and \texttt{EXPLAIN}
+plans; per-endpoint counts differ by design (Supplement Table~S2).
 
-To standardize the SQL and report how much of the spread remains once it is held fixed --- the protocol's
-\emph{strategy-standardization} precondition --- every adapter also implements a \emph{same-SQL standardized contrast}: identical two-statement deep-fetch SQL (and, per
-engine, identical \texttt{EXPLAIN} plans) with identical row mapping, executed through the
-layer's raw-SQL facility, mirroring the aggregation control (Section~\ref{sec:results}).
-Server-side capture, synchronized to a request marker so connection handshakes are excluded,
-confirms the two control statements are byte-identical across every layer on both engines;
-what differs is the wire protocol each driver negotiates (per-layer protocols in Supplement
-Table~S14). The
-six ORMs split both ways on the join-versus-select-in default. Because the native driver's
-documentation-selected default is a hand-authored join while an ORM's is whatever relation
-loader its documentation presents first, the deep
-fetch --- the one pattern exposing a documented strategy choice --- admits two \emph{co-primary}
-regimes, which we measure on one harness and report side by side (Section~\ref{sec:results}, Table~\ref{tab:deepfetch_regimes}). The \emph{documentation-primary} regime is the strategy fixed by the
-adapter-selection rule above. The \emph{performance-conscious} regime applies a predefined
-\emph{tuning budget}: the faster of a layer's two documented deep-fetch loading strategies (join
-versus select-in), admitted only where it is byte-identical to the documentation-primary output
-under the same \texttt{bench/verify.mjs} oracle. The budget is deliberately narrow --- it tunes
-only the loading strategy, only on the deep fetch, and never rewrites SQL, adds caching, or
-changes the schema (Section~\ref{sec:results} reports the resulting regimes). To ensure no adapter silently returns less, the protocol's
-\emph{semantic-equivalence} precondition is established at four levels rather than asserted as a
-universal property: (i)~\emph{specification}, shared canonical constructors that fix each response's
-field set, key order, and serialization; (ii)~\emph{finite pre-measurement conformance}, a
-fast gate (\texttt{bench/verify.mjs}) asserting full JSON byte-equality to the native-driver baseline
-on 12 fixed probes per adapter, both engines, before any timing; (iii)~\emph{exhaustive} equivalence,
-infeasible for arbitrary code and not claimed; and (iv)~\emph{property-based} randomized differential
-testing (\texttt{bench/verify-property.mjs}), which asserts byte-equality over a fixed-seed sample of
-thousands of random and edge-case inputs, on both engines, with \emph{zero}
-divergences (Supplement Table~S38). Byte-equality thus remains a \emph{finite}, if much broadened,
-check --- strong evidence of, not proof of, agreement on every possible input. For the mutating patterns a companion check
-(\texttt{bench/verify-writes.mjs}) validates database \emph{state}, not the HTTP status alone:
-through an independent native-driver connection it confirms, for every adapter on both engines,
-that the single-row insert wrote exactly the field values and generated identifier requested,
-that the transactional write inserted the post and its five comments with the exact field values
-(one \texttt{posts} and five \texttt{comments} rows), and that a
-transaction whose last comment violates the author foreign key throws and leaves no partial state (atomic
-rollback); all adapters pass on both engines. The read cross-check caught two defects during
-development (a fan-out aggregation bug and a driver result-shape mismatch; Section~\ref{sec:discussion}).
+The documentation-selected API was fixed by a rule decided \emph{before} measurement: the eager-loading
+API each layer's official documentation presents first for the pinned version, ties broken (as for
+Drizzle's two builders) toward the API at the library's own taxonomy tier. This is an intentionally artificial, predeclared \emph{policy}, not evidence that the
+chosen API is performance-optimal or the most common production choice --- one instance of the
+protocol's predeclared treatment rule (Section~\ref{sec:protocol}), which privileges none; a study
+targeting expert-tuned usage would substitute its own (corroboration and limits: Table~S33,
+Section~\ref{sec:threats}). Supplement Table~S16, \texttt{METHODOLOGY.md}, and the rubric
+(\texttt{notes/documentation-selection.md}) record, per layer, that API (documentation page, version,
+URL), its round-trip count, the documented alternative not used, that logging, hooks, and validation
+are off, and the freeze date for reassessment against Wayback Machine snapshots.
+
+To standardize the SQL and report how much spread remains once it is held fixed --- the protocol's
+\emph{strategy-standardization} precondition --- every adapter also implements a \emph{same-SQL
+standardized contrast}: the same two-statement deep-fetch SQL and row mapping (per engine, the same
+\texttt{EXPLAIN} plan) through the layer's raw-SQL facility, mirroring the aggregation control.
+Server-side capture, synchronized to a request marker so handshakes are excluded, confirms these
+statements are byte-identical across every layer on both engines; only the wire protocol differs
+(Supplement Table~S14). Because the six ORMs split both ways on the deep fetch's join-versus-select-in
+default, that pattern --- the one exposing a documented strategy choice --- admits two \emph{co-primary}
+regimes reported side by side (Table~\ref{tab:deepfetch_regimes}): the \emph{documentation-primary}
+regime fixed by the rule above and a \emph{performance-conscious} regime applying a predefined
+\emph{tuning budget}, the faster documented loading strategy admitted only where byte-identical to the
+documentation-primary output under the \texttt{bench/verify.mjs} oracle. The
+budget is deliberately narrow --- only the loading strategy, only on the deep fetch, never rewriting
+SQL, adding caching, or changing the schema.
+
+To ensure no adapter silently returns less, the \emph{semantic-equivalence} precondition is
+established \emph{before any timing} and at four levels rather than asserted as universal: shared
+canonical constructors fix each response's fields, key order, and serialization; a fast gate
+(\texttt{bench/verify.mjs}) asserts full JSON byte-equality to the native-driver baseline on 12 fixed
+probes per adapter on both engines; \emph{exhaustive} equivalence is infeasible for arbitrary code and
+not claimed; and property-based randomized differential testing (\texttt{bench/verify-property.mjs})
+asserts byte-equality over a fixed-seed sample of thousands of random and edge-case inputs on both
+engines, with \emph{zero} divergences (Supplement Table~S38) --- so byte-equality stays a \emph{finite},
+if much broadened, check, strong evidence of, not proof of, agreement on every input. A companion check
+(\texttt{bench/verify-writes.mjs}) validates database \emph{state}, not HTTP status: an independent
+native-driver connection confirms, for every adapter on both engines, that the primary single-row
+autocommit insert wrote exactly the requested values and identifier, and that the exploratory
+transactional write committed its post and five comments atomically, rolling back to no partial state
+when the last comment violates the author foreign key; all pass. The read cross-check caught
+two defects during development (a fan-out aggregation bug and a driver result-shape mismatch;
+Section~\ref{sec:discussion}).
 
 \subsection{Controls}
-Four controls hold the shared conditions fixed --- connection pool, logical task, physical
-dataset state, and observer --- so that the \emph{configured access-layer implementation bundle}
-is the only \emph{deliberately varied} factor; they do not isolate the library alone: the bundled
-differences in SQL, query count, protocol, loading strategy, and hydration are the treatment
-(Supplement Table~S42), not confounds to be removed. \emph{(i)~Pool size} is fixed at
-ten connections for every adapter, so the comparison reflects the access-layer choice, not
-pool tuning~\cite{gupta2017pooling,laigner2021microservices} (for Prisma, whose default pool
-is core-count-derived, this is pinned via \texttt{connection\_limit}). Because the load
-generator opens 50 concurrent connections against this ten-connection pool, roughly forty
-in-flight requests are always waiting in each library's acquisition queue; this queueing is
-deliberately part of what we measure and is held identical across layers (a 200~ms pool
-sampler confirmed the native PostgreSQL cell ran with its pool fully occupied and about 32
-requests pending). \emph{(ii)~Identical query semantics}: each endpoint issues the same
-logical query across layers, aggregation using a single correlated-subquery formulation
-everywhere (the documented raw-SQL path), so the residual reflects the layer on an identical
-plan, not the generated SQL. \emph{(iii)~Write isolation}: because the insert endpoint mutates
-the dataset, every cell resets it before warm-up and before every measured run, and the write
-endpoint is measured in its own dedicated boot after the database's physical state is rebuilt
-(PostgreSQL: recreate from a seeded template; MySQL: rebuild with \texttt{OPTIMIZE TABLE} and
-re-pin \texttt{AUTO\_INCREMENT}), so physical layout and purge state cannot drift across
-replicates or leak between adapters. \emph{(iv)~Observer separation}: the HTTP load generator
-runs in a process separate from the server.
+Four controls hold the shared conditions fixed --- connection pool, logical task, physical dataset
+state, and observer --- so the \emph{configured access-layer implementation bundle} is the only
+\emph{deliberately varied} factor; they do not isolate the library alone: the bundled differences in
+SQL, query count, protocol, loading strategy, and hydration are the treatment (Supplement Table~S42),
+not confounds to remove. \emph{(i)~Pool size} is fixed at ten connections for every adapter, so the
+comparison reflects the access-layer choice, not pool
+tuning~\cite{gupta2017pooling,laigner2021microservices} (Prisma's core-count-derived default is pinned
+via \texttt{connection\_limit}). Because the load generator opens 50 concurrent connections against
+this ten-connection pool, roughly forty in-flight requests always wait in each library's acquisition
+queue; this queueing is deliberately measured and held identical across layers (a 200~ms sampler
+confirmed the native PostgreSQL pool fully occupied, about 32 requests pending).
+\emph{(ii)~Identical query semantics}: each endpoint issues the same logical query across layers
+(aggregation via one correlated-subquery formulation, the documented raw-SQL path), so the residual
+reflects the layer on an identical plan, not the SQL. \emph{(iii)~Write isolation}: because the insert
+endpoint mutates the dataset, every cell resets it before warm-up and before every measured run, and
+the write endpoint is measured in its own dedicated boot after the physical state is rebuilt
+(recreated from a seeded template on PostgreSQL; rebuilt with \texttt{OPTIMIZE TABLE} and re-pinned
+\texttt{AUTO\_INCREMENT} on MySQL), so physical layout and purge state cannot drift across replicates
+or leak between adapters. \emph{(iv)~Observer separation}: the HTTP load generator runs in a process
+separate from the server.
 
 \subsection{Measurement procedure}
-Load was generated with \texttt{autocannon}~\cite{autocannon}, a closed-loop
-(constant-concurrency) HTTP/1.1 generator~\cite{schroeder2006open} issuing requests at
-fixed concurrency and recording a latency histogram. Each of the 90 configurations was
-measured as 25 \emph{repeated runs}: for each replicate we booted a fresh server process,
-opened 50 concurrent connections, ran a fifteen-second warm-up whose measurements were
-discarded --- long enough for every layer to reach and sustain at least 95\% of
-steady-state throughput, since managed runtimes do not always stabilize
-promptly~\cite{barrett2017warmup} --- then took one twelve-second measured run. Booting a
-fresh process per replicate prevents persistent application-process state (JIT, pool,
-heap) from carrying across replicates; all runs share one host and one short campaign, so
-replicate index and measurement order are treated as blocking factors, and cell order was
-reshuffled independently within each replicate (a forward-versus-reversed order check found
-no history effect on the read cells; replication package, \texttt{notes/supplement-methods}). Within a
-replicate, every layer and engine is driven by the identical request-id sequence from a
-PRNG seeded on the (endpoint, replicate) pair, so this paired-stream design removes
-between-layer sampling noise as a confound. The experimental unit is the freshly booted
-server run for one (layer, engine, endpoint) cell in one replicate; individual HTTP
-requests are subsamples. We report the median of the 25 replicate values of throughput and
-of the run-level percentiles p50, p90, p97.5, and p99 (one cell, Drizzle's MySQL
-insert, has 24 after a failed health check; the median and interval accommodate it). Throughout,
-\emph{p99} denotes this \emph{median run-level p99} --- the median across replicates of each run's
-own p99 --- not the p99 of the pooled request distribution across runs, which the design does not
-estimate. A 60~s re-measurement of the deep
-fetch preserves the p99 ranking exactly and barely moves each cell's p99 (Supplement
-Table~S23), so the 12~s window is adequate for the tail. During measured runs we sampled
-server CPU and peak resident memory over the full process tree, with database and
-load-generator CPU sampled separately (replication package, \texttt{notes/supplement-methods}). Inserts
-were measured under each engine's \emph{default} durability configuration (PostgreSQL
-\texttt{fsync} and \texttt{synchronous\_commit} on; MySQL
-\texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1}), the regime a
-deployment runs unless an operator relaxes it; a labelled secondary run relaxed all of
-those settings to isolate the durability mechanism (Supplement Table~S3). To characterize
-behavior under load we swept the deep/nested fetch across 1--256 connections for every
-layer and engine~\cite{yu2014concurrency}, with an exploratory equal-CPU-budget check
-(Section~\ref{sec:results}); and a native \texttt{undici}-based constant-arrival generator
-drove the deep fetch under a fixed offered rate (250--4{,}000~req/s) rather than fixed
-concurrency, measuring latency from each request's intended send time and clipping
-timed-out requests at their cutoff, a coordinated-omission-corrected
-design~\cite{tene2015latency,krishnamachari2026stats} that independently validates the
-closed-loop tail (Section~\ref{sec:results}).
+Load was generated with \texttt{autocannon}~\cite{autocannon}, a closed-loop (constant-concurrency)
+HTTP/1.1 generator~\cite{schroeder2006open} recording a latency histogram. Each of the 90
+configurations was measured as 25 \emph{repeated runs}: per replicate we booted a fresh server
+process, opened 50 concurrent connections, ran a fifteen-second warm-up whose measurements were
+discarded --- long enough to reach and sustain at least 95\% of steady-state throughput, since managed
+runtimes do not always stabilize promptly~\cite{barrett2017warmup} --- then took one twelve-second
+measured run. Booting fresh isolates each replicate from prior JIT/pool/heap
+state; all runs share one host and one short campaign, so replicate index and measurement order are
+treated as \emph{blocking factors}, and cell order was reshuffled independently within each replicate
+(a forward-versus-reversed check found no history effect on the read cells). Within a replicate, every
+layer and engine is driven by the identical request-id
+sequence from a PRNG seeded on the (endpoint, replicate) pair, so this \emph{paired-stream} design
+removes between-layer sampling noise as a confound. The experimental unit is one freshly booted (layer,
+engine, endpoint) run per replicate; individual requests are subsamples. We
+report the median of the 25 replicate values of throughput and of the run-level percentiles p50, p90,
+p97.5, and p99 (one cell has 24 after a failed health check; the median and interval accommodate it).
+Throughout, \emph{p99} denotes this \emph{median run-level p99} --- the
+median across replicates of each run's own p99 --- not the p99 of the pooled request distribution,
+which the design does not estimate. A 60~s re-measurement of the deep fetch preserves the p99 ranking
+and barely moves each cell's p99 (Supplement Table~S23), so the 12~s window suffices for the tail. We sampled server CPU and peak RSS over the process tree, with database and load-generator CPU
+separately. Inserts were measured under each engine's \emph{default} durability (PostgreSQL
+\texttt{fsync} and \texttt{synchronous\_commit} on; MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1},
+\texttt{sync\_binlog=1}), the regime a deployment runs unless relaxed; a labelled secondary run relaxed
+all of these to isolate the durability mechanism (Supplement Table~S3). To characterize behavior under
+load we swept the deep/nested fetch across 1--256 connections for every layer and
+engine~\cite{yu2014concurrency}; and a native \texttt{undici}-based constant-arrival generator drove the
+deep fetch under a fixed offered
+rate (250--4{,}000~req/s) rather than fixed concurrency, measuring from intended send time and clipping
+timeouts at their cutoff --- a coordinated-omission-corrected
+design~\cite{tene2015latency,krishnamachari2026stats} that independently validates the closed-loop tail
+(Section~\ref{sec:results}).
 
 \subsection{Analysis}
-We separate \emph{primary} outcomes, which carry the paired inference and the
-research-question claims, from \emph{secondary} and \emph{exploratory} outcomes, reported
-descriptively as controls and sensitivity analyses (Supplement Table~S34): the primary
-outcomes are throughput and the closed-loop p99 on the five patterns against both engines
-at the fixed operating point.
+We separate \emph{primary} outcomes, which carry the research-question claims, from \emph{secondary}
+and \emph{exploratory} outcomes reported descriptively as controls and sensitivity analyses (Supplement
+Table~S34): the primary outcomes are throughput and the closed-loop p99 on the five patterns against
+both engines at the fixed operating point.
 
-Because absolute throughput is hardware-specific, we analyze \emph{relative} differences
-within an engine; a pattern's \emph{spread} is the documentation-selected native driver's
-median throughput divided by that of the slowest layer on that pattern (native-relative, so
-comparable across patterns). We report medians over the 25 repeated runs, the coefficient
-of variation as a stability signal~\cite{georges2007rigorous,laaber2019microbenchmarking},
-and a percentile bootstrap 95\% CI for the median from a fixed seed; these intervals
-capture within-campaign, run-to-run variability on this host and configuration, not
-variation across machines, versions, or deployments (Section~\ref{sec:threats}). The design
-is a randomized block --- within each replicate every layer runs the identical request
-stream --- so adjacently ranked layers are compared with \emph{paired} tests on their
-per-replicate throughput ratios (a two-sided sign-flip permutation test cross-checked with
-the Wilcoxon signed-rank test), reporting the geometric-mean paired ratio, its bootstrap
-CI, and the paired dominance, plus a TOST against a $\pm5\%$ margin (author-selected and
-application-dependent, not a universal threshold; supplement) for the closest pair; we
-foreground these effect sizes and interval estimates over $p$-values, as recommended for
-randomized performance experiments~\cite{arcuri2014hitchhiker,cliff1993dominance}. Because
-the seven adjacent pairs follow the \emph{observed} ranking, their significances are a
-post-hoc, descriptive robustness check, not a confirmatory family. Adjacent-layer p99 gaps
-of one or two milliseconds sit at the millisecond measurement floor and are not read as
-real; conclusions rest on the large-ratio patterns, chiefly the deep fetch. The full
-construction --- the permutation and bootstrap procedure and seed, tie handling, the
-layer$\times$engine interaction test, the rank correlations, and the equivalence-margin
-rationale --- is given in the replication package's statistical-methods notes (\texttt{notes/supplement-methods}); the paired
-p99 comparisons are Supplement Table~S30.
+Because absolute throughput is hardware-specific, we analyze \emph{relative} differences within an
+engine; a pattern's \emph{spread} is the documentation-selected native driver's median throughput
+divided by that of the slowest layer on that pattern (native-relative, so comparable across patterns).
+We report medians over the 25 runs, the coefficient of variation as a stability
+signal~\cite{georges2007rigorous,laaber2019microbenchmarking}, and a fixed-seed percentile bootstrap
+95\% CI for the median; these intervals capture within-campaign, run-to-run variability on this host
+and configuration, not variation across machines, versions, or deployments (Section~\ref{sec:threats}).
+The design is a \emph{randomized block} --- within each replicate every layer runs the identical
+request stream --- so adjacently ranked layers are compared with \emph{paired} tests on their
+per-replicate throughput ratios (a two-sided sign-flip permutation test cross-checked with Wilcoxon
+signed-rank), reporting the geometric-mean paired ratio, its bootstrap CI, the paired dominance, and a
+TOST against a $\pm5\%$ margin (author-selected and application-dependent, not universal; supplement)
+for the closest pair; we foreground these effect sizes and interval estimates over
+$p$-values~\cite{arcuri2014hitchhiker,cliff1993dominance}. Because the seven adjacent pairs follow the
+\emph{observed} ranking, their significances are a post-hoc, descriptive robustness check, not a
+confirmatory family. Adjacent-layer p99 gaps of one or two milliseconds sit at the millisecond
+measurement floor and are not read as real; conclusions rest on the large-ratio patterns, chiefly the
+deep fetch. The full construction (procedure and seed, tie handling, the layer$\times$engine
+interaction test, rank correlations, equivalence margin) is in the statistical-methods notes
+(\texttt{notes/supplement-methods}); paired p99 comparisons are Supplement Table~S30.
 
 \subsection{Experimental setup}
-The measurements were taken on 2026-07-16 to 2026-07-18 on a single host: the primary matrix
-ran overnight and the secondary experiments (order-invariance, durability, same-SQL,
-open-loop, fan-out, equal-CPU, concurrency, utilization, pool-size, cluster, mixed-workload,
-wait-event, post-restart, and the longer-window tail) over the same window --- a virtualized
-Intel Xeon Gold~6140 instance (16~vCPUs, single NUMA node, 126~GB RAM; Linux~6.17;
-Node.js~24.18.0; Express~5), with PostgreSQL~18.4 and MySQL~9.7.1 running locally. Each library
-is pinned to the \emph{latest stable release compatible with the harness adapter contract} as
-of the freeze date (2026-07-15), recorded from the committed lockfile and an automated
-environment capture (Supplement Table~S11); only Sequelize invokes the earlier-release
-exception (its version-7 line is a prerelease, so the current 6.x stable line is used). Because
-access-layer performance is version-sensitive, this pins a dated snapshot rather than a
-permanent ranking (Section~\ref{sec:results}).
+Measurements were taken 2026-07-16 to 2026-07-18 on a single host --- a virtualized Intel Xeon
+Gold~6140 instance (16~vCPUs, single NUMA node, 126~GB RAM; Linux~6.17; Node.js~24.18.0; Express~5),
+PostgreSQL~18.4 and MySQL~9.7.1 local --- the primary matrix overnight and fourteen labelled secondary
+experiments (order-invariance, durability, same-SQL, open-loop, fan-out, equal-CPU, concurrency,
+utilization, pool-size, cluster, mixed-workload, wait-event, post-restart, longer-window tail) over the
+same window. Each library is pinned to the \emph{latest stable release compatible with the harness adapter contract}
+as of the freeze date (2026-07-15), recorded from the committed lockfile and an automated environment
+capture (Supplement Table~S11); only Sequelize invokes the earlier-release exception (its version-7
+line is a prerelease, so the current 6.x stable line is used). Because access-layer performance is
+version-sensitive, this pins a dated snapshot rather than a permanent ranking (Section~\ref{sec:results}).
 
 \subsection{Replication package}
-The harness --- the Express application, the adapter contract, all nine
-documentation-selected adapters and the two tuned baselines, the deterministic seed, the
-\texttt{autocannon} matrix runner, the correctness cross-check, and the
-scripts regenerating every table in Section~\ref{sec:results} --- is released
-so the full matrix can be re-run with one command against a containerized or
-local PostgreSQL and MySQL.
+The harness --- the Express application, the adapter contract, all eleven adapters, the deterministic
+seed, the \texttt{autocannon} matrix runner, the correctness cross-check, and the scripts regenerating
+every table in Section~\ref{sec:results} --- is released so the full matrix re-runs with one command
+against a containerized or local PostgreSQL and MySQL.
