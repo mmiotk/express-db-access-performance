@@ -247,7 +247,7 @@ fresh process per replicate prevents persistent application-process state (JIT, 
 heap) from carrying across replicates; all runs share one host and one short campaign, so
 replicate index and measurement order are treated as blocking factors, and cell order was
 reshuffled independently within each replicate (a forward-versus-reversed order check found
-no history effect on the read cells; supplement, \emph{Measurement details}). Within a
+no history effect on the read cells; replication package, \texttt{notes/supplement-methods}). Within a
 replicate, every layer and engine is driven by the identical request-id sequence from a
 PRNG seeded on the (endpoint, replicate) pair, so this paired-stream design removes
 between-layer sampling noise as a confound. The experimental unit is the freshly booted
@@ -261,7 +261,7 @@ estimate. A 60~s re-measurement of the deep
 fetch preserves the p99 ranking exactly and barely moves each cell's p99 (Supplement
 Table~S23), so the 12~s window is adequate for the tail. During measured runs we sampled
 server CPU and peak resident memory over the full process tree, with database and
-load-generator CPU sampled separately (supplement, \emph{Measurement details}). Inserts
+load-generator CPU sampled separately (replication package, \texttt{notes/supplement-methods}). Inserts
 were measured under each engine's \emph{default} durability configuration (PostgreSQL
 \texttt{fsync} and \texttt{synchronous\_commit} on; MySQL
 \texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1}), the regime a
@@ -305,7 +305,7 @@ of one or two milliseconds sit at the millisecond measurement floor and are not 
 real; conclusions rest on the large-ratio patterns, chiefly the deep fetch. The full
 construction --- the permutation and bootstrap procedure and seed, tie handling, the
 layer$\times$engine interaction test, the rank correlations, and the equivalence-margin
-rationale --- is given in the supplement's \emph{Statistical methods} section; the paired
+rationale --- is given in the replication package's statistical-methods notes (\texttt{notes/supplement-methods}); the paired
 p99 comparisons are Supplement Table~S30.
 
 \subsection{Experimental setup}

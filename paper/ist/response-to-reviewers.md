@@ -1553,6 +1553,17 @@ replication remains valuable and welcome. The live correctness smoke test
 
 No measurement changed (checksums 35/35).
 
+## Point 9 (supplement size: move some material to the repository)
+
+To reduce the online supplement, the four prose sections that were narrative rather than data --- the
+reporting checklist, the benchmarking-pitfalls checklist, the detailed statistical methods, and the
+measurement details --- were moved out of the journal supplement and into the replication package as a
+standalone document (`notes/supplement-methods.pdf`, five pages). None of them carried a numbered table
+or figure, so the numbered Supplement Tables S1--S44 and Figures S1--S4 keep their identifiers and every
+main-text cross-reference is unaffected. The supplement drops from 42 to 39 pages; a short pointer
+section remains in it, and the four main-text mentions of these sections now cite the replication
+package. No numbered supplement table or figure was removed or renumbered (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1567,7 +1578,7 @@ additions from earlier rounds (the write-state validation and the co-primary dee
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.10 (DOI 10.5281/zenodo.21497292), the version this revision describes.
+as release v1.12.11 (DOI 10.5281/zenodo.21497964), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
