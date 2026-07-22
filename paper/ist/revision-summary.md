@@ -264,6 +264,17 @@ satisfies precisely, turning the protocol into a reusable object against which a
 its own per-cell compliance. Prose-plus-one-supplement-table only; the earlier coverage paragraph was
 tightened, so the manuscript is 14,991 words.
 
+Addressing reviewer **strongly-recommended point 6.7** (some mechanistic language is stronger than the
+design permits), the flagged formulations were softened to "consistent with" readings, using the
+already-hedged Prisma raw-path conjecture as the model. The native-lead sentence no longer "comes from"
+lean SQL but "is consistent with" it; "how a layer materializes a result graph matters more than how
+many statements it issues" became "consistent with result-graph materialization, not statement count,
+separating the layers here"; and the Results compute-efficiency claim is now "consistent with the
+native driver's leaner SQL." Both compute-efficiency passages now note that the application-tier CPU
+figure (Supplement Figure S3) excludes database CPU and point to the combined accounting in Supplement
+Table S5. The remaining causal statements are either experimentally supported (the durability
+manipulation) or already hedged. Prose-only, no data changed; the manuscript is 14,986 words.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21485139 (release v1.11.3). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21485274 (release v1.11.4). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

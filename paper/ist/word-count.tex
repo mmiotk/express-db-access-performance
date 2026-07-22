@@ -154,6 +154,10 @@ A follow-up (reviewer \textbf{strongly-recommended point 6.6} --- the protocol i
 
 The strongly-recommended-6.6 pass (five explicit protocol compliance levels + a cell-by-level coverage map) is archived as release v1.11.3 (DOI 10.5281/zenodo.21485139).
 
+A follow-up (reviewer \textbf{strongly-recommended point 6.7} --- some mechanistic language is stronger than the design permits) softened the flagged causal claims to "consistent with" formulations, taking the already-hedged Prisma raw-path conjecture as the model. The two named phrases ("the native driver's lead comes from issuing lean SQL that pushes work onto the database tier" and "how a layer materializes a result graph matters more than how many statements it issues") and the Results "drives the database harder ... so the native driver leads" sentence now read as consistency statements, and "large only when it must materialize" became descriptive. On the reviewer's figure point, both compute-efficiency passages now note that the application-tier CPU figure (Supplement Figure S3) excludes database CPU and point to the combined app-plus-database accounting (Supplement Table S5). A re-audit of the Introduction, Results, Discussion, and Conclusion confirmed the remaining causal statements are either experimentally supported (the durability manipulation with \texttt{performance\_schema} instrumentation) or already hedged. Prose-only: no data, tables, or floats changed (checksums 35/35). The softening added a few words, offset by trimming duplicated compute-cost prose across Results and Discussion, so the body is \textbf{11,449} words and the total \textbf{14,986}.
+
+The strongly-recommended-6.7 pass (mechanistic language softened to "consistent with"; app-tier CPU-figure caveat) is archived as release v1.11.4 (DOI 10.5281/zenodo.21485274).
+
 Highlights (5 bullets, each $\le$ 85 characters) are in \texttt{highlights.tex}.
 
 \end{document}

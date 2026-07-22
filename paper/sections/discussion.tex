@@ -21,14 +21,13 @@ mismatch~\cite{ireland2009impedance} made concrete): the native-relative spread 
 the deep/nested fetch and narrowest on aggregation. Round-trip count alone does not set
 throughput --- on the PostgreSQL deep fetch the single-query MikroORM is the slowest of all
 while the two-query Drizzle outruns the four-query Prisma (Supplement Table~S2;
-Table~\ref{tab:deep_fetch}) --- so how a layer materializes a result graph matters more than
-how many statements it issues.
+Table~\ref{tab:deep_fetch}) --- consistent with result-graph materialization, not statement count,
+separating the layers here.
 
 \paragraph{Compute cost and horizontal scaling}
-Under current versions the throughput differences are no longer bought with extra
-application cores: every layer sits at roughly one application core, and the native driver's
-lead comes from issuing lean SQL that pushes work onto the database tier
-(Section~\ref{sec:results}; Supplement Figure~S3). A low per-process throughput is
+Under current versions, with every layer at roughly one application core, the native driver's
+lead is consistent with its issuing leaner SQL that pushes more work onto the database tier
+(Section~\ref{sec:results}; Supplement Figure~S3, app-tier, with combined CPU in Table~S5). A low per-process throughput is
 not a fixed ceiling over the range tested: on PostgreSQL Prisma's aggregate throughput rises
 roughly in proportion to workers (1{,}117 to 4{,}449 over one to four workers), reaching
 native-like throughput in this run, trading footprint and energy for

@@ -770,6 +770,36 @@ and the earlier coverage paragraph was tightened so the manuscript stays under t
 
 ---
 
+## Strongly recommended 6.7 — Some mechanistic language is stronger than the design permits
+
+You are right, and this is a matter I care about: the design supports *consistency* with a
+mechanism, not its isolation, and a few passages still read as though the benchmark had established
+one. I softened each flagged formulation to a "consistent with" reading, using the Prisma raw-path
+sentence --- "Prisma is the slowest layer on the raw path itself; we conjecture this..." --- as the
+model, exactly as you suggest.
+
+- The native-lead sentence "the native driver's lead **comes from** issuing lean SQL that pushes work
+  onto the database tier" now reads "the native driver's lead **is consistent with** its issuing
+  leaner SQL that pushes more work onto the database tier."
+- "so how a layer materializes a result graph **matters more than** how many statements it issues" now
+  reads "**consistent with** result-graph materialization, not statement count, separating the layers
+  here."
+- In Results, "the native `pg` driver issues lean SQL that **drives the database harder** ---
+  so the native driver leads ..." now reads "**consistent with** the native `pg` driver's
+  leaner SQL, the native driver leads throughput and end-to-end compute efficiency at once," and
+  "large only when it must materialize" became the descriptive "largest on patterns that materialize."
+
+On the figure: you correctly note that the application-tier CPU figure (Supplement Figure S3) excludes
+database CPU. Both places that make the compute-efficiency point now say so explicitly and point to the
+combined application-plus-database accounting in Supplement Table S5, so the claim rests on the
+complete accounting, not the app-only view. I re-audited the Introduction, Results, Discussion, and
+Conclusion: the remaining causal statements are either experimentally supported (the durability
+manipulation with direct `performance_schema` instrumentation attributes the MySQL insert
+floor to the commit path) or already hedged. This is prose-only --- no measurement, table, or figure
+changed.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -994,14 +1024,14 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,991 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,986 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.11.3 (DOI 10.5281/zenodo.21485139), the version this revision describes.
+as release v1.11.4 (DOI 10.5281/zenodo.21485274), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
