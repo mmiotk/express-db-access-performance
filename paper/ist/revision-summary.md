@@ -323,8 +323,22 @@ only in the supplement/`REPRODUCE.md` --- is now conspicuous in the main-text Da
 of both builds: "Exact reproduction requires the reference engines (PostgreSQL 18.4 and MySQL 9.7.1) ...
 the convenience Docker path pins older engines (PostgreSQL 16, MySQL 8.4) and reproduces the workflow but
 not the published numbers." The Data-availability section is a declaration, so this does not change the
-manuscript length (14,991 words).
+manuscript length (then 14,991 words).
+
+For reviewer point 10 (novelty and related work), the Positioning subsection now separates coverage
+novelty (the four-axis Table 1 claim, stated as the strongest the scoping search supports) from
+methodological novelty, and adds a paragraph posing the reviewer's exact question --- which existing
+benchmark-quality or experimental-design framework, applied carefully, would already *generate* this
+protocol --- and answering, with an adversarially-verified literature analysis, "none." It names the
+closest frameworks (Kounev et al.'s systems-benchmarking criteria, Hasselbring's software-engineering
+benchmarking standard, and Raasveldt and Mühleisen's database fair-benchmarking guidance) and shows they
+supply generic principles but operationalize neither the documentation-selected treatment definition nor
+the semantic-equivalence-gated admission for access layers; correctness-before-timing precedents (SPEC,
+TPC, SQLancer) validate one program or engine against its own reference, not equivalence across
+competing implementations. A final pre-submission search past the 2026-07-15 freeze surfaced no new
+access-layer prior art. Three references were added (Kounev et al.; Hasselbring; Rigger and Su); the
+paragraph was offset by tightening the survey subsections, so the manuscript is 14,985 words.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21487281 (release v1.11.8). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21488397 (release v1.11.9). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

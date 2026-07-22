@@ -758,4 +758,24 @@ unchanged at **14,991** words (body 11,454). No data, tables, or floats changed 
 
 The point-9 pass (container-engine reproducibility caveat made conspicuous in the main Data-availability section) is archived as release v1.11.8 (DOI 10.5281/zenodo.21487281).
 
+Reviewer **point 10** (novelty and related work) asked to (a) distinguish methodological novelty from
+coverage novelty and (b) position the protocol against benchmark-quality/experimental-design frameworks
+beyond access-layer benchmarking, answering "which existing framework could already generate this
+protocol?". The Positioning subsection now does both: it labels the four-axis coverage claim as "not the
+contribution" and adds a paragraph answering the reviewer's question with "none," naming the closest
+frameworks (Kounev et al.'s systems-benchmarking criteria; Hasselbring's SE-benchmarking standard;
+Raasveldt and Mühleisen's fair-benchmarking guidance) and showing they operationalize neither the
+documentation-selected treatment definition nor the semantic-equivalence-gated admission for access
+layers, and that correctness-before-timing precedents (SPEC/TPC/SQLancer) validate one program or engine
+against its own reference, not equivalence across competing implementations. The literature analysis was
+an adversarially-verified multi-agent research workflow (25 agents; 18 candidate frameworks verified,
+all fall short); a post-freeze search found no new access-layer prior art. **Three references were
+added** (Kounev et al. 2020; Hasselbring 2021; Rigger and Su 2020, SQLancer), so the reference list
+grows by ~50 words (to ~1,900); the methodological paragraph (net +~80 body)
+was offset by tightening the survey subsections (search-terms list, benchmark-methodology, per-study
+detail across the Colley/Salunke/Lorenz/vendor passages). The body is **11,389** words and the total
+**~14,985**, under the 15,000 limit. No data, tables, or floats changed (checksums 35/35).
+
+The point-10 pass (methodological positioning vs benchmark-quality frameworks; three references; post-freeze search) is archived as release v1.11.9 (DOI 10.5281/zenodo.21488397).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
