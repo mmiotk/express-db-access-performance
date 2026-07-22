@@ -36,9 +36,7 @@ cross-engine gap is not an artifact of either configuration
 \paragraph{Construct validity of the treatment}
 RQ1's treatment is each layer's \emph{documentation-selected} implementation and eager-loading
 strategy: an operational rule --- the API the official documentation presents first --- that we
-do not validate against surveyed, typical, or performance-tuned usage. It is a reproducible proxy
-for one persona, the developer who follows the official documentation, not a claim that
-documentation ordering equals idiomatic or performance-conscious practice; where a layer's
+do not validate against surveyed, typical, or performance-tuned usage. It is an intentionally artificial, predeclared selection policy, not a validated practitioner persona or a claim that documentation ordering equals idiomatic or performance-conscious practice; where a layer's
 documentation-first API differs from what a performance-conscious developer would choose, RQ1's
 spread mixes the library's execution machinery with that strategy choice, a mixture made material
 by the one-to-four statement range on the deep fetch (Supplement Table~S2). Three things constrain it.
@@ -52,8 +50,7 @@ loading strategy as opposed to the library machinery. Third, where the documente
 alternative is a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows the
 documentation-selected default is the \emph{faster} strategy for the join-default ORMs, so their
 deficit does not appear to be an artifact of a poor default; the one exception, Objection's slower select-in
-default on MySQL, is disclosed rather than corrected. RQ1 therefore answers what a documentation-following
-developer obtains, not the library's intrinsic overhead.
+default on MySQL, is disclosed rather than corrected. RQ1 therefore answers what this documentation-selected policy yields, not the library's intrinsic overhead.
 
 \paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for

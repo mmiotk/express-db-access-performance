@@ -166,8 +166,7 @@ prominent, as for Drizzle's SQL-style builder versus its higher-level relational
 the API at the library's own taxonomy tier and recording the rest as documented alternatives ---
 a reproducible selection heuristic, not evidence
 that the chosen API is performance-optimal or the most common production choice, so we report
-a documentation-selected implementation-and-strategy estimand that models the choice of a
-developer following the official documentation --- a construct whose corroboration and limits are
+a documentation-selected implementation-and-strategy estimand fixed by this intentionally artificial, predeclared policy --- a construct whose corroboration and limits are
 set out in the supplement's Construct-validity section (Table~S33) and Section~\ref{sec:threats}.
 This documentation-first rule is the case study's \emph{treatment-selection policy} --- one
 instance of the protocol's mandatory predeclared, reproducible rule (Section~\ref{sec:protocol}),
@@ -175,7 +174,7 @@ which privileges no particular rule; a study targeting expert-tuned usage would 
 Supplement Table~S16 and
 \texttt{METHODOLOGY.md} record, per layer, that API with its documentation page and version,
 its round-trip count, the documented alternative we did \emph{not} use, and that query
-logging, hooks, and validation are off.
+logging, hooks, and validation are off. The machine-readable selection rubric (\texttt{notes/documentation-selection.md}) records the per-layer documentation URLs, versions, and freeze date for independent reassessment against Wayback Machine snapshots.
 
 To standardize the SQL and report how much of the spread remains once it is held fixed --- the protocol's
 \emph{strategy-standardization} precondition --- every adapter also implements a \emph{same-SQL standardized contrast}: identical two-statement deep-fetch SQL (and, per

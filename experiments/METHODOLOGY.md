@@ -66,14 +66,14 @@ the library maintainers to review the adapters; that is disclosed as a limitatio
 | Layer | Pinned version | Chosen deep-fetch API | Justifying documentation |
 |---|---|---|---|
 | `pg` | 8.22.0 | hand-written parameterized JOIN (`pool.query`) | native driver — no relation API; `https://node-postgres.com/features/queries` |
-| `mysql2` | 3.22.5 | hand-written JOIN (`pool.query`) | native driver — no relation API; `https://sidorares.github.io/node-mysql2/docs` |
+| `mysql2` | 3.23.0 | hand-written JOIN (`pool.query`) | native driver — no relation API; `https://sidorares.github.io/node-mysql2/docs` |
 | `knex` | 3.3.0 | builder `.join()` | `https://knexjs.org/guide/query-builder.html#join` |
-| `drizzle-orm` | 0.36.4 | core builder `.innerJoin()` | `https://orm.drizzle.team/docs/joins` |
-| `prisma` (`@prisma/client`) | 5.22.0 | `include` (nested reads) | `https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries` |
+| `drizzle-orm` | 0.45.2 | core builder `.innerJoin()` | `https://orm.drizzle.team/docs/joins` |
+| `prisma` (`@prisma/client`) | 7.8.0 | `include` (nested reads) | `https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries` |
 | `sequelize` | 6.37.8 | `include` eager loading | `https://sequelize.org/docs/v6/advanced-association-concepts/eager-loading/` |
-| `typeorm` | 0.3.30 | `relations` find option | `https://typeorm.io/find-options` |
+| `typeorm` | 1.1.0 | `relations` find option | `https://typeorm.io/find-options` |
 | `objection` | 3.1.5 | `withGraphFetched` | `https://vincit.github.io/objection.js/guide/query-examples.html#eager-loading` |
-| `@mikro-orm/core` | 6.6.15 | `populate` | `https://mikro-orm.io/docs/populating-relations` |
+| `@mikro-orm/core` | 7.1.6 | `populate` | `https://mikro-orm.io/docs/populating-relations` |
 
 The two *tuned* baselines (`pg-tuned`, `mysql2-tuned`) reuse the native drivers' plan
 as reusable prepared statements and are labelled separately. Each layer's declined

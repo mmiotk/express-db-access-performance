@@ -886,6 +886,10 @@ words, so the exact IST total is body 11,131 + abstract 299 + references ~1,900 
 (1,600) = **~14,930 words**, under the 15,000-word limit. Prose-only; no data changed (checksums 35/35).
 
 The point-6.4 pass (methodological novelty reframed to a domain-specific operational protocol and
-reusable realization) is archived as release v1.12.5 (DOI 10.5281/zenodo.21494811).
+reusable realization) is archived as release v1.12.5 (DOI 10.5281/zenodo.21494811). 
+
+Reviewer **point 6.5** --- the documentation-selected treatment has reproducibility but weak external construct validity. It is now presented as an intentionally artificial, predeclared selection policy rather than a validated practitioner persona: the Threats construct-validity paragraph, Study Design, and Results drop the "proxy for one persona"/"a developer following the documentation obtains" framing for policy statements (net -8 body words), keeping the not-performance-optimal and not-most-common disclaimers. A machine-readable selection rubric (`notes/documentation-selection.md`, an artifact, uncounted) records the per-layer API, official documentation URL, pinned version, freeze date, tie-break decisions, and Wayback retrieval URLs for independent reassessment; a pointer was added in Study Design (+21 words). Compiling it also surfaced and fixed a stale version column in METHODOLOGY.md (reconciled to Table S11 / lockfile). Net body 11,131 -> 11,145, so the total is body 11,145 + abstract 299 + references ~1,900 + eight main floats (1,600) = **~14,944 words**, under the 15,000-word limit. Prose-plus-artifact; no data changed (checksums 35/35).
+
+The point-6.5 pass (documentation-selected reframed as an artificial predeclared policy; rubric archived; METHODOLOGY version column reconciled) is archived as release v1.12.6 (DOI 10.5281/zenodo.21495171).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
