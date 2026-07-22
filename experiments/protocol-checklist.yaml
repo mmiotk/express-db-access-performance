@@ -1,0 +1,109 @@
+# Comparability Protocol for Benchmarking Relational Database Access Layers
+# ---------------------------------------------------------------------------
+# Machine-readable checklist (reviewer point 12, O1). Encodes the protocol
+# specified normatively in the manuscript's Study Design (Figure 1 and the
+# protocol-mapping table, Table 2) so that any access-layer benchmark can be
+# audited against it programmatically. Each stage lists: what it requires, how
+# to check it, the failure that follows if it is skipped, and how THIS study
+# satisfies it. Fields are stable identifiers intended for tooling.
+#
+# Schema (informal):
+#   inputs[]            : the four declared inputs a protocol instance must fix
+#   stages.mandatory[]  : a comparison is VALID only if all mandatory stages hold
+#   stages.recommended[]: enrich the comparison; may be scoped to a workload point
+#   cell_admission      : the per-cell pass/fail gate applied before timing
+#   outputs             : what the protocol licenses reporting, and how to read it
+#   applicability_limits: when the byte-identical oracle is valid vs. a comparator
+#   compliance_levels[] : named coverage levels an instantiation may reach
+
+protocol:
+  name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
+  author: "Mateusz Miotk, University of Gdansk"
+  release: "1.12.1"
+  doi: "10.5281/zenodo.21491886"
+  spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
+
+inputs:
+  - id: IN1
+    name: treatments
+    requirement: "The set of implementations under comparison, each a configured bundle (library, version, and its query/loading strategy), not the library name alone."
+  - id: IN2
+    name: declared_workload_model
+    requirement: "Stated access patterns (not a captured production trace), fixed for all treatments."
+  - id: IN3
+    name: output_equivalence_semantics
+    requirement: "A definition of when two responses count as equivalent (byte-identical, set equality, numeric tolerance, or canonicalization)."
+  - id: IN4
+    name: operating_point_definition
+    requirement: "An explicit separation of capacity, external demand, and utilization; every reported number is tied to one operating point."
+
+stages:
+  mandatory:
+    - id: M1
+      name: correctness_oracle
+      requirement: "Admit a treatment only if its non-mutating outputs are equivalent under the semantics AND its mutations produce the intended database state (validated field values, generated identifiers, row-count changes, transactional rollback) - not merely a 2xx status."
+      check: "Independent-oracle comparison of every treatment's output and post-write state before any timing."
+      failure_if_skipped: "A layer that returns fewer fields, writes wrong, or errors faster than it works can appear faster - a spurious ranking."
+      this_study: "bench/verify.mjs (12 fixed probes), bench/verify-property.mjs (property-based sweep, 60,800 comparisons, 0 divergences), bench/verify-writes.mjs (post-write state on both engines)."
+    - id: M2
+      name: treatment_definition_rule
+      requirement: "Fix each treatment's implementation and strategy by a rule declared reproducibly in advance. The protocol REQUIRES such a rule but PRIVILEGES NONE; documentation-first is one instantiation."
+      check: "The selection rule is stated before measurement and applied uniformly; ties are broken by a stated tie-breaker."
+      failure_if_skipped: "The query strategy chosen for a library is silently conflated with the library's own cost."
+      this_study: "Documentation-selected (first documented API), with a tie-breaker (select the API at the library's own taxonomy tier); this is the case study's policy, not a protocol requirement."
+
+  recommended:
+    - id: R3
+      name: strategy_control
+      requirement: "Add a standardized contrast holding the query strategy fixed, read against a common-strategy baseline (e.g. same-SQL raw path)."
+      reports: "A residual spread (a diagnostic contrast), NOT a causal decomposition and NOT a bound on the intrinsic library effect."
+      this_study: "Same-SQL raw-path contrast (Supplement Table S42); deep-fetch spread 7.15x/4.96x documentation-selected vs 1.68x/2.01x same-SQL."
+    - id: R4
+      name: capacity_identification
+      requirement: "Locate saturating throughput per treatment by a concurrency sweep, so the fixed operating point can be read against capacity."
+      this_study: "Per-pattern concurrency sweep (Supplement Table S35); knees at or below 50 connections, 97-100% median utilization at the operating point."
+    - id: R5
+      name: demand_and_utilization
+      requirement: "Measure the tail at equal external demand AND at matched fractions of each treatment's own capacity; report them as distinct quantities."
+      this_study: "High-load p99 under equal closed-loop demand vs matched-utilization tail (Table 7 regimes; Supplement Table S43); the near-saturation gap is a capacity/queueing outcome that converges at matched utilization."
+
+cell_admission:
+  rule: "Time a (treatment, workload-point) cell ONLY if the correctness oracle passes: equivalent non-mutating outputs AND correct post-write state."
+  disqualifiers:
+    - "non-equivalent output"
+    - "invalid or unsuccessful write"
+    - "degenerate plan (e.g. an N+1 query pattern)"
+
+outputs:
+  reports: "Throughput and tail latency per operating point."
+  interpretation:
+    - "Descriptive of the treatment as defined - not a causal decomposition."
+    - "Rankings are configuration-specific and version-specific."
+    - "Only relative, within-condition differences are meant to travel across environments."
+
+applicability_limits:
+  byte_identical_oracle_valid_when: "Equivalent outputs are deterministic and canonically serializable."
+  otherwise_use_semantic_comparator_for:
+    - "unordered collections (set equality)"
+    - "floating-point values (numeric tolerance)"
+    - "timestamps and nondeterministic identifiers (canonicalization)"
+    - "differently serialized but equivalent representations"
+
+compliance_levels:
+  levels:
+    - id: L1
+      name: mandatory_validity_core
+      holds_when: "M1 and M2 hold for the cell."
+    - id: L2
+      name: capacity_characterization
+      holds_when: "R4 has located the cell's throughput knee."
+    - id: L3
+      name: standardized_strategy_extension
+      holds_when: "R3 standardized contrast has been run for the cell."
+    - id: L4
+      name: utilization_controlled_extension
+      holds_when: "R5 matched-utilization tail has been measured for the cell."
+    - id: L5
+      name: resource_normalized_extension
+      holds_when: "Throughput is reported per CPU-second (application and combined app+db)."
+  coverage_in_this_study: "L1 and L2 hold across all five patterns on both engines; L3-L5 are demonstrated on the deep fetch as a representative-point instantiation (Supplement Table S40 maps each cell to the levels it satisfies)."

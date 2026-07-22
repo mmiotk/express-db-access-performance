@@ -100,7 +100,10 @@ tarball; and the three protocol tables --- the stage-by-stage mapping (main-text
 `protocol_mapping.tex`), the retrospective application to prior benchmarks (Supplement Table S37,
 `protocol_retro.tex`), and the compliance-levels coverage map (Supplement Table S40,
 `protocol_compliance.tex`) --- are *analytical* (authored, not data-derived) and likewise ship
-pre-authored, as does the descriptive five-pattern table (Supplement Table S39, `patterns.tex`). Every
+pre-authored, as does the descriptive five-pattern table (Supplement Table S39, `patterns.tex`). A
+machine-readable encoding of the whole protocol (inputs, mandatory and recommended stages, the
+cell-admission gate, outputs, applicability limits, and compliance levels) ships as
+`protocol-checklist.yaml`, so a benchmark can be audited against the protocol programmatically. Every
 other table regenerates from the archived `results/*.json` (the tail-regime table, `tail_regimes.tex`,
 from `raw.json` plus the utilization sweeps).
 

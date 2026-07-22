@@ -353,6 +353,22 @@ words, so the exact IST total is body 10,938 + abstract ~292 + references ~1,900
 = ~14,530 words, well under 15,000. No data changed (checksums 35/35); the supplement now holds
 forty-four tables (S1--S44) plus four figures.
 
+**Point 12 (Essential / strongly-recommended / optional list).** The consolidated list was closed:
+the six Essential items were already implemented (E1 novelty framing; E2 protocol-versus-policy
+separation; E3 high-load p99 reframe; E4 moderated language; E5 four-level correctness oracle; E6
+primary-versus-secondary via the point-11 roster table), with the Abstract now stating explicitly that
+the near-saturation high-load p99 is chiefly a capacity-and-queueing outcome (E3 reinforcement). For the
+strongly-recommended items, the two deep-fetch regimes were brought back into the main text as a
+side-by-side table (Table 7, reversing the point-11 declutter, per S2); S3 (protocol-to-failure-mode
+table) is Table 2 plus the Supplement S37 retrospective; S4 (predefined contrasts and effect sizes) and
+S5 (material shortening) were done in points 8 and 11; S1 (independent environment) remains future work
+for want of a second host. A machine-readable protocol checklist (protocol-checklist.yaml, O1) now ships
+in the artifact; coverage statistics for the property-based sweep are reported (O2, Supplement S38); and
+a cold/I/O-heavier workload (O3) is declared future work. Returning the regimes table takes the
+main-text float count to eight, so the total is body 10,934 + abstract 299 + references ~1,900 + eight
+floats (1,600) = ~14,733 words, under 15,000. No data changed (checksums 35/35); the supplement now
+holds forty-three tables (S1--S43) plus four figures.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21491886 (release v1.12.0). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21492694 (release v1.12.1). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

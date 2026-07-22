@@ -187,7 +187,7 @@ six ORMs split both ways on the join-versus-select-in default. Because the nativ
 documentation-selected default is a hand-authored join while an ORM's is whatever relation
 loader its documentation presents first, the deep
 fetch --- the one pattern exposing a documented strategy choice --- admits two \emph{co-primary}
-regimes, which we measure on one harness and report side by side (Section~\ref{sec:results}; Supplement Table~S43). The \emph{documentation-primary} regime is the strategy fixed by the
+regimes, which we measure on one harness and report side by side (Section~\ref{sec:results}, Table~\ref{tab:deepfetch_regimes}). The \emph{documentation-primary} regime is the strategy fixed by the
 adapter-selection rule above. The \emph{performance-conscious} regime applies a predefined
 \emph{tuning budget}: the faster of a layer's two documented deep-fetch loading strategies (join
 versus select-in), admitted only where it is byte-identical to the documentation-primary output

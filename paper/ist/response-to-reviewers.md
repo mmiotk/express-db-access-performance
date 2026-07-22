@@ -1239,6 +1239,83 @@ margin the previous revision ran at. The structured abstract is 292 words, under
 structured-abstract limit. No measurement changed (checksums 35/35); the supplement now holds
 forty-four tables (S1--S44) plus four figures.
 
+## Point 12 (consolidated Essential / strongly-recommended / optional list)
+
+Thank you for the consolidated list. Most items were already implemented across the point-by-point
+responses; below I map each to its resolution and note the few new changes made in this revision.
+
+**Essential.**
+
+- **E1 (recast and defend the protocol contribution).** The Positioning subsection and the protocol
+  mapping table (**Table 2**) show what is domain-specific: the two access-layer constructs (a
+  documentation-selected, predeclared treatment rule and a semantic-equivalence-gated per-cell
+  admission) that established benchmark-quality frameworks supply the principles for but do not
+  operationalize (point 10). *Done.*
+- **E2 (separate the general protocol from the documentation-selected policy).** The protocol requires
+  only a *predeclared, reproducible* treatment-selection rule and privileges none; documentation-first
+  is stated as this case study's policy (Figure 1, mandatory stage 2; Study Design; major concern 6.2).
+  *Done.*
+- **E3 (reframe high-load p99).** Relabelled throughout as the *high-load response-time p99 under equal
+  closed-loop demand* and distinguished from the tail at equal utilization (point 6.5). **New in this
+  revision:** the Abstract now states explicitly that the near-saturation high-load p99 is *chiefly a
+  capacity-and-queueing outcome, not an intrinsic tail difference*. *Done, reinforced.*
+- **E4 (moderate mechanistic / practitioner-generalization language).** Mechanistic claims read as
+  "consistent with" formulations and conclusions are scoped to what was varied (points 6.7 and 8).
+  *Done.*
+- **E5 (strengthen the correctness oracle).** Study Design distinguishes four levels (specification;
+  finite pre-measurement conformance; exhaustive equivalence, infeasible and not claimed;
+  property-based randomized testing) and the property-based gate runs 60,800 comparisons with zero
+  divergences (major concern 6.3; Supplement Table S38). *Done.*
+- **E6 (make primary versus secondary evidence unmistakable).** The point-11 **analysis-roster table
+  (Table 6)** separates the four primary analyses from the twelve robustness/sensitivity ones, each
+  labelled by role and location; secondary experiments restricted to few replicates are labelled
+  sensitivity evidence (point 8). *Done.*
+
+**Strongly recommended.**
+
+- **S1 (independent-environment replication).** The only host available for this revision is the
+  machine that produced the primary data, so no same-host re-run is presented as independent-substrate
+  replication; the External Validity paragraph partitions which conclusions should survive a substrate
+  change and names an independent-host deep-fetch replication as future work (point 6.4). *Framed;
+  deferred for want of a second environment.*
+- **S2 (regimes side by side in the main paper).** **Done in this revision:** the documentation-primary
+  and performance-conscious deep-fetch regimes are now a side-by-side main-text table (**Table 7**),
+  returned from the supplement where the point-11 declutter had placed them, since you ask for them in
+  the main paper. The matched-utilization tail (Supplement Table S43) and the same-SQL components (S42)
+  remain in the supplement.
+- **S3 (protocol-to-failure-mode validation table).** **Table 2** pairs each stage with its generic
+  principle, its access-layer manifestation, the failure that follows if it is skipped, and the
+  evidence it was load-bearing *here*; Supplement Table S37 applies the protocol retrospectively to the
+  eight prior benchmarks, naming for each the absent stages and the conclusion that becomes
+  uninterpretable (major concern 6.1). *Done.*
+- **S4 (simplify the statistical section).** The main text leads with a *predefined* contrast set (each
+  portable layer against the native-driver reference, Supplement Table S41) and paired effect sizes,
+  with the post-hoc adjacent-rank tests demoted to a descriptive supplement check (point 8). *Done.*
+- **S5 (shorten materially).** Point 11 converted the ~500-word protocol box to a figure, moved
+  secondary tables to the supplement, and trimmed over-defensive prose, cutting the body from 11,389 to
+  10,934 words. *Done.*
+
+**Optional.**
+
+- **O1 (machine-readable protocol checklist).** **Done:** `protocol-checklist.yaml` now ships in the
+  artifact, encoding the four inputs, the mandatory and recommended stages, the cell-admission gate,
+  the outputs and their interpretation, the applicability limits, and the five compliance levels, so a
+  benchmark can be audited against the protocol programmatically (pointer in the Data-availability
+  section and `REPRODUCE.md`).
+- **O2 (broader randomized equivalence testing and coverage statistics).** Coverage statistics are
+  already reported (Supplement Table S38: 3,800 distinct inputs per adapter, 60,800 comparisons across
+  both engines, zero divergences); the supplement now also notes that the sample size is a script
+  parameter, so a broader sweep is a re-run at larger *N* against the deterministic dataset rather than
+  a redesign. *Reported; broader run deferred (it needs the reference engines live).*
+- **O3 (a cold / I/O-heavier contrasting workload).** Deferred as future work; the manuscript already
+  states the plausible hypothesis that access-layer spreads compress when database I/O dominates, and
+  testing it would require a new campaign and a second, I/O-bound environment.
+
+The one manuscript change with a word-count effect --- returning the regimes table to the main text ---
+takes the main-text float count from seven to **eight**; the exact IST total is body 10,934 + abstract
+299 + references ~1,900 + eight main floats (1,600) = **~14,733 words** (< 15,000). No measurement
+changed (checksums 35/35); the supplement now holds forty-three tables (S1--S43) plus four figures.
+
 ---
 
 ## Closing
@@ -1246,14 +1323,14 @@ forty-four tables (S1--S44) plus four figures.
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,530 words** (IST rule) with a structured abstract of
-**292 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
+manuscript remains under the journal's limit at **14,733 words** (IST rule) with a structured abstract of
+**299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.0 (DOI 10.5281/zenodo.21491886), the version this revision describes.
+as release v1.12.1 (DOI 10.5281/zenodo.21492694), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

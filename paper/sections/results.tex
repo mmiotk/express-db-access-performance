@@ -96,7 +96,7 @@ batched-select-in default is about $1.6\times$ slower than a single join on MySQ
 Because the deep fetch is the only pattern exposing a documented strategy choice, we report RQ1
 there under \emph{two co-primary regimes} (Section~\ref{sec:methodology}): the
 documentation-primary strategy and a performance-conscious regime taking the faster
-byte-identical documented strategy (Supplement Table~S43). The performance-conscious regime shifts the
+byte-identical documented strategy (Table~\ref{tab:deepfetch_regimes}). The performance-conscious regime shifts the
 picture only marginally. For the join-default ORMs (Sequelize, MikroORM) the documentation-selected
 strategy is already the faster one, so the two regimes return the \emph{identical} configuration;
 the only cell that gains is Objection on MySQL, whose documented single-join alternative beats its
@@ -106,6 +106,7 @@ strategies rather than a poor-default artifact. TypeORM's alternative errors and
 diverges from byte-identity on PostgreSQL, so those cells are excluded as non-drop-ins. The performance-conscious regime caps how much a developer could recover within a narrow,
 semantically-equivalent tuning budget.
 
+\input{\tabledir deepfetch_regimes}
 
 \subsection{RQ2: engine dependence of the ranking}
 The read ordering is stable across engines, but the aggregation and insert
@@ -188,7 +189,7 @@ Offering each layer 50/70/85/95\% of \emph{its own} saturating throughput (Suppl
 Tables~S21--S22), the tails converge (near $2$--$5$~ms at 50\% utilization on both engines), so
 the large high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at matched
 utilization: it is a capacity-and-queueing effect, not a difference in tail latency at
-comparable utilization. Supplement Table~S44 shows both readings per layer, so the false
+comparable utilization. Supplement Table~S43 shows both readings per layer, so the false
 ``intrinsically worse tail'' reading is averted directly.
 
 \subsection{Measurement stability and effect sizes}

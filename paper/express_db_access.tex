@@ -58,7 +58,8 @@ two tuned native baselines, over five access patterns, on the latest stable
 library versions current at the July 2026 freeze. We report throughput with the \emph{high-load response-time p99 under equal
 closed-loop demand} (a fixed 50-connection point) from 25 repeated runs per cell, and on the deep
 fetch distinguish it from the tail at \emph{equal utilization} (an open-loop sweep, where the gap
-converges) and an exploratory equal compute budget; an automated
+converges --- the near-saturation p99 chiefly a capacity-and-queueing outcome, not an intrinsic tail
+difference) and an exploratory equal compute budget; an automated
 cross-check verifies byte-identical responses
 before measurement, and inserts run under the engines' default durability.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
@@ -97,14 +98,17 @@ The complete replication package (benchmark harness, database schema and
 deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table and figure) is
 available at \texttt{https://github.com/mmiotk/express-db-access-performance};
-release v1.12.0 is permanently archived at Zenodo
-(\texttt{https://doi.org/10.5281/zenodo.21491886}). A reproducibility summary --- versions,
+release v1.12.1 is permanently archived at Zenodo
+(\texttt{https://doi.org/10.5281/zenodo.21492694}). A reproducibility summary --- versions,
 requirements, run commands, time and resources, and which results the harness regenerates
 automatically from the archived raw data --- is in Supplement Table~S31 and
 \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
 (PostgreSQL~18.4 and MySQL~9.7.1), installed via the user-space conda path documented in
 \texttt{REPRODUCE.md}; the convenience Docker path pins \emph{older} engines
-(PostgreSQL~16, MySQL~8.4) and reproduces the workflow but not the published numbers. This is the generic build; the Elsevier submission build is
+(PostgreSQL~16, MySQL~8.4) and reproduces the workflow but not the published numbers. A machine-readable
+encoding of the protocol --- inputs, mandatory and recommended stages, the cell-admission gate, and
+compliance levels --- ships as \texttt{protocol-checklist.yaml} for auditing a benchmark against the
+protocol. This is the generic build; the Elsevier submission build is
 \texttt{ist/ist\_main.tex}.
 
 \section*{CRediT authorship contribution statement}

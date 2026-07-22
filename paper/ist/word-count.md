@@ -800,4 +800,33 @@ The point-11 presentation pass (protocol flow figure; estimands and analysis-ros
 tables; reduced same-SQL defense; three secondary tables moved to the supplement; exact
 word-equivalent recomputation) is archived as release v1.12.0 (DOI 10.5281/zenodo.21491886).
 
+Reviewer **point 12** (the consolidated Essential / strongly-recommended / optional list) was closed.
+The six **Essential** items were already in place --- E1 domain-specific novelty (point 10), E2
+protocol-versus-case-study-policy separation (major concern 6.2), E3 high-load p99 reframe (point 6.5),
+E4 moderated mechanistic language (points 6.7, 8), E5 the four-level correctness oracle (major concern
+6.3), and E6 primary-versus-secondary made unmistakable by the point-11 analysis-roster table --- with
+one reinforcement: for **E3** the Abstract now states explicitly that the near-saturation high-load p99
+is chiefly a capacity-and-queueing outcome, not an intrinsic tail difference. Among the
+**strongly-recommended** items, **S2** was applied by bringing the two deep-fetch regimes back into the
+main text as a side-by-side table (**Table 7**), reversing their point-11 move to the supplement since
+the reviewer wants them in the main paper; the matched-utilization tail (now Supplement Table S43) and
+the same-SQL components (S42) stay in the supplement. S3 (protocol-to-failure-mode validation) is the
+existing Table 2 mapping plus the Supplement S37 retrospective; S4 (foreground predefined contrasts and
+effect sizes) was done in point 8; S5 (shorten materially) was the point-11 density cut. **S1**
+(independent-environment replication) has no second host available this revision and remains framed as
+future work. **Optional:** **O1** a machine-readable protocol checklist (`protocol-checklist.yaml`) now
+ships in the artifact, encoding the inputs, mandatory and recommended stages, the admission gate,
+outputs, applicability limits, and compliance levels; **O2** the property-based sweep already reports
+coverage statistics (60,800 comparisons, zero divergences, Supplement Table S38) and its sample size is
+a script parameter; **O3** (a cold/I/O-heavier contrasting workload) is declared future work, the
+manuscript already stating the hypothesis that access-layer spreads compress when database I/O
+dominates. Returning the regimes table to the main text takes the main-text float count from seven to
+**eight** (seven tables plus one figure), so the exact IST total is body 10,934 + abstract 299 +
+references ~1,900 + eight main floats (1,600) = **~14,733 words**, under the 15,000-word limit. No data
+changed (checksums 35/35); the supplement now holds forty-three tables (S1--S43) plus four figures.
+
+The point-12 pass (Essential list confirmed with the E3 abstract reinforcement; S2 regimes returned to
+the main text; O1 machine-readable checklist; O2 coverage statistics; S1 and O3 framed as future work)
+is archived as release v1.12.1 (DOI 10.5281/zenodo.21492694).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

@@ -1,9 +1,8 @@
 % Analysis roster: separates PRIMARY (confirmatory, paired) analyses from
 % ROBUSTNESS / SENSITIVITY analyses. \input-able; belongs in the main paper
 % (uses \ref to the main-text pattern tables). Supplement tables are cited by
-% their verified S-number; the three tables being moved to the supplement this
-% revision carry literal placeholders (their assigned supplement S-numbers) to be find-replaced once
-% their S-numbers are assigned.
+% their verified S-number. Two tables (same-SQL components S42, matched-utilization tail S43)
+% live in the supplement; the deep-fetch regimes are a main-text table (S2 follow-up).
 \begin{table}[htbp]
   \centering
   \small
@@ -21,10 +20,10 @@
     Insert (write) throughput \& p99                     & Primary & Table~\ref{tab:write} \\
     Point read, range scan, aggregation: throughput \& p99 & Primary & Supplement Tables~S12, S13, S15 \\
     Predefined native-driver reference contrasts         & Primary & Supplement Table~S41 \\
+    Deep-fetch regimes (documentation-primary, performance-conscious) & Primary & Table~\ref{tab:deepfetch_regimes} \\
     \midrule
     Same-SQL standardized contrast                       & Robustness / sensitivity & Supplement Table~S42 \\
-    Performance-conscious deep-fetch regimes             & Robustness / sensitivity & Supplement Table~S43 \\
-    Matched-utilization / equal-demand tail              & Robustness / sensitivity & Supplement Table~S44 \\
+    Matched-utilization / equal-demand tail              & Robustness / sensitivity & Supplement Table~S43 \\
     Per-pattern capacity / utilization sweep             & Robustness / sensitivity & Supplement Table~S35 \\
     Equal-CPU budget (exploratory)                       & Robustness / sensitivity & Supplement Table~S4 \\
     Pool-size frontier (1--50)                           & Robustness / sensitivity & Supplement Tables~S7, S25 \\
