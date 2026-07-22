@@ -66,15 +66,13 @@ Table~S15), and the native driver leads both. The documentation-selected differe
 when a layer forwards a single query and largest on patterns that materialize a
 nested object graph application-side, such as the deep fetch.
 
-\subsection{Same-SQL control}
-The \emph{same-SQL control} (Section~\ref{sec:methodology}) is a \emph{compound} intervention:
-replacing each layer's documentation-selected relational-loading path with the same hand-written
-SQL through its raw facility changes the loading API, query strategy, SQL formulation, round-trip
-count, statement preparation, and result hydration \emph{together}
-(Supplement Table~S42). Server-side capture confirms the statement text is
-byte-identical across layers on both engines while the wire protocols differ per layer, so the
-control is \emph{same SQL, protocol disclosed}, not \emph{same plan}. It is therefore a
-\emph{standardized-SQL contrast}: it reports how much of the spread remains once the SQL is held
+\subsection{Same-SQL standardized contrast}
+The \emph{same-SQL standardized contrast} (Section~\ref{sec:methodology}) is a \emph{compound} intervention:
+replacing each layer's documentation-selected loading path with the same hand-written SQL through its
+raw facility changes several mechanisms at once (Supplement Table~S42 enumerates them). Server-side
+capture confirms the statement text is byte-identical across layers on both engines while wire
+protocols differ per layer, so the control is \emph{same SQL, protocol disclosed}, not \emph{same
+plan}: a \emph{standardized-SQL contrast} reporting how much of the spread remains once the SQL is held
 fixed. Because raw mode changes several mechanisms at once and may interact differently with each
 library, this residual is a diagnostic contrast, not a bound on the intrinsic library effect.
 

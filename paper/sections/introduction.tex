@@ -36,7 +36,7 @@ surveys each).
 This leaves a gap along the four coverage
 axes of Table~\ref{tab:prior_art} --- access-layer taxonomy, engine, joint throughput/tail
 metrics, and vendor involvement: no access-layer comparison we found includes MySQL, and no
-PostgreSQL/MySQL benchmark varies the access layer; no independently authored study spans the
+PostgreSQL/MySQL benchmark varies the access layer; no non-vendor-authored study spans the
 taxonomy broadly (the broad-coverage comparisons are vendor-authored, academic work covering
 at most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}); and we did not identify one
 reporting throughput and the p99 tail jointly (the sole vendor suite stops at a single P95 at
@@ -53,7 +53,7 @@ Comparing access layers meaningfully requires establishing that comparability fi
 problem this paper takes up.
 
 This paper addresses these gaps with a \emph{comparability protocol} and an
-independently authored case study that applies it
+non-vendor-authored case study that applies it
 (Section~\ref{sec:methodology} defines the term): an
 \emph{identical} Express application served through all nine access layers
 (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM,
@@ -79,8 +79,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.12.7 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21495887}.}
+v1.12.8 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21497051}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -127,24 +127,13 @@ in the performance-evaluation literature (Section~\ref{sec:related})~\cite{raasv
 The contribution is their \emph{domain-specific synthesis and operationalization} for the
 access-layer genre --- which assumes comparability rather than establishing it --- not the invention
 of these principles.
-We distinguish this contribution from two things it is easily confused with. The
-\textbf{artifact} --- an open, reusable harness (a uniform adapter contract, a
-deterministic seed, a randomized-block matrix runner, the automated correctness
-cross-check, and a coordinated-omission-corrected open-loop generator) ---
-\emph{operationalizes} the protocol and is released so it can be re-run, but is not
-itself the scientific claim (Section~\ref{sec:methodology}). The \textbf{empirical case
-study} --- eleven implementations (nine documentation-selected layers and two tuned
-baselines) across PostgreSQL and MySQL over five access patterns
-(Section~\ref{sec:results}) --- \emph{demonstrates} the protocol and shows why each
-precondition is load-bearing: a broken MikroORM cell briefly \emph{led} the MySQL write
-ranking until the equivalence gate excluded it, the sevenfold documentation-selected deep-fetch spread
-was only $1.7\times$ among the raw paths running common SQL, and a large high-load tail gap
-dissolved once
-layers were compared at matched utilization. The case study thus contributes novel experimental evidence: a dual-engine,
-throughput-and-p99, documentation-selected access-layer comparison we did not identify in the
-searched sources. But the resulting rankings are configuration-specific and version-sensitive,
-so the benchmark infrastructure --- the protocol's domain-specific synthesis of established
-benchmarking principles and its harness --- not any single ranking, is the more durable
-contribution. The case study also yields a
-practitioner-oriented checklist of genre-specific benchmarking pitfalls
-(Section~\ref{sec:discussion}), each an instance of a precondition the protocol enforces.
+The \textbf{artifact} --- an open, reusable harness --- \emph{operationalizes} the protocol and is
+released for re-running, but is not itself the scientific claim (Section~\ref{sec:methodology}); the
+\textbf{empirical case study} --- eleven implementations across PostgreSQL and MySQL over five access
+patterns (Section~\ref{sec:results}) --- \emph{demonstrates} it and shows each precondition is
+load-bearing: a broken MikroORM cell briefly \emph{led} the MySQL write ranking until the equivalence
+gate excluded it; the sevenfold documentation-selected deep-fetch spread was only $1.7\times$ among raw
+paths running common SQL; and a large high-load tail gap dissolved at matched utilization. Because the
+resulting rankings are configuration-specific and version-sensitive, the protocol and its harness ---
+not any single ranking --- are the more durable contribution, and the case study also yields a checklist
+of genre-specific benchmarking pitfalls (Section~\ref{sec:discussion}).

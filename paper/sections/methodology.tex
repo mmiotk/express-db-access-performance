@@ -73,13 +73,12 @@ engines, while the three extensions are demonstrated on the deep fetch --- the w
 maps each cell to the levels it satisfies.
 
 \smallskip
-Table~\ref{tab:protocol_mapping} makes the protocol's contribution explicit: each row pairs a generic
-benchmarking principle with its access-layer manifestation, the failure that follows if the stage is
-skipped, and the evidence that the stage was load-bearing here. We do not invent these principles, but
-in the sources searched found no prior access-layer benchmark applying all five together; the stages
-are complete (admission through interpretation), individually necessary (omission changes the
-conclusion), and distinguishable, yet transferable --- Supplement Table~S37 shows analytically how
-each prior benchmark's conclusion becomes uninterpretable once its absent stages are named.
+Table~\ref{tab:protocol_mapping} pairs each generic benchmarking principle with its access-layer
+manifestation, the failure if the stage is skipped, and the evidence it was load-bearing \emph{here};
+each stage was consequential in this case study (its omission would have changed a conclusion), though
+one study cannot establish universal necessity. In the sources searched we found no prior access-layer
+benchmark applying all five together, and Supplement Table~S37 shows how each prior benchmark's
+conclusion becomes uninterpretable once its absent stages are named.
 
 \input{\tabledir protocol_mapping}
 
@@ -158,18 +157,14 @@ ORM default the library's relation loader). Server-side statement logging captur
 SQL, round-trip count, and \texttt{EXPLAIN} plans (released with the package); the
 per-endpoint counts differ by design (Supplement Table~S2: the deep fetch takes one query in
 Sequelize and MikroORM, two in the native drivers, Knex, Drizzle, and TypeORM, and four in
-Prisma and Objection). The documentation-selected API was fixed by a rule decided
-\emph{before} measurement --- the eager-loading API each layer's official documentation
-presents first for the pinned version, breaking ties (where several official paths are equally
-prominent, as for Drizzle's SQL-style builder versus its higher-level relational-query API) toward
-the API at the library's own taxonomy tier and recording the rest as documented alternatives ---
-a reproducible selection heuristic, not evidence
-that the chosen API is performance-optimal or the most common production choice, so we report
-a documentation-selected implementation-and-strategy estimand fixed by this intentionally artificial, predeclared policy --- a construct whose corroboration and limits are
-set out in the supplement's Construct-validity section (Table~S33) and Section~\ref{sec:threats}.
-This documentation-first rule is the case study's \emph{treatment-selection policy} --- one
-instance of the protocol's mandatory predeclared, reproducible rule (Section~\ref{sec:protocol}),
-which privileges no particular rule; a study targeting expert-tuned usage would substitute its own.
+Prisma and Objection). The documentation-selected API was fixed by a rule decided \emph{before} measurement: the
+eager-loading API each layer's official documentation presents first for the pinned version, breaking
+ties (as for Drizzle's SQL-style builder versus its relational-query API) toward the API at the
+library's own taxonomy tier. This is an intentionally artificial, predeclared \emph{policy}, not
+evidence that the chosen API is performance-optimal or the most common production choice --- one
+instance of the protocol's predeclared treatment rule (Section~\ref{sec:protocol}), which privileges
+none; a study targeting expert-tuned usage would substitute its own. Its corroboration and limits are
+in the supplement's Construct-validity section (Table~S33) and Section~\ref{sec:threats}.
 Supplement Table~S16 and
 \texttt{METHODOLOGY.md} record, per layer, that API with its documentation page and version,
 its round-trip count, the documented alternative we did \emph{not} use, and that query

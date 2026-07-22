@@ -894,6 +894,8 @@ The point-6.5 pass (documentation-selected reframed as an artificial predeclared
 
 Reviewer **point 6.7** --- RQ3's "most consequential pattern" was broader than the result warrants. RQ3 is now restricted, everywhere (the RQ3 question and its answer, Study Design, and the abstract in both builds), to the established statement: among the five tested patterns, under the native-relative spread metric, the deep/nested fetch shows the largest spread. The class generalization "concentrates in relation-materializing patterns" in the abstract becomes "is largest on the tested deep/nested fetch"; the RQ3 subsection header and mnemonic label were neutralized. Net -2 body words (so body 11,145 -> 11,143, total ~14,942); the Discussion's fan-out breadth-not-depth/schema caveat is kept. Prose-only; no data changed (checksums 35/35).
 
-The point-6.7 pass (RQ3 restricted to the largest native-relative spread among the five tested patterns) is archived as release v1.12.7 (DOI 10.5281/zenodo.21495887).
+The point-6.7 pass (RQ3 restricted to the largest native-relative spread among the five tested patterns) is archived as release v1.12.7 (DOI 10.5281/zenodo.21495887). 
+
+A **presentation, terminology, and first condensation pass** (reviewer points 1, 4, 5, 6, 7, 8-vendor, 8-engine) tightened the abstract from 299 to 273 words (repeated contribution claim stated once; the n=7 Spearman coefficient and engine-scatter dropped), consolidated the recurring "protocol, not any ranking" framing, softened Table 2's necessity claim, renamed "same-SQL control" to "same-SQL standardized contrast", replaced "independently authored" with "non-vendor-authored", and named the Prisma-MariaDB implementation-by-engine asymmetry. Body 11,143 -> 10,871; total ~14,644. No data changed (checksums 35/35). A deeper condensation toward 20% follows. Archived as release v1.12.8 (DOI 10.5281/zenodo.21497051).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

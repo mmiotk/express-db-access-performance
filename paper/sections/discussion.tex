@@ -1,7 +1,7 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Version-sensitivity: the protocol, not any single ranking, is the contribution}
+\paragraph{Version-sensitivity}
 An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the
 native driver on the deep fetch while drawing about five application cores; re-running the
 \emph{identical} harness on the latest stable releases at the freeze did not reproduce it ---
@@ -9,8 +9,7 @@ no layer now draws more than about one core, and Prisma has fallen to mid-to-low
 (Section~\ref{sec:results}). The non-reproduction is a fact; its cause is a hypothesis (only
 Prisma changed architecture, so its Rust-free rewrite is the likeliest driver, but the
 re-freeze moved the whole toolchain at once). The headline is therefore
-version-sensitive~\cite{vanzyl2009optimisations,papadopoulos2021reproducible} --- again the reason
-the protocol and its harness, not any single ranking, are the durable contribution.
+version-sensitive~\cite{vanzyl2009optimisations,papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice}
 RQ1 and RQ3 agree that the documentation-selected implementation-and-strategy difference is

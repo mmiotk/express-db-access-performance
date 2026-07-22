@@ -42,7 +42,7 @@ spread mixes the library's execution machinery with that strategy choice, a mixt
 by the one-to-four statement range on the deep fetch (Supplement Table~S2). Three things constrain it.
 First, the selected API is in every case the relations mechanism the official documentation
 presents first --- for the ORMs, the library's canonical eager-loading API --- not an obscure one (Supplement Table~S33, corroborated against the official documentation recorded per
-layer in \texttt{METHODOLOGY.md}). Second, the \emph{same-SQL control} makes every
+layer in \texttt{METHODOLOGY.md}). Second, the \emph{same-SQL standardized contrast} makes every
 layer run common SQL through its raw facility, so the raw-path spread (deep fetch $1.68\times$,
 against $7.15\times$ documentation-selected; Section~\ref{sec:results}) is far smaller --- a
 compound \emph{standardized contrast}, not a decomposition or bound on how much comes from the documentation-selected
@@ -76,35 +76,27 @@ coordinated-omission-corrected constant-arrival cross-run on the deep fetch
 stricter model (Section~\ref{sec:results}; Supplement Table~S6).
 
 \paragraph{External validity}
-All measurements come from a single schema, dataset size, and 16-vCPU virtualized host, with a
-connection pool fixed at ten, against specific engine and library versions (PostgreSQL~18.4,
-MySQL~9.7.1). The fixed pool is an \emph{equal configured connection limit} comparison; the
-pool-size frontier (Supplement Tables~S7, S25) preserves the ordering from a pool of 1 to 50, and a
-mixed read/write workload (Supplement Table~S26) preserves the read ordering, so the fixed pool does
-not drive the ranking. Results may not transfer to larger
-working sets, other pool sizes, or other versions; because library performance ages quickly we pin
-the latest stable release compatible with the harness (Supplement Table~S11); Prisma is measured at 7.8, the Rust-free
-client~\cite{prisma7_benchmarks}. Two choices are disclosed rather than resolved: Sequelize on its
-stable 6.x line (7.x is prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships
-no \texttt{mysql2} adapter. Only the \emph{relative} within-engine ordering is intended to travel;
-absolute req/s reflect this substrate. The memory-resident working set is a hot-cache regime that makes
-access-layer overhead more visible; as a workload becomes I/O-bound the spreads should compress
-toward $1\times$. Three same-host concerns do not drive the
-ranking: a resource-isolation run pinning application, database, and generator to
-disjoint cores agrees with the shared-host medians within about 2\% (ordering unchanged); a
-multi-worker check (Supplement Table~S24) shows the low-per-process layers scale out roughly
-linearly over one to four workers, so single-process throughput is not the aggregate ceiling,
-though it locates no database-side saturation bottleneck; and a ten-minute
-sustained-load check moves throughput by at most $\pm1.4\%$, so the short runs are not sampling
-a transient. Crucially, none of these come from an \emph{independent} substrate: they bound only
-within-host drift (the post-restart re-run moved absolute throughput up to $16\%$ with the ranking
-intact, Supplement Table~S20), not variation across a different host or hypervisor. A substrate
-change should preserve the \emph{architectural} conclusions --- the within-engine relative ordering
-and the operating-point separation --- while possibly moving absolute req/s, gap magnitudes, and the
-cross-engine ordering of RQ2; an independent-host replication of the core deep fetch, and
-longer-horizon drift~\cite{kuffel2025nodejs}, remain future work. The protocol's stages are
-experimental-design controls, argued necessary analytically (Table~\ref{tab:protocol_mapping},
-Supplement Table~S37), so single-host measurement bounds the case study, not the protocol.
+All measurements come from a single schema, dataset size, and 16-vCPU virtualized host, a pool fixed
+at ten, and specific engine and library versions (PostgreSQL~18.4, MySQL~9.7.1; the latest stable
+releases compatible with the harness, Supplement Table~S11). The fixed pool does not drive the
+ranking: the pool-size frontier (Supplement Tables~S7, S25) preserves the ordering from 1 to 50
+connections, and a mixed read/write workload (S26) preserves the read ordering. Two choices are
+disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is prerelease), and Prisma's
+MySQL path on the MariaDB adapter, as Prisma ships no \texttt{mysql2} adapter --- an
+implementation$\times$engine asymmetry. Only the \emph{relative} within-engine ordering is intended to
+travel; absolute req/s reflect this substrate and may not transfer to larger working sets, other pool
+sizes, or other versions. The memory-resident working set is a hot-cache regime that makes
+access-layer overhead more visible; as a workload becomes I/O-bound the spreads should compress toward
+$1\times$. Same-host checks bound only within-host drift, not an independent substrate: an equal-CPU
+pinning agrees with the shared-host medians within about 2\%, a multi-worker check (Supplement
+Table~S24) shows the low-per-process layers scale out roughly linearly over one to four workers, a
+ten-minute run moves throughput by at most $\pm1.4\%$, and a post-restart re-run moved absolute
+throughput up to $16\%$ with the ranking intact (Supplement Table~S20). A substrate change should
+preserve the \emph{architectural} conclusions --- the within-engine relative ordering and the
+operating-point separation --- while possibly moving absolute req/s, gap magnitudes, and the
+cross-engine RQ2 ordering; an independent-host replication of the core deep fetch remains future work.
+The protocol's stages are experimental-design controls (Table~\ref{tab:protocol_mapping}, Supplement
+Table~S37), so single-host measurement bounds the case study, not the protocol.
 
 \paragraph{Conclusion validity}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient of variation

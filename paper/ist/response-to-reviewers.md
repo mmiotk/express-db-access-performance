@@ -1464,6 +1464,35 @@ Prose plus artifact; no measurement changed (checksums 35/35).
 
 You are right that the established result is narrower than "the most consequential access pattern." RQ3 is now stated, at every site (the RQ3 question and answer, Study Design, and the abstract in both builds), as the restricted claim: among the five tested patterns, under the native-relative spread metric, the deep/nested fetch shows the largest spread. The abstract's "concentrates in relation-materializing patterns" becomes "is largest on the tested deep/nested fetch"; the RQ3 subsection header and label were neutralized; the Discussion breadth-not-depth/schema caveat is kept. Net -2 words; no measurement changed (checksums 35/35).
 
+## Presentation and terminology pass (points 1, 4, 5, 6, 7, 8-vendor, 8-engine; condensation first pass)
+
+Addressing the presentation, terminology, and statistical-framing remarks together (with a first
+condensation increment; a deeper 20% pass follows):
+
+- **Abstract density (1, 4, 5).** The structured abstract (five dimensions retained) is tightened from
+  299 to 273 words: the repeated "the protocol, not any ranking, is the contribution" is stated once (in
+  the Conclusion), the $n=7$ Spearman coefficient and the secondary engine-scatter figure are dropped
+  from the abstract, leaving one protocol contribution and the principal empirical results.
+- **Repeated contribution defenses (5, 11).** The "protocol, not any ranking, is the contribution"
+  framing, which recurred across the Introduction, Discussion heading, and Conclusion, is consolidated;
+  the Introduction's artifact/case-study paragraph and the Discussion version-sensitivity heading are cut.
+- **Table 2 necessity (6).** "the stages are ... individually necessary (omission changes the
+  conclusion)" is softened to "each stage was consequential in this case study (its omission would have
+  changed a conclusion), though one study cannot establish universal necessity."
+- **Terminology (7).** "same-SQL control" is now "same-SQL standardized contrast" consistently (the
+  subsection heading and remaining prose uses).
+- **Vendor independence (8).** "independently authored"/"independent authorship" become
+  "non-vendor-authored"/"non-vendor authorship" to avoid implying independence from the author's choices;
+  the prior-art column stays "Vendor involvement."
+- **Cross-engine asymmetry (8).** External Validity now names the Prisma-MySQL-on-MariaDB-adapter vs
+  PostgreSQL-specific-adapter difference as an "implementation$\times$engine asymmetry," reinforcing
+  that RQ2 reports that the ordering differs between the tested PostgreSQL and MySQL stacks.
+
+Condensation first pass: the body is cut from 11,143 to 10,871 words (Introduction, Discussion, Study
+Design, Results, and Threats tightened; repeated framings removed), so the IST total is about 14,644
+words. No measurement changed (checksums 35/35). A deeper condensation toward the reviewer's 20% target,
+and the remaining statistical and artifact points, follow.
+
 ---
 
 ## Closing
@@ -1471,14 +1500,14 @@ You are right that the established result is narrower than "the most consequenti
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,942 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,644 words** (IST rule) with a structured abstract of
 **299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.7 (DOI 10.5281/zenodo.21495887), the version this revision describes.
+as release v1.12.8 (DOI 10.5281/zenodo.21497051), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
