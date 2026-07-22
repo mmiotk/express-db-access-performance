@@ -23,9 +23,10 @@ Table~\ref{tab:deep_fetch}) --- consistent with result-graph materialization, no
 separating the layers here.
 
 \paragraph{Compute cost and horizontal scaling}
-Under current versions, with every layer at roughly one application core, the native driver's
-lead is consistent with its issuing leaner SQL that pushes more work onto the database tier
-(Section~\ref{sec:results}; Supplement Figure~S3, app-tier, with combined CPU in Table~S5). A low per-process throughput is
+Under current versions, with every layer at roughly one application core, the native driver
+leads on both throughput and compute efficiency (requests per CPU-second, application-tier and
+combined; Section~\ref{sec:results}, Supplement Figure~S3 and Table~S5), consistent with its leaner
+SQL --- though CPU shares at unequal throughput do not identify where per-request work occurs. A low per-process throughput is
 not a fixed ceiling over the range tested: on PostgreSQL Prisma's aggregate throughput rises
 roughly in proportion to workers (1{,}117 to 4{,}449 over one to four workers), reaching
 native-like throughput in this run, trading footprint and energy for
@@ -35,7 +36,7 @@ it locates no database-side saturation bottleneck. The open-loop cross-run furth
 benchmark alone would underestimate how abruptly, not just how much, a heavyweight ORM's tail
 degrades once offered load crosses its capacity.
 
-\paragraph{Writes: a partly engine-bound cost under default durability}
+\paragraph{Single-row inserts: a partly engine-bound cost under default durability}
 RQ2 has a clear answer on inserts, under each engine's \emph{default} durability
 configuration: the native driver leads on both engines, PostgreSQL's insert throughput stays
 strongly layer-dependent even with fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on
@@ -48,8 +49,8 @@ advantage spanning $1.6$--$3.2\times$ (Supplement Table~S28), so a single-engine
 invites the wrong generalization either way; an
 engine-only benchmark such as~\cite{salunke2024pgmysql} cannot expose this interaction,
 whereas the dual-engine design does, consistent with earlier work showing database technology
-modulates mapping-strategy cost~\cite{lorenz2017orm}. A transactional multi-statement write (a
-post and five comments in one transaction) narrows the representative-layer spread to about
+modulates mapping-strategy cost~\cite{lorenz2017orm}. An \emph{exploratory} transactional multi-statement write (a post and five comments in one
+transaction; five replicates, representative layers) narrows the spread to about
 $3.7\times$ (Supplement Table~S8), below the widest read spread, because the single commit
 amortizes the flush across six inserts; Prisma, mid-pack on the single-row insert, falls to
 the bottom transactionally, so the transactional ordering does not simply track the

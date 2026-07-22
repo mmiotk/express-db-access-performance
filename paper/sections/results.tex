@@ -105,7 +105,7 @@ semantically-equivalent tuning budget.
 
 \input{\tabledir deepfetch_regimes}
 
-\subsection{RQ2: engine dependence of the ranking}
+\subsection{RQ2: cross-engine transfer of the ranking}
 The read ordering is stable across engines, but the aggregation and insert
 orderings reverse at the top, so we characterize the transfer by these concrete
 rank reversals and by the layer$\times$engine interaction magnitudes rather than by a
@@ -125,13 +125,13 @@ but the insert scatters from $1.6\times$ (MikroORM) to $3.2\times$ (Prisma) and
 aggregation from $1.4\times$ to $1.9\times$ --- a two-to-one range in the per-layer
 engine advantage on the writes that reorders the layers across engines. The blocked
 permutation test (Section~\ref{sec:methodology}) confirms this interaction is nonzero
-but bounds only its existence, not its size. For completeness the rank correlations
-these reversals produce are reported (descriptive only, and coarse at $n=7$):
-$\rho=0.86$, $0.89$, $0.86$ on the point read, range scan, and deep fetch, and
-$\rho=0.64$ ($\tau=0.52$) on aggregation and $\rho=0.68$ on the insert --- but the
-finding rests on the reversals and interaction spreads above, not on the
-coefficients. Single-engine results are thus portable in order for the reads and not
-for the writes.
+but bounds only its existence, not its size. For completeness, the coarse ($n=7$) rank correlations these reversals produce are reported in
+Supplement Table~S27 (descriptive only); the finding rests on the reversals and interaction spreads
+above, not on the coefficients. Because \emph{engine} here varies the whole stack --- driver, wire
+protocol, adapter, engine implementation, and default isolation and durability --- together (for
+Prisma, even a different MariaDB adapter on MySQL; Section~\ref{sec:threats}), these are differences
+between the tested PostgreSQL and MySQL \emph{stacks}, not an effect of the database engine alone.
+Single-engine results are thus portable in order for the reads and not for the writes.
 
 On the \textbf{keyset range scan} the native driver again leads (native-relative spread
 $4.21\times$ on PostgreSQL, $3.85\times$ on MySQL; Supplement Table~S13), driven
@@ -175,9 +175,10 @@ point, so the tail includes connection-acquisition queueing --- the tail a deplo
 load. At this high-load point tail latency tracks throughput: on the deep/nested fetch, PostgreSQL's
 p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (Table~\ref{tab:deep_fetch}), mirroring the
 throughput ranking; a paired p99 analysis (Supplement Table~S30) resolves every adjacent pair on both
-engines except two near-ties at the millisecond resolution. Each run-level p99 is a noisy top-1\%
-estimate, so we report the median of the 25 run-level values rather than pooling requests (spread in
-Supplement Figure~S4). Driving the deep fetch under the
+engines except two near-ties at the millisecond resolution. Because each 12~s run completes roughly 6{,}000 (slowest ORM) to 44{,}000 (native) deep-fetch
+requests, a run's top-1\% p99 rests on only ${\sim}60$--$440$ observations and is noisier for slower
+layers; we therefore report the median of the 25 run-level values rather than pooling requests (spread
+in Supplement Figure~S4). Driving the deep fetch under the
 coordinated-omission-corrected open-loop harness (Supplement Tables~S6, S17) reproduces this
 ordering: corrected tails are flat below saturation and collapse beyond each layer's capacity, the
 data-mapper ORMs earliest.
@@ -217,11 +218,11 @@ layer on the deep fetch, so the RQ1 ranking is not an artifact of a single point
 \subsection{Resource footprint}
 On the current library generation the application-side CPU cost is uniform (Supplement Tables~S5,
 S10; the trade-off is plotted in Supplement Figure~S3): every layer draws about one core on the deep
-fetch (100--110\%), so none buys throughput with extra application cores. What differs is
-database-side load: consistent with the native \texttt{pg} driver's leaner SQL, the native driver
-leads throughput and end-to-end compute efficiency at once
-(\texttt{mysql2} 1{,}254 versus Prisma 384 and MikroORM 356~req per combined-CPU-second on the MySQL
-deep fetch; Supplement Table~S5, since the app-tier figure alone excludes database CPU). An exploratory equal-CPU check and a 1-to-4-worker cluster check
+fetch (100--110\%), so none buys throughput with extra application cores. The native driver also
+leads end-to-end compute efficiency (\texttt{mysql2} 1{,}254 versus Prisma 384 and MikroORM 356~req
+per combined app-plus-database CPU-second on the MySQL deep fetch; Supplement Table~S5). These CPU
+shares, measured at unequal throughput, describe efficiency but do not by themselves locate where
+per-request work occurs. An exploratory equal-CPU check and a 1-to-4-worker cluster check
 (Supplement Tables~S4, S24) are consistent with low per-process throughput being addressed by
 additional application processes until another bottleneck is reached, with no database-side
 saturation measured. Peak memory ranges 215--356~MB, lowest for the query builder and lightest ORMs
