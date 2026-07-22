@@ -18,7 +18,7 @@ The \textbf{primary comparison}
 its raw facility. The \textbf{mechanisms} differing within a layer --- eager loading, wire protocol,
 round-trips, statement preparation, hydration --- change together and are \emph{not} separately or
 causally identified; the same-SQL contrast is a standardized diagnostic, not a decomposition and not a
-bound on the intrinsic library effect (Supplement Table~S42 enumerates the components it moves).
+bound on any library-only component (Supplement Table~S42 enumerates the components it moves).
 
 A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and so drives them to
 unequal \emph{utilization}, so RQ1 is characterized under three operating conditions rather than one
@@ -26,15 +26,19 @@ privileged point --- the protocol's \emph{operating-point separation}. \emph{Equ
 the fixed 50-connection \emph{high-load} point (the full five-pattern, two-engine matrix); a
 per-pattern concurrency sweep (ladder 1--200, both engines; Supplement Table~S35) puts each pattern's
 throughput knee at or below 50 connections, so this point places every pattern at high utilization of
-its own capacity (median 97--100\%) --- a capacity-and-queueing, sub-saturation-latency regime, not an
-intrinsic tail --- while 50 connections against a ten-connection pool keep about forty requests queued
+its own capacity (median 97--100\%) --- a capacity-and-queueing regime rather than a
+sub-saturation latency comparison --- while 50 connections against a ten-connection pool keep about forty requests queued
 (Controls, below). Capacity is thus \emph{measured} for all five patterns (deep-fetch curve, Supplement
 Figure~S2). The two utilization-dependent conditions need
 a per-layer \emph{saturating-throughput} target and are shown on the deep fetch: \emph{equal
 utilization} is the coordinated-omission-corrected open-loop sweep offering each layer a fixed
 fraction (50/70/85/95\%) of its \emph{own} saturating throughput, and an \emph{equal compute budget}
 is the exploratory equal-CPU check --- different questions that need not agree, so all three are
-reported.
+reported. For the deep fetch, the target is the median 50-connection throughput from the 25-run
+primary campaign; 50 connections is at or above every layer's measured knee. Because capacity is
+located on a discrete concurrency ladder rather than known exactly, the offered-load fractions are
+approximate. The 50\% and 70\% cells support the sub-saturation comparison; the noisier 85\% and 95\%
+cells are interpreted only as near-saturation trends (Supplement Tables~S21--S22).
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
@@ -65,10 +69,10 @@ Table~S40).
 \smallskip
 Table~\ref{tab:protocol_mapping} pairs each generic benchmarking principle with its access-layer
 manifestation, the failure if the stage is skipped, and the evidence it was load-bearing \emph{here}:
-each stage was consequential in this case study (its omission would have changed a conclusion), though
+each stage affected a conclusion in this case study, though
 one study cannot establish universal necessity. We found no prior access-layer benchmark applying all
-five together; Supplement Table~S37 shows how each prior benchmark's conclusion becomes
-uninterpretable once its absent stages are named.
+five together; Supplement Table~S37 identifies the narrower interpretations supported when particular
+stages are absent.
 
 \input{\tabledir protocol_mapping}
 

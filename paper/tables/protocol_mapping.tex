@@ -1,12 +1,12 @@
 \begin{table}[htbp]
   \centering
-  \caption{The comparability protocol, stage by stage. Each row pairs a generic benchmarking principle with its concrete manifestation for relational database access layers, the failure that follows if the stage is omitted, and the evidence that the stage was load-bearing in this study. We do not claim to originate these principles; in the sources searched we found no prior access-layer benchmark applying all five together. Throughputs abbreviated PG (PostgreSQL) and MySQL; ``conns'' denotes client connections.}
+  \caption{The comparability protocol, stage by stage. Each row pairs a generic benchmarking principle with its access-layer manifestation, the risk if omitted, and how the stage affected interpretation here. We do not claim to originate these principles; in the sources searched we found no prior access-layer benchmark applying all five together. Throughputs abbreviated PG (PostgreSQL) and MySQL; ``conns'' denotes client connections.}
   \label{tab:protocol_mapping}
   \begin{adjustbox}{max width=\textwidth}
   \footnotesize
   \begin{tabular}{p{1.7cm} p{2.3cm} p{2.5cm} p{3.3cm} p{2.5cm} p{3.4cm}}
     \toprule
-    \textbf{Stage} & \textbf{Benchmark decision} & \textbf{Generic principle} & \textbf{Access-layer manifestation} & \textbf{Failure if omitted} & \textbf{Evidence it was load-bearing} \\
+    \textbf{Stage} & \textbf{Benchmark decision} & \textbf{Generic principle} & \textbf{Access-layer manifestation} & \textbf{Risk if omitted} & \textbf{Effect on interpretation here} \\
     \midrule
     Correctness oracle &
     Which treatments are timed at all &
@@ -26,7 +26,7 @@
     Add a standardized same-SQL contrast (a compound diagnostic, not a mechanism decomposition) &
     Hold confounds constant via a common-baseline contrast &
     Access-layer time mixes loading strategy with execution machinery; engines have no ORM loading strategy to confound, so no same-SQL baseline is meaningful &
-    Mis-read the whole documentation-selected spread as intrinsic library ``overhead'' &
+    Mis-read the whole documentation-selected spread as library-only ``overhead'' &
     The $7.15\times$/$4.96\times$ spread narrows to $1.68\times$ (PG) / $2.01\times$ (MySQL) among raw paths on common SQL, so most of the documentation-selected spread disappears under this compound raw-SQL standardization; which component is responsible is not identified \\
     \addlinespace
     Capacity identification &

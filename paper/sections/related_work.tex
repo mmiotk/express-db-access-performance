@@ -88,11 +88,12 @@ coverage is not the contribution: the protocol operationalizes established exper
 this genre, not a new one. Kounev et al.'s systems-benchmarking
 criteria~\cite{kounev2020benchmarking}, Hasselbring's software-engineering
 standard~\cite{hasselbring2021benchmarking}, and Raasveldt and M\"uhleisen's fair-benchmarking
-guidance~\cite{raasveldt2018fair} supply its principles, but abstractly: none prescribes a
-documentation-selected, predeclared rule for
-\emph{what code represents a library} or a same-SQL contrast holding the query strategy fixed, and their
-correctness norms (``verify results'', construct validity) stop short of a per-cell admission gate
-requiring byte-identical responses and verified write-state \emph{before} timing. Correctness-before-timing
+guidance~\cite{raasveldt2018fair} supply its principles at a deliberately general level. They leave an
+access-layer study to operationalize \emph{what code represents a library}, how competing
+implementations are checked for semantic equivalence, and how strategy-sensitive results are
+contrasted. Our protocol supplies one concrete operationalization: a documentation-selected,
+predeclared treatment rule; a same-SQL diagnostic; and a per-cell gate requiring equivalent responses
+and verified write state \emph{before} timing. Correctness-before-timing
 has precedents (SPEC validation, TPC ACID, SQLancer's equivalence oracles~\cite{rigger2020sqlancer}), but
 each validates one program against its own reference, not equivalence \emph{across competing
 implementations of one task}. Together these three constructs --- predeclared treatment-selection,
@@ -101,7 +102,7 @@ domain-specific property general frameworks leave to the practitioner: an admiss
 discipline making \emph{competing
 implementations of one task} mutually comparable. That domain specialization, realized in the open
 harness (Section~\ref{sec:introduction}), is the contribution, not the invention of the underlying
-principles; a post-freeze pre-submission search surfaced no new prior art.
+principles.
 
 \begin{table}[htbp]
   \centering

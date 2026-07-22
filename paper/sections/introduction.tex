@@ -53,7 +53,7 @@ and queueing, so a lower-capacity layer looks worse on the tail even when its
 sub-saturation latency is not; we therefore also report the tail at \emph{matched
 utilization}. The study separates two estimands: the
 \emph{documentation-selected implementation-and-strategy} effect of each layer (RQ1--RQ3),
-and a controlled \emph{same-SQL} standardized contrast reporting the residual under
+and a \emph{same-SQL} standardized contrast reporting the residual under
 identical SQL --- changing query formulation, protocol, preparation, round-trips, and
 mapping together rather than isolating any one. The full harness --- adapters, seed data,
 an autocannon-driven~\cite{autocannon} load runner, and an automated \emph{byte-identical}
@@ -107,8 +107,8 @@ the contribution is their \emph{domain-specific synthesis and operationalization
 access-layer genre --- which assumes comparability rather than establishing it --- not their
 invention. The \textbf{artifact} --- an open, reusable harness --- \emph{operationalizes}
 the protocol; the \textbf{empirical case study} --- eleven implementations across
-PostgreSQL and MySQL (Section~\ref{sec:results}) --- \emph{demonstrates} it and shows each
-precondition is load-bearing: a broken MikroORM cell briefly \emph{led} the MySQL write
+PostgreSQL and MySQL (Section~\ref{sec:results}) --- \emph{demonstrates} it and shows how each
+precondition affected interpretation here: a broken MikroORM cell briefly \emph{led} the MySQL write
 ranking until the
 equivalence gate excluded it; the sevenfold documentation-selected deep-fetch spread was
 only $1.7\times$ among raw paths running common SQL; and a large high-load tail gap
