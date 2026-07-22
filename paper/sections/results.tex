@@ -188,9 +188,8 @@ data-mapper ORMs earliest.
 Offering each layer 50/70/85/95\% of \emph{its own} saturating throughput (Supplement
 Tables~S21--S22), the tails converge (near $2$--$5$~ms at 50\% utilization on both engines), so
 the large high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at matched
-utilization: it is a capacity-and-queueing effect, not a difference in tail latency at
-comparable utilization. Supplement Table~S43 shows both readings per layer, so the false
-``intrinsically worse tail'' reading is averted directly.
+utilization: it is a capacity-and-queueing effect, not a difference in latency at a matched offered-load fraction. Supplement Table~S43 shows both readings per layer, so the false
+``worse sub-saturation latency'' reading is averted directly.
 
 \subsection{Measurement stability and effect sizes}
 Across the 25 repeated runs the coefficient of variation of deep-fetch throughput is at most

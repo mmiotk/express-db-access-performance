@@ -66,7 +66,7 @@ driver use achieves. Every (layer, engine, pattern) combination reports
 throughput (req/s) and the \emph{high-load response-time p99 under equal closed-loop demand} at the
 fixed 50-connection operating point, from 25 repeated runs. At this near-saturation point the p99
 largely tracks capacity and queueing, so a lower-capacity layer looks worse on the tail even when its
-intrinsic latency is not; we therefore also report the tail at \emph{matched utilization}, where it
+sub-saturation latency is not; we therefore also report the tail at \emph{matched utilization}, where it
 converges --- the more informative view of tail behavior. The study
 separates two estimands: the \emph{documentation-selected implementation-and-strategy} effect of each layer
 (RQ1--RQ3), and a controlled \emph{same-SQL} standardized contrast that
@@ -79,8 +79,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.12.2 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21493555}.}
+v1.12.3 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21494005}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:

@@ -585,7 +585,7 @@ oracle keeps a broken/fast-error layer off the top (the MikroORM MySQL write led
 until the write-state gate excluded it); the standardized same-SQL contrast keeps the compound spread from
 being read as fixed library overhead (the 7.15x/4.96x documentation-selected spread narrows to 1.68x/2.01x
 among raw paths on common SQL); and capacity identification with demand/utilization separate a
-queueing effect from intrinsic latency (the 20-to-116 ms high-load tail converges to ~2-5 ms at
+queueing effect from sub-saturation latency (the 20-to-116 ms high-load tail converges to ~2-5 ms at
 matched utilization). The access-layer-manifestation column is what makes this *not* generic: each
 stage is trivial or unnecessary for a pure engine benchmark (one canonical result, one query
 language, one saturating throughput) and load-bearing only because access layers vary in output
@@ -726,10 +726,10 @@ Introduction.** The Abstract's Methods now reads: "throughput with the *high-loa
 under equal closed-loop demand* (a fixed 50-connection point) ... and on the deep fetch distinguish it
 from the tail at *equal utilization* (an open-loop sweep, where the gap converges)." The Introduction
 uses the same label and states the coupling explicitly: "At this near-saturation point the p99 largely
-tracks capacity and queueing, so a lower-capacity layer looks worse on the tail even when its intrinsic
+tracks capacity and queueing, so a lower-capacity layer looks worse on the tail even when its sub-saturation
 latency is not; we therefore also report the tail at *matched utilization*, where it converges --- the
 more informative view of tail behavior." So a reader meets the caveat --- that a poor headline p99 can
-be lower capacity, not a worse intrinsic tail --- at first contact with the metric.
+be lower capacity, not a worse sub-saturation latency --- at first contact with the metric.
 
 **The matched-utilization experiment is now a main-text result, not only Supplement S21--S22.** A new
 main-text table (`tab:tail_regimes`) places, per layer and engine, the equal-demand p99 next to the
@@ -1258,7 +1258,7 @@ responses; below I map each to its resolution and note the few new changes made 
 - **E3 (reframe high-load p99).** Relabelled throughout as the *high-load response-time p99 under equal
   closed-loop demand* and distinguished from the tail at equal utilization (point 6.5). **New in this
   revision:** the Abstract now states explicitly that the near-saturation high-load p99 is *chiefly a
-  capacity-and-queueing outcome, not an intrinsic tail difference*. *Done, reinforced.*
+  capacity-and-queueing outcome, not a sub-saturation latency difference*. *Done, reinforced.*
 - **E4 (moderate mechanistic / practitioner-generalization language).** Mechanistic claims read as
   "consistent with" formulations and conclusions are scoped to what was varied (points 6.7 and 8).
   *Done.*
@@ -1354,6 +1354,34 @@ The claims that a *specific* layer's deficit is partly strategy (Objection on My
 the same layer (Supplement Table S18) --- not on the compound same-SQL contrast, so they remain. This
 is a prose-and-caption change only; no measurement changed (checksums 35/35).
 
+## Point 6.2 (follow-up: "intrinsic latency" is not measured)
+
+You are right. Matched-utilization latency still measures an end-to-end Express request under a specific
+workload, pool, arrival process, database state, service-time distribution, generated SQL, DB execution,
+serialization, and hardware; offering each layer equal fractions of *separately-estimated* capacity does
+not isolate an implementation's inherent service-time distribution, so it cannot establish an "intrinsic
+tail" quantity. The word "intrinsic" was too strong.
+
+I replaced every "intrinsic latency / intrinsic tail / intrinsically worse tail / intrinsic per-request
+latency" formulation with a non-overclaiming term --- **"sub-saturation latency"**, **"latency at a
+matched offered-load fraction"**, or **"queueing-reduced latency"** --- chosen to fit each sentence.
+The changes span the **Abstract** (both builds: the near-saturation p99 is now "chiefly a
+capacity-and-queueing outcome, not a *sub-saturation latency* difference"), the Introduction, Results,
+main-text **Table 2** (Demand-and-utilization row), the tail-regime table (now Supplement Table S43),
+the utilization tables (S21/S22), and the paired-p99 significance table. An adversarially-verified
+multi-agent audit (24 agents; 21 sites confirmed, 0 rejected) located them.
+
+The manuscript now claims only what the open-loop and matched-utilization results support: (1) high-load
+p99 is heavily affected by proximity to saturation and queueing; and (2) a ranking at equal external
+demand should not be read as a difference in low-load / sub-saturation latency. It no longer asserts an
+intrinsic-tail quantity.
+
+I kept the *separate*, legitimate use of "intrinsic" that refers to the **library** effect --- "not the
+library's intrinsic overhead," "not a bound on the intrinsic library effect," and the estimands table's
+"intrinsic library overhead" --- because there it correctly states what the design does *not* isolate
+(the RQ1/same-SQL disclaimer, your point 6.1), not a measured quantity. This is a prose-and-caption
+change only; no measurement changed (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1361,14 +1389,14 @@ is a prose-and-caption change only; no measurement changed (checksums 35/35).
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,757 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,758 words** (IST rule) with a structured abstract of
 **299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.2 (DOI 10.5281/zenodo.21493555), the version this revision describes.
+as release v1.12.3 (DOI 10.5281/zenodo.21494005), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

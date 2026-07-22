@@ -58,7 +58,7 @@ patterns, on the latest stable versions (July 2026 freeze).
 We report throughput with the \emph{high-load response-time p99 under equal closed-loop demand}
 (a fixed 50-connection point) from 25 repeated runs per cell, and on the deep fetch distinguish it
 from the tail at \emph{equal utilization}, where the gap converges --- the near-saturation p99
-chiefly a capacity-and-queueing outcome, not an intrinsic tail difference.
+chiefly a capacity-and-queueing outcome, not a sub-saturation latency difference.
 An automated cross-check verifies byte-identical responses before measurement.
 \textbf{Results:} The implementation-and-strategy difference concentrates in
 relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
@@ -108,8 +108,8 @@ deterministic seed, all adapter implementations, the byte-level correctness cros
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.12.2
-(\url{https://doi.org/10.5281/zenodo.21493555}). A reproducibility summary --- versions,
+archived at Zenodo as release v1.12.3
+(\url{https://doi.org/10.5281/zenodo.21494005}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}

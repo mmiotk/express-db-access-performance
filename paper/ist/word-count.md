@@ -806,7 +806,7 @@ protocol-versus-case-study-policy separation (major concern 6.2), E3 high-load p
 E4 moderated mechanistic language (points 6.7, 8), E5 the four-level correctness oracle (major concern
 6.3), and E6 primary-versus-secondary made unmistakable by the point-11 analysis-roster table --- with
 one reinforcement: for **E3** the Abstract now states explicitly that the near-saturation high-load p99
-is chiefly a capacity-and-queueing outcome, not an intrinsic tail difference. Among the
+is chiefly a capacity-and-queueing outcome, not a sub-saturation latency difference. Among the
 **strongly-recommended** items, **S2** was applied by bringing the two deep-fetch regimes back into the
 main text as a side-by-side table (**Table 7**), reversing their point-11 move to the supplement since
 the reviewer wants them in the main paper; the matched-utilization tail (now Supplement Table S43) and
@@ -847,5 +847,25 @@ references ~1,900 + eight main floats (1,600) = **~14,757 words**, under the 15,
 The point-6.1 follow-up pass (removed the same-SQL mechanistic interpretation; renamed
 strategy-attribution to strategy-standardization; factorial/ablation noted as future work) is archived
 as release v1.12.2 (DOI 10.5281/zenodo.21493555).
+Reviewer **point 6.2** --- "intrinsic latency" is not measured. Matched-utilization latency still
+measures an end-to-end Express request under a specific pool, arrival process, database state,
+service-time distribution, generated SQL, and hardware; equal fractions of separately-estimated
+capacity do not isolate an implementation's inherent service-time distribution, so the
+matched-utilization result does not establish an "intrinsic tail" quantity. Every "intrinsic latency /
+intrinsic tail / intrinsically worse tail / intrinsic per-request latency" formulation was replaced
+with a non-overclaiming term --- "sub-saturation latency", "latency at a matched offered-load
+fraction", or "queueing-reduced latency" --- across the Abstract (both builds), Introduction, Results,
+Table 2, the tail-regime and utilization tables, and the paired-p99 significance table. The two
+supported claims are kept: high-load p99 is heavily affected by proximity to saturation and queueing,
+and the equal-demand ranking should not be read as a difference in sub-saturation latency. The
+legitimate "intrinsic library overhead/effect" uses (the RQ1/same-SQL estimand disclaimer, which
+correctly states the design does not isolate the library's own cost) are unchanged. Prose-and-caption
+only; no float or data changed (checksums 35/35). The slightly longer wordings took the body from
+10,958 to 10,959, so the exact IST total is body 10,959 + abstract 299 + references ~1,900 + eight main
+floats (1,600) = **~14,758 words**, under the 15,000-word limit.
+
+The point-6.2 pass (replaced "intrinsic latency/tail" with sub-saturation / matched-offered-load terms;
+kept the legitimate intrinsic-library-overhead disclaimers) is archived as release v1.12.3 (DOI
+10.5281/zenodo.21494005).
 
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

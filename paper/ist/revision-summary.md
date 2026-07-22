@@ -246,8 +246,7 @@ Addressing reviewer **strongly-recommended point 6.5** (closed-loop p99 is over-
 its interpretation), the primary p99 is now labelled *high-load response-time p99 under equal
 closed-loop demand* in both the Abstract and the Introduction and immediately distinguished from the
 tail at *equal utilization*, with the coupling stated at first contact (near saturation the p99 tracks
-capacity and queueing, so a lower-capacity layer looks worse on the tail without a worse intrinsic
-tail). The matched-utilization experiment was promoted to a new main-text table (`tab:tail_regimes`,
+capacity and queueing, so a lower-capacity layer looks worse on the tail without a worse sub-saturation latency). The matched-utilization experiment was promoted to a new main-text table (`tab:tail_regimes`,
 generated from the same raw data) that places the equal-demand p99 beside the matched-50%-utilization
 p99 per layer, making the collapse of the PostgreSQL ladder (`pg` 20 to MikroORM 116 ms down to
 a 2-5 ms band) visible directly; to keep the main-text float count at seven, the descriptive
@@ -372,5 +371,7 @@ holds forty-three tables (S1--S43) plus four figures.
 The replication package for this revision is archived at Zenodo,
 **Point 6.1 (follow-up).** The most important scientific correction: every formulation reading a mechanistic interpretation into the compound same-SQL contrast was removed. Table 2 no longer concludes ''most spread is query strategy, not raw execution''; it now states that most of the documentation-selected spread disappears under the compound raw-SQL standardization, with the responsible component not identified. The causal-sounding name ''strategy attribution'' is renamed ''strategy standardization'' throughout (Introduction, Study Design, Conclusion, Figure 1, Table 2, checklist), and Results notes that mechanistic attribution would require a factorial or staged ablation, left as future work. Layer-specific strategy claims rest on a separate controlled A/B (Supplement S18) and stay. Prose-only (checksums 35/35); body 10,934 to 10,958, total ~14,757.
 
-DOI 10.5281/zenodo.21493555 (release v1.12.2). Every table reproduces from the archived raw
+**Point 6.2 (follow-up).** "Intrinsic latency" was too strong: matched-utilization latency is still an end-to-end measurement under a specific pool, arrival process, DB state, service-time distribution, and hardware, and equal fractions of separately-estimated capacity do not isolate an inherent service-time distribution. Every "intrinsic latency/tail/per-request latency" formulation was replaced with a non-overclaiming term ("sub-saturation latency", "latency at a matched offered-load fraction", "queueing-reduced latency") across the Abstract, Introduction, Results, Table 2, and the tail-regime/utilization/significance tables; the supported claims (high-load p99 reflects proximity to saturation and queueing; equal-demand rankings are not sub-saturation latency differences) are kept, and the separate legitimate "intrinsic library overhead" disclaimer (point 6.1) is unchanged. Prose-only (checksums 35/35); body 10,958 to 10,959, total ~14,758.
+
+DOI 10.5281/zenodo.21494005 (release v1.12.3). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -58,7 +58,7 @@ two tuned native baselines, over five access patterns, on the latest stable
 library versions current at the July 2026 freeze. We report throughput with the \emph{high-load response-time p99 under equal
 closed-loop demand} (a fixed 50-connection point) from 25 repeated runs per cell, and on the deep
 fetch distinguish it from the tail at \emph{equal utilization} (an open-loop sweep, where the gap
-converges --- the near-saturation p99 chiefly a capacity-and-queueing outcome, not an intrinsic tail
+converges --- the near-saturation p99 chiefly a capacity-and-queueing outcome, not a sub-saturation latency
 difference) and an exploratory equal compute budget; an automated
 cross-check verifies byte-identical responses
 before measurement, and inserts run under the engines' default durability.
@@ -98,8 +98,8 @@ The complete replication package (benchmark harness, database schema and
 deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table and figure) is
 available at \texttt{https://github.com/mmiotk/express-db-access-performance};
-release v1.12.2 is permanently archived at Zenodo
-(\texttt{https://doi.org/10.5281/zenodo.21493555}). A reproducibility summary --- versions,
+release v1.12.3 is permanently archived at Zenodo
+(\texttt{https://doi.org/10.5281/zenodo.21494005}). A reproducibility summary --- versions,
 requirements, run commands, time and resources, and which results the harness regenerates
 automatically from the archived raw data --- is in Supplement Table~S31 and
 \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}

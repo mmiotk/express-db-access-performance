@@ -1,6 +1,6 @@
 // Utilization-controlled open-loop tail latency (review 4, §6.1). The primary p99
 // is a SATURATED closed-loop response time and tracks throughput; it is not
-// intrinsic tail latency. This measures the coordinated-omission-corrected tail at
+// sub-saturation latency. This measures the coordinated-omission-corrected tail at
 // MATCHED UTILIZATION: each layer is offered 50/70/85/95% of ITS OWN saturating
 // throughput (taken from the primary deep-fetch closed-loop rps in results/raw.json),
 // replicated OL_REPS times, on both engines. Comparing layers at equal utilization
