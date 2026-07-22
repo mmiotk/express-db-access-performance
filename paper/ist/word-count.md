@@ -692,4 +692,19 @@ is **11,449** words and the total **14,986**.
 
 The strongly-recommended-6.7 pass (mechanistic language softened to "consistent with"; app-tier CPU-figure caveat) is archived as release v1.11.4 (DOI 10.5281/zenodo.21485274).
 
+A follow-up addressed two **presentation** remarks. (1) The terminology remark (the alternation among
+"nine layers," "eleven implementations," "seven portable," and "four native/tuned"): Section 3
+(Factors and treatments) now opens with a compact **schematic** --- a small tier table (native driver;
+tuned native baseline; query builder; ORM) with the implementations and engine coverage, followed by
+the counting arithmetic in one place. The schematic replaces the previous inline prose enumeration and
+is **non-floating** (a plain centred tabular, not a numbered float), so the main-text float count is
+unchanged at **seven** and the section does not lengthen. (2) The repetition remark: the fullest
+redundant restatement of "configuration-specific and version-sensitive" (in the Discussion) was reduced
+to a back-reference, keeping the caveat in the abstract, Introduction, and Conclusion. Both changes are
+prose-only (no data, tables, or floats changed; checksums 35/35); the schematic's cells and counting
+sentence roughly balance the removed enumeration, and the consolidation trims a little, so the body is
+**11,457** words and the total **14,994**.
+
+The presentation pass (terminology schematic in Section 3; consolidated the perishable-rankings caveat) is archived as release v1.11.5 (DOI 10.5281/zenodo.21485425).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

@@ -800,6 +800,29 @@ changed.
 
 ---
 
+## Presentation — a terminology schematic, and consolidated repetition
+
+**1. Terminology ("nine layers" / "eleven implementations" / "seven portable" / "four native/tuned").**
+You are right that alternating among these counts is cognitively expensive. Section 3 (Factors and
+treatments) now opens with a compact schematic --- a small tier table (Native driver; Tuned native
+baseline; Query builder; ORM) with the implementations in each and whether each runs on one engine or
+both --- immediately followed by the arithmetic in one place: "11 implementations = 9
+documentation-selected (2 native + 1 query builder + 6 ORMs) + 2 tuned; the 7 portable layers run on
+both engines and the 4 native/tuned are engine-specific, so 4 + 7x2 = 18 layer-by-engine cells x 5
+patterns = 90 measured configurations." The schematic replaces the previous inline prose enumeration,
+so it clarifies the counting at first mention without lengthening the section (it is a non-floating
+schematic, not a numbered float, so the main-text float count is unchanged at seven).
+
+**2. Repetition of "configuration-specific and version-sensitive."** The caveat is important and I have
+kept it where it does load-bearing work --- the abstract's Conclusion, the Introduction's contribution
+statement, and the Conclusion --- but I removed the fullest redundant restatement. In the Discussion,
+"the headline is therefore version-sensitive, so the durable contribution is the reusable comparability
+protocol, which the open harness operationalizes and the pitfalls checklist instantiates" is now a
+back-reference: "the headline is therefore version-sensitive --- again the reason the protocol and its
+harness, not any single ranking, are the durable contribution." Both changes are prose-only.
+
+---
+
 ## Essential 5 (point 4) — The n=7 rank correlations are given too much weight
 
 > The cross-engine transfer rests heavily on Spearman coefficients computed over only seven
@@ -1024,14 +1047,14 @@ was moved, and no load-bearing caveat was removed --- the caveats carry the Esse
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,986 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,994 words** (IST rule) with a structured abstract of
 **297 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.11.4 (DOI 10.5281/zenodo.21485274), the version this revision describes.
+as release v1.11.5 (DOI 10.5281/zenodo.21485425), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

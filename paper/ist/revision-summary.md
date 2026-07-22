@@ -275,6 +275,17 @@ figure (Supplement Figure S3) excludes database CPU and point to the combined ac
 Table S5. The remaining causal statements are either experimentally supported (the durability
 manipulation) or already hedged. Prose-only, no data changed; the manuscript is 14,986 words.
 
+Two presentation follow-ups were also addressed. For the reviewer's terminology remark (the
+alternation among "nine layers," "eleven implementations," "seven portable," and "four native/tuned"),
+Section 3 now opens with a compact schematic --- a tier table (native driver; tuned native baseline;
+query builder; ORM) with the implementations and their engine coverage, followed by the arithmetic in
+one place (11 = 9 documentation-selected + 2 tuned; 7 portable on both engines, 4 engine-specific, so
+90 configurations). It replaces the previous inline enumeration and is non-floating, so the main-text
+float count stays at seven. For the repetition remark, the fullest redundant restatement of
+"configuration-specific and version-sensitive" (in the Discussion) was reduced to a back-reference,
+keeping the caveat in the abstract, Introduction, and Conclusion. Prose-only, no data changed; the
+manuscript is 14,994 words.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21485274 (release v1.11.4). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21485425 (release v1.11.5). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -107,13 +107,27 @@ each prior benchmark's conclusion becomes uninterpretable once its absent stages
 \input{\tabledir protocol_mapping}
 
 \subsection{Factors and treatments}
-We vary three factors. The \emph{access layer} has eleven levels spanning the taxonomy:
-the native drivers \texttt{pg} and \texttt{mysql2}, their tuned counterparts
-\texttt{pg-tuned} (named prepared statements reused across calls) and \texttt{mysql2-tuned}
-(binary protocol with server-side prepared statements via \texttt{execute()}), included as
-engine-specific tuned reference baselines rather than documentation-selected treatments; the
-query builder Knex; and the ORMs Drizzle (a query-builder-style ORM), Prisma,
-Sequelize, TypeORM, Objection, and MikroORM. We classify a library by its dominant
+We vary three factors. The \emph{access layer} has eleven levels across three tiers
+(schematic below): two native drivers with two engine-specific tuned baselines
+(\texttt{pg-tuned} reuses named prepared statements, \texttt{mysql2-tuned} the binary protocol via
+\texttt{execute()}), the query builder Knex, and six ORMs. The tuned baselines are reference points,
+not documentation-selected treatments, leaving \emph{nine} documentation-selected layers.
+\begin{center}\small
+\begin{tabular}{@{}l p{0.46\linewidth} l@{}}
+\toprule
+Tier & Implementations & Runs on \\
+\midrule
+Native driver         & \texttt{pg}, \texttt{mysql2}                        & its own engine \\
+Tuned native baseline & \texttt{pg-tuned}, \texttt{mysql2-tuned}            & its own engine \\
+Query builder         & Knex                                                & both engines \\
+ORM                   & Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM & both engines \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent In total, 11 implementations $=$ 9 documentation-selected (2 native $+$ 1 query builder $+$
+6 ORMs) $+$ 2 tuned; the 7 portable layers run on both engines and the 4 native/tuned are
+engine-specific, so $4 + 7\times 2 = 18$ layer$\times$engine cells $\times$ 5 patterns $= 90$ measured
+configurations. We classify a library by its dominant
 interface, not its self-description (Section~\ref{sec:introduction}); Objection, for
 instance, layers an ORM over Knex. The nine documentation-selected layers are a
 representative cross-section of the three tiers, not an exhaustive catalogue --- each
@@ -123,11 +137,8 @@ already covered by Knex (\texttt{METHODOLOGY.md} gives the full criteria). Vendo
 independence means authorship only: no evaluated library's maintainers were involved, though
 the consequential author choices (selection, schema, pool size, tuning) remain and are
 disclosed. The \emph{engine} has two levels, PostgreSQL~18.4 and MySQL~9.7.1, and the
-\emph{access pattern} has five, realized as HTTP endpoints (Supplement Table~S39). The
-four native and tuned baselines are engine-specific
-(\texttt{pg}/\texttt{pg-tuned} on PostgreSQL, \texttt{mysql2}/\texttt{mysql2-tuned} on
-MySQL); the other seven layers run on both, giving $4 + 7\times 2 = 18$
-layer\,$\times$\,engine cells and $18\times 5 = 90$ measured configurations. Supplement
+\emph{access pattern} has five, realized as HTTP endpoints (Supplement Table~S39), giving the
+90 measured configurations counted in the schematic above. Supplement
 Table~S29 records which factors are held constant, vary, or are uncontrolled on this single
 virtualized host --- the reason we report results for this configuration rather than as
 general library performance.
