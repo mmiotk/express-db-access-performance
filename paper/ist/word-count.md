@@ -707,4 +707,23 @@ sentence roughly balance the removed enumeration, and the consolidation trims a 
 
 The presentation pass (terminology schematic in Section 3; consolidated the perishable-rankings caveat) is archived as release v1.11.5 (DOI 10.5281/zenodo.21485425).
 
+A further presentation pass addressed four caption/prose points. (4) Every throughput/p99 table caption
+now records the 1 ms p99 resolution and that cells differing by $\le 1$ ms are practically unresolved
+(with a pointer to the paired significance analysis), so the tables no longer invite ranking
+within-resolution differences. (5) For the bimodal insert cells the main text now reads dispersion from
+the replicate plot (Supplement Figure S1) and the bootstrap spread rather than the coefficient of
+variation. (6) After verifying every caption, "within-campaign" was added to the two paired-ratio
+captions (interaction S28, deep-fetch significance S36) and to the Conclusion-validity sentence, so all
+95% bootstrap intervals are labelled within-campaign repeatability, not population-general. (7) The
+protocol box's Inputs now say "declared workload model (stated access patterns, not a production
+trace)" rather than "representative workload." The caption changes do not affect the body count
+(\input-ed table captions are counted once as the float, not in the body texcount); the prose additions
+were offset by trimming a duplicated post-restart clause, so the body is **11,460** words and the total
+**14,997**. No data changed (checksums 35/35). Note for reproducibility: regenerating the CI tables must
+respect the analyze engine order (cv/PostgreSQL tables want PostgreSQL-last, significance/resources want
+MySQL-last), and `gen-r6-tables.mjs` output has hand-tuned captions in the committed tables --- so only
+the intended caption edits were kept; the rest were reverted to HEAD.
+
+The presentation-caption pass (1 ms p99-resolution marking; insert dispersion via replicate plot/bootstrap not CV; within-campaign interval labeling verified; "declared workload model") is archived as release v1.11.6 (DOI 10.5281/zenodo.21486707).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

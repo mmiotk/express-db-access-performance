@@ -59,7 +59,9 @@ for (const [ep, label] of Object.entries(PATTERNS)) {
     within-campaign 95\\% bootstrap interval over the 25 repeated runs --- run-to-run
     variability within one host and campaign, not across hardware or days) and
     response-time p99 (ms, lower is better; median run-level p99 with the same
-    within-campaign 95\\% bootstrap interval) by access layer and engine.}
+    within-campaign 95\\% bootstrap interval) by access layer and engine. p99 is reported at
+    1~ms resolution, so cells differing by $\\le 1$~ms are practically unresolved (see the paired
+    significance analysis in the supplement).}
   \\label{tab:${ep}}
   \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l l r r r r}

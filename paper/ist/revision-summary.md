@@ -286,6 +286,19 @@ float count stays at seven. For the repetition remark, the fullest redundant res
 keeping the caveat in the abstract, Introduction, and Conclusion. Prose-only, no data changed; the
 manuscript is 14,994 words.
 
+Four further presentation refinements were made. (4) Every throughput/p99 table caption now states that
+p99 is reported at 1 ms resolution, so cells differing by at most 1 ms are practically unresolved and
+the reader is pointed to the paired significance analysis rather than encouraged to rank
+within-resolution differences. (5) The main text no longer leans on the coefficient of variation for
+the bimodal insert cells; it reads the write dispersion from the replicate plot (Supplement Figure S1)
+and the per-cell bootstrap spread instead. (6) Verifying every caption, the "within-campaign" qualifier
+was added to the two paired-ratio captions that lacked it and to the Conclusion-validity sentence, so
+all 95% bootstrap intervals are consistently labelled as within-campaign repeatability, not
+population-general. (7) The protocol box's Inputs now read "a declared workload model (stated access
+patterns, not a production trace)" instead of "a representative workload." All four are
+prose/caption-only; the added prose was offset by trimming a duplicated post-restart robustness clause,
+so the manuscript is 14,997 words.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21485425 (release v1.11.5). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21486707 (release v1.11.6). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

@@ -225,18 +225,17 @@ collapse from the equal-demand ladder to the matched-utilization band --- and th
 \subsection{Measurement stability and effect sizes}
 Across the 25 repeated runs the coefficient of variation of deep-fetch throughput is at most
 $4.0\%$ on either engine (Supplement Tables~S1, S9), well below the between-layer spreads;
-dispersion is larger only on the insert, where the MySQL cells are noisiest (up to $15.9\%$,
-bimodal under group-commit batching; raw distributions in Supplement Figure~S1), so the insert
-rank correlation is reported conservatively. Every measured request succeeded (zero errors or
-non-2xx across all 90 cells); those counters are load-bearing, since a broken cell returning
-errors faster than real work can spuriously lead a ranking (Section~\ref{sec:discussion}), and
-a post-restart re-measurement reproduced the ranking with absolute throughput up to $16\%$
-lower (Supplement Table~S20). We foreground paired effect sizes over significance tests: six of the
+dispersion is larger only on the insert, where the MySQL cells are visibly bimodal under
+group-commit batching --- structure a coefficient of variation (up to $15.9\%$) cannot convey --- so
+we read the write dispersion from the replicate plot (Supplement Figure~S1) and the bootstrap spread
+in the insert table, and report the insert rank correlation conservatively. Every measured request
+succeeded (zero errors or non-2xx across all 90 cells), load-bearing counters since a cell erroring
+faster than it works can spuriously lead a ranking (Section~\ref{sec:discussion}).
+We foreground paired effect sizes over significance tests: six of the
 seven adjacent MySQL deep-fetch steps are geometric-mean paired ratios $\geq 1.15$ with the faster
 layer ahead in \emph{every} replicate, well above the $\leq 4.0\%$ CV, while the narrowest
-(Sequelize over Objection, $1.05$) sits at the $\pm5\%$ practical-equivalence margin; the bootstrap
-intervals behind these ratios are within-campaign, not deployment-general
-(Section~\ref{sec:threats}). The post-hoc adjacent-pair permutation and Wilcoxon tests (which agree,
+(Sequelize over Objection, $1.05$) sits at the $\pm5\%$ practical-equivalence margin; these bootstrap
+intervals are within-campaign, not deployment-general (Section~\ref{sec:threats}). The post-hoc adjacent-pair permutation and Wilcoxon tests (which agree,
 Bonferroni intact) are reported only descriptively, in the supplement (Supplement Table~S36), since
 the ranking itself selects the pairs tested and their inference is therefore conditional.
 

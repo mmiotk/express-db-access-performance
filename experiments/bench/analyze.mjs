@@ -116,8 +116,8 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
     fetch (${engine==="postgres"?"PostgreSQL":"MySQL"}), over the ${ranked[0].r.repeats} repeated runs. Because
     every layer runs the identical per-replicate request stream, layers are compared
     on their per-replicate throughput ratios: median throughput (req/s; the per-cell
-    bootstrap CI is in the pattern tables), the geometric-mean paired ratio A$/$B with a paired bootstrap
-    95\\% CI, paired dominance (fraction of replicates in which A exceeds B), and the
+    bootstrap CI is in the pattern tables), the geometric-mean paired ratio A$/$B with a within-campaign
+    paired bootstrap 95\\% CI, paired dominance (fraction of replicates in which A exceeds B), and the
     two-sided paired sign-flip permutation $p$ (${PERM_B} permutations; a value
     of $5.0{\\times}10^{-5}$ is the resolution floor $1/(B{+}1)=1/20{,}001$, i.e.
     the observed statistic exceeded every permutation; the Wilcoxon signed-rank
