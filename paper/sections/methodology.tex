@@ -175,8 +175,8 @@ Supplement Table~S16 and
 its round-trip count, the documented alternative we did \emph{not} use, and that query
 logging, hooks, and validation are off.
 
-To standardize the SQL and contrast the combined contribution of query strategy and formulation --- the protocol's
-\emph{strategy-attribution} precondition --- every adapter also implements a \emph{same-SQL standardized contrast}: identical two-statement deep-fetch SQL (and, per
+To standardize the SQL and report how much of the spread remains once it is held fixed --- the protocol's
+\emph{strategy-standardization} precondition --- every adapter also implements a \emph{same-SQL standardized contrast}: identical two-statement deep-fetch SQL (and, per
 engine, identical \texttt{EXPLAIN} plans) with identical row mapping, executed through the
 layer's raw-SQL facility, mirroring the aggregation control (Section~\ref{sec:results}).
 Server-side capture, synchronized to a request marker so connection handshakes are excluded,

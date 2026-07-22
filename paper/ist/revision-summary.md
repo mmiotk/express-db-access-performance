@@ -20,7 +20,7 @@ matrix untouched.
   implementation-and-strategy**: choosing the first documented API is a reproducible
   selection heuristic, not the library's actual default configuration.
 - The comparison is now read at **three explicit, separated levels**: the primary
-  implementation-and-strategy comparison, the same-SQL raw-path **bounding** control, and the
+  implementation-and-strategy comparison, the same-SQL raw-path standardized (diagnostic) contrast, and the
   individual mechanisms, which change together and are **not** causally isolated.
 - The operating conditions are scoped: the full five-pattern, two-engine matrix is the fixed
   **high-load** point, while the equal-utilization and equal-CPU conditions are a limited set
@@ -370,5 +370,7 @@ floats (1,600) = ~14,733 words, under 15,000. No data changed (checksums 35/35);
 holds forty-three tables (S1--S43) plus four figures.
 
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21492694 (release v1.12.1). Every table reproduces from the archived raw
+**Point 6.1 (follow-up).** The most important scientific correction: every formulation reading a mechanistic interpretation into the compound same-SQL contrast was removed. Table 2 no longer concludes ''most spread is query strategy, not raw execution''; it now states that most of the documentation-selected spread disappears under the compound raw-SQL standardization, with the responsible component not identified. The causal-sounding name ''strategy attribution'' is renamed ''strategy standardization'' throughout (Introduction, Study Design, Conclusion, Figure 1, Table 2, checklist), and Results notes that mechanistic attribution would require a factorial or staged ablation, left as future work. Layer-specific strategy claims rest on a separate controlled A/B (Supplement S18) and stay. Prose-only (checksums 35/35); body 10,934 to 10,958, total ~14,757.
+
+DOI 10.5281/zenodo.21493555 (release v1.12.2). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

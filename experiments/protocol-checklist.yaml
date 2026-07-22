@@ -19,8 +19,8 @@
 protocol:
   name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
   author: "Mateusz Miotk, University of Gdansk"
-  release: "1.12.1"
-  doi: "10.5281/zenodo.21491886"
+  release: "1.12.2"
+  doi: "10.5281/zenodo.21493555"
   spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
 
 inputs:
@@ -54,7 +54,7 @@ stages:
 
   recommended:
     - id: R3
-      name: strategy_control
+      name: strategy_standardization
       requirement: "Add a standardized contrast holding the query strategy fixed, read against a common-strategy baseline (e.g. same-SQL raw path)."
       reports: "A residual spread (a diagnostic contrast), NOT a causal decomposition and NOT a bound on the intrinsic library effect."
       this_study: "Same-SQL raw-path contrast (Supplement Table S42); deep-fetch spread 7.15x/4.96x documentation-selected vs 1.68x/2.01x same-SQL."

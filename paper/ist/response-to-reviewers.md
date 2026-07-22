@@ -582,8 +582,8 @@ stages it gives, across the columns you named, the benchmark decision -> the gen
 principle it draws on -> its access-layer-specific manifestation -> the failure if the stage is
 omitted -> the evidence that the stage was load-bearing *in this study*. For example, the correctness
 oracle keeps a broken/fast-error layer off the top (the MikroORM MySQL write led the insert ranking
-until the write-state gate excluded it); the strategy control keeps a query-strategy artifact from
-being attributed to the library (the 7.15x/4.96x documentation-selected spread narrows to 1.68x/2.01x
+until the write-state gate excluded it); the standardized same-SQL contrast keeps the compound spread from
+being read as fixed library overhead (the 7.15x/4.96x documentation-selected spread narrows to 1.68x/2.01x
 among raw paths on common SQL); and capacity identification with demand/utilization separate a
 queueing effect from intrinsic latency (the 20-to-116 ms high-load tail converges to ~2-5 ms at
 matched utilization). The access-layer-manifestation column is what makes this *not* generic: each
@@ -1316,6 +1316,44 @@ takes the main-text float count from seven to **eight**; the exact IST total is 
 299 + references ~1,900 + eight main floats (1,600) = **~14,733 words** (< 15,000). No measurement
 changed (checksums 35/35); the supplement now holds forty-three tables (S1--S43) plus four figures.
 
+## Point 6.1 (follow-up: the same-SQL result must not carry a mechanistic interpretation)
+
+You are right, and this is the most important scientific correction in the revision. The same-SQL
+raw-path control is a *compound* intervention --- switching a layer from its documentation-selected
+deep fetch to hand-written SQL through its raw facility changes the loading API, SQL formulation, query
+strategy, round-trip count, statement preparation, result hydration, and ORM graph-materialization
+machinery all at once (the manuscript's own Supplement Table S42). The narrowing from
+$7.15\times/4.96\times$ to $1.68\times/2.01\times$ therefore **cannot** be read as "most of the spread
+is query strategy, not raw execution," and your MikroORM-on-PostgreSQL counterexample makes the point
+concretely: its documentation-selected deep fetch already issues a single query, yet its raw path is
+dramatically faster, so the effect is not a reduction in statement count and the raw path also bypasses
+ORM hydration.
+
+I removed **every** formulation equivalent to "most of the spread is query strategy." Concretely:
+
+- **Table 2** (protocol mapping), the row you flagged, no longer concludes "so most spread is query
+  strategy, not raw execution"; it now reads "so most of the documentation-selected spread disappears
+  under this compound raw-SQL standardization; which component is responsible is not identified." The
+  same row's decision and failure cells were reworded from "Separate query-strategy effect from
+  raw-execution effect" and "Attribute strategy-driven spread to library overhead" to non-causal
+  wordings ("Add a standardized same-SQL contrast, a compound diagnostic, not a mechanism
+  decomposition"; "Mis-read the whole documentation-selected spread as intrinsic library overhead").
+- The causal-sounding **name** "strategy attribution," used for the third protocol pillar (Introduction),
+  the precondition (Study Design), and the Conclusion gloss, is renamed **"strategy standardization"**
+  throughout, matching Figure 1's stage 3 and the machine-readable checklist.
+- A **non-causal statement of what the experiment supports** is now explicit in Results: "the
+  documentation-selected paths differ much more than the raw paths executing common SQL," and
+  "attributing the residual to any one of these components would require a factorial or staged
+  ablation, which we leave to future work" --- exactly the design you note would be necessary for
+  mechanistic attribution.
+- The Highlights bullet, which still said "Same-SQL control bounds strategy vs machinery," now reads
+  "Same-SQL contrast narrows deep-fetch spread from 7.15x to 1.68x on common raw SQL."
+
+The claims that a *specific* layer's deficit is partly strategy (Objection on MySQL) rest on a
+*different*, controlled experiment --- the loading-strategy A/B that swaps join against select-in for
+the same layer (Supplement Table S18) --- not on the compound same-SQL contrast, so they remain. This
+is a prose-and-caption change only; no measurement changed (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1323,14 +1361,14 @@ changed (checksums 35/35); the supplement now holds forty-three tables (S1--S43)
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,733 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,757 words** (IST rule) with a structured abstract of
 **299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.1 (DOI 10.5281/zenodo.21492694), the version this revision describes.
+as release v1.12.2 (DOI 10.5281/zenodo.21493555), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

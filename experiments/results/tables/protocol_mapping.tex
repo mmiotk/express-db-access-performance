@@ -22,12 +22,12 @@
     Arbitrary/cherry-picked API choice; spread reflects the tester, not the defaults &
     Documentation-selected deep fetch spreads $7.15\times$ (PG) / $4.96\times$ (MySQL); round-trips differ 1--4 by design; Drizzle is the documented tie-break case \\
     \addlinespace
-    Strategy control &
-    Separate query-strategy effect from raw-execution effect &
+    Strategy standardization &
+    Add a standardized same-SQL contrast (a compound diagnostic, not a mechanism decomposition) &
     Hold confounds constant via a common-baseline contrast &
     Access-layer time mixes loading strategy with execution machinery; engines have no ORM loading strategy to confound, so no same-SQL baseline is meaningful &
-    Attribute strategy-driven spread to library ``overhead'' &
-    The $7.15\times$/$4.96\times$ spread narrows to $1.68\times$ (PG) / $2.01\times$ (MySQL) among raw paths on common SQL, so most spread is query strategy, not raw execution \\
+    Mis-read the whole documentation-selected spread as intrinsic library ``overhead'' &
+    The $7.15\times$/$4.96\times$ spread narrows to $1.68\times$ (PG) / $2.01\times$ (MySQL) among raw paths on common SQL, so most of the documentation-selected spread disappears under this compound raw-SQL standardization; which component is responsible is not identified \\
     \addlinespace
     Capacity identification &
     Locate each layer's saturating throughput before fixing an operating point &

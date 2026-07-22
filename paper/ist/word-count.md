@@ -829,4 +829,23 @@ The point-12 pass (Essential list confirmed with the E3 abstract reinforcement; 
 the main text; O1 machine-readable checklist; O2 coverage statistics; S1 and O3 framed as future work)
 is archived as release v1.12.1 (DOI 10.5281/zenodo.21492694).
 
+Reviewer **point 6.1 (follow-up)** --- the most important scientific correction --- removed every
+formulation that reads a mechanistic interpretation into the *compound* same-SQL contrast. The
+manuscript no longer says "most spread is query strategy, not raw execution" (main-text Table 2, the
+row the reviewer flagged); it now says most of the documentation-selected spread disappears under the
+compound raw-SQL standardization, with which component is responsible *not identified*. The
+causal-sounding pillar/precondition name "strategy attribution" is renamed **"strategy standardization"**
+throughout (Introduction, Study Design, Conclusion, Figure 1, Table 2, and the machine-readable
+checklist), the Highlights bullet's "bounds strategy vs machinery" is reworded, and Results now states
+that attributing the residual to any one component would require a factorial or staged ablation, left
+to future work. The layer-specific strategy claims (Objection on MySQL) rest on a separate controlled
+A/B (Supplement Table S18), not the compound contrast, so they stay. Prose-and-caption only: no float
+count or data changed (checksums 35/35). The ablation caveat and slightly longer non-causal wordings
+took the body from 10,934 to 10,958 words, so the exact IST total is body 10,958 + abstract 299 +
+references ~1,900 + eight main floats (1,600) = **~14,757 words**, under the 15,000-word limit.
+
+The point-6.1 follow-up pass (removed the same-SQL mechanistic interpretation; renamed
+strategy-attribution to strategy-standardization; factorial/ablation noted as future work) is archived
+as release v1.12.2 (DOI 10.5281/zenodo.21493555).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.
