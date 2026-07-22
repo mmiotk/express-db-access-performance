@@ -117,15 +117,12 @@ and within-campaign bootstrap 95\% intervals (repeatability, not population-gene
 randomized block, compares adjacently ranked layers with \emph{paired} tests on their
 per-replicate throughput ratios (paired sign-flip permutation, cross-checked with Wilcoxon;
 Supplement Table~S36). Two bounds reinforce the ordering: the widest spreads dwarf the
-run-to-run CV (deep-fetch throughput varies by at most $\approx4.0\%$ across the 25 repeated
-runs on either engine; Supplement Tables~S1, S9), and the ordering holds across the
+run-to-run CV ($\leq4.0\%$; Supplement Tables~S1, S9), and the ordering holds across the
 concurrency sweep at $\geq32$ connections (Supplement Figure~S2). Rather than assert a
-specific statistical power, which would need a prospective effect-size and variance model we
-did not prespecify, we rest the conclusions on effect sizes and interval estimates: the
-adjacent-rank pairs combine large paired ratios --- down to $1.05$ for the closest, near the
-$\pm5\%$ practical-equivalence margin --- with non-overlapping bootstrap intervals above the
-run-to-run dispersion, the paired permutation test agreeing only as a descriptive post-hoc
-check (six pairs at the resolution floor, all seven surviving Bonferroni). Booting a fresh
+specific statistical power (which would need a prospective effect-size model we did not
+prespecify), we rest the conclusions on effect sizes and interval estimates --- foremost the
+\emph{predefined} native-driver contrasts (Supplement Table~S41), with the ranking-selected
+adjacent-pair permutation tests kept only as a descriptive post-hoc check (Supplement Table~S36). Booting a fresh
 process per replicate prevents persistent process state from carrying across
 replicates~\cite{kalibera2013rigorous}, but the replicates share one host and one campaign, so
 we treat replicate index and measurement order as blocks rather than claiming full

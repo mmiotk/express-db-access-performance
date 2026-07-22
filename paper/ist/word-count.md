@@ -726,4 +726,25 @@ the intended caption edits were kept; the rest were reverted to HEAD.
 
 The presentation-caption pass (1 ms p99-resolution marking; insert dispersion via replicate plot/bootstrap not CV; within-campaign interval labeling verified; "declared workload model") is archived as release v1.11.6 (DOI 10.5281/zenodo.21486707).
 
+Reviewer **point 8** (follow-up statistical assessment) was addressed across five sub-points, adding two
+supplement floats (no main float; main-text float count unchanged at seven). (8.1) For the ranking-
+conditional adjacent-pair tests, the manuscript now leads with a *predefined* contrast set --- each
+portable layer against the native-driver reference (new **Supplement Table S41**,
+`gen-native-contrasts.mjs`; paired ratio, within-campaign bootstrap interval, dominance 1.00 on all 25
+replicates) --- and demotes the adjacent-pair permutation/Wilcoxon tests to a descriptive supplement
+check. (8.2) The +-5% TOST margin's author-selected/application-dependent/not-preregistered/not-universal
+caveat, already in the supplement, is now stated at first main-text use. (8.3) Rank correlations remain
+subordinated to reversals and interaction magnitudes (no change). (8.4) A full HDR recorder is not in the
+archived data (the load generator records percentiles only), so a new **Supplement Figure S4**
+(`gen-p99-spread.mjs`) shows the 25 per-run p99 values behind each deep-fetch cell; the main text notes
+the noisy top-1% estimate and the median-of-run-level estimator, with HDR reconstruction as future work.
+(8.5) An adversarially-verified inferential-phrasing audit (a multi-agent workflow over all sections)
+found one genuine over-reach ("confirm" for a general claim), softened to "consistent with." The added
+main-text prose (predefined-contrast reframe, p99-noise note, TOST caveat) was heavily offset by
+consolidating the now-duplicated adjacent-pair effect-size recap in Results and Threats; the body is
+**11,454** words and the total **14,991**. Supplement tables/figures: S1--S41 and S1--S4. No data changed
+(checksums 35/35).
+
+The point-8 statistical pass (predefined native-driver contrasts S41; p99-spread figure S4; TOST caveat at first use; inferential-phrasing audit) is archived as release v1.11.7 (DOI 10.5281/zenodo.21487096).
+
 Highlights (5 bullets, each ≤ 85 characters) are in `highlights.tex`.

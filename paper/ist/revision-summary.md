@@ -299,6 +299,24 @@ patterns, not a production trace)" instead of "a representative workload." All f
 prose/caption-only; the added prose was offset by trimming a duplicated post-restart robustness clause,
 so the manuscript is 14,997 words.
 
+Reviewer point 8 (a follow-up statistical assessment) was addressed across its five sub-points. For the
+conditional adjacent-pair tests, the manuscript now leads with a *predefined* contrast set fixed before
+analysis --- each portable layer against the native-driver reference (new Supplement Table S41, from
+`scripts/gen-native-contrasts.mjs`): geometric-mean paired ratio, within-campaign bootstrap interval,
+and paired dominance, with every layer trailing the native driver in all 25 replicates (dominance 1.00);
+the ranking-selected adjacent-pair tests are demoted to a descriptive supplement check. The +-5% TOST
+margin now carries its author-selected, application-dependent, not-preregistered, never-universal caveat
+at first use in the main text (the supplement already did). Rank correlations remain subordinated to the
+concrete reversals and interaction magnitudes (no change needed). For p99 estimation, a full per-request
+HDR recorder is not available in the archived data (the load generator records percentiles only), so a
+new Supplement Figure S4 (from `scripts/gen-p99-spread.mjs`) shows the run-to-run spread of the 25
+per-run p99 values behind each deep-fetch cell, and the main text states that each run-level p99 is a
+noisy top-1% estimate handled by the median-of-run-level estimator; HDR reconstruction is future work.
+An adversarially-verified audit of inferential phrasing found one genuine over-reach ("confirm" applied
+to a general claim), now softened to "consistent with." The new table and figure are supplement floats
+(the main-text float count is unchanged at seven); no primary measurement changed. The manuscript is
+14,991 words.
+
 The replication package for this revision is archived at Zenodo,
-DOI 10.5281/zenodo.21486707 (release v1.11.6). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21487096 (release v1.11.7). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

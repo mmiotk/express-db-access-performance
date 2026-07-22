@@ -208,17 +208,18 @@ point, so the tail includes connection-acquisition queueing --- the tail a deplo
 load. At this high-load point tail latency tracks throughput: on the deep/nested fetch, PostgreSQL's
 p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms (Table~\ref{tab:deep_fetch}), mirroring the
 throughput ranking; a paired p99 analysis (Supplement Table~S30) resolves every adjacent pair on both
-engines except two near-ties at the millisecond resolution. Driving the deep fetch under the
+engines except two near-ties at the millisecond resolution. Each run-level p99 is a noisy top-1\%
+estimate, so we report the median of the 25 run-level values rather than pooling requests (spread in
+Supplement Figure~S4). Driving the deep fetch under the
 coordinated-omission-corrected open-loop harness (Supplement Tables~S6, S17) reproduces this
-ordering: below saturation the corrected tails are flat and small, and beyond each layer's
-capacity the tail collapses, the data-mapper ORMs earliest.
+ordering: corrected tails are flat below saturation and collapse beyond each layer's capacity, the
+data-mapper ORMs earliest.
 Offering each layer 50/70/85/95\% of \emph{its own} saturating throughput (Supplement
 Tables~S21--S22), the tails converge (near $2$--$5$~ms at 50\% utilization on both engines), so
 the large high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at matched
 utilization: it is a capacity-and-queueing effect, not a difference in tail latency at
-comparable utilization. Table~\ref{tab:tail_regimes} shows both readings per layer, making the
-collapse from the equal-demand ladder to the matched-utilization band --- and the false
-``intrinsically worse tail'' reading it averts --- visible directly.
+comparable utilization. Table~\ref{tab:tail_regimes} shows both readings per layer, so the false
+``intrinsically worse tail'' reading is averted directly.
 
 \input{\tabledir tail_regimes}
 
@@ -231,13 +232,14 @@ we read the write dispersion from the replicate plot (Supplement Figure~S1) and 
 in the insert table, and report the insert rank correlation conservatively. Every measured request
 succeeded (zero errors or non-2xx across all 90 cells), load-bearing counters since a cell erroring
 faster than it works can spuriously lead a ranking (Section~\ref{sec:discussion}).
-We foreground paired effect sizes over significance tests: six of the
-seven adjacent MySQL deep-fetch steps are geometric-mean paired ratios $\geq 1.15$ with the faster
-layer ahead in \emph{every} replicate, well above the $\leq 4.0\%$ CV, while the narrowest
-(Sequelize over Objection, $1.05$) sits at the $\pm5\%$ practical-equivalence margin; these bootstrap
-intervals are within-campaign, not deployment-general (Section~\ref{sec:threats}). The post-hoc adjacent-pair permutation and Wilcoxon tests (which agree,
-Bonferroni intact) are reported only descriptively, in the supplement (Supplement Table~S36), since
-the ranking itself selects the pairs tested and their inference is therefore conditional.
+We foreground paired effect sizes over significance tests. The confirmatory contrast is
+\emph{predefined}, not selected from the ranking: against the native-driver reference, fixed before
+analysis, every portable layer trails the native driver in all 25 replicates on both engines (dominance
+$1.00$; Supplement Table~S41). Adjacent ranks separate similarly, all but the narrowest pair
+(Sequelize over Objection, $1.05$) exceeding the run-to-run CV with the faster layer ahead in every
+replicate. These bootstrap intervals are within-campaign, not
+deployment-general (Section~\ref{sec:threats}); the adjacent-pair permutation and Wilcoxon tests, which
+only re-test pairs the ranking selected, are a descriptive supplement check (Supplement Table~S36).
 
 \subsection{Scaling with concurrency}
 A concurrency sweep from 1 to 256 connections (Supplement Figure~S2) shows the

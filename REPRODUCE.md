@@ -84,7 +84,7 @@ sha256sum -c results/checksums.sha256      # verify the 35 archived raw-data fil
 npm ci
 # regenerate every table from the archived raw data (no database needed):
 node scripts/ci-tables.mjs && node scripts/gen-tables.mjs && \
-  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && node scripts/gen-tail.mjs && node scripts/gen-tail-regimes.mjs && node scripts/gen-p99-significance.mjs && \
+  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && node scripts/gen-tail.mjs && node scripts/gen-tail-regimes.mjs && node scripts/gen-native-contrasts.mjs && node scripts/gen-p99-spread.mjs && node scripts/gen-p99-significance.mjs && \
   ENGINE=postgres node bench/analyze.mjs && ENGINE=mysql node bench/analyze.mjs && \
   node scripts/stats2.mjs
 npm run sync:tables && (cd ../paper && make)

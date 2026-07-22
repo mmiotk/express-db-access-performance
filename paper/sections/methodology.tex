@@ -321,7 +321,8 @@ is a randomized block --- within each replicate every layer runs the identical r
 stream --- so adjacently ranked layers are compared with \emph{paired} tests on their
 per-replicate throughput ratios (a two-sided sign-flip permutation test cross-checked with
 the Wilcoxon signed-rank test), reporting the geometric-mean paired ratio, its bootstrap
-CI, and the paired dominance, plus a $\pm5\%$-margin TOST for the closest pair; we
+CI, and the paired dominance, plus a TOST against a $\pm5\%$ margin (author-selected and
+application-dependent, not a universal threshold; supplement) for the closest pair; we
 foreground these effect sizes and interval estimates over $p$-values, as recommended for
 randomized performance experiments~\cite{arcuri2014hitchhiker,cliff1993dominance}. Because
 the seven adjacent pairs follow the \emph{observed} ranking, their significances are a

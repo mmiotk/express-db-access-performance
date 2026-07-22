@@ -28,6 +28,8 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:resources_main` | `resources_main.tex` | `bench/analyze.mjs` (`resourceMainTable`) | `results/raw.json` |
 | `tab:patterns` (moved to Supplement S39) | `patterns.tex` | hand-authored | — |
 | `tab:significance` | `significance_deep_fetch.tex` | `bench/analyze.mjs` (`significanceTable`, paired) | `results/raw.json` |
+| `tab:native_contrasts` (Supp. S41) | `native_contrasts.tex` | `scripts/gen-native-contrasts.mjs` | `results/raw.json` |
+| `fig:p99_spread` (Supp. Fig. S4) | `fig_p99_spread.tex` | `scripts/gen-p99-spread.mjs` | `results/raw.json` |
 | `tab:prior_art` | inline in `sections/related_work.tex` | hand-authored | literature search (`notes/related-work-search.md`) |
 | `fig:scaling` | `fig_scaling.tex` | `bench/scaling.mjs` | `results/scaling.json` |
 | `fig:cpu_tradeoff` | `fig_cpu_tradeoff.tex` | `scripts/gen-tables.mjs` | `results/raw.json` |
