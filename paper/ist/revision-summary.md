@@ -326,9 +326,7 @@ manuscript length (then 14,991 words).
 
 For reviewer point 10 (novelty and related work), the Positioning subsection now separates coverage
 novelty (the four-axis Table 1 claim, stated as the strongest the scoping search supports) from
-methodological novelty, and adds a paragraph posing the reviewer's exact question --- which existing
-benchmark-quality or experimental-design framework, applied carefully, would already *generate* this
-protocol --- and answering, with an adversarially-verified literature analysis, "none." It names the
+methodological novelty, and adds a paragraph showing that existing benchmark-quality and experimental-design frameworks supply the abstract principles (fairness, validity, reproducibility) but leave their operationalization for competing implementations of one task to the practitioner --- so the protocol is a domain-specific operationalization of those principles and a reusable realization, not a new methodology. It names the
 closest frameworks (Kounev et al.'s systems-benchmarking criteria, Hasselbring's software-engineering
 benchmarking standard, and Raasveldt and Mühleisen's database fair-benchmarking guidance) and shows they
 supply generic principles but operationalize neither the documentation-selected treatment definition nor
@@ -375,5 +373,5 @@ The replication package for this revision is archived at Zenodo,
 
 **Point 6.3 (follow-up).** The cell-admission rule conflated semantic validity with performance-strategy admissibility: Figure 1 listed a "degenerate plan (N+1)" as a disqualifier. Because an N+1 plan can be semantically correct and may be the documentation-selected behaviour under evaluation, excluding it would change the treatment. The rule and Figure 1 are rewritten to separate semantic correctness (wrong output/write excludes), workload conformance (excludes only an explicitly declared constraint's violation), and strategy diagnosis (query count/N+1/joins/eager loading are reported via Supplement S2, not gated). A new "Admission versus diagnosis" paragraph states this; the Figure 1 reject node/caption and the machine-readable checklist drop N+1; and the semantic-equivalence gate is decoupled from N+1 in the methodology. Prose-and-figure only (checksums 35/35); body 10,959 to 11,085, total ~14,884.
 
-DOI 10.5281/zenodo.21494495 (release v1.12.4). Every table reproduces from the archived raw
+DOI 10.5281/zenodo.21494811 (release v1.12.5). Every table reproduces from the archived raw
 data, whose checksum manifest verifies 35/35.

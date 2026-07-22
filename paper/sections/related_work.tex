@@ -104,23 +104,25 @@ In the sources searched through July 2026 the access-layer benchmarks report num
 comparability is assumed rather than established, and we did not identify a study combining broad
 taxonomy coverage, both engines, joint throughput/tail reporting, and independent authorship --- each
 covers at most two or three (Table~\ref{tab:prior_art}) --- the strongest claim the scoping search
-supports, not a claim of priority. But coverage is not the contribution, and methodological novelty is
-a separate question: which existing benchmark-quality or experimental-design framework, applied
-carefully, would already \emph{generate} this protocol? In the sources searched, none. Kounev et al.'s
-systems-benchmarking criteria~\cite{kounev2020benchmarking}, Hasselbring's software-engineering
-benchmarking standard~\cite{hasselbring2021benchmarking}, and Raasveldt and M\"uhleisen's database
-fair-benchmarking guidance~\cite{raasveldt2018fair} supply the principles it rests on --- fairness,
-verifiability, experimental design, validate-then-report --- but operationalize neither of its
-access-layer constructs:
-none prescribes a documentation-selected, predeclared rule for \emph{what code represents a library} or
-a same-SQL contrast holding the query strategy fixed, and their correctness norms (``verify results'',
-construct validity) stop short of a per-cell admission gate requiring byte-identical responses and
-verified write-state \emph{before} timing. Correctness-before-timing has precedents (SPEC output
-validation, TPC ACID, SQLancer's equivalence oracles~\cite{rigger2020sqlancer}), but each validates one
-program or engine against its own reference, not equivalence \emph{across competing implementations of
-one task} as an admission precondition. That joint operationalization for access layers
-(Section~\ref{sec:introduction}), not the coverage, is the methodological novelty; a pre-submission
-search past the July~2026 freeze surfaced no new access-layer prior art.
+supports, not a claim of priority. But coverage is not the contribution, and the methodological point is a bounded one: the protocol
+operationalizes established experimental principles for the access-layer genre, not a new principle of
+its own. Kounev et al.'s systems-benchmarking criteria~\cite{kounev2020benchmarking}, Hasselbring's
+software-engineering benchmarking standard~\cite{hasselbring2021benchmarking}, and Raasveldt and
+M\"uhleisen's database fair-benchmarking guidance~\cite{raasveldt2018fair} supply the principles it
+rests on --- fairness, verifiability, experimental design, validate-then-report --- but at an abstract
+level, operationalizing neither of its access-layer constructs: none prescribes a documentation-selected,
+predeclared rule for \emph{what code represents a library} or a same-SQL contrast holding the query
+strategy fixed, and their correctness norms (``verify results'', construct validity) stop short of a
+per-cell admission gate requiring byte-identical responses and verified write-state \emph{before} timing.
+Correctness-before-timing has precedents (SPEC output validation, TPC ACID, SQLancer's equivalence
+oracles~\cite{rigger2020sqlancer}), but each validates one program or engine against its own reference,
+not equivalence \emph{across competing implementations of one task} as an admission precondition.
+Combined, the three constructs --- predeclared treatment-selection, cross-implementation admission-gated
+equivalence, and a same-SQL diagnostic --- yield one domain-specific property that general frameworks
+assume or leave to the practitioner: an admission-and-attribution discipline making \emph{competing
+implementations of one task} mutually comparable. That domain specialization, realized in the open
+harness (Section~\ref{sec:introduction}), is the contribution --- not the invention of the underlying
+principles; a pre-submission search past the July~2026 freeze surfaced no new access-layer prior art.
 
 \begin{table}[htbp]
   \centering

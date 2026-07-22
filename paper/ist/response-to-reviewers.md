@@ -1166,9 +1166,7 @@ validity) stop short of a per-cell admission gate requiring byte-identical respo
 write-state *before* timing. It also handles the honest counter-case: correctness-before-timing *does*
 have precedents (SPEC output validation, TPC ACID, SQLancer's equivalence oracles), but each validates
 one program or engine against its own reference, never byte-identical equivalence *across competing
-implementations of one task* as an admission precondition. The joint operationalization for access
-layers is thus the methodological novelty --- exactly the "demonstrate it explicitly" you asked for,
-not a claim of unprecedentedness. Three references were added (Kounev et al.; Hasselbring; Rigger and Su
+implementations of one task* as an admission precondition. The joint operationalization for access layers is thus a domain-specific operationalization of established benchmarking principles and a reusable realization (the open harness) --- exactly the "demonstrate it explicitly" you asked for --- not a new methodology and not a claim of unprecedentedness. Three references were added (Kounev et al.; Hasselbring; Rigger and Su
 on SQLancer).
 
 **Post-freeze search.** I ran a final pre-submission search past the documented 2026-07-15 freeze. It
@@ -1408,6 +1406,29 @@ semantic-equivalence gate from N+1 in the methodology (byte-equality cannot dete
 returns identical bytes; query count is captured by server-side statement logging and reported).
 Prose-and-figure only; no measurement changed (checksums 35/35).
 
+## Point 6.4 (follow-up: the methodological-novelty claim was too categorical)
+
+You are right. The empirical-novelty claim is well scoped, but Section 2.7 went further, asking which
+framework would "already *generate* this protocol" and calling the joint operationalization a
+"methodological novelty." I have reframed it toward a domain-specific operational protocol and reusable
+realization.
+
+The passage no longer poses the "which framework would generate this?" question or claims methodological
+novelty. It now states the bounded methodological point: the protocol *operationalizes* established
+experimental principles --- fairness, validity, reproducibility, correctness-before-timing --- which the
+benchmark-quality frameworks (Kounev et al.; Hasselbring; Raasveldt and Mühleisen) prescribe only at an
+abstract level. The specific property that emerges from combining the three constructs (predeclared
+treatment-selection, cross-implementation admission-gated equivalence, and a same-SQL diagnostic) is an
+**admission-and-attribution discipline that makes competing implementations of one task mutually
+comparable**, which general frameworks assume or leave to the practitioner. The contribution is therefore
+a **domain-specific operationalization and a reusable realization (the open harness), not the invention
+of a new methodology** --- aligning Section 2.7 with the already-softened Introduction.
+
+The evidence you agreed the search *can* establish is kept (the combination and terminology were not
+found in the scoped search; existing access-layer benchmarks do not document all these controls); only
+the stronger claim of genuine methodological novelty is dropped. Prose-only; no measurement changed
+(checksums 35/35).
+
 ---
 
 ## Closing
@@ -1415,14 +1436,14 @@ Prose-and-figure only; no measurement changed (checksums 35/35).
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,884 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,930 words** (IST rule) with a structured abstract of
 **299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.4 (DOI 10.5281/zenodo.21494495), the version this revision describes.
+as release v1.12.5 (DOI 10.5281/zenodo.21494811), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.
