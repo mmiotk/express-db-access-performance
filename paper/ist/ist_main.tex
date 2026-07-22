@@ -60,8 +60,7 @@ We report throughput with the \emph{high-load response-time p99 under equal clos
 from the tail at \emph{equal utilization}, where the gap converges --- the near-saturation p99
 chiefly a capacity-and-queueing outcome, not a sub-saturation latency difference.
 An automated cross-check verifies byte-identical responses before measurement.
-\textbf{Results:} The implementation-and-strategy difference concentrates in
-relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
+\textbf{Results:} The implementation-and-strategy difference is largest on the tested deep/nested fetch: spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
 against only $1.68\times$ and $2.01\times$ among the raw paths running common SQL --- a
 standardized contrast that isolates no single mechanism. The read ordering holds
@@ -108,8 +107,8 @@ deterministic seed, all adapter implementations, the byte-level correctness cros
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.12.6
-(\url{https://doi.org/10.5281/zenodo.21495171}). A reproducibility summary --- versions,
+archived at Zenodo as release v1.12.7
+(\url{https://doi.org/10.5281/zenodo.21495887}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}

@@ -154,14 +154,13 @@ $3.23\times$ (\texttt{pg} 6{,}402 down to MikroORM 1{,}979) and is only weakly
 durability-sensitive ($\le$14\%), so there the access layer, not the engine, remains the larger
 factor.
 
-\subsection{RQ3: which patterns matter most}
+\subsection{RQ3: which pattern spreads widest}
 Ranking the five patterns by native-relative spread gives, on PostgreSQL, deep fetch
 ($7.15\times$) $>$ range scan ($4.21\times$) $>$ insert ($3.23\times$) $>$ point read
 ($2.78\times$) $>$ aggregation ($1.83\times$); MySQL keeps the same head and tail (deep fetch
 $4.96\times$, aggregation $1.72\times$ last) while the insert and point read swap in the middle,
 the insert compressing because MySQL's engine floor, not the access layer, sets its ceiling
-(RQ2). The deep/nested fetch is thus the most consequential pattern on both engines and
-aggregation the least. Because a fixed 50-connection demand could in principle place fast and slow
+(RQ2). The deep/nested fetch thus leads this five-pattern spread ranking on both engines, aggregation last. Because a fixed 50-connection demand could in principle place fast and slow
 patterns at different fractions of their capacity --- confounding this spread ranking --- we measured
 that it does not: a per-pattern concurrency sweep (Supplement Table~S35) puts every pattern's
 throughput knee at or below 50 connections on both engines, so all five sit at high utilization of

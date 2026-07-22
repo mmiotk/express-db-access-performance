@@ -79,8 +79,8 @@ non-mutating patterns) is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters, raw per-cell
 measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; release
-v1.12.6 is permanently archived at Zenodo,
-\texttt{https://doi.org/10.5281/zenodo.21495171}.}
+v1.12.7 is permanently archived at Zenodo,
+\texttt{https://doi.org/10.5281/zenodo.21495887}.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -94,8 +94,8 @@ implementations under the specified operating point:
         matched utilization} (equal fractions of each layer's own capacity).
   \item \emph{(engine dependence):} Does the observed layer ordering transfer
         across PostgreSQL and MySQL, or is it engine-dependent?
-  \item \emph{(consequential patterns):} For which access patterns is the choice of
-        implementation most consequential in this configuration?
+  \item \emph{(pattern spread):} Which of the five tested patterns shows the
+        largest native-relative spread in this configuration?
 \end{enumerate}
 
 This paper's primary contribution is a \textbf{comparability protocol for

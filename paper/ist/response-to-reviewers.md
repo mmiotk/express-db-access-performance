@@ -1460,6 +1460,10 @@ archival, keeping the term but removing the persona reading.
 
 Prose plus artifact; no measurement changed (checksums 35/35).
 
+## Point 6.7 (follow-up: RQ3 scoped to the tested patterns)
+
+You are right that the established result is narrower than "the most consequential access pattern." RQ3 is now stated, at every site (the RQ3 question and answer, Study Design, and the abstract in both builds), as the restricted claim: among the five tested patterns, under the native-relative spread metric, the deep/nested fetch shows the largest spread. The abstract's "concentrates in relation-materializing patterns" becomes "is largest on the tested deep/nested fetch"; the RQ3 subsection header and label were neutralized; the Discussion breadth-not-depth/schema caveat is kept. Net -2 words; no measurement changed (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1467,14 +1471,14 @@ Prose plus artifact; no measurement changed (checksums 35/35).
 These revisions leave the manuscript making one clear scientific claim --- a comparability protocol for
 access-layer benchmarking --- demonstrated through a configuration-specific dual-engine case study whose
 rankings are disclosed as version-sensitive, with a supplement that serves as a complete audit trail. The
-manuscript remains under the journal's limit at **14,944 words** (IST rule) with a structured abstract of
+manuscript remains under the journal's limit at **14,942 words** (IST rule) with a structured abstract of
 **299 words** (≤ 300), and, to reiterate, **the primary measurement matrix and every previously reported
 primary number are unchanged**; the only new measurements are the two clearly-scoped supplementary
 additions from earlier rounds (the write-state validation and the co-primary deep-fetch regime), which
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.6 (DOI 10.5281/zenodo.21495171), the version this revision describes.
+as release v1.12.7 (DOI 10.5281/zenodo.21495887), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

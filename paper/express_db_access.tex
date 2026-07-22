@@ -62,8 +62,7 @@ converges --- the near-saturation p99 chiefly a capacity-and-queueing outcome, n
 difference) and an exploratory equal compute budget; an automated
 cross-check verifies byte-identical responses
 before measurement, and inserts run under the engines' default durability.
-\textbf{Results:} The implementation-and-strategy difference concentrates in
-relation-materializing patterns: the deep/nested fetch spreads $7.15\times$
+\textbf{Results:} The implementation-and-strategy difference is largest on the tested deep/nested fetch: spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
 against only $1.68\times$ and $2.01\times$ among the raw paths running common SQL, a
 standardized contrast that isolates no single mechanism. The read ordering holds
@@ -98,8 +97,8 @@ The complete replication package (benchmark harness, database schema and
 deterministic seed, all adapter implementations, the byte-level correctness cross-check,
 raw per-cell measurements, and the scripts that generate every table and figure) is
 available at \texttt{https://github.com/mmiotk/express-db-access-performance};
-release v1.12.6 is permanently archived at Zenodo
-(\texttt{https://doi.org/10.5281/zenodo.21495171}). A reproducibility summary --- versions,
+release v1.12.7 is permanently archived at Zenodo
+(\texttt{https://doi.org/10.5281/zenodo.21495887}). A reproducibility summary --- versions,
 requirements, run commands, time and resources, and which results the harness regenerates
 automatically from the archived raw data --- is in Supplement Table~S31 and
 \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
