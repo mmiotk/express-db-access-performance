@@ -195,12 +195,12 @@ in the main text.
 \input{\tabledir point_read}
 \input{\tabledir range_scan}
 
-\section{Same-SQL control: full table}
+\section{Same-SQL standardized contrast: full table}
 \label{sup:sameplan}
-Table~\ref{tab:sameplan} gives the full same-SQL (raw-path) control on the deep
+Table~\ref{tab:sameplan} gives the full same-SQL (raw-path) standardized contrast on the deep
 fetch for both engines: throughput when every layer executes the identical
-control statement (verified byte-identical by server-side capture). The main text
-reports the resulting collapse toward parity and reads it as a standardized-SQL contrast, not a
+statement (verified byte-identical by server-side capture). The main text
+reports the resulting smaller residual spread and reads it as a standardized-SQL contrast, not a
 bound, on the residual same-SQL difference --- a compound intervention that isolates no single factor.
 
 \input{\tabledir sameplan}
@@ -489,7 +489,7 @@ the single runnable entry point.
     Experiment & Pattern(s) & Engines & Layers & Runs \\
     \midrule
     Primary matrix: throughput \& closed-loop p99 (main paper) & all five & PG, MySQL & 11 & 25 independent \\
-    Same-SQL raw-path control (Table~\ref{tab:sameplan}) & deep fetch & PG, MySQL & 9 & median of 10 \\
+    Same-SQL raw-path contrast (Table~\ref{tab:sameplan}) & deep fetch & PG, MySQL & 9 & median of 10 \\
     Open-loop CO-corrected tail (Tables~\ref{tab:openloop},~\ref{tab:openloop_mysql}) & deep fetch & PG, MySQL & 5 & rate sweep \\
     Utilization-controlled tail (Tables~\ref{tab:utilization},~\ref{tab:utilization_mysql}) & deep fetch & PG, MySQL & 8 & median of 5 \\
     Equal-CPU, 1/2/4 cores (Table~\ref{tab:equalcpu}), exploratory & deep fetch & PG & 3 & median of 3 \\
@@ -692,9 +692,9 @@ within-campaign bootstrap interval, and the longer-window (60~s) sensitivity che
 
 \input{\tabledir fig_p99_spread}
 
-\section{The same-SQL control: components of the compound intervention}
+\section{Components moved by the same-SQL standardized contrast}
 \label{sup:samesql-components}
-The same-SQL (raw-path) control (main text, RQ1) is a \emph{compound} intervention: replacing each
+The same-SQL (raw-path) standardized contrast (main text, RQ1) is a \emph{compound} intervention: replacing each
 layer's documentation-selected relational-loading path with the same hand-written SQL through its raw
 facility changes several mechanisms at once. Table~\ref{tab:samesql_components} enumerates them. The
 residual spread it leaves is a standardized-SQL contrast --- not a bound on the combined effect, and

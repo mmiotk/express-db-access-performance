@@ -15,15 +15,16 @@ RQ1 and RQ3 agree the documentation-selected implementation-and-strategy differe
 the access \emph{pattern}: the native-relative spread is widest on the deep/nested fetch --- where
 a layer must hydrate rows and resolve associations rather than merely issue SQL (the
 object-relational impedance mismatch~\cite{ireland2009impedance} made concrete) --- and narrowest
-on aggregation. Round-trip count alone does not set throughput --- result-graph materialization
-does: on the PostgreSQL deep fetch single-query MikroORM is slowest while two-query Drizzle
-outruns four-query Prisma (Supplement Table~S2; Table~\ref{tab:deep_fetch}).
+on aggregation. Round-trip count alone does not explain throughput: on the PostgreSQL deep fetch,
+single-query MikroORM is slowest while two-query Drizzle outruns four-query Prisma
+(Supplement Table~S2; Table~\ref{tab:deep_fetch}). Result-graph materialization and the other
+bundled implementation differences are plausible contributors, but the study does not isolate them.
 
 \paragraph{Compute cost and horizontal scaling}
 With every layer now near one core, the native driver leads throughput and compute efficiency
-(requests per CPU-second; Section~\ref{sec:results}, Supplement Figure~S3, Table~S5), consistent
-with its leaner SQL --- though CPU shares at unequal throughput do not identify where per-request
-work occurs. Low per-process throughput is no fixed ceiling: on PostgreSQL Prisma's aggregate
+(requests per CPU-second; Section~\ref{sec:results}, Supplement Figure~S3, Table~S5).
+CPU shares observed at unequal throughput establish that descriptive efficiency ordering but do not
+identify where per-request work occurs. Low per-process throughput is no fixed ceiling: on PostgreSQL Prisma's aggregate
 throughput rises roughly with workers (1{,}117 to 4{,}449 over one to four) to native-like levels,
 trading footprint and energy for it~\cite{bonvoisin2024orm}, but this bounded 1-to-4-worker check
 on a single host is not general scalability: on MySQL the native driver keeps scaling, the gap not

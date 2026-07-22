@@ -19,7 +19,7 @@ before any timing run (Section~\ref{sec:methodology}). That check caught a defec
 PostgreSQL's timezone-naive \texttt{created\_at} (the column is
 \texttt{timestamptz}) shifted Drizzle's instants by the host's UTC offset,
 invisible to throughput and fixed before this campaign. The fixed-payload baseline
-floor sits above the fastest cell (Section~\ref{sec:methodology}), so the framework
+ceiling sits above the fastest cell (Section~\ref{sec:methodology}), so the framework
 compresses rather than manufactures between-layer differences, attributable to how
 each layer reaches an identical response, not to what is returned. The reported
 write finding uses each engine's \emph{default} vendor-standard durability
@@ -51,7 +51,7 @@ the documentation-selected default is the \emph{faster} strategy for the
 join-default ORMs, so their deficit is not an artifact of a poor default; the lone
 exception, Objection's slower select-in default on MySQL, is disclosed rather than
 corrected. RQ1 therefore answers what this documentation-selected policy yields,
-not the library's intrinsic overhead.
+not a library-only overhead.
 
 \paragraph{Internal validity}
 A naively configured ORM can trigger N+1 queries and appear artificially slow for
@@ -83,7 +83,7 @@ disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is
 prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no
 \texttt{mysql2} adapter --- an implementation$\times$engine asymmetry. The
 memory-resident working set is a hot-cache regime that makes access-layer overhead
-more visible; as a workload becomes I/O-bound the spreads should compress toward
+more visible; as a workload becomes I/O-bound the spreads may compress toward
 $1\times$. Same-host checks bound only within-host drift, not an independent
 substrate: equal-CPU pinning agrees with the shared-host medians within about
 2\%, low-per-process layers scale roughly linearly over one to four workers
@@ -92,8 +92,8 @@ and a post-restart re-run moved throughput up to $16\%$ with the ranking intact
 (Supplement Table~S20). Only the \emph{relative} within-engine ordering and
 operating-point separation are intended to travel; absolute req/s, gap magnitudes,
 and RQ2's cross-engine ordering may move with the substrate and need not transfer
-to other working sets, pool sizes, or versions, so a substrate change should
-preserve these \emph{architectural} conclusions while independent-host replication
+to other working sets, pool sizes, or versions. The protocol's design logic is intended to travel;
+no case-study ordering is claimed to survive a substrate change, and independent-host replication
 of the core deep fetch remains future work. Because the protocol's stages are experimental-design controls
 (Table~\ref{tab:protocol_mapping}, Supplement Table~S37), single-host measurement
 bounds the case study, not the protocol.

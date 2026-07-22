@@ -16,8 +16,9 @@ nested object graph application-side, modest for point reads and aggregation. Am
 paths running common SQL the spread is far smaller --- a standardized diagnostic, not a bound
 (Section~\ref{sec:results}).
 
-On current library versions throughput never scales with added application cores, and the
-native driver leads all ten engine-pattern combinations; read orderings are similar across
+On current library versions no single server process uses more than about 1.1 application cores,
+while adding workers increases aggregate throughput at additional resource cost. The native
+implementation leads each of the ten engine--pattern comparisons; read orderings are similar across
 engines while aggregation and insert orderings reverse (Prisma drops from mid-pack to last on
 the MySQL insert), cautioning against generalizing single-engine results. Rankings are also
 version-sensitive: an earlier headline did not survive re-running on newer releases
