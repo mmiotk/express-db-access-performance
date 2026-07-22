@@ -105,8 +105,8 @@ deterministic seed, all adapter implementations, the byte-level correctness cros
 raw per-cell measurements, and the scripts that generate every table in this
 paper) is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.12.9
-(\url{https://doi.org/10.5281/zenodo.21497167}). A reproducibility summary --- versions,
+archived at Zenodo as release v1.12.10
+(\url{https://doi.org/10.5281/zenodo.21497292}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
@@ -114,7 +114,7 @@ Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the ref
 \texttt{REPRODUCE.md}; the convenience Docker path pins \emph{older} engines (PostgreSQL~16,
 MySQL~8.4) and reproduces the workflow but not the published numbers. A machine-readable encoding of
 the protocol --- inputs, mandatory and recommended stages, the cell-admission gate, and compliance
-levels --- ships as \texttt{protocol-checklist.yaml} for auditing a benchmark against the protocol.
+levels --- ships as \texttt{protocol-checklist.yaml} for auditing a benchmark against the protocol. A clean-room reproduction from the archived tarball (35/35 raw-data checksums; byte-for-byte regeneration of 45 of 50 tables) is logged in \texttt{notes/clean-room-reproduction.md}.
 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the

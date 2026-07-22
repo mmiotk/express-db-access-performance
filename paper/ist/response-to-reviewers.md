@@ -1530,6 +1530,29 @@ and the remaining statistical and artifact points, follow.
 
 Prose-only across the manuscript and supplement; no measurement changed (checksums 35/35).
 
+## Point 10 (artifact validation: clean-room reproduction)
+
+I ran a clean-room reproduction from the immutable release tarball (a `git archive` of the tag, with no
+access to the working tree) and logged it in `notes/clean-room-reproduction.md`. Following
+`REPRODUCE.md` section 4: `sha256sum -c results/checksums.sha256` verifies **35/35** archived raw-data
+files; `npm ci` installs the pinned dependencies from the committed lockfile; and the DB-free generator
+chain regenerates **45 of the 50** committed tables **byte-for-byte** from the archived `results/*.json`,
+confirming the seeded estimators (`mulberry32` bootstrap intervals and sign-flip permutation p-values)
+are bit-reproducible. The five tables that differ do so for presentation reasons only --- not any numeric
+or statistical result: `cv_all.tex` shows whichever engine `analyze.mjs` ran last (the chain ends with
+MySQL; the committed table was generated PostgreSQL-last); `ranks.tex` carries a hand-added third panel;
+`interaction.tex` and `txn_write.tex` carry hand-refined captions; and `tail_regimes.tex` differs only
+in line-wrapping. `REPRODUCE.md` now records these regeneration caveats, and the Data-availability
+section points to the log.
+
+I note honestly that, as the sole author, this is not an independent third-party reproduction; it
+demonstrates that the documented clean-room chain works from the immutable archive alone. An independent
+replication remains valuable and welcome. The live correctness smoke test
+(`bench/verify.mjs`, `bench/verify-property.mjs`) additionally requires the reference engines
+(PostgreSQL 18.4, MySQL 9.7.1) via the conda path and is documented but not repeated in this DB-free log.
+
+No measurement changed (checksums 35/35).
+
 ---
 
 ## Closing
@@ -1544,7 +1567,7 @@ additions from earlier rounds (the write-state validation and the co-primary dee
 leave the primary matrix untouched, and the major-concern-6.2 revision moves an existing comparison into
 the main text without re-measuring anything. The full replication package (harness, deterministic seed, all
 adapters, raw per-cell measurements, and the table-generating scripts) is permanently archived at Zenodo
-as release v1.12.9 (DOI 10.5281/zenodo.21497167), the version this revision describes.
+as release v1.12.10 (DOI 10.5281/zenodo.21497292), the version this revision describes.
 
 I am grateful for the depth and precision of this review, which has materially sharpened the paper's central
 claim, and I look forward to your assessment.

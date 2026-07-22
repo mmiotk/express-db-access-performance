@@ -107,6 +107,15 @@ cell-admission gate, outputs, applicability limits, and compliance levels) ships
 other table regenerates from the archived `results/*.json` (the tail-regime table, `tail_regimes.tex`,
 from `raw.json` plus the utilization sweeps).
 
+**Clean-room verification (`notes/clean-room-reproduction.md`).** Running the chain above from the
+immutable v1.12.9 tarball verifies the raw data (35/35) and regenerates **45 of 50** committed tables
+byte-for-byte, confirming the seeded estimators are bit-reproducible. Five tables differ for
+presentation reasons only, not for any numeric or statistical result: `cv_all.tex` shows whichever
+engine `analyze.mjs` ran **last** (the chain ends with `ENGINE=mysql`; the committed table was
+generated PostgreSQL-last --- run `ENGINE=mysql` then `ENGINE=postgres` to reproduce the committed
+view); `ranks.tex` carries a hand-added third panel; `interaction.tex` and `txn_write.tex` carry
+hand-refined captions the generators do not emit; and `tail_regimes.tex` differs only in line-wrapping.
+
 ## 5. Expected outputs
 
 - `results/raw.json`: 90 primary cells, each with 25 (`repeats`) per-run

@@ -210,6 +210,8 @@ A \textbf{presentation, terminology, and first condensation pass} (reviewer poin
 
 A \textbf{statistical-assessment and mechanistic pass} (reviewer point 6.8 and point 8) reworded the native-driver CPU claim to a descriptive efficiency finding (CPU shares at unequal throughput do not locate per-request work), added a case-study-not-population-inference statement, retitled RQ2 "cross-engine transfer" with a stack-not-engine-alone caveat, removed the n=7 rank coefficients from the Results narrative, stated p99 per-run request/observation counts, and relabelled the primary write single-row autocommit inserts with the transactional study exploratory. Prose-only (checksums 35/35); body \textasciitilde{}10,961, total \textasciitilde{}14,734. Archived as release v1.12.9 (DOI 10.5281/zenodo.21497167).
 
+Reviewer \textbf{point 10} (artifact validation): a clean-room reproduction from the immutable v1.12.9 tarball (logged in ) verifies 35/35 raw-data checksums, installs pinned dependencies via , and regenerates 45 of 50 tables byte-for-byte from the archived raw data; the five that differ are presentation-only (engine-emission order, hand-refined captions, an added panel, line-wrapping), no numeric result changed. REPRODUCE.md records the caveats and Data availability points to the log. Prose-and-artifact; body unchanged, total \textasciitilde{}14,734. Archived as release v1.12.10 (DOI 10.5281/zenodo.21497292).
+
 Highlights (5 bullets, each $\le$ 85 characters) are in \texttt{highlights.tex}.
 
 \end{document}
