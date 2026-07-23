@@ -4,7 +4,7 @@
 Express.js is among the most widely used web frameworks for Node.js, and almost every
 non-trivial service built on it reaches a relational database through some \emph{access
 layer}. Access layers trade raw performance for ergonomics, compile-time type safety, and
-protection from pitfalls such as the N+1 query problem, where a nested fetch issues one
+protection from pitfalls such as the N+1 query problem, where fetching a result graph issues one
 query per parent row instead of one for the result graph~\cite{chen2014orm} --- a pervasive
 anti-pattern (Section~\ref{sec:related}). Native drivers expose the wire
 protocol directly (\texttt{pg}, \texttt{mysql2}); query builders assemble SQL
@@ -43,7 +43,7 @@ non-vendor-authored case study that applies it (Section~\ref{sec:methodology} de
 term): an \emph{identical} Express application served through all nine access layers (two
 native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM, Objection,
 MikroORM) over five representative access patterns --- point read, keyset range scan,
-deep/nested fetch, per-author aggregation, and insert --- rather than a production workload.
+deep fetch, per-author aggregation, and insert --- rather than a production workload.
 Seven layers run against \emph{both} engines under an identical schema, dataset, and pool
 size; two tuned native-driver baselines mark what hand-tuned driver use reaches.
 Every (layer, engine, pattern) reports throughput (req/s) and the \emph{high-load
@@ -60,8 +60,7 @@ an autocannon-driven~\cite{autocannon} load runner, and an automated \emph{byte-
 cross-check on the four non-mutating patterns --- is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters,
 raw per-cell measurements, and the table/figure-generating scripts:
-\texttt{https://github.com/mmiotk/express-db-access-performance}; release v1.12.12 is
-permanently archived at Zenodo, \texttt{https://doi.org/10.5281/zenodo.21498786}.}
+\texttt{https://github.com/mmiotk/express-db-access-performance}; the primary-campaign snapshot is archived as release v1.12.12 at Zenodo, \texttt{https://doi.org/10.5281/zenodo.21498786}. The documentation snapshots and canonical-constructor measurement added in this revision are carried by the current repository and require a new persistent release before submission.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -73,8 +72,9 @@ implementations under the specified operating point:
         operating point conflates: \emph{capacity} (saturating throughput),
         \emph{high-load latency} (p99 under equal demand), and \emph{latency at
         matched utilization} (equal fractions of each layer's own capacity).
-  \item \emph{(engine dependence):} Does the observed layer ordering transfer
-        across PostgreSQL and MySQL, or is it engine-dependent?
+  \item \emph{(backend-stack transfer):} Does the observed layer ordering transfer
+        between the tested PostgreSQL and MySQL backend stacks, where changing the
+        DBMS can also change its supported adapter and lower-level driver?
   \item \emph{(pattern spread):} Which of the five tested patterns shows the
         largest native-relative spread in this configuration?
 \end{enumerate}
@@ -102,7 +102,8 @@ preconditions it otherwise leaves unmet.
 \end{itemize}
 These preconditions are not new: correctness, workload equivalence, warm-up,
 coordinated-omission correction, and reproducibility are long established in performance
-evaluation (Section~\ref{sec:related})~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous};
+evaluation~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}, and CYNTHIA already applies differential equivalence across ORM
+implementations~\cite{sotiropoulos2021cynthia} (Section~\ref{sec:related});
 the contribution is their \emph{domain-specific synthesis and operationalization} for the
 access-layer genre --- which assumes comparability rather than establishing it --- not their
 invention. The \textbf{artifact} --- an open, reusable harness --- \emph{operationalizes}

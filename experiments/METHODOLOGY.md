@@ -3,7 +3,7 @@
 ## Purpose and principle
 
 This document records, for every access layer in the benchmark, exactly how the
-**deep/nested fetch** is implemented and which documented alternative loading
+**deep fetch** is implemented and which documented alternative loading
 strategy we deliberately did *not* use. The deep fetch materializes one post with
 its author and all of its comments, each comment with its own comment-author
 (the `post → author`, `post → comments → comment-author` graph).
@@ -71,7 +71,7 @@ the library maintainers to review the adapters; that is disclosed as a limitatio
 | `drizzle-orm` | 0.45.2 | core builder `.innerJoin()` | `https://orm.drizzle.team/docs/joins` |
 | `prisma` (`@prisma/client`) | 7.8.0 | `include` (nested reads) | `https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries` |
 | `sequelize` | 6.37.8 | `include` eager loading | `https://sequelize.org/docs/v6/advanced-association-concepts/eager-loading/` |
-| `typeorm` | 1.1.0 | `relations` find option | `https://typeorm.io/find-options` |
+| `typeorm` | 1.1.0 | `relations` find option | `https://typeorm.io/docs/working-with-entity-manager/find-options` |
 | `objection` | 3.1.5 | `withGraphFetched` | `https://vincit.github.io/objection.js/guide/query-examples.html#eager-loading` |
 | `@mikro-orm/core` | 7.1.6 | `populate` | `https://mikro-orm.io/docs/populating-relations` |
 

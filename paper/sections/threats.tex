@@ -12,7 +12,7 @@ database boundary --- deliberate, since it captures the full request round trip
 \emph{access layer} may partly reflect these surrounding costs. We hold those
 near-constant: every adapter satisfies a documented \emph{adapter contract} and
 funnels rows through shared canonical constructors (fixed field set, key order,
-typing, under \texttt{TZ=UTC}), and the automated cross-check
+typing, under \texttt{TZ=UTC}). These constructors copy and type-normalize already-grouped rows or entity graphs; they do not query, join, regroup, sort, or cache. Their standalone median is 9.34--9.36~\(\mu\)s for the ten-comment deep fetch (0.078\% of the fastest reported HTTP p50; see the supplement's canonical-constructor table), so this common work can only compress the large gaps; near-ties remain practically unresolved. The automated cross-check
 (\texttt{bench/verify.mjs}) asserted full JSON byte equality against the
 native-driver baseline, on both engines, across the four non-mutating patterns
 before any timing run (Section~\ref{sec:methodology}). That check caught a defect:

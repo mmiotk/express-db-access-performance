@@ -22,10 +22,7 @@ for (const engine of ['postgres', 'mysql']) {
   \\centering
   \\caption{Utilization-controlled open-loop tail on the deep fetch (${eng}):
     coordinated-omission-corrected p99 (ms, median of five runs) when each layer is
-    offered a fixed fraction of \\emph{its own} saturating throughput. At matched
-    utilization the tails are small and similar across layers---the large high-load
-    p99 gap is a capacity/queueing effect, not a sub-saturation latency difference; the tail rises
-    only as each layer approaches its own capacity.}
+    offered a fixed fraction of \\emph{its own} saturating throughput. At 50\% and across most 70\% cells the tails are small and similar across layers, so the large high-load p99 gap is chiefly a capacity/queueing effect. The noisier 85\% and 95\% cells are near-saturation sensitivity evidence, not a precise convergence claim.}
   \\label{tab:${label}}
   \\begin{tabular}{l ${fr.map(() => 'r').join(' ')}}
     \\toprule

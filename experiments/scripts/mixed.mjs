@@ -1,5 +1,5 @@
 // Mixed read/write workload (review 4, §S5). The primary matrix drives one endpoint
-// per run; the reviewer asks for a mixed workload. This interleaves the deep/nested
+// per run; the reviewer asks for a mixed workload. This interleaves the deep
 // read (GET /posts/:id/thread) with single-row inserts (POST /posts) at documented
 // mixes (default 90/10 and 70/30) via autocannon weighted requests, on representative
 // layers and both engines, with a physical write reset before each run. Exploratory /

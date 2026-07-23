@@ -17,7 +17,7 @@ export default async function createAdapter({ engine, config }) {
     // 2. RANGE SCAN — keyset pagination: newest-first page of posts with id < before
     async listPosts({ limit, before }) { /* -> post[] (id DESC, id < before) */ },
 
-    // 3. DEEP / NESTED FETCH (N+1-sensitive) — post + its author +
+    // 3. DEEP / deep fetch (N+1-sensitive) — post + its author +
     //    all comments, each with its comment-author
     async getThread(id) { /* -> { post, author, comments:[{...,author}] } | null */ },
 

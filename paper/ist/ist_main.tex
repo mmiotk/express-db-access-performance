@@ -53,17 +53,16 @@ operating points --- realized in an open harness and demonstrated through a
 dual-engine PostgreSQL/MySQL case study.
 \textbf{Methods:} An identical Express application is served through nine
 documentation-selected access layers and two tuned native baselines, over five access
-patterns, on the latest stable versions (July 2026 freeze).
+patterns, on the latest compatible stable versions as of the 15 July 2026 freeze.
 We report throughput with the \emph{high-load response-time p99 under equal closed-loop demand}
 (a fixed 50-connection point) from 25 repeated runs per cell, and on the deep fetch distinguish it
-from the tail at \emph{equal utilization}, where the gap converges --- the near-saturation p99
-chiefly a capacity-and-queueing outcome, not a sub-saturation latency difference.
+from the tail at \emph{equal utilization}: at 50\% and in most 70\% cells the tails form a small band, showing that the near-saturation p99 is chiefly a capacity-and-queueing outcome rather than a sub-saturation latency difference.
 An automated cross-check verifies byte-identical responses before measurement.
-\textbf{Results:} The implementation-and-strategy difference is largest on the tested deep/nested fetch: spreads $7.15\times$
+\textbf{Results:} The implementation-and-strategy difference is largest on the tested deep fetch: spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
 against only $1.68\times$ and $2.01\times$ among the raw paths running common SQL --- a
-standardized contrast that isolates no single mechanism. The read ordering holds
-across engines, but the aggregation and insert orderings
+standardized contrast that isolates no single mechanism. The read ordering transfers
+between the tested backend stacks, but the aggregation and insert orderings
 reverse: Prisma drops to last on the MySQL insert. No layer exceeds
 $\approx\!110\%$ of one application core on the deep fetch, where the
 documentation-selected native driver also has the highest throughput.
@@ -101,13 +100,10 @@ The author is not affiliated with, nor funded by, any of the database libraries 
 vendors evaluated in this study.
 
 \section*{Data availability}
-The complete replication package (benchmark harness, database schema and
-deterministic seed, all adapter implementations, the byte-level correctness cross-check,
-raw per-cell measurements, and the scripts that generate every table in this
-paper) is publicly available at
+The primary-campaign replication package is publicly available at
 \url{https://github.com/mmiotk/express-db-access-performance} and permanently
 archived at Zenodo as release v1.12.12
-(\url{https://doi.org/10.5281/zenodo.21498786})~\cite{miotk2026artifact}. A reproducibility summary --- versions,
+(\url{https://doi.org/10.5281/zenodo.21498786})~\cite{miotk2026artifact}. The current repository additionally includes the immutable documentation-page copies and the standalone canonical-constructor measurement introduced in this revision; the revised package must receive a new persistent release before submission. A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}

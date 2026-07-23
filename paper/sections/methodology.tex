@@ -35,16 +35,16 @@ utilization} is the coordinated-omission-corrected open-loop sweep offering each
 fraction (50/70/85/95\%) of its \emph{own} saturating throughput, and an \emph{equal compute budget}
 is the exploratory equal-CPU check --- different questions that need not agree, so all three are
 reported. For the deep fetch, the target is the median 50-connection throughput from the 25-run
-primary campaign; 50 connections is at or above every layer's measured knee. Because capacity is
-located on a discrete concurrency ladder rather than known exactly, the offered-load fractions are
-approximate. The 50\% and 70\% cells support the sub-saturation comparison; the noisier 85\% and 95\%
+primary campaign; 50 connections is at or above every layer's measured knee. Because capacity is located on a discrete concurrency ladder rather than known exactly, the offered-load fractions are approximate. Propagating each target's within-campaign 95\% bootstrap interval as an alternative capacity denominator moves the nominal 50\% load only to 48.6--51.7\% and the nominal 70\% load to 68.0--72.4\%. The 50\% and 70\% cells therefore support the sub-saturation comparison; the noisier 85\% and 95\%
 cells are interpreted only as near-saturation trends (Supplement Tables~S21--S22).
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
 We state the protocol independently of the case study, then instantiate it. It turns \emph{treatments}
 compared on a fixed \emph{workload} into a controlled experiment; Figure~\ref{fig:protocol} states its
-inputs, mandatory and recommended stages, cell-admission rule, and output interpretation.
+inputs, mandatory and recommended stages, cell-admission rule, and output interpretation. The stages
+cover the admission-through-interpretation dimensions addressed here; they are not asserted to be a
+complete taxonomy of every threat to access-layer benchmarking.
 
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 % The line is repeated here so the figure is self-contained if pasted alone;
@@ -64,7 +64,12 @@ canonically constructed, so byte-equality is valid here.
 across all five patterns on both engines, while the \emph{standardized-strategy},
 \emph{utilization-controlled}, and \emph{resource-normalized} extensions are demonstrated on the deep
 fetch (widest-spread pattern tested) as a representative point, not full-matrix coverage (Supplement
-Table~S40).
+Table~S40). The validity core licenses comparison only among admitted, explicitly defined treatments;
+capacity characterization additionally licenses interpretation of a fixed load relative to each
+treatment's throughput knee. The standardized-strategy extension licenses only the compound same-SQL
+contrast, the utilization extension the tail at matched capacity fractions, and the resource
+extension the equal-compute comparison. A lower level does not license conclusions belonging to a
+higher one.
 
 \smallskip
 Table~\ref{tab:protocol_mapping} pairs each generic benchmarking principle with its access-layer
@@ -114,7 +119,7 @@ report this configuration rather than general library performance.
 The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts} $1\!-\!*$
 \texttt{comments} $*\!-\!1$ \texttt{authors}). The five endpoints implement five representative access
 patterns~\cite{cooper2010ycsb} (Supplement Table~S39): a keyset page (primary-key cursor, not a large
-\texttt{OFFSET}), a single-row read, a one-to-many list, the deep/nested fetch (a post with its author
+\texttt{OFFSET}), a single-row read, a one-to-many list, the deep fetch (a post with its author
 and every comment, each with its own comment-author), and a per-author aggregation. A deterministic seed
 (2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments) is loaded by the native driver,
 independently of any layer under test, so both engines receive byte-identical row values; on-disk
@@ -147,7 +152,11 @@ targeting expert-tuned usage would substitute its own (corroboration and limits:
 Section~\ref{sec:threats}). Supplement Table~S16, \texttt{METHODOLOGY.md}, and the rubric
 (\texttt{notes/documentation-selection.md}) record, per layer, that API (documentation page, version,
 URL), its round-trip count, the documented alternative not used, that logging, hooks, and validation
-are off, and the freeze date for reassessment against Wayback Machine snapshots.
+are off, and the freeze date. The artifact also ships the exact archived HTML, capture timestamp,
+and SHA-256 for every justifying page (\texttt{experiments/documentation-snapshots/manifest.json}),
+so reconstruction does not depend on today's website. If official pages conflict, the version-matched
+relations/eager-loading page controls over a quick-start or marketing page; remaining equal prominence
+invokes the declared taxonomy-tier tie-break, and an unresolved tie must be reported as ambiguous.
 
 To standardize the SQL and report how much spread remains once it is held fixed --- the protocol's
 \emph{strategy-standardization} precondition --- every adapter also implements a \emph{same-SQL
@@ -166,7 +175,7 @@ SQL, adding caching, or changing the schema.
 
 To ensure no adapter silently returns less, the \emph{semantic-equivalence} precondition is
 established \emph{before any timing} and at four levels rather than asserted as universal: shared
-canonical constructors fix each response's fields, key order, and serialization; a fast gate
+canonical constructors fix each response's fields, key order, and serialization. Concretely, the point-read constructor copies seven fields while normalizing identifiers, counts, booleans, and timestamps; the range constructor maps it over 20 rows; the two deep-fetch constructors copy the post and author and map the already-grouped comment array into the same nested shape (they do no joining, regrouping, sorting, or caching); and the aggregation constructor converts four scalars. Inserts do not pass through a shared constructor, only the adapter-specific identifier conversion. A standalone 30-block microbenchmark on seed-realistic inputs measures 0.05--17.51~\(\mu\)s per call and 9.34--9.36~\(\mu\)s for the ten-comment deep fetch, respectively 0.001--0.146\% and 0.078\% of the smallest primary-campaign HTTP p50 for the corresponding pattern (supplement, ``Standalone cost of canonical response construction''). This scale check is not a causal decomposition, but shows that the common layer cannot explain the multi-fold deep-fetch spread; a fast gate
 (\texttt{bench/verify.mjs}) asserts full JSON byte-equality to the native-driver baseline on 12 fixed
 probes per adapter on both engines; \emph{exhaustive} equivalence is infeasible for arbitrary code and
 not claimed; and property-based randomized differential testing (\texttt{bench/verify-property.mjs})
@@ -228,7 +237,7 @@ separately. Inserts were measured under each engine's \emph{default} durability 
 \texttt{fsync} and \texttt{synchronous\_commit} on; MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1},
 \texttt{sync\_binlog=1}), the regime a deployment runs unless relaxed; a labelled secondary run relaxed
 all of these to isolate the durability mechanism (Supplement Table~S3). To characterize behavior under
-load we swept the deep/nested fetch across 1--256 connections for every layer and
+load we swept the deep fetch across 1--256 connections for every layer and
 engine~\cite{yu2014concurrency}; and a native \texttt{undici}-based constant-arrival generator drove the
 deep fetch under a fixed offered
 rate (250--4{,}000~req/s) rather than fixed concurrency, measuring from intended send time and clipping

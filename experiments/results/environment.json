@@ -1,0 +1,15 @@
+{
+  "date_utc": "2026-07-13T19:30:56.334Z",
+  "node": "v24.18.0",
+  "platform": "linux 6.17.0-29-generic (x64)",
+  "cpu": "Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz x16",
+  "mem_total_gb": "125.8",
+  "loadavg": "0.22 0.28 0.18",
+  "cpu_governor": "unavailable",
+  "turbo_no_turbo": "unavailable",
+  "numa_nodes": "1",
+  "virtualization": "vmware",
+  "process_affinity": "pid 1847579's current affinity list: 0-15",
+  "git_commit": "d309c796b77d993443794b12c7a60c51dbbb4313 (dirty)",
+  "package_lock_sha256": "a31415b6c10f4d31740dee74dc88ac3046e2169f214b3a14d0ff3104941267b2"
+}

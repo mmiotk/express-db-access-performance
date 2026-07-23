@@ -16,28 +16,29 @@ Gdańsk, Poland, 22 July 2026
 
 Dear Editors,
 
-Please find enclosed the revised version of my manuscript, "A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js" (Research Paper), for \emph{Information and Software Technology}, together with a point-by-point Response to Reviewers and a Summary of Revisions.
+Please find enclosed the revised manuscript, "A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js" (Research Paper), for Information and Software Technology.
 
-I am grateful for the reviewer's exceptionally thorough reading and for the recommendation of major revision. The central concern was precise: the same-SQL experiment was over-claimed as \emph{bounding} the contribution of query strategy versus library machinery --- a step that does not follow without assumptions about interaction effects --- and this claim was one of the three advertised pillars of the protocol. This revision corrects exactly that, together with the full set of Essential, strongly-recommended, and optional items:
+This major revision preserves the primary measurement matrix and addresses the conceptual and artifact-auditability concerns raised in the review:
 
 \begin{itemize}
-  \item \textbf{The same-SQL experiment is now a standardized diagnostic contrast, not a bound.} Every "bound" applied to the same-SQL result was reworded to a "standardized (same-SQL) contrast"; the manuscript states plainly that, because raw mode changes several mechanisms at once and may interact differently with each library, the residual is a diagnostic contrast and \emph{no ordering theorem holds without assumptions about interaction effects}. The "Strategy attribution" pillar now reads "a diagnostic contrast, not an attribution."
-  \item \textbf{Write correctness is strengthened to validate database state.} A new harness check (\texttt{bench/verify-writes.mjs}) confirms, through an independent native driver, the exact field values, generated identifiers, row-count changes, and transactional rollback of every mutating pattern --- the correctness oracle now validates state, not merely an HTTP 2xx.
-  \item \textbf{The protocol is formalized as a reusable procedure.} Study Design specifies it normatively and carries a compact formal box separating the mandatory stages (correctness oracle; treatment-definition rule, with an explicit tie-breaker) from the recommended ones, with output-interpretation and applicability rules stated explicitly.
+  \item It cites and distinguishes CYNTHIA and narrows the novelty claim to the integrated benchmark-admission protocol: a cross-implementation semantic-equivalence gate, a predeclared treatment-selection rule, and separated operating-point interpretations.
+  \item It removes universal completeness and necessity language. The compliance levels now state exactly which claims each level licenses, and each stage is described only as consequential in this case study.
+  \item It reframes RQ2 as transfer across backend stacks because the DBMS, official adapter, and lower-level driver can change together.
+  \item It archives exact documentation-page HTML, capture timestamps, SHA-256 hashes, and a deterministic conflict-resolution rule for every documentation-selected treatment.
+  \item It specifies the operations performed by every canonical constructor and adds a standalone 30-block cost measurement. The deep-fetch constructors cost 9.34--9.36 microseconds, or 0.078\% of the fastest corresponding HTTP p50; this is a scale check, not a causal decomposition.
+  \item It bases the matched-utilization headline on the stable 50\% and most 70\% cells, quantifies uncertainty in the saturation denominator, and treats the 85--95\% cells only as near-saturation sensitivity evidence.
 \end{itemize}
 
-Beyond these, the operating-point claims are aligned with the experiments (a per-pattern capacity sweep now covers all five patterns; the utilization and equal-CPU checks are labelled deep-fetch-only), the "isolate the access layer as the only variable" claim is replaced by the \emph{configured implementation-and-strategy} treatment, the methodological novelty is framed as a domain-specific synthesis of established benchmarking principles rather than an invention of them, and the reproducibility checklist (a byte-identical Zenodo-to-git-tag match, environment capture, an explicit dual license, and independently tested analytical code) is verified. No primary measurement changed; the three supplementary measurements added (write-state validation, a co-primary deep-fetch regime, and a per-pattern capacity sweep) leave the primary matrix untouched.
+Terminology is now consistent: "deep fetch" is used throughout, the primary mutation is called a single-row insert, and versions are described as the latest compatible stable versions as of the 15 July 2026 freeze. The MySQL insert section prominently points to the raw bimodal and heavy-tailed distributions, and the millisecond p99 resolution caveat remains explicit.
 
-Following the presentation review, the central protocol is now carried by a one-page \textbf{protocol flow figure} (Figure 1) in place of the earlier framed text box, a new \textbf{estimands table} consolidates in one place what each quantity does and does not identify, a new \textbf{analysis-roster table} separates the primary analyses from the robustness/sensitivity ones, the repeated defense of the same-SQL comparison is stated once with back-references, and (following the final consolidated list) the two deep-fetch regimes are presented side by side in the main text (Table 7) while other secondary tables moved to the online supplement; a machine-readable protocol checklist now ships with the replication package.
+The exact IST word-equivalent count is 13,786 words, including 66 references and eight main-text floats at 200 words each. The five-part structured abstract is 298 words. Both calculations are documented in the accompanying word-count declaration.
 
-The manuscript is \textbf{12,946 words} under the IST counting rule (references and appendices counted, each main-text float 200 words), within the 15,000-word Research Paper limit, with a five-part structured abstract of \textasciitilde{}299 words; the exact word-equivalent calculation the reviewer requested is documented in the accompanying word-count declaration. The full point-by-point reply, each quoting the revised text, is in the accompanying Response to Reviewers, and a Summary of Revisions accompanies it. The complete replication package remains public on GitHub and is permanently archived on Zenodo (DOI: 10.5281/zenodo.21498786); the numbered online supplement accompanies the manuscript.
+The primary-campaign package remains archived as release v1.12.12 at Zenodo (DOI 10.5281/zenodo.21498786). The current repository additionally contains the documentation snapshots and canonical-constructor measurement introduced by this revision. A new immutable release of the revised package must be deposited before submission; the manuscript states this explicitly rather than attributing the new files to v1.12.12.
 
-The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding for this research. A declaration of generative-AI use in the writing process, and a separate statement on AI-assisted research software (with its independent tests), are included in the manuscript in accordance with Elsevier policy.
-
-I look forward to your editorial decision.
+The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding. The manuscript includes the required declarations concerning generative AI and AI-assisted research software.
 
 Sincerely,
 
-Mateusz Miotk Faculty of Mathematics, Physics and Informatics, University of Gdańsk, Poland mateusz.miotk@ug.edu.pl (corresponding author)
+Mateusz Miotk Faculty of Mathematics, Physics and Informatics, University of Gdańsk, Poland mateusz.miotk@ug.edu.pl
 
 \end{document}

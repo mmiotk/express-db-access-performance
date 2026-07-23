@@ -14,7 +14,7 @@ five workload endpoints that map onto the canonical access patterns:
 |---|---|---|
 | `GET /posts/:id` | point read (PK) | per-query overhead |
 | `GET /posts?limit&before` | range scan (keyset) | PK-index seek + row hydration |
-| `GET /posts/:id/thread` | deep/nested fetch | **N+1** avoidance, join strategy |
+| `GET /posts/:id/thread` | deep fetch | **N+1** avoidance, join strategy |
 | `GET /authors/:id/summary` | aggregation | GROUP BY / raw-SQL escape hatch |
 | `POST /posts` | write | insert + id return |
 

@@ -3,7 +3,7 @@
 
 Tables report throughput (req/s, higher better) and tail latency (p99~ms, lower
 better) per access layer and engine. The two consequential patterns are in the
-main text (deep/nested fetch, Table~\ref{tab:deep_fetch}; insert,
+main text (deep fetch, Table~\ref{tab:deep_fetch}; insert,
 Table~\ref{tab:write}); the point read, keyset range scan, and aggregation are in
 Supplement Tables~S12, S13, and~S15, all from the run of
 Section~\ref{sec:methodology}. Each native driver appears documentation-selected
@@ -43,7 +43,7 @@ trip lets prepared statements pay off (\texttt{pg-tuned} 3{,}746 vs.\ \texttt{pg
 on PostgreSQL aggregation \texttt{pg-tuned} adds about $8\%$ (7{,}538 vs.\ 6{,}978).
 
 On the \textbf{point read} the native-relative spread is $2.78\times$ (PostgreSQL)
-and $2.11\times$ (MySQL) (Supplement Table~S12). On the \textbf{deep/nested fetch}
+and $2.11\times$ (MySQL) (Supplement Table~S12). On the \textbf{deep fetch}
 (a post, its author, and all comments with their authors) it is the widest
 measured --- $7.15\times$ on PostgreSQL (\texttt{pg} 3{,}687, 95\% CI
 [3{,}602--3{,}737], down to MikroORM's 516~[499--525]) and $4.96\times$ on MySQL
@@ -97,8 +97,8 @@ semantically-equivalent tuning budget.
 
 \input{\tabledir deepfetch_regimes}
 
-\subsection{RQ2: cross-engine transfer of the ranking}
-The read ordering is stable across engines, but the aggregation and insert
+\subsection{RQ2: backend-stack transfer of the ranking}
+The read ordering transfers between the tested backend stacks, but the aggregation and insert
 orderings reverse at the top, so we characterize transfer by these rank reversals
 and layer$\times$engine interaction magnitudes, not a correlation over seven
 portable layers. On the \textbf{insert} \texttt{knex} leads on PostgreSQL
@@ -151,7 +151,7 @@ fetch ($7.15\times$) $>$ range scan ($4.21\times$) $>$ insert ($3.23\times$) $>$
 point read ($2.78\times$) $>$ aggregation ($1.83\times$); MySQL keeps the same head
 and tail (deep fetch $4.96\times$, aggregation $1.72\times$ last) while the insert
 and point read swap in the middle, the insert compressing because MySQL's engine
-floor, not the access layer, sets its ceiling (RQ2). The deep/nested fetch thus has
+floor, not the access layer, sets its ceiling (RQ2). The deep fetch thus has
 the largest native-relative spread among the five tested patterns on both engines,
 aggregation the smallest. A fixed 50-connection demand could place patterns at
 different capacity fractions; a per-pattern concurrency sweep (Supplement
@@ -166,7 +166,7 @@ to be a roughly fixed multiplier over that range rather than growing with it
 \subsection{Tail latency}
 We report high-load p99 under equal closed-loop demand at the 50-connection point,
 so the tail includes connection-acquisition queueing --- what a deployment sees
-under load. Here tail latency tracks throughput: on the deep/nested fetch
+under load. Here tail latency tracks throughput: on the deep fetch
 PostgreSQL's p99 ladder runs from \texttt{pg} 20 to MikroORM 116~ms
 (Table~\ref{tab:deep_fetch}); a paired p99 analysis (Supplement Table~S30) resolves
 every adjacent pair on both engines
@@ -174,9 +174,7 @@ except two near-ties at the millisecond resolution. Because each 12~s run comple
 roughly 6{,}000 (slowest ORM) to 44{,}000 (native) deep-fetch requests, a run's
 top-1\% p99 rests on only ${\sim}60$--$440$ observations and is noisier for slower
 layers, so we report the median of the 25 run-level values rather than pooling
-requests (spread in Supplement Figure~S4). Offering each layer approximately 50/70/85/95\% of
-\emph{its own} measured saturating throughput (Supplement Tables~S21--S22) the tails
-converge (near $2$--$5$~ms at 50\% utilization on both engines), so the large
+requests (spread in Supplement Figure~S4). At 50\% of each layer's measured saturating throughput (Supplement Tables~S21--S22), tails converge near 2--5~ms on both engines; most 70\% cells remain in a similarly small band. The 85\% and 95\% cells are near-saturation sensitivity evidence, not part of this convergence claim, so the large
 high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at
 matched utilization: it is a capacity-and-queueing effect, not a difference in
 latency at a matched offered-load fraction. The coordinated-omission-corrected

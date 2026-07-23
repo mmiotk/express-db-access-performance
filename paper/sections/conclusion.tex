@@ -10,16 +10,15 @@ latency (operating-point separation). An open, reusable harness operationalizes 
 demonstrated by a dual-engine case study --- eleven implementations across PostgreSQL and
 MySQL over five access patterns (Section~\ref{sec:introduction}).
 
-The documentation-selected implementation-and-strategy difference is concentrated, not
-uniform, across the five tested patterns: sharpest for the deep/nested fetch assembling a
-nested object graph application-side, modest for point reads and aggregation. Among the raw
+Across the five tested patterns, the documentation-selected implementation-and-strategy difference
+is largest on the deep fetch that assembles a nested object graph and is smaller on point reads and
+aggregation. Among the raw
 paths running common SQL the spread is far smaller --- a standardized diagnostic, not a bound
 (Section~\ref{sec:results}).
 
-On current library versions no single server process uses more than about 1.1 application cores,
+On the pinned compatible stable library versions no single server process uses more than about 1.1 application cores,
 while adding workers increases aggregate throughput at additional resource cost. The native
-implementation leads each of the ten engine--pattern comparisons; read orderings are similar across
-engines while aggregation and insert orderings reverse (Prisma drops from mid-pack to last on
+implementation leads each of the ten engine--pattern comparisons; read orderings are similar between the tested backend stacks while aggregation and insert orderings reverse (Prisma drops from mid-pack to last on
 the MySQL insert), cautioning against generalizing single-engine results. Rankings are also
 version-sensitive: an earlier headline did not survive re-running on newer releases
 (Section~\ref{sec:discussion}).

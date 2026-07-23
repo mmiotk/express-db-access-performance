@@ -35,4 +35,9 @@ const lines = [
 ].join('\n');
 
 await writeFile(join(here, '..', 'results', 'environment.txt'), `${lines}\n`);
+const environment = Object.fromEntries(lines.split("\n").map((line) => {
+  const colon = line.indexOf(":");
+  return [line.slice(0, colon), line.slice(colon + 1).trim()];
+}));
+await writeFile(join(here, "..", "results", "environment.json"), JSON.stringify(environment, null, 2) + "\n");
 console.log(lines);

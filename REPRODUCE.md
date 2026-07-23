@@ -14,7 +14,8 @@ and the raw-data hashes in [`experiments/results/checksums.sha256`](experiments/
   (`results/raw.json`).
 - **Secondary / exploratory**: the same-SQL bound, open-loop and utilization-matched
   tail, layer×engine interaction, CPU accounting, durability, fan-out, pool-size,
-  cluster, mixed workload, and robustness checks.
+  cluster, mixed workload, robustness checks, and the standalone canonical-constructor microbenchmark.
+- **Audit evidence**: exact archived treatment-selection documentation (HTML plus capture timestamps and SHA-256 manifest) and both text and JSON environment fingerprints.
 - The role of every table (Primary / Secondary / Exploratory) is tabulated in the
   paper's outcomes table (`paper/tables/outcomes.tex`) and mapped to its generator and
   input data in `experiments/MANIFEST.md`.
@@ -54,7 +55,7 @@ an explicit edge set, differentially compared byte-for-byte against the native d
 engine (`ENGINE=postgres` / `ENGINE=mysql`; regenerate the Prisma client with
 `npm run prisma:generate:<engine>` when switching). It writes a coverage summary to
 `experiments/semantic-equivalence.json` — a DB-derived verification artifact, re-runnable against the
-seeded database and therefore kept outside the 35-file `results/` measurement manifest.
+seeded database and therefore kept outside the primary-results measurement manifest.
 
 ## 3. Full primary matrix (hours)
 
@@ -80,13 +81,13 @@ raw data is force-added past `.gitignore`). From the tarball alone:
 ```bash
 tar xzf express-db-access-performance-<version>.tar.gz
 cd express-db-access-performance-<version>/experiments
-sha256sum -c results/checksums.sha256      # verify the 35 archived raw-data files
+sha256sum -c results/checksums.sha256      # verify the 37 archived JSON files
 npm ci
 # regenerate every table from the archived raw data (no database needed):
 node scripts/ci-tables.mjs && node scripts/gen-tables.mjs && \
   node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && node scripts/gen-tail.mjs && node scripts/gen-tail-regimes.mjs && node scripts/gen-native-contrasts.mjs && node scripts/gen-p99-spread.mjs && node scripts/gen-p99-significance.mjs && \
   ENGINE=postgres node bench/analyze.mjs && ENGINE=mysql node bench/analyze.mjs && \
-  node scripts/stats2.mjs
+  node scripts/stats2.mjs && node scripts/gen-canonicalization-table.mjs
 npm run sync:tables && (cd ../paper && make)
 ```
 
@@ -129,5 +130,7 @@ hand-refined captions the generators do not emit; and `tail_regimes.tex` differs
 - `bench/verify-property.mjs`: `ALL BYTE-IDENTICAL` over the randomized/edge input sweep —
   3,800 distinct inputs per adapter, 30,400 adapter-versus-baseline comparisons per engine
   (60,800 across both), zero divergences; coverage written to `experiments/semantic-equivalence.json`.
+- `npm run bench:canonicalization`: re-measures constructor cost; `npm run table:canonicalization` deterministically rebuilds its table from the archived JSON.
+- `npm run archive:documentation`: re-fetches exact pre-freeze Wayback pages and validates the recorded evidence terms; review hashes before replacing committed evidence.
 - `npm test`: 19/19 estimator unit tests pass (`bench/stats.test.mjs`).
 - The rebuilt `paper/ist/ist_main.pdf` and `paper/supplement.pdf`.
