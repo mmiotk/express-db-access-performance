@@ -1,4 +1,4 @@
-% auto-generated: throughput vs application-side CPU, deep/nested fetch on PostgreSQL
+% auto-generated: throughput vs application-side CPU, deep fetch on PostgreSQL
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}
@@ -13,6 +13,6 @@
       \addplot[scatter, only marks, mark=*, scatter src=explicit symbolic] coordinates {(100,3687) [pg] (100,3746) [pg-tuned] (100,2487) [knex] (100,1865) [drizzle] (105,1186) [prisma] (100,991) [sequelize] (105,1204) [typeorm] (100,1028) [objection] (105,516) [mikroorm]};
     \end{axis}
   \end{tikzpicture}
-  \caption{Throughput versus application-side CPU on the deep/nested fetch (PostgreSQL, ten-connection pool, medians of 25 replicates). Every layer sits at about $100$--$110\%$ of one application core; the native driver leads on the throughput axis, and the slower ORMs are low on throughput at the same CPU. CPU is the server process only; database-side CPU is excluded for all layers alike.}
+  \caption{Throughput versus application-side CPU on the deep fetch (PostgreSQL, ten-connection pool, medians of 25 replicates). Every layer sits at about $100$--$110\%$ of one application core; the native driver leads on the throughput axis, and the slower ORMs are low on throughput at the same CPU. CPU is the server process only; database-side CPU is excluded for all layers alike.}
   \label{fig:cpu_tradeoff}
 \end{figure}

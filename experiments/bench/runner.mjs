@@ -400,7 +400,7 @@ async function main() {
   const eps = [
     ['point_read', 'Point read'],
     ['range_scan', 'Keyset range scan'],
-    ['deep_fetch', 'Deep/nested fetch'],
+    ['deep_fetch', 'deep fetch'],
     ['aggregation', 'Aggregation'],
     ['write', 'Insert'],
   ];

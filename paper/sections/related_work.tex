@@ -32,6 +32,16 @@ energy dimension~\cite{bonvoisin2024orm}. Overhead is thus configurable, not fix
 our per-pattern results confirm --- but this line never compares drivers, query builders, and ORMs
 head-to-head under load, our aim.
 
+Cross-implementation ORM equivalence checking itself has a direct precedent. CYNTHIA generates an
+abstract query, translates it to equivalent queries for five ORMs (including Sequelize), executes
+them over four relational DBMSs, and differentially compares the results to find correctness
+bugs~\cite{sotiropoulos2021cynthia}. It therefore shows that semantically aligned ORM operations
+can serve as a cross-implementation differential oracle. CYNTHIA is a testing method, however, not a
+performance-benchmark admission protocol: it does not use equivalence to decide which timing cells
+may enter a benchmark, define a premeasurement rule for which implementation represents each
+library, or separate equal-demand capacity effects from matched-utilization latency. Our novelty
+claim is restricted to that joint operationalization.
+
 \subsection{Peer-reviewed access-layer comparisons}
 Peer-reviewed head-to-head access-layer measurement is scarce. Colley et al.~\cite{colley2018orm} give
 the earliest cross-language account --- eight ORMs across Java, C\#, Python, and PHP on a common schema
@@ -93,12 +103,11 @@ access-layer study to operationalize \emph{what code represents a library}, how 
 implementations are checked for semantic equivalence, and how strategy-sensitive results are
 contrasted. Our protocol supplies one concrete operationalization: a documentation-selected,
 predeclared treatment rule; a same-SQL diagnostic; and a per-cell gate requiring equivalent responses
-and verified write state \emph{before} timing. Correctness-before-timing
-has precedents (SPEC validation, TPC ACID, SQLancer's equivalence oracles~\cite{rigger2020sqlancer}), but
-each validates one program against its own reference, not equivalence \emph{across competing
-implementations of one task}. Together these three constructs --- predeclared treatment-selection,
+and verified write state \emph{before} timing. Correctness-before-timing has precedents (SPEC validation, TPC ACID, and SQLancer~\cite{rigger2020sqlancer}); cross-implementation equivalence has the direct precedent discussed above. Our narrower contribution uses that check as an explicit prerequisite for admitting
+benchmark timings and combines it with predeclared treatment selection and operating-point
+separation. Together these constructs --- predeclared treatment-selection,
 cross-implementation admission-gated equivalence, and a same-SQL diagnostic --- yield one
-domain-specific property general frameworks leave to the practitioner: an admission-and-attribution
+domain-specific property general frameworks leave to the practitioner: an admission-and-interpretation
 discipline making \emph{competing
 implementations of one task} mutually comparable. That domain specialization, realized in the open
 harness (Section~\ref{sec:introduction}), is the contribution, not the invention of the underlying

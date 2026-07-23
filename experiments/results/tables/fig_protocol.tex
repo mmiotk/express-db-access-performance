@@ -1,7 +1,7 @@
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 \begin{figure}[htbp]
 \centering
-\begin{adjustbox}{max width=\linewidth}
+\begin{adjustbox}{max width=\linewidth,max totalheight=0.58\textheight,keepaspectratio}
 \begin{tikzpicture}[
   font=\footnotesize,
   node distance=5mm and 7mm,
@@ -63,12 +63,10 @@
 \draw[arr] (g) -- node[above, font=\scriptsize\bfseries]{fail} (rej);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{The comparability protocol as a flow. Declared \emph{inputs} feed two
-\emph{mandatory} stages (solid); the correctness oracle governs a per-cell \emph{admission} gate---a (treatment,\,workload-point) cell is timed only if its non-mutating outputs are equivalent and its post-write state correct, while a non-equivalent output or an invalid write disqualifies it; query strategy (N+1, query count, joins, eager loading) is a reported characteristic, not an admission criterion, unless the workload explicitly forbids it.
-Admitted cells may traverse three \emph{recommended} stages (dashed) that enrich but
-do not gate the comparison. \emph{Outputs} are descriptive of the treatment as
-defined: throughput and tail per operating point, with configuration- and
-version-specific rankings and only relative within-condition differences meant to
-travel.}
+\caption{The comparability protocol. Mandatory correctness and treatment-definition
+stages feed a per-cell admission gate; non-equivalent outputs or invalid writes are
+rejected, while query strategy is descriptive unless the workload explicitly forbids it.
+Recommended stages add same-SQL, capacity, and demand/utilization analyses. Outputs remain
+treatment-, configuration-, and version-specific.}
 \label{fig:protocol}
 \end{figure}

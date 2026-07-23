@@ -1,13 +1,11 @@
 # Artifact manifest — table/figure provenance
 
-Every table and figure in the paper is generated from a raw result file by a
-committed script. To reproduce the tables from the archived raw data:
+Every table and figure is mapped below to its evidence and production path. Standalone no-database renderers, run-coupled renderers, authored analytical items, and the statement-log table with an unarchived transient input are distinguished explicitly. This prevents a committed presentation artifact from being mistaken for a clean reconstruction. To rerun the measurement-producing scripts:
 
 ```
 cd experiments
 node bench/runner.mjs                 # (re-measures; or use the archived results/raw.json)
-ENGINE=postgres node bench/analyze.mjs
-ENGINE=mysql    node bench/analyze.mjs   # cv_mysql copied from cv_all under ENGINE=mysql
+node scripts/gen-analysis-tables.mjs # renders engine-specific analysis tables from raw.json
 node scripts/stats2.mjs               # inferential JSON (results/analysis2.json)
 node scripts/gen-tables.mjs           # durability, equalcpu, cpu trade-off
 node scripts/sameplan.mjs             # (re-measures same-SQL; or use results/sameplan.json)
@@ -23,51 +21,43 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 
 | Paper label | File | Generator | Input data |
 |---|---|---|---|
-| `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
-| `tab:tail_regimes` (moved to Supplement S44) | `tail_regimes.tex` | `scripts/gen-tail-regimes.mjs` | `results/raw.json`, `results/utilization.{postgres,mysql}.json` |
-| `tab:resources_main` | `resources_main.tex` | `bench/analyze.mjs` (`resourceMainTable`) | `results/raw.json` |
-| `tab:patterns` (moved to Supplement S39) | `patterns.tex` | hand-authored | — |
-| `tab:significance` | `significance_deep_fetch.tex` | `bench/analyze.mjs` (`significanceTable`, paired) | `results/raw.json` |
-| `tab:native_contrasts` (Supp. S41) | `native_contrasts.tex` | `scripts/gen-native-contrasts.mjs` | `results/raw.json` |
-| `fig:p99_spread` (Supp. Fig. S4) | `fig_p99_spread.tex` | `scripts/gen-p99-spread.mjs` | `results/raw.json` |
-| `tab:deepfetch_regimes` (moved to Supplement S43) | `deepfetch_regimes.tex` | `scripts/gen-deepfetch-table.mjs` | `results/deepfetch-regimes.json` |
-| `tab:samesql_components` (moved to Supplement S42) | `samesql_components.tex` | hand-authored (component enumeration) | `results/sameplan.*` (server-side capture) |
-| `fig:protocol` (Figure 1) | `fig_protocol.tex` | hand-authored (protocol flow diagram, TikZ) | — |
-| `tab:estimands` (Table 3) | `estimands.tex` | hand-authored (estimand consolidation) | — |
-| `tab:analysis_roster` (Table 6) | `analysis_roster.tex` | hand-authored (primary vs sensitivity roster) | — |
-| `tab:prior_art` | inline in `sections/related_work.tex` | hand-authored | literature search (`notes/related-work-search.md`) |
-| `fig:scaling` | `fig_scaling.tex` | `bench/scaling.mjs` | `results/scaling.json` |
-| `fig:cpu_tradeoff` | `fig_cpu_tradeoff.tex` | `scripts/gen-tables.mjs` | `results/raw.json` |
+| `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `scripts/ci-tables.mjs` | `results/raw.json` |
+| `tab:prior_art` (Table 1) | inline in `sections/related_work.tex` | authored synthesis | `notes/related-work-search.md` |
+| `fig:protocol` (Figure 1) | `fig_protocol.tex` | authored protocol diagram | `protocol-checklist.yaml` |
+| `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | case-study evidence cited in cells |
+| `tab:estimands` (Table 3) | `estimands.tex` | authored estimand consolidation | manuscript definitions |
+| `tab:analysis_roster` (Table 6) | `analysis_roster.tex` | authored analysis roster | manuscript/table inventory |
+| `tab:deepfetch_regimes` (Table 7) | `deepfetch_regimes.tex` | `scripts/gen-deepfetch-table.mjs` | `results/deepfetch-regimes.json` |
 
 ## Supplement tables
 
 | Paper label | Supp. | File | Generator | Input data |
 |---|---|---|---|---|
-| `tab:cv_mysql` | S1 | `cv_mysql.tex` | `bench/analyze.mjs` (`ENGINE=mysql`, copied) | `results/raw.json` |
+| `tab:cv_mysql` | S1 | `cv_mysql.tex` | `scripts/gen-analysis-tables.mjs` | `results/raw.json` |
 | `tab:query_counts` | S2 | `query_counts.tex` | `scripts/capture-plans.mjs` | server statement logs |
 | `tab:durability` | S3 | `durability.tex` | `scripts/gen-tables.mjs` | `results/raw.json`, `results/raw-writes-relaxed.json` |
 | `tab:equalcpu` | S4 | `equalcpu.tex` | `scripts/gen-tables.mjs` | `results/equalcpu.json` |
-| `tab:cpu_efficiency` | S5 | `cpu_efficiency.tex` | `bench/analyze.mjs` (`cpuEfficiencyTable`) | `results/raw.json` |
-| `tab:openloop` | S6 | `openloop.tex` | `scripts/openloop2.mjs` | `results/openloop2.json` |
-| `tab:poolsize` | S7 | `poolsize.tex` | `scripts/gen-tables.mjs` | `results/poolsize.json` |
-| `tab:txn_write` | S8 | `txn_write.tex` | `scripts/gen-tables.mjs` | `results/txn-write.json` |
-| `tab:cv` | S9 | `cv_all.tex` | `bench/analyze.mjs` (`cvTable`, `ENGINE=postgres`) | `results/raw.json` |
-| `tab:resources` | S10 | `resources.tex` | `bench/analyze.mjs` (`resourceTable`) | `results/raw.json` |
+| `tab:cpu_efficiency` | S5 | `cpu_efficiency.tex` | `scripts/gen-analysis-tables.mjs` | `results/raw.json` |
+| `tab:openloop` | S6 | `openloop.tex` | `scripts/openloop2.mjs` (run-coupled renderer) | `results/openloop2.json` |
+| `tab:poolsize` | S7 | `poolsize.tex` | `scripts/poolsize.mjs` (run-coupled renderer) | `results/poolsize.json` |
+| `tab:txn_write` | S8 | `txn_write.tex` | `scripts/gen-txn-write-table.mjs` | `results/txn-write.json` |
+| `tab:cv` | S9 | `cv_all.tex` | `scripts/gen-analysis-tables.mjs` | `results/raw.json` |
+| `tab:resources` | S10 | `resources.tex` | `scripts/gen-analysis-tables.mjs` | `results/raw.json` |
 | `tab:versions` | S11 | inline in `supplement.tex` | hand-authored (lockfile) | — |
-| `tab:point_read` | S12 | `point_read.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
-| `tab:range_scan` | S13 | `range_scan.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
-| `tab:sameplan` | S14 | `sameplan.tex` | `scripts/sameplan.mjs` | `results/sameplan.json`, `results/raw.json` |
-| `tab:aggregation` | S15 | `aggregation.tex` | `bench/runner.mjs` (`texTableCombined`) | `results/raw.json` |
+| `tab:point_read` | S12 | `point_read.tex` | `scripts/ci-tables.mjs` | `results/raw.json` |
+| `tab:range_scan` | S13 | `range_scan.tex` | `scripts/ci-tables.mjs` | `results/raw.json` |
+| `tab:sameplan` | S14 | `sameplan.tex` | `scripts/sameplan.mjs` (run-coupled renderer) | `results/sameplan.json`, `results/raw.json` |
+| `tab:aggregation` | S15 | `aggregation.tex` | `scripts/ci-tables.mjs` | `results/raw.json` |
 | `tab:adapter_choices` | S16 | `adapter_choices.tex` | hand-authored (from `src/adapters/*`, verified) | `METHODOLOGY.md` |
 | `tab:openloop_mysql` | S17 | `openloop_mysql.tex` | `scripts/gen-openloop-mysql.mjs` | `results/openloop2.mysql.json` |
-| `tab:altloading` | S18 | `altloading.tex` | `scripts/altloading.mjs` | `results/altloading.json` |
-| `tab:waitevents` | S19 | `waitevents.tex` | `scripts/waitevents.mjs` | `results/waitevents.json` |
+| `tab:altloading` | S18 | `altloading.tex` | `scripts/altloading.mjs` (run-coupled renderer) | `results/altloading.json` |
+| `tab:waitevents` | S19 | `waitevents.tex` | `scripts/waitevents.mjs` (run-coupled renderer) | `results/waitevents.json` |
 | `tab:postreboot` | S20 | `postreboot.tex` | `scripts/gen-postreboot.mjs` | `results/postreboot.json` |
 | `tab:utilization` | S21 | `utilization.tex` | `scripts/gen-r4-tables.mjs` | `results/utilization.postgres.json` |
 | `tab:utilization_mysql` | S22 | `utilization_mysql.tex` | `scripts/gen-r4-tables.mjs` | `results/utilization.mysql.json` |
 | `tab:taillong` | S23 | `taillong.tex` | `scripts/gen-tail.mjs` | `results/taillong.json`, `results/raw.json` |
 | `tab:cluster` | S24 | `cluster.tex` | `scripts/gen-r4-tables.mjs` | `results/cluster.json` |
-| `tab:poolsize_mysql` | S25 | `poolsize_mysql.tex` | `scripts/poolsize.mjs` (`PS_ENGINE=mysql`) | `results/poolsize.mysql.json` |
+| `tab:poolsize_mysql` | S25 | `poolsize_mysql.tex` | `scripts/poolsize.mjs` (`PS_ENGINE=mysql`; run-coupled renderer) | `results/poolsize.mysql.json` |
 | `tab:mixed` | S26 | `mixed.tex` | `scripts/gen-r4-tables.mjs` | `results/mixed.json` |
 | `tab:ranks` | S27 | `ranks.tex` | hand-authored (ranks from `raw.json`) | `results/raw.json` |
 | `tab:interaction` | S28 | `interaction.tex` | `scripts/gen-r6-tables.mjs` | `results/raw.json` |
@@ -75,7 +65,33 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:significance_p99` | S30 | `significance_p99.tex` | `scripts/gen-p99-significance.mjs` | `results/raw.json` |
 | `tab:reproducibility` | S31 | inline in `supplement.tex` | hand-authored | `REPRODUCE.md`, `results/checksums.sha256` |
 | `tab:scope` | S32 | inline in `supplement.tex` | hand-authored | per-experiment table captions |
-| `fig:insert_dispersion` | Fig S1 | `fig_insert_dispersion.tex` | `scripts/gen-r6-tables.mjs` | `results/raw.json` |
+| `tab:construct` | S33 | inline in `supplement.tex` | authored construct-validity record | documentation manifest, `METHODOLOGY.md` |
+| `tab:outcomes` | S34 | `outcomes.tex` | authored analysis-role map | manuscript definitions |
+| `tab:scaling_patterns` | S35 | `scaling_patterns.tex` | `scripts/gen-scaling-patterns-table.mjs` | `results/scaling-patterns.json` |
+| `tab:significance` | S36 | `significance_deep_fetch.tex` | `scripts/gen-analysis-tables.mjs` | `results/raw.json` |
+| `tab:protocol_retro` | S37 | `protocol_retro.tex` | authored retrospective mapping | cited prior studies |
+| `tab:semantic_equivalence` | S38 | `semantic_equivalence.tex` | authored from gate summary | `semantic-equivalence.json` |
+| `tab:patterns` | S39 | `patterns.tex` | authored workload definition | endpoint contract |
+| `tab:protocol_compliance` | S40 | `protocol_compliance.tex` | authored compliance mapping | `protocol-checklist.yaml`, case-study evidence |
+| `tab:native_contrasts` | S41 | `native_contrasts.tex` | `scripts/gen-native-contrasts.mjs` | `results/raw.json` |
+| `tab:samesql_components` | S42 | `samesql_components.tex` | authored component enumeration | `results/sameplan.*`, server capture |
+| `tab:tail_regimes` | S43 | `tail_regimes.tex` | `scripts/gen-tail-regimes.mjs` | `results/raw.json`, `results/utilization.{postgres,mysql}.json` |
+| `tab:canonicalization_cost` | S44 | `canonicalization_cost.tex` | `scripts/gen-canonicalization-table.mjs` | `results/canonicalization-cost.json` |
+| `tab:capacity_sensitivity` | S45 | `capacity_sensitivity.tex` | `scripts/gen-capacity-sensitivity.mjs` | `results/utilization.{postgres,mysql}.json`, `results/scaling.json`, `results/raw.json` |
+| `fig:insert_dispersion` | Fig. S1 | `fig_insert_dispersion.tex` | `scripts/gen-r6-tables.mjs` | `results/raw.json` |
+| `fig:scaling` | Fig. S2 | `fig_scaling.tex` | `bench/scaling.mjs` (run-coupled renderer) | `results/scaling.json` |
+| `fig:cpu_tradeoff` | Fig. S3 | `fig_cpu_tradeoff.tex` | `scripts/gen-tables.mjs` | `results/raw.json` |
+| `fig:p99_spread` | Fig. S4 | `fig_p99_spread.tex` | `scripts/gen-p99-spread.mjs` | `results/raw.json` |
+
+### Regeneration modes
+
+- **Standalone reconstruction from archived JSON (no database):** rows whose production path is `scripts/ci-tables.mjs`, `bench/analyze.mjs`, or a `scripts/gen-*.mjs` renderer. These are covered by the clean-room chain in `REPRODUCE.md`.
+- **Run-coupled renderer:** S6 (`openloop.tex`), S7 (`poolsize.tex`), S14 (`sameplan.tex`), S18 (`altloading.tex`), S19 (`waitevents.tex`), S25 (`poolsize_mysql.tex`), and Figure S2 (`fig_scaling.tex`). The named script both measures and writes TeX. The archived JSON and committed TeX support cell-level numerical audit, but the no-database chain does not claim byte regeneration of these files.
+- **Pre-generated or authored:** S2 is preserved from unarchived statement logs; all rows labelled authored are analytical or declarative rather than reconstructed measurements.
+
+The treatment-selection evidence is separately archived under `documentation-snapshots/`:
+`manifest.json` maps every treatment to the recorded pre-freeze Wayback response, capture timestamp,
+SHA-256, byte length, and evidence terms; `scripts/archive-documentation.mjs` validates those terms when regenerating. A capture establishes page state at its timestamp, not continuous lack of change through the freeze. The primary-campaign environment is available as both `results/environment.txt` and machine-readable `results/environment.json`.
 
 The five per-pattern tables (`point_read`…`write`) carry a 95% bootstrap CI on
 **both** throughput and p99, regenerated by `scripts/ci-tables.mjs` from `results/raw.json`;

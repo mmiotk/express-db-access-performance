@@ -3,14 +3,14 @@
   \centering
   \caption{Per-layer throughput rank (1 = fastest) on PostgreSQL versus MySQL for the
     seven portable layers, showing the concrete rank reversals behind the
-    engine-dependence finding. The deep/nested-fetch orderings largely agree; aggregation
+    backend-stack-transfer finding. The deep-fetch orderings largely agree; aggregation
     and the insert reverse at the \emph{top}, not among near-ties: on aggregation
     \texttt{drizzle} (PostgreSQL rank 1) and \texttt{knex} (MySQL rank 1) trade the lead
     (a three-place move each), and on the insert \texttt{knex} drops from rank 1 to 3
     while \texttt{drizzle} rises from 2 to 1; Prisma falls from mid-pack (rank 4) to last
     (rank 7) on both. These reversals, not the coarse ($n=7$) coefficients they produce
     (deep fetch $\rho=0.86$, $\tau=0.71$; aggregation $\rho=0.64$; insert $\rho=0.68$,
-    $\tau=0.52$), are the engine-dependence result. Excluding
+    $\tau=0.52$), are the backend-stack-transfer result. Excluding
     MikroORM (the largest single outlier) leaves the read ordering similar (deep-fetch
     $\rho=0.77$, $\tau=0.60$) and the deep-fetch native-relative spread at $3.72\times$
     (PostgreSQL) and $3.76\times$ (MySQL), so no single layer drives these findings.}

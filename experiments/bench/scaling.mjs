@@ -1,4 +1,4 @@
-// Concurrency sweep: for the deep/nested fetch (the most layer-sensitive pattern),
+// Concurrency sweep: for the deep fetch (the most layer-sensitive pattern),
 // drive each access layer at a range of connection counts and record throughput,
 // to expose saturation behaviour and show the ranking is robust to load.
 // Writes results/scaling.json and a pgfplots figure results/tables/fig_scaling.tex.
@@ -93,11 +93,11 @@ function figure(all, engine) {
   \\begin{axis}[width=\\linewidth,height=6.5cm,xlabel={Concurrent connections},
       ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
       legend columns=2,legend cell align=left,font=\\small,grid=both,
-      title={Deep/nested fetch scaling on ${engine==="postgres"?"PostgreSQL":"MySQL"}}]
+      title={deep fetch scaling on ${engine==="postgres"?"PostgreSQL":"MySQL"}}]
 ${plots}
   \\end{axis}
   \\end{tikzpicture}
-  \\caption{Throughput of each access layer on the deep/nested fetch as concurrency
+  \\caption{Throughput of each access layer on the deep fetch as concurrency
     increases (${engine}). The three-band ordering holds at 32 connections and above; at low concurrency (1 and 8 connections) Prisma is mid-pack.}
   \\label{fig:scaling}
 \\end{figure}

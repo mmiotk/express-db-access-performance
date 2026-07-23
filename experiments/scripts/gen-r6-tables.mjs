@@ -40,12 +40,12 @@ const tex = `\\begin{table}[htbp]
     throughput ratio (geometric mean of the paired per-replicate ratios, with a 95\\%
     paired-bootstrap interval) for each portable layer and pattern. A ratio $>1$ means
     the layer runs faster on PostgreSQL, $<1$ faster on MySQL. Every layer is faster on
-    PostgreSQL here, so the interaction is in the \\emph{spread} of the advantage, not its
-    sign: point read and range scan hold a tight band ($\\approx$1.0--1.6), the deep fetch
+    PostgreSQL here, so the interaction is in the \\emph{spread} of the ratios, not their
+    direction: point read and range scan hold a tight band ($\\approx$1.0--1.6), the deep fetch
     and aggregation reach $\\approx$1.9, and the insert scatters widest (1.6--3.2), reordering
     the layers across engines --- the
-    interaction the blocked permutation test detects and the rank correlations of
-    Table~\\ref{tab:ranks} summarize.}
+    interaction the blocked permutation test detects and the rank reversals of
+    Table~\\ref{tab:ranks} make concrete.}
   \\label{tab:interaction}
   \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l ccccc}

@@ -24,10 +24,10 @@
     \addlinespace
     Strategy standardization &
     Add a standardized same-SQL contrast (a compound diagnostic, not a mechanism decomposition) &
-    Hold confounds constant via a common-baseline contrast &
-    Access-layer time mixes loading strategy with execution machinery; engines have no ORM loading strategy to confound, so no same-SQL baseline is meaningful &
+    Standardize query text and plan while disclosing the jointly changed factors &
+    Access-layer time mixes loading strategy with execution machinery; a common raw-path comparison shows sensitivity to standardization but does not separate those mechanisms &
     Mis-read the whole documentation-selected spread as library-only ``overhead'' &
-    The $7.15\times$/$4.96\times$ spread narrows to $1.68\times$ (PG) / $2.01\times$ (MySQL) among raw paths on common SQL, so most of the documentation-selected spread disappears under this compound raw-SQL standardization; which component is responsible is not identified \\
+    The $7.15\times$/$4.96\times$ spread narrows to $1.68\times$ (PG) / $2.01\times$ (MySQL) among raw paths on common SQL under this compound raw-SQL standardization; which component is responsible is not identified \\
     \addlinespace
     Capacity identification &
     Locate each layer's saturating throughput before fixing an operating point &
@@ -41,7 +41,7 @@
     Distinguish demand from utilization; correct coordinated omission &
     Because layer capacities differ, an equal-demand tail conflates queueing with sub-saturation latency; engines at similar capacity make the two nearly coincide &
     Read a capacity/queueing gap as a sub-saturation latency difference &
-    At 50 conns deep-fetch p99 runs pg 20\,ms to MikroORM 116\,ms; at 50\% of each layer's own capacity the tails converge to $\sim$2--5\,ms, so the gap is capacity-and-queueing, not a sub-saturation latency difference \\
+    At 50 conns deep-fetch p99 runs pg 20\,ms to MikroORM 116\,ms; at nominal 50\% of the $\widehat C_{50}$ capacity proxy the tails converge to $\sim$2--5\,ms, and the full-sweep-denominator sensitivity stays below saturation (S45) \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

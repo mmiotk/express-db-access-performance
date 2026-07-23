@@ -27,13 +27,13 @@ package: pdf
 	@for f in ../sections/*.tex; do cp "$$f" "_package/sections_$$(basename $$f)"; done
 	@for f in ../tables/*.tex;   do cp "$$f" "_package/tables_$$(basename $$f)";   done
 	cp $(MAIN).pdf _package/
-	cp ../supplement.pdf _package/supplement.pdf
+	cp ../_build/supplement.pdf _package/supplement.pdf
 	@cd _package && zip -qr ../ist-submission.zip . -x '*.DS_Store'
 	@echo "Self-contained sources: paper/ist/_package/  ->  ist-submission.zip"
 
 # Build the submission support PDFs (cover letter, response, word count,
 # suggested reviewers) from their Markdown sources, plus the highlights PDF.
-DOCS := cover-letter response-to-reviewers word-count suggested-reviewers
+DOCS := cover-letter response-to-reviewers revision-summary word-count suggested-reviewers
 docs:
 	@for d in $(DOCS); do python3 md2tex.py $$d.md $$d.tex && latexmk -pdf -interaction=nonstopmode $$d.tex >/dev/null; done
 	latexmk -pdf -interaction=nonstopmode highlights.tex >/dev/null

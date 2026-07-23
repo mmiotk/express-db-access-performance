@@ -105,34 +105,15 @@ Version-specific reproducibility notes carried by the pinned freeze (Table S11):
   3.5.3 driver for MySQL, as Prisma ships no `mysql2` adapter).
 
 All recorded doc-source fields above are **official documentation base URLs** (site
-roots) the author is confident about; no deep per-page URLs are asserted here. The
-specific justifying page each choice was originally read against is listed in
-`experiments/METHODOLOGY.md` (Selection-protocol table); those deep links were valid at
-authoring time, but documentation structure changes over time, so a reassessor should
-confirm "presents first" against the archived **base-site** snapshot below rather than
-trusting the deep links.
+roots) retained as navigation metadata. The exact justifying URL for each choice is listed in `experiments/METHODOLOGY.md`; the preserved response, capture timestamp, and hash in `experiments/documentation-snapshots/manifest.json` are the auditable evidence.
 
 ## 6. Documentation snapshot retrieval (Wayback Machine)
 
-Documentation prominence is **not** shipped with the replication package. To make
-"presents first" reassessable, retrieve the **nearest capture at or before the freeze
-date (2026-07-15)** of each official base site from the Internet Archive Wayback Machine,
-**where the library's documentation licensing permits archival/redistribution**. The
-timestamp prefix `20260715` returns the nearest available capture; verify the returned
-capture date, since an exact-day snapshot is not guaranteed to exist. Do **not** treat a
-missing or later capture as evidence of the freeze-date content.
+The replication package ships the exact archived HTML for every justifying page under `experiments/documentation-snapshots/pages`, plus a machine-readable manifest containing the source URL, capture timestamp, Wayback URL, SHA-256, byte length, and evidence terms. All committed pages are the nearest retrievable official-page capture at or before the 2026-07-15 freeze; the recorded timestamps, rather than an assumed exact-day capture, define the preserved evidence. The archive script labels any future live fallback as post-freeze evidence and forbids treating it as a freeze copy.
 
-Wayback retrieval URLs (nearest capture at/before freeze):
+Contradictory official pages are resolved in this order: the page for the pinned stable major version; the relation/eager-loading section over quick-start or marketing material; then first presentation within that section. Remaining equal prominence invokes the taxonomy-tier tie-break above. If still unresolved, the choice is recorded as ambiguous and both treatments must be predeclared.
 
-- `pg` — https://web.archive.org/web/20260715/https://node-postgres.com/
-- `mysql2` — https://web.archive.org/web/20260715/https://sidorares.github.io/node-mysql2/
-- `knex` — https://web.archive.org/web/20260715/https://knexjs.org/
-- `drizzle-orm` — https://web.archive.org/web/20260715/https://orm.drizzle.team/
-- `@prisma/client` — https://web.archive.org/web/20260715/https://www.prisma.io/docs
-- `sequelize` — https://web.archive.org/web/20260715/https://sequelize.org/
-- `typeorm` — https://web.archive.org/web/20260715/https://typeorm.io/
-- `objection` — https://web.archive.org/web/20260715/https://vincit.github.io/objection.js/
-- `@mikro-orm/core` — https://web.archive.org/web/20260715/https://mikro-orm.io/
+The preserved state proves what the page contained at its capture timestamp, not that it remained unchanged on every day through the freeze. This is the residual archival limitation.
 
 ## 7. Machine-readable record
 
@@ -158,7 +139,8 @@ rubric:
       competing_paths: [SQL-style core query builder, higher-level relational-query API]
       selected: SQL-style core query builder (.innerJoin)
       rationale: API at Drizzle's own taxonomy tier (its documented base layer)
-  snapshot_retrieval: Internet Archive Wayback Machine, nearest capture at/before freeze date, where licensing permits
+  snapshot_manifest: experiments/documentation-snapshots/manifest.json
+  snapshot_retrieval: Internet Archive Wayback Machine, nearest exact-page capture at/before freeze date
   excluded_from_rubric: [pg-tuned, mysql2-tuned]   # tuned reference baselines, not documentation-selected
   layers:
     - id: pg
@@ -264,11 +246,8 @@ rubric:
 ## 9. How to independently reassess
 
 1. Pull the pinned versions from `experiments/package.json` / Table S11 (Section 5).
-2. For each layer, open the archived base-site snapshot (Section 6) nearest at/before
-   2026-07-15 and locate its loading-related-records section.
+2. For each layer, verify the SHA-256 in `experiments/documentation-snapshots/manifest.json`, then open the corresponding committed exact-page HTML and locate its relations/eager-loading section.
 3. Confirm the API in the "Selected deep-fetch API" column is the one presented first
    there; for Drizzle, confirm the two co-prominent paths and that the tie-break selects
    the core SQL-style builder.
-4. Where licensing blocks archival, record the licence and treat that layer's
-   "presents first" as **unverifiable from archive** rather than substituting a live,
-   post-freeze capture.
+4. Check the recorded capture timestamp. If a future regeneration falls back to a live post-freeze page, treat the freeze-date ordering as unverifiable rather than substituting that page.

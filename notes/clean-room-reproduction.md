@@ -53,3 +53,19 @@ regeneration caveats so an independent reproducer knows what to expect.
 From the immutable archive alone, the raw data verifies (35/35) and 45/50 tables regenerate
 byte-for-byte; the five exceptions are presentation-only and documented. The estimators are seeded and
 bit-reproducible.
+
+## Revision-candidate offline reconstruction (23 July 2026)
+
+After the major-revision changes, the author also copied the current candidate to a fresh temporary
+directory while excluding `node_modules`, build directories, PDFs, ZIPs, and Git metadata. No database
+server was started. In that copy:
+
+1. all 37 archived JSON checksums verified;
+2. the complete standalone-renderer chain documented in `REPRODUCE.md` ran successfully; and
+3. recursive byte comparison of both `experiments/results/tables/` and `paper/tables/` against the
+   source candidate produced an empty diff.
+
+This verifies the current candidate's **offline reconstruction path**, including the deterministic
+engine-specific analysis-table orchestrator and new Tables S44--S45. It does not rerun the benchmark
+measurements: seven explicitly marked outputs still have run-coupled renderers, the statement-count
+table depends on unarchived transient server logs, and authored tables are copied rather than generated.

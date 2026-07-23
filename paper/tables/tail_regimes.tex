@@ -5,10 +5,12 @@
     is the high-load response-time p99 (ms) at the fixed 50-connection closed-loop point --- the
     headline deep-fetch p99, which at this saturating load largely tracks
     capacity and connection-acquisition queueing. \emph{50\% util.} is the
-    coordinated-omission-corrected p99 when each layer is instead offered half of \emph{its own}
-    saturating throughput (Supplement Tables~S21--S22). The wide equal-demand ladder
+    coordinated-omission-corrected p99 when each layer is instead offered half of its
+    $\widehat C_{50}$ capacity proxy (Supplement Tables~S21--S22; denominator sensitivity,
+    Table~S45). The wide equal-demand ladder
     (\texttt{pg}~20 to \texttt{mikroorm}~116~ms on PostgreSQL) collapses to a $2$--$5$~ms band at
-    matched utilization, so the high-load gap is a capacity-and-queueing effect, \emph{not} a sub-saturation latency difference; the matched-utilization reading is the more informative one.}
+    matched utilization, so the high-load gap is a capacity-and-queueing effect, \emph{not} a
+    sub-saturation latency difference; the matched-utilization reading is the more informative one.}
   \label{tab:tail_regimes}
   \begin{tabular}{l l r r r r}
     \toprule

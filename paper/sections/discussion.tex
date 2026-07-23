@@ -4,7 +4,7 @@
 \paragraph{Version-sensitivity}
 An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the native
 driver on the deep fetch while drawing about five application cores; the \emph{identical} harness
-on the latest stable releases did not reproduce it --- no layer now draws over one core, and
+on the latest compatible stable versions as of the 15 July 2026 freeze did not reproduce it --- no layer now draws over one core, and
 Prisma sits at mid-to-low throughput (Section~\ref{sec:results}). The non-reproduction is a fact,
 its cause a hypothesis (Prisma's Rust-free rewrite is likeliest, though the re-freeze moved the
 whole toolchain at once), so the headline is
@@ -12,7 +12,7 @@ version-sensitive~\cite{vanzyl2009optimisations,papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice}
 RQ1 and RQ3 agree the documentation-selected implementation-and-strategy difference is specific to
-the access \emph{pattern}: the native-relative spread is widest on the deep/nested fetch --- where
+the access \emph{pattern}: the native-relative spread is widest on the deep fetch --- where
 a layer must hydrate rows and resolve associations rather than merely issue SQL (the
 object-relational impedance mismatch~\cite{ireland2009impedance} made concrete) --- and narrowest
 on aggregation. Round-trip count alone does not explain throughput: on the PostgreSQL deep fetch,
@@ -38,9 +38,9 @@ native driver leads on both, PostgreSQL's inserts staying strongly layer-depende
 fsync on ($3.23\times$; Table~\ref{tab:write}), whereas on MySQL the faster layers cluster
 within about $5\%$ near an engine-level commit floor (the per-commit redo-log-then-binlog double
 flush~\cite{harizopoulos2008oltp}; Supplement Table~S19); relaxing durability does not overturn
-this contrast. The ranking reverses across engines --- \texttt{knex} leads on PostgreSQL,
+this contrast. The ranking reverses between the tested backend stacks --- \texttt{knex} leads on PostgreSQL,
 \texttt{drizzle} on MySQL, Prisma dropping from fourth to last (Table~\ref{tab:write}) --- the
-per-layer engine advantage spanning $1.6$--$3.2\times$ (Supplement Table~S28), so a single-engine
+per-layer PostgreSQL-to-MySQL stack ratio spanning $1.6$--$3.2\times$ (Supplement Table~S28), so a single-engine
 benchmark like~\cite{salunke2024pgmysql} misses this interaction either way, which the dual-engine
 design exposes, as prior work on database technology modulating mapping cost
 anticipates~\cite{lorenz2017orm}. An \emph{exploratory} transactional multi-statement write
@@ -72,9 +72,9 @@ The synthesis follows from RQ1--RQ3 and describes the benchmarked implementation
 configuration and workload --- single host, default durability, pinned versions
 (Section~\ref{sec:threats}) --- not access-layer categories in general. Because the fan-out sweep
 (Section~\ref{sec:results}) varies breadth (0--500 children) but not depth, schema, or query mix,
-the documentation-selected spread's peak on the deep/nested fetch locates a difference among five
+the documentation-selected spread's peak on the deep fetch locates a difference among five
 probes on one synthetic schema --- a benchmark observation to re-measure on the target workload,
-not an established law. Where a hot path is dominated by deep or nested fetches the access layer is
+not an established law. Where a hot path resembles the tested deep fetch the access layer is
 consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for
 throughput and response-time p99}. Where the workload is read-simple or write-bound (especially on
 MySQL, whose commit floor dominates under default durability) the cost is small and may be met by

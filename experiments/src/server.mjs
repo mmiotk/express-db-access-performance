@@ -61,7 +61,7 @@ app.get('/posts/:id', h(async (req, res) => {
   res.json(post);
 }));
 
-// 3. deep/nested fetch — declared before the ':id' range route is fine because
+// 3. deep fetch — declared before the ':id' range route is fine because
 //    Express matches '/posts/:id/thread' distinctly.
 app.get('/posts/:id/thread', h(async (req, res) => {
   const thread = await db.getThread(Number(req.params.id));

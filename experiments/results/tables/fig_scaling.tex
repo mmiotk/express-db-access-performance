@@ -5,7 +5,7 @@
   \begin{axis}[width=\linewidth,height=6.5cm,xlabel={Concurrent connections},
       ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
       legend columns=2,legend cell align=left,font=\small,grid=both,
-      title={Deep/nested fetch scaling on PostgreSQL}]
+      title={deep fetch scaling on PostgreSQL}]
     \addplot+[mark=*] coordinates {(1,729) (8,3293) (32,3717) (64,3636) (128,3590) (256,3556)};
     \addlegendentry{pg}
     \addplot+[mark=square*] coordinates {(1,1017) (8,3753) (32,3899) (64,3852) (128,3815) (256,3688)};
@@ -26,7 +26,7 @@
     \addlegendentry{mikroorm}
   \end{axis}
   \end{tikzpicture}
-  \caption{Throughput of each access layer on the deep/nested fetch as concurrency
+  \caption{Throughput of each access layer on the deep fetch as concurrency
     increases (postgres). The native driver leads at every concurrency level, with the query builder and Drizzle next and the data-mapper ORMs (Prisma among them) below; the ordering is stable above about 32 connections and compresses only at very low concurrency.}
   \label{fig:scaling}
 \end{figure}

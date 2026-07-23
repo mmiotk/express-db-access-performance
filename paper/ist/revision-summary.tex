@@ -14,186 +14,51 @@
 \begin{document}
 \section*{Summary of Revisions}
 
-\textbf{Manuscript:} A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js \textbf{Author:} Mateusz Miotk (University of Gdańsk) \textbf{Journal:} Information and Software Technology
+\textbf{Manuscript:} A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js \textbf{Author:} Mateusz Miotk \textbf{Journal:} Information and Software Technology
 
-I thank the reviewer for a thorough, multi-part reading. This revision addresses five successive sets of comments --- on methodology and the scope of claims, on the CPU and statistical reporting, on the conclusions and language, on presentation, and on the paper's length. A full point-by-point reply, each with a quotation of the revised text, is in the separate Response to Reviewers; the essential changes are summarized below. The main revision changed no measurement --- it is one of framing, scoping, and length; the deeper follow-up points noted at the end add clearly-scoped \emph{supplementary} measurements that leave the primary matrix untouched.
+This revision keeps the primary benchmark matrix unchanged and addresses the remaining conceptual, construct-validity, and artifact-auditability concerns.
 
-\section*{Scope of claims and methodology}
-
-\begin{itemize}
-  \item The estimand is renamed from "default-configuration" to **documentation-selected
-\end{itemize}
-
-implementation-and-strategy**: choosing the first documented API is a reproducible selection heuristic, not the library's actual default configuration.
+\section*{Conceptual framing}
 
 \begin{itemize}
-  \item The comparison is now read at \textbf{three explicit, separated levels}: the primary
+  \item Added and distinguished CYNTHIA (ICSE 2021) as prior cross-ORM differential-equivalence work.
+  \item Narrowed novelty to the integrated benchmark-admission protocol rather than correctness checking or differential testing themselves.
+  \item Removed global "complete" and universal "necessary" claims; compliance levels now state the claims they license.
+  \item Renamed RQ2 to backend-stack transfer and removed causal attribution to the DBMS alone.
+  \item Audited same-SQL prose so the result remains a compound standardized contrast that isolates no mechanism.
 \end{itemize}
 
-implementation-and-strategy comparison, the same-SQL raw-path standardized (diagnostic) contrast, and the individual mechanisms, which change together and are \textbf{not} causally isolated.
+\section*{Construct validity and experiments}
 
 \begin{itemize}
-  \item The operating conditions are scoped: the full five-pattern, two-engine matrix is the fixed
+  \item Archived the recorded pre-freeze Wayback responses for all nine selected treatments with capture timestamps, source URLs, SHA-256 hashes, evidence terms, a reproducible conflict rule, and an explicit capture-time limitation.
+  \item Documented each canonical constructor operation.
+  \item Added a standalone 30-block canonicalization benchmark and generated Supplement Table S44. Deep-fetch construction costs 9.32--9.40 microseconds, 0.078\% of the fastest corresponding HTTP p50.
+  \item Quantified two saturation-target sensitivities: bootstrap confidence bounds yield 48.6--51.7\% and 68.0--72.4\%; replacing the target with the full-sweep maximum yields 46.8--51.2\% and 65.5--71.6\% (Supplement Table S45).
+  \item Restricted the matched-utilization headline to stable 50\% and most 70\% cells; 85--95\% results are sensitivity trends.
 \end{itemize}
 
-\textbf{high-load} point, while the equal-utilization and equal-CPU conditions are a limited set restricted to the deep fetch. "capacity", "saturating throughput", and "overload" are reserved for the deep-fetch sweep, where a throughput knee was actually measured.
+\section*{Artifact auditability}
 
 \begin{itemize}
-  \item A new \textbf{experiment-scope table} (Supplement Table S32) tabulates every experiment's
+  \item Added \texttt{documentation-snapshots/manifest.json} plus nine preserved pages and an archival/validation script.
+  \item Added machine-readable \texttt{environment.json} and a complete, corrected provenance map for every table and figure.
+  \item Expanded the verified checksum manifest from 35 to 37 result files.
+  \item Ran the complete standalone-renderer chain in a fresh copy without dependencies or build outputs; both table directories reproduced byte-for-byte. This was an author-run offline reconstruction, not a measurement rerun or independent-machine reproduction.
+  \item Archived the complete revision as Zenodo-linked release v1.12.13 under concept DOI 10.5281/zenodo.21313858; the primary matrix remains unchanged from v1.12.12.
 \end{itemize}
 
-patterns, engines, layer count, and repeated runs.
-
-\section*{CPU and statistics}
+\section*{Editorial consistency}
 
 \begin{itemize}
-  \item The equal-CPU experiment is \textbf{demoted to an exploratory sensitivity check}; the earlier
+  \item Standardized "deep fetch," "single-row insert," and "latest compatible stable versions as of the 15 July 2026 freeze."
+  \item Kept the MySQL insert raw-distribution warning and the one-millisecond p99 resolution qualification prominent.
+  \item Removed the remaining positive same-SQL "bound" claims and restricted the transactional-write discussion to its exploratory five-layer PostgreSQL subset.
+  \item Replaced stale submission documents with the current point-by-point response and exact word-count declaration.
 \end{itemize}
 
-"at most a few percent" wording is corrected (the ORM per-core values wobble 10--17\% run-to-run with no monotonic gain from more cores).
+\section*{Submission length}
 
-\begin{itemize}
-  \item The bootstrap intervals are stated to capture \textbf{within-campaign}, run-to-run variability
-\end{itemize}
-
-on this host, not variation across machines or versions; adjacent-layer p99 gaps of one or two milliseconds sit at the millisecond measurement floor and are not read as real.
-
-\begin{itemize}
-  \item The raw per-replicate MySQL-insert distributions (Supplement Figure S1) are brought into
-\end{itemize}
-
-the Results body.
-
-\section*{Conclusions and language}
-
-\begin{itemize}
-  \item "access-layer overhead" wording is limited where it implied an isolated measurement (the
-\end{itemize}
-
-primary comparison bundles library, query strategy, round-trips, and mapping); the "thin layers are a safer default" recommendation becomes \textbf{"benchmark the relation-heavy hot path for the specific application"}; an explicit \textbf{configuration-specific} label is added to the Conclusion; and novelty is scoped throughout to "the sources searched".
-
-\section*{Presentation, length, and consistency}
-
-\begin{itemize}
-  \item Rather than split the paper (which would read as salami-slicing, since both threads share
-\end{itemize}
-
-one research question), the main text is \textbf{condensed by about 24\% (51 $\to$ 43 pages; body 11,356 $\to$ 8,669 words)} so the central message is not lost among the controls and sensitivity analyses. Detail is \textbf{moved to the supplement, not deleted}: new \emph{Statistical Methods}, \emph{Measurement Details}, and \emph{Benchmarking-Pitfalls Checklist} sections. The same-SQL control, the RQ1--RQ3 answers, and Threats to Validity remain prominent in the main text. The manuscript is 12,216 words, well under the 15,000-word IST limit.
-
-\begin{itemize}
-  \item A pre-submission consistency sweep confirmed that the pinned library versions match the
-\end{itemize}
-
-lockfile, the DOI and repository link resolve, and every headline number matches its table; it corrected a coefficient-of-variation figure ("within 4.2\%", not 4.0\%, on the reads), removed redundant per-cell median confidence intervals from the paired significance table that had disagreed with the pattern table, and reconciled two loose prose phrasings.
-
-\section*{Deeper follow-up points (6.1--6.6)}
-
-Six deeper follow-up points were addressed after the main revision and released incrementally:
-
-\begin{itemize}
-  \item \textbf{6.1} --- the same-SQL result is renamed a \textbf{standardized (same-SQL) contrast}, not a "bound":
-\end{itemize}
-
-absent interaction assumptions, the raw-path spread does not bound the intrinsic library effect.
-
-\begin{itemize}
-  \item \textbf{6.2} --- the semantic-equivalence gate is \textbf{strengthened to validate write state} (a new
-\end{itemize}
-
-\texttt{bench/verify-writes.mjs} confirms exact field values, row-count changes, and transactional rollback through an independent native-driver connection), not merely a 2xx status.
-
-\begin{itemize}
-  \item \textbf{6.3} --- the \textbf{comparability protocol is specified normatively} and independently of the case
-\end{itemize}
-
-study, in a new Methodology subsection (inputs; mandatory stages; pass/fail cell admission; output interpretation; applicability limits).
-
-\begin{itemize}
-  \item \textbf{6.4} --- RQ1 is narrowed to the performance of each layer's **documentation-selected
-\end{itemize}
-
-implementation strategy\textbf{, and a second }performance-conscious co-primary regime** --- the faster of a layer's two documented deep-fetch loading strategies, admitted only where byte-identical to the documentation-primary output --- is measured on one harness and reported (new Supplement Table S34). The finding reinforces rather than overturns the documentation-primary reading: the documented strategy is already the faster one for most layers, and where it is not (Objection on MySQL) the performance-conscious ORM deep fetch still sits below the native driver.
-
-\begin{itemize}
-  \item \textbf{6.5} --- \textbf{capacity is now characterized for all five patterns}, not only the deep fetch. A
-\end{itemize}
-
-per-pattern concurrency sweep (connection ladder 1--200, every layer, both engines; new Supplement Table S35) locates each pattern's throughput knee at or below 50 connections, so the fixed 50-connection operating point places all five patterns at high utilization of their own capacity --- making the cross-pattern p99/spread comparison one at comparable, measured relative utilization rather than unknown fractions of capacity. The equal-utilization open-loop tail and the exploratory equal-compute check remain demonstrated on the deep fetch, and the manuscript now labels those as deep-fetch-only.
-
-\begin{itemize}
-  \item \textbf{6.6} --- the over-strong claim that four controls "isolate the access layer as the only variable"
-\end{itemize}
-
-is \textbf{corrected} (prose only). The controls hold the shared conditions fixed (pool, logical task, physical state, observer) so the \emph{configured access-layer implementation bundle} is the only deliberately varied factor; they do not isolate the library alone, since the bundled differences (SQL, query count, protocol, loading strategy, hydration) are the treatment, not confounds. Two related-work "isolates" usages were reworded to "treats"/"varies"; the isolation \emph{disclaimers} elsewhere were verified correct.
-
-Points 6.2, 6.4, and 6.5 add new, clearly-scoped \emph{supplementary} measurements (a write-state oracle, a deep-fetch regime, and a per-pattern capacity sweep); point 6.6 is a wording correction only. The primary measurement matrix and every previously reported primary number are unchanged.
-
-\section*{Point 7 (minor concerns)}
-
-Six further wording/labeling corrections, no measurement changed: the abstract's version-specific "Prisma 7 sits mid-pack" clause was removed (de-loading it); "the most widely used" Node.js framework was softened and temporally qualified to "has long been among the most widely used"; Table 1's "Independent?" column was relabelled the neutral \textbf{"Vendor involvement"} (a source/conflict-of-interest property, not a methodological one); the threats claim that a hot-cache regime "maximizes layer differences" became "expected to make application/access-layer overhead more visible"; the primary text now discloses the one Drizzle/MySQL-insert cell with 24 rather than 25 runs; and "independent runs" was reworded to "repeated runs" in the captions and REPRODUCE (all repetitions share a host and campaign).
-
-\section*{Point 8 (methodological and statistical assessment)}
-
-The reviewer's assessment was favourable ("substantially above the level of many benchmark studies \ldots{} no clear statistical error requiring rejection"). Five precision/scoping fixes, no measurement changed: (1) Methodology now states explicitly that *\emph{"p99" throughout is the }median run-level p99*\textbf{ (median across replicates of each run's p99), not the p99 of the pooled request distribution; (2) the within-campaign scope of the bootstrap intervals is reinforced where they are used, so they are not read as deployment-general; (3) the coarse millisecond p99 resolution is noted not to finely separate near-adjacent layers; (4) following the reviewer's suggestion to foreground effect sizes, the paired-significance table (former main-text }Table 7\textbf{) was }moved to the supplement (new Table S36)*\emph{, the main text now leading with paired geometric-mean ratios and per-replicate dominance and noting the post-hoc tests' inference is conditional on the ranking that selects the pairs; (5) the secondary experiments on layer subsets or few replicates (Supplement Table S32) are labelled }sensitivity evidence* on the tested subset, not claims about all eleven implementations. Moving Table 7 drops the main-text float count from eight to seven.
-
-\section*{Point 9 (reproducibility and artifact assessment)}
-
-The reviewer rated this "one of the manuscript's strongest dimensions." I verified the five-item pre-submission checklist --- all satisfied: (1) the Zenodo tarball byte-matches \texttt{git archive} of the tag (identical sha256); (2) every statistic traces to archived raw data (\texttt{MANIFEST.md}, 35 files), the one disclosed exception being the deterministic S2 query-count table; (3) \texttt{environment.txt} and \texttt{db-config.md} capture kernel/runtime, CPU/NUMA topology, governor/turbo, virtualization, lockfile hash, and database configuration; (4) tables rebuild from raw data with pinned dependencies and no network; (5) an explicit dual license (MIT code, CC BY 4.0 paper/data). For the AI-declaration policy point, the declaration was \textbf{split} into the Elsevier-standard writing declaration and a separate \emph{AI-assisted research software} statement (author responsibility; the AI-assisted analytical code passes 19/19 estimator unit tests). No body change; the AI declarations are excluded metadata.
-
-\section*{Point 10 (novelty and related-work assessment)}
-
-The reviewer found the novelty case "credible but should remain carefully bounded" and endorsed the scoped wording. I bounded the \emph{methodological}-novelty claim: the Introduction now states explicitly that the three preconditions "are not new to benchmarking in general" (correctness, workload equivalence, warm-up, coordinated-omission correction, capacity curves, and reproducibility are long established), and that the contribution is their \textbf{domain-specific synthesis and operationalization} for the access-layer genre, not the invention of these principles; "novel benchmark infrastructure" was reworded accordingly. The scoped "in the sources searched" novelty wording is preserved, and the same-SQL "bound" is already a "standardized contrast" (point 6.1).
-
-\section*{Point 11 (presentation)}
-
-The reviewer found the manuscript "generally well written, technically mature, unusually careful about claim scope," the main weakness being density. Because the protocol is the contribution, Study Design now opens the \emph{comparability protocol} subsection with a \textbf{compact formal protocol box} (Inputs; the five mandatory stages in order; cell-admission; output interpretation), replacing the verbose paragraph prose and establishing treatment selection/admission in the main text rather than in \texttt{METHODOLOGY.md} and supplementary tables; the box is inline body text, not a float. The most-repeated "protocol, not the ranking, is the contribution" framing was consolidated to one statement per location. Several recurring caveats are load-bearing for earlier points (same-SQL "not a bound", 6.1; deep-fetch "not a poor-default artifact", 6.4) and were kept once each. Word-count compliance was verified quantitatively under the IST rule: body 11,373 + abstract \textasciitilde{}292 + references 1,848 + seven main-text floats (1,400) = \textbf{14,913}, under the 15,000-word limit.
-
-\section*{Point 12 (Essential / strongly-recommended / optional list)}
-
-The reviewer's consolidated list. All five \textbf{Essential} items were already carried out in the follow-up points above: (1) "bound" $\to$ standardized contrast (6.1); (2) write-state oracle (6.2); (3) normative reusable protocol (6.3, 11); (4) configured-bundle treatment, not "only variable" (6.6); (5) per-pattern capacity, deep-fetch-only utilization labelled (6.5). This pass closed the one remaining Essential-3 gap by separating the protocol box's \textbf{mandatory} stages (correctness oracle; treatment-definition rule) from its \textbf{recommended} stages (strategy control; capacity; demand/utilization), and added a \textbf{tie-breaking rule} for "documentation-selected" (equally-prominent official paths, as for Drizzle, resolved toward the library's own taxonomy tier). Strongly-recommended: the alternative-strategy subset is the \emph{complete} byte-equivalent-drop-in set (the rest have no semantically-equivalent alternative); version-sensitivity echoes in Introduction and Conclusion were trimmed; word count reported quantitatively (14,971). Optional (visual schematic, second host, I/O-bound run) declined as future work --- the formal protocol box already carries the schematic content.
-
-\section*{Point 15 (final recommendation: major revision)}
-
-The reviewer's central reason for major revision was the same-SQL "bound" attribution claim, one of the three advertised pillars. It is fully corrected: every "bound" on the same-SQL result is a "standardized (same-SQL) contrast" (point 6.1), the Strategy-attribution pillar reads "a diagnostic contrast, not an attribution," and an audit finds no positive bound claim remaining. The other two changes the reviewer named as making the manuscript "considerably stronger" --- a strengthened write-correctness oracle (6.2) and a formalized reusable protocol (6.3, 11, 12) --- are in place. This pass reconciled the submission package to that state: a stale "bounds" quotation in the Response's Essential-1 pillar was corrected, one Results word changed ("bounds" $\to$ "caps" for the tuning-budget ceiling), and the cover letter was refreshed to the current title, the three major-revision changes, and the current 14,971-word count.
-
-\section*{Major concern 6.1 (protocol novelty and validation)}
-
-The reviewer noted that framing the protocol as a synthesis/operationalization raises the evidentiary bar (it must be shown complete, necessary, distinguishable, transferable) and required a formal mapping table, ideally with a retrospective application to prior benchmarks. Both were added. A \textbf{main-text mapping table (Table 2)} maps each of the five protocol stages to its generic principle, access-layer-specific manifestation, failure-if-omitted, and the evidence it was load-bearing here. A \textbf{supplement retrospective table (Table S37)} applies the protocol \emph{analytically} (nothing re-run, no figures disputed) to the eight prior benchmarks in the sources searched, naming each study's absent stages and the one conclusion that becomes uninterpretable without them --- showing the protocol has diagnostic power over other work, not only this study. To fit the main text, the peripheral CPU figure moved to the supplement (Figure S3) and the Resource-footprint paragraph was condensed; the main-text float count is unchanged at seven. Both new tables are analytical (authored, not data-derived; noted in \texttt{REPRODUCE.md}), so the primary data and checksums are unchanged.
-
-Addressing reviewer \textbf{major concern 6.2}, the "documentation-selected" treatment was reframed as \emph{this case study's} selection policy rather than something intrinsic to the general protocol: the protocol now requires only a predeclared, reproducible treatment-selection rule and privileges none (the mandatory protocol-box stage, the Strategy-attribution contribution, and the Study-Design definition were genericised accordingly). The performance-conscious comparison that speaks to the construct's weakness was promoted from Supplement S34 to a new main-text table beside the co-primary paragraph in Results; to keep the main-text float count at seven and avoid renumbering the supplement, the roadmap/outcomes table moved the other way into the vacated S34 slot (net-zero swap). No raw data changed.
-
-Addressing reviewer \textbf{major concern 6.3} (the semantic-equivalence gate is finite), Study Design now distinguishes four levels of the precondition rather than asserting a universal property --- specification, finite pre-measurement conformance (the 12-probe \texttt{verify.mjs}), exhaustive equivalence (infeasible and not claimed), and property-based/randomized differential testing --- and the Introduction's byte-identical claim was softened to hold "on the protocol's conformance suite." A new gate (\texttt{bench/verify-property.mjs}) draws a fixed-seed sample of thousands of random and edge-case inputs across the full key range and asserts every adapter is byte-identical to the native-driver oracle on all five read methods: 30,400 comparisons per engine, 60,800 across both, zero divergences (new Supplement Table S38). It is inexpensive because the dataset is deterministic and finite.
-
-Addressing reviewer \textbf{strongly-recommended point 6.4} (environmental replication is absent), the External Validity treatment was sharpened rather than backed by a fabricated second environment: the only host available for this revision is the same virtualized machine that produced the primary data, so no same-host re-run is presented as environmental replication. The Threats section now states that the same-host checks bound only \emph{within-host} drift (post-restart re-run: up to 16\% absolute change, ranking intact, Supplement Table S20), and partitions the conclusions --- a substrate change should preserve the \emph{architectural} ones (within-engine relative ordering, operating-point separation) while possibly moving absolute req/s, gap magnitudes, and the cross-engine RQ2 ordering; an independent-host replication of the core deep fetch is named as future work. It also notes that the protocol's stages are experimental-design controls argued necessary analytically (Table 2, Supplement Table S37), so single-host measurement bounds the case study, not the protocol. This was offset by tightening the paragraph, so the manuscript is 14,993 words, under the 15,000-word limit.
-
-Addressing reviewer \textbf{strongly-recommended point 6.5} (closed-loop p99 is over-prominent relative to its interpretation), the primary p99 is now labelled \emph{high-load response-time p99 under equal closed-loop demand} in both the Abstract and the Introduction and immediately distinguished from the tail at \emph{equal utilization}, with the coupling stated at first contact (near saturation the p99 tracks capacity and queueing, so a lower-capacity layer looks worse on the tail without a worse sub-saturation latency). The matched-utilization experiment was promoted to a new main-text table (\texttt{tab:tail\_regimes}, generated from the same raw data) that places the equal-demand p99 beside the matched-50\%-utilization p99 per layer, making the collapse of the PostgreSQL ladder (\texttt{pg} 20 to MikroORM 116 ms down to a 2-5 ms band) visible directly; to keep the main-text float count at seven, the descriptive five-pattern table moved to the supplement (new Supplement Table S39, net-zero swap). No raw data changed.
-
-Addressing reviewer \textbf{strongly-recommended point 6.6} (the protocol is only partially exercised across the workload matrix), Study Design now names five explicit \emph{compliance levels} --- the mandatory validity core, capacity characterization, and the standardized-strategy, utilization-controlled, and resource-normalized extensions --- and states that the first two hold across all five patterns on both engines while the three extensions are demonstrated on the deep fetch as a representative-point instantiation, not full-matrix coverage. New Supplement Table S40 maps each cell to the levels it satisfies precisely, turning the protocol into a reusable object against which a later study can report its own per-cell compliance. Prose-plus-one-supplement-table only; the earlier coverage paragraph was tightened, so the manuscript is 14,991 words.
-
-Addressing reviewer \textbf{strongly-recommended point 6.7} (some mechanistic language is stronger than the design permits), the flagged formulations were softened to "consistent with" readings, using the already-hedged Prisma raw-path conjecture as the model. The native-lead sentence no longer "comes from" lean SQL but "is consistent with" it; "how a layer materializes a result graph matters more than how many statements it issues" became "consistent with result-graph materialization, not statement count, separating the layers here"; and the Results compute-efficiency claim is now "consistent with the native driver's leaner SQL." Both compute-efficiency passages now note that the application-tier CPU figure (Supplement Figure S3) excludes database CPU and point to the combined accounting in Supplement Table S5. The remaining causal statements are either experimentally supported (the durability manipulation) or already hedged. Prose-only, no data changed; the manuscript is 14,986 words.
-
-Two presentation follow-ups were also addressed. For the reviewer's terminology remark (the alternation among "nine layers," "eleven implementations," "seven portable," and "four native/tuned"), Section 3 now opens with a compact schematic --- a tier table (native driver; tuned native baseline; query builder; ORM) with the implementations and their engine coverage, followed by the arithmetic in one place (11 = 9 documentation-selected + 2 tuned; 7 portable on both engines, 4 engine-specific, so 90 configurations). It replaces the previous inline enumeration and is non-floating, so the main-text float count stays at seven. For the repetition remark, the fullest redundant restatement of "configuration-specific and version-sensitive" (in the Discussion) was reduced to a back-reference, keeping the caveat in the abstract, Introduction, and Conclusion. Prose-only, no data changed; the manuscript is 14,994 words.
-
-Four further presentation refinements were made. (4) Every throughput/p99 table caption now states that p99 is reported at 1 ms resolution, so cells differing by at most 1 ms are practically unresolved and the reader is pointed to the paired significance analysis rather than encouraged to rank within-resolution differences. (5) The main text no longer leans on the coefficient of variation for the bimodal insert cells; it reads the write dispersion from the replicate plot (Supplement Figure S1) and the per-cell bootstrap spread instead. (6) Verifying every caption, the "within-campaign" qualifier was added to the two paired-ratio captions that lacked it and to the Conclusion-validity sentence, so all 95\% bootstrap intervals are consistently labelled as within-campaign repeatability, not population-general. (7) The protocol box's Inputs now read "a declared workload model (stated access patterns, not a production trace)" instead of "a representative workload." All four are prose/caption-only; the added prose was offset by trimming a duplicated post-restart robustness clause, so the manuscript is 14,997 words.
-
-Reviewer point 8 (a follow-up statistical assessment) was addressed across its five sub-points. For the conditional adjacent-pair tests, the manuscript now leads with a \emph{predefined} contrast set fixed before analysis --- each portable layer against the native-driver reference (new Supplement Table S41, from \texttt{scripts/gen-native-contrasts.mjs}): geometric-mean paired ratio, within-campaign bootstrap interval, and paired dominance, with every layer trailing the native driver in all 25 replicates (dominance 1.00); the ranking-selected adjacent-pair tests are demoted to a descriptive supplement check. The +-5\% TOST margin now carries its author-selected, application-dependent, not-preregistered, never-universal caveat at first use in the main text (the supplement already did). Rank correlations remain subordinated to the concrete reversals and interaction magnitudes (no change needed). For p99 estimation, a full per-request HDR recorder is not available in the archived data (the load generator records percentiles only), so a new Supplement Figure S4 (from \texttt{scripts/gen-p99-spread.mjs}) shows the run-to-run spread of the 25 per-run p99 values behind each deep-fetch cell, and the main text states that each run-level p99 is a noisy top-1\% estimate handled by the median-of-run-level estimator; HDR reconstruction is future work. An adversarially-verified audit of inferential phrasing found one genuine over-reach ("confirm" applied to a general claim), now softened to "consistent with." The new table and figure are supplement floats (the main-text float count is unchanged at seven); no primary measurement changed. The manuscript is 14,991 words.
-
-For reviewer point 9 (reproducibility), the one actionable qualification --- that the convenience Docker path pins older database engines and so does not reproduce the exact published environment, disclosed only in the supplement/\texttt{REPRODUCE.md} --- is now conspicuous in the main-text Data-availability section of both builds: "Exact reproduction requires the reference engines (PostgreSQL 18.4 and MySQL 9.7.1) ... the convenience Docker path pins older engines (PostgreSQL 16, MySQL 8.4) and reproduces the workflow but not the published numbers." The Data-availability section is a declaration, so this does not change the manuscript length (then 14,991 words).
-
-For reviewer point 10 (novelty and related work), the Positioning subsection now separates coverage novelty (the four-axis Table 1 claim, stated as the strongest the scoping search supports) from methodological novelty, and adds a paragraph showing that existing benchmark-quality and experimental-design frameworks supply the abstract principles (fairness, validity, reproducibility) but leave their operationalization for competing implementations of one task to the practitioner --- so the protocol is a domain-specific operationalization of those principles and a reusable realization, not a new methodology. It names the closest frameworks (Kounev et al.'s systems-benchmarking criteria, Hasselbring's software-engineering benchmarking standard, and Raasveldt and Mühleisen's database fair-benchmarking guidance) and shows they supply generic principles but operationalize neither the documentation-selected treatment definition nor the semantic-equivalence-gated admission for access layers; correctness-before-timing precedents (SPEC, TPC, SQLancer) validate one program or engine against its own reference, not equivalence across competing implementations. A final pre-submission search past the 2026-07-15 freeze surfaced no new access-layer prior art. Three references were added (Kounev et al.; Hasselbring; Rigger and Su); the paragraph was offset by tightening the survey subsections, so the manuscript is 14,985 words.
-
-\textbf{Point 11 (presentation).} The manuscript's density was addressed by realizing the reviewer's three-layer structure (protocol, then case-study instantiation, then evidence the controls matter) through concrete artifacts rather than a section reorder. The verbose framed protocol box became a one-page \textbf{protocol flow figure} (Figure 1); a new \textbf{estimands table} (Table 3) consolidates every estimand and what it does and does not identify; a new \textbf{analysis-roster table} (Table 6) separates the primary analyses from the robustness/sensitivity ones. The repeated same-SQL "not a bound" defense was reduced to one canonical statement with back-references, and three secondary result tables (same-SQL components, deep-fetch regimes, matched-utilization tail) were moved to the supplement (Tables S42--S44), catalogued in the roster. The main-text float count is unchanged at seven (six tables plus one figure); converting the box to a figure and trimming over-defensive prose cut the body from 11,389 to 10,938 words, so the exact IST total is body 10,938 + abstract \textasciitilde{}292 + references \textasciitilde{}1,900 + seven floats (1,400) = \textasciitilde{}14,530 words, well under 15,000. No data changed (checksums 35/35); the supplement now holds forty-four tables (S1--S44) plus four figures.
-
-\textbf{Point 12 (Essential / strongly-recommended / optional list).} The consolidated list was closed: the six Essential items were already implemented (E1 novelty framing; E2 protocol-versus-policy separation; E3 high-load p99 reframe; E4 moderated language; E5 four-level correctness oracle; E6 primary-versus-secondary via the point-11 roster table), with the Abstract now stating explicitly that the near-saturation high-load p99 is chiefly a capacity-and-queueing outcome (E3 reinforcement). For the strongly-recommended items, the two deep-fetch regimes were brought back into the main text as a side-by-side table (Table 7, reversing the point-11 declutter, per S2); S3 (protocol-to-failure-mode table) is Table 2 plus the Supplement S37 retrospective; S4 (predefined contrasts and effect sizes) and S5 (material shortening) were done in points 8 and 11; S1 (independent environment) remains future work for want of a second host. A machine-readable protocol checklist (protocol-checklist.yaml, O1) now ships in the artifact; coverage statistics for the property-based sweep are reported (O2, Supplement S38); and a cold/I/O-heavier workload (O3) is declared future work. Returning the regimes table takes the main-text float count to eight, so the total is body 10,934 + abstract 299 + references \textasciitilde{}1,900 + eight floats (1,600) = \textasciitilde{}14,733 words, under 15,000. No data changed (checksums 35/35); the supplement now holds forty-three tables (S1--S43) plus four figures.
-
-The replication package for this revision is archived at Zenodo, \textbf{Point 6.1 (follow-up).} The most important scientific correction: every formulation reading a mechanistic interpretation into the compound same-SQL contrast was removed. Table 2 no longer concludes ''most spread is query strategy, not raw execution''; it now states that most of the documentation-selected spread disappears under the compound raw-SQL standardization, with the responsible component not identified. The causal-sounding name ''strategy attribution'' is renamed ''strategy standardization'' throughout (Introduction, Study Design, Conclusion, Figure 1, Table 2, checklist), and Results notes that mechanistic attribution would require a factorial or staged ablation, left as future work. Layer-specific strategy claims rest on a separate controlled A/B (Supplement S18) and stay. Prose-only (checksums 35/35); body 10,934 to 10,958, total \textasciitilde{}14,757.
-
-\textbf{Point 6.2 (follow-up).} "Intrinsic latency" was too strong: matched-utilization latency is still an end-to-end measurement under a specific pool, arrival process, DB state, service-time distribution, and hardware, and equal fractions of separately-estimated capacity do not isolate an inherent service-time distribution. Every "intrinsic latency/tail/per-request latency" formulation was replaced with a non-overclaiming term ("sub-saturation latency", "latency at a matched offered-load fraction", "queueing-reduced latency") across the Abstract, Introduction, Results, Table 2, and the tail-regime/utilization/significance tables; the supported claims (high-load p99 reflects proximity to saturation and queueing; equal-demand rankings are not sub-saturation latency differences) are kept, and the separate legitimate "intrinsic library overhead" disclaimer (point 6.1) is unchanged. Prose-only (checksums 35/35); body 10,958 to 10,959, total \textasciitilde{}14,758.
-
-\textbf{Point 6.3 (follow-up).} The cell-admission rule conflated semantic validity with performance-strategy admissibility: Figure 1 listed a "degenerate plan (N+1)" as a disqualifier. Because an N+1 plan can be semantically correct and may be the documentation-selected behaviour under evaluation, excluding it would change the treatment. The rule and Figure 1 are rewritten to separate semantic correctness (wrong output/write excludes), workload conformance (excludes only an explicitly declared constraint's violation), and strategy diagnosis (query count/N+1/joins/eager loading are reported via Supplement S2, not gated). A new "Admission versus diagnosis" paragraph states this; the Figure 1 reject node/caption and the machine-readable checklist drop N+1; and the semantic-equivalence gate is decoupled from N+1 in the methodology. Prose-and-figure only (checksums 35/35); body 10,959 to 11,085, total \textasciitilde{}14,884.
-
-\textbf{Point 6.5 (follow-up).} The documentation-selected treatment is now presented as an intentionally artificial, predeclared selection policy, not a validated practitioner persona: the Threats construct-validity paragraph, Study Design, and Results drop the persona/"a developer following the documentation obtains" framing for policy statements, keeping the disclaimers. A machine-readable selection rubric (\texttt{notes/documentation-selection.md}) archives the per-layer API, documentation URLs, versions, freeze date, tie-break decisions, and Wayback retrieval URLs for independent reassessment; Study Design points to it. Compiling it surfaced and fixed a stale version column in METHODOLOGY.md (reconciled to Table S11 / lockfile). Prose-plus-artifact (checksums 35/35); body 11,131 to 11,145, total \textasciitilde{}14,944.
-
-DOI 10.5281/zenodo.21498786 (release v1.12.12). Every table reproduces from the archived raw data, whose checksum manifest verifies 35/35.
+The conservative IST word-equivalent count is \textbf{13,929}: 9,962 body words, 298 abstract words, 2,069 reference-list words, and 1,600 words for eight main-text floats. This leaves 1,071 words below the 15,000-word limit.
 
 \end{document}

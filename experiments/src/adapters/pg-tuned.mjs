@@ -1,6 +1,6 @@
 // Native driver, TUNED variant — node-postgres with NAMED prepared statements.
 // The idiomatic `pg` baseline issues parameterized simple queries; this variant is
-// the lower bound an experienced practitioner can reach with statement reuse (the
+// a tuned practitioner reference point using statement reuse (the
 // driver prepares once per connection and executes by name thereafter). Same SQL,
 // same canonical output as every other adapter.
 import pg from 'pg';

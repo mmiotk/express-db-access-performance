@@ -29,7 +29,7 @@ for (const en of ['postgres', 'mysql']) {
   }
 }
 
-const cap = `Longer-window tail sensitivity on the deep/nested fetch. Each cell's primary p99 is
+const cap = `Longer-window tail sensitivity on the deep fetch. Each cell's primary p99 is
     measured over a 12~s window ($\\approx$60 tail observations per run in the slowest
     cells); the re-measurement uses a 60~s window ($\\approx$300 tail observations) at the
     same 50-connection operating point, 10 repeated runs. The p99 ranking is preserved

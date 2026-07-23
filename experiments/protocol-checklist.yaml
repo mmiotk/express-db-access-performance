@@ -19,8 +19,8 @@
 protocol:
   name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
   author: "Mateusz Miotk, University of Gdansk"
-  release: "1.12.12"
-  doi: "10.5281/zenodo.21498786"
+  release: "v1.12.13 complete revision; primary-campaign data unchanged from v1.12.12"
+  doi: "10.5281/zenodo.21313858 (concept DOI resolving to v1.12.13)"
   spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
 
 inputs:
@@ -64,8 +64,8 @@ stages:
       this_study: "Per-pattern concurrency sweep (Supplement Table S35); knees at or below 50 connections, 97-100% median utilization at the operating point."
     - id: R5
       name: demand_and_utilization
-      requirement: "Measure the tail at equal external demand AND at matched fractions of each treatment's own capacity; report them as distinct quantities."
-      this_study: "High-load p99 under equal closed-loop demand vs matched-utilization tail (Table 7 regimes; Supplement Table S43); the near-saturation gap is a capacity/queueing outcome that converges at matched utilization."
+      requirement: "Measure the tail at equal external demand AND at matched fractions of each treatment's estimated capacity, with denominator uncertainty disclosed; report them as distinct quantities."
+      this_study: "High-load p99 under equal closed-loop demand versus matched-utilization tail (Supplement Tables S21-S22 and S43), with bootstrap and full-sweep denominator sensitivity (S45); the stable 50% and most 70% cells form a small band, while 85-95% cells are only near-saturation trends."
 
 cell_admission:
   rule: "Time a (treatment, workload-point) cell ONLY if the correctness oracle passes: equivalent non-mutating outputs AND correct post-write state."
@@ -101,7 +101,7 @@ compliance_levels:
       holds_when: "R3 standardized contrast has been run for the cell."
     - id: L4
       name: utilization_controlled_extension
-      holds_when: "R5 matched-utilization tail has been measured for the cell."
+      holds_when: "R5 matched-utilization tail has been measured for the cell and its capacity denominator is stated."
     - id: L5
       name: resource_normalized_extension
       holds_when: "Throughput is reported per CPU-second (application and combined app+db)."

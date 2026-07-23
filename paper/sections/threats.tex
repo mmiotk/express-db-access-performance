@@ -12,7 +12,7 @@ database boundary --- deliberate, since it captures the full request round trip
 \emph{access layer} may partly reflect these surrounding costs. We hold those
 near-constant: every adapter satisfies a documented \emph{adapter contract} and
 funnels rows through shared canonical constructors (fixed field set, key order,
-typing, under \texttt{TZ=UTC}), and the automated cross-check
+typing, under \texttt{TZ=UTC}). These constructors copy and type-normalize already-grouped rows or entity graphs; they do not query, join, regroup, sort, or cache. Their standalone median is 9.32--9.40~\(\mu\)s for the ten-comment deep fetch (0.078\% of the fastest reported HTTP p50; see the supplement's canonical-constructor table), so this common work can only compress the large gaps; near-ties remain practically unresolved. The automated cross-check
 (\texttt{bench/verify.mjs}) asserted full JSON byte equality against the
 native-driver baseline, on both engines, across the four non-mutating patterns
 before any timing run (Section~\ref{sec:methodology}). That check caught a defect:
@@ -22,9 +22,9 @@ invisible to throughput and fixed before this campaign. The fixed-payload baseli
 ceiling sits above the fastest cell (Section~\ref{sec:methodology}), so the framework
 compresses rather than manufactures between-layer differences, attributable to how
 each layer reaches an identical response, not to what is returned. The reported
-write finding uses each engine's \emph{default} vendor-standard durability
-(Section~\ref{sec:methodology}), not one we relaxed, so the write spreads
-(Table~\ref{tab:write}) describe a standard deployment, not a tuning choice; a
+single-row-insert finding uses each engine's \emph{default} vendor-standard durability
+(Section~\ref{sec:methodology}), not one we relaxed, so those insert spreads
+(Table~\ref{tab:write}) describe the tested default deployment, not a tuning choice; a
 symmetric relaxed-durability secondary confirms the
 cross-engine gap is not an artifact of either configuration
 (Section~\ref{sec:discussion}, Supplement Table~S3).
@@ -75,7 +75,8 @@ under that stricter model (Section~\ref{sec:results}; Supplement Table~S6).
 \paragraph{External validity}
 All measurements come from a single schema, dataset size, and 16-vCPU virtualized
 host, a pool fixed at ten, and specific engine and library versions
-(PostgreSQL~18.4, MySQL~9.7.1; latest harness-compatible stable, Supplement
+(PostgreSQL~18.4, MySQL~9.7.1; latest compatible stable versions as of the
+15 July 2026 freeze, Supplement
 Table~S11). The fixed pool does not drive the ranking: the pool-size frontier
 (Supplement Tables~S7, S25) preserves the ordering from 1 to 50 connections, and a
 mixed read/write workload (S26) preserves the read ordering. Two choices are

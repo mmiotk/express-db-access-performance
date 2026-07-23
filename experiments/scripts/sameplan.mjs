@@ -2,9 +2,9 @@
 // on /posts/:id/thread-raw — the IDENTICAL two-statement plan + identical JS mapping
 // through each layer's raw facility — under the primary protocol (50 connections,
 // 2s warm-up, 12s run), and contrasts it with the idiomatic deep fetch from
-// results/raw.json. The per-layer ratio idiomatic/same-SQL attributes each library's
-// deep-fetch deficit to its default eager-loading strategy + hydration (ratio < 1)
-// versus its raw execution path (the same-SQL spread itself). Also measures the
+// results/raw.json. The per-layer ratio compares the documentation-selected path with
+// a compound raw-path standardization; it does not attribute the difference to eager
+// loading, hydration, or any other single mechanism. Also measures the
 // no-DB /baseline endpoint once per engine (Express + JSON serialization floor).
 // Sanity: before measuring, asserts /thread and /thread-raw agree on key fields.
 import { spawn, execSync } from 'node:child_process';

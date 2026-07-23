@@ -1,7 +1,7 @@
 // Native driver, TUNED variant — mysql2 with pool.execute(): the binary protocol
 // with server-side prepared statements, cached per connection. The idiomatic
 // `mysql2` baseline uses pool.query() (text protocol, no statement reuse); this
-// variant is the practitioner lower bound. Same SQL, same canonical output.
+// variant is a tuned practitioner reference point. Same SQL, same canonical output.
 import mysql from 'mysql2/promise';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
 import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';

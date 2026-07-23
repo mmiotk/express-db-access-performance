@@ -21,6 +21,11 @@
     "env": "node bench/environment.mjs",
     "bench": "node bench/environment.mjs && node bench/runner.mjs",
     "bench:quick": "ADAPTERS=pg,knex,drizzle,prisma ENGINES=postgres DURATION=3 REPEATS=1 node bench/runner.mjs",
+    "bench:canonicalization": "node scripts/canonicalization-cost.mjs",
+    "table:canonicalization": "node scripts/gen-canonicalization-table.mjs",
+    "table:capacity-sensitivity": "node scripts/gen-capacity-sensitivity.mjs",
+    "table:txn-write": "node scripts/gen-txn-write-table.mjs",
+    "archive:documentation": "node scripts/archive-documentation.mjs",
     "sync:tables": "cp results/tables/*.tex ../paper/tables/",
     "test": "node --test 'bench/*.test.mjs'"
   },
