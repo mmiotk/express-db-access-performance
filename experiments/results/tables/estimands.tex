@@ -12,8 +12,8 @@
     \textbf{Estimand / quantity} & \textbf{What it identifies} & \textbf{What it does \emph{not} identify} & \textbf{Where reported} \\
     \midrule
     Documentation-selected implementation-and-strategy effect (RQ1, primary) &
-    Performance a developer following each library's documentation obtains (throughput, p99), as defined &
-    Intrinsic library overhead; the most common or most performant usage &
+    Performance of the configuration selected by the predeclared documentation-primary rule (throughput, p99) &
+    Library-only overhead; the most common or most performant usage &
     Tables~\ref{tab:deep_fetch},~\ref{tab:write} \\
     \addlinespace
     Same-SQL (raw-path) standardized contrast (diagnostic) &
@@ -37,19 +37,14 @@
     Table~\ref{tab:deep_fetch} \\
     \addlinespace
     Matched-utilization tail (p99 at matched fractions of own capacity) &
-    p99 when each layer is offered equal fractions (50/70/85/95\%) of its \emph{own} saturating throughput &
+    p99 when each layer is offered equal fractions (50/70/85/95\%) of its estimated capacity proxy &
     The tail under equal external demand; the capacity-and-queueing component it removes &
-    Supplement Table~S43 \\
+    Supplement Tables~S43, S45 \\
     \addlinespace
     Layer$\times$engine interaction magnitude (RQ2) &
-    The spread of each layer's PostgreSQL$\div$MySQL advantage and the concrete rank reversals &
+    The spread of each layer's PostgreSQL$\div$MySQL stack ratio and the concrete rank reversals &
     The interaction's size from the permutation test (bounds existence only); its sign (every layer faster on PostgreSQL) &
     Supplement Table~S28; \S\ref{sec:results} (RQ2) \\
-    \addlinespace
-    Cross-engine rank correlations ($n=7$, coarse descriptive) &
-    Descriptive agreement of the layer ordering across engines (Spearman~$\rho$, Kendall~$\tau$) &
-    Reliable cross-engine transfer at $n=7$; the RQ2 finding, which rests on the reversals and interaction spread &
-    \S\ref{sec:results} (RQ2) \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

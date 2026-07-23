@@ -1,4 +1,4 @@
-Gdańsk, Poland, 22 July 2026
+Gdańsk, Poland, 23 July 2026
 
 Dear Editors,
 
@@ -9,15 +9,15 @@ This major revision preserves the primary measurement matrix and addresses the c
 - It cites and distinguishes CYNTHIA and narrows the novelty claim to the integrated benchmark-admission protocol: a cross-implementation semantic-equivalence gate, a predeclared treatment-selection rule, and separated operating-point interpretations.
 - It removes universal completeness and necessity language. The compliance levels now state exactly which claims each level licenses, and each stage is described only as consequential in this case study.
 - It reframes RQ2 as transfer across backend stacks because the DBMS, official adapter, and lower-level driver can change together.
-- It archives exact documentation-page HTML, capture timestamps, SHA-256 hashes, and a deterministic conflict-resolution rule for every documentation-selected treatment.
-- It specifies the operations performed by every canonical constructor and adds a standalone 30-block cost measurement. The deep-fetch constructors cost 9.34--9.36 microseconds, or 0.078% of the fastest corresponding HTTP p50; this is a scale check, not a causal decomposition.
-- It bases the matched-utilization headline on the stable 50% and most 70% cells, quantifies uncertainty in the saturation denominator, and treats the 85--95% cells only as near-saturation sensitivity evidence.
+- It archives the recorded pre-freeze Wayback responses, capture timestamps, SHA-256 hashes, and a deterministic conflict-resolution rule for every documentation-selected treatment, while stating that a capture proves page state only at its timestamp.
+- It specifies the operations performed by every canonical constructor and adds a standalone 30-block cost measurement. The deep-fetch constructors cost 9.32--9.40 microseconds, or 0.078% of the fastest corresponding HTTP p50; this is a scale check, not a causal decomposition.
+- It bases the matched-utilization headline on the stable nominal 50% and most nominal 70% cells, quantifies both bootstrap and full-concurrency-sweep denominator sensitivity in Supplement Table S45, and treats the 85--95% cells only as near-saturation trends.
 
 Terminology is now consistent: "deep fetch" is used throughout, the primary mutation is called a single-row insert, and versions are described as the latest compatible stable versions as of the 15 July 2026 freeze. The MySQL insert section prominently points to the raw bimodal and heavy-tailed distributions, and the millisecond p99 resolution caveat remains explicit.
 
-The exact IST word-equivalent count is 13,786 words, including 66 references and eight main-text floats at 200 words each. The five-part structured abstract is 298 words. Both calculations are documented in the accompanying word-count declaration.
+The exact IST word-equivalent count is 13,929 words, including 66 references and eight main-text floats at 200 words each. The five-part structured abstract is 298 words. Both calculations are documented in the accompanying word-count declaration.
 
-The primary-campaign package remains archived as release v1.12.12 at Zenodo (DOI 10.5281/zenodo.21498786). The current repository additionally contains the documentation snapshots and canonical-constructor measurement introduced by this revision. A new immutable release of the revised package must be deposited before submission; the manuscript states this explicitly rather than attributing the new files to v1.12.12.
+The complete revised package is archived as release v1.12.13 under Zenodo concept DOI 10.5281/zenodo.21313858. It includes the documentation snapshots and canonical-constructor measurement introduced by this revision. The primary measurement matrix is unchanged from v1.12.12 (version DOI 10.5281/zenodo.21498786).
 
 The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding. The manuscript includes the required declarations concerning generative AI and AI-assisted research software.
 

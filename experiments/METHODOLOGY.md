@@ -8,16 +8,12 @@ strategy we deliberately did *not* use. The deep fetch materializes one post wit
 its author and all of its comments, each comment with its own comment-author
 (the `post → author`, `post → comments → comment-author` graph).
 
-The guiding principle is that **each layer uses its documentation-selected default
-eager-loading path** — the API a competent developer reaches for first when reading
-that library's own guide — rather than a hand-tuned variant. The only exceptions are
-the two explicitly labelled *tuned* native adapters (`pg-tuned`, `mysql2-tuned`),
-which exist precisely to bound the practitioner lower bound and are marked as such.
+The guiding principle is that **each layer uses the path selected by the predeclared documentation rule** — the relation-loading API that the pinned-version official documentation presents first — rather than a claim about a typical, competent, or performance-tuning developer. The two explicitly labelled *tuned* native adapters (`pg-tuned`, `mysql2-tuned`) are separate reference points, not documentation-selected treatments.
 For every layer we additionally verify that **query logging is disabled**, that no
 lifecycle hooks or validation run on the read path, and that entity tracking /
 identity maps (where they exist) are either absent or scoped so they cannot leak
-state across requests. This keeps the comparison about each library's default
-relational-fetch machinery, not about incidental instrumentation.
+state across requests. This keeps the comparison about each library's selected
+relational-fetch treatment, not about incidental instrumentation.
 
 ## Library inclusion and exclusion
 
@@ -89,9 +85,7 @@ that table (`mysql2`, `pg-tuned`, `mysql2-tuned`) issue the identical hand-writt
 two-statement plan (`THREAD_Q1` + `THREAD_Q2` in `src/adapters/_threadraw.mjs`), so
 their deep fetch is two round-trips by construction.
 
-A separate *same-SQL* control (`getThreadRaw`, endpoint `/posts/:id/thread-raw`) runs
-the identical two-statement plan through every layer's raw-SQL facility, isolating raw
-execution from the documentation-selected eager-loading path documented below.
+A separate *same-SQL* standardized contrast (`getThreadRaw`, endpoint `/posts/:id/thread-raw`) runs the identical two-statement plan through every layer's raw-SQL facility. It standardizes SQL and row mapping while jointly changing the API, protocol, query strategy, hydration, and other mechanisms; it is diagnostic and isolates no single cause.
 
 ---
 

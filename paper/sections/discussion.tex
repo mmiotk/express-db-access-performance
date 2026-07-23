@@ -4,7 +4,7 @@
 \paragraph{Version-sensitivity}
 An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the native
 driver on the deep fetch while drawing about five application cores; the \emph{identical} harness
-on the latest compatible stable releases at the 15 July 2026 freeze did not reproduce it --- no layer now draws over one core, and
+on the latest compatible stable versions as of the 15 July 2026 freeze did not reproduce it --- no layer now draws over one core, and
 Prisma sits at mid-to-low throughput (Section~\ref{sec:results}). The non-reproduction is a fact,
 its cause a hypothesis (Prisma's Rust-free rewrite is likeliest, though the re-freeze moved the
 whole toolchain at once), so the headline is

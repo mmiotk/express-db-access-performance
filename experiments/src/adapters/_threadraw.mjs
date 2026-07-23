@@ -1,10 +1,9 @@
 // Shared same-plan deep-fetch control. Every adapter's getThreadRaw() executes the
 // IDENTICAL two-statement plan below through its own documented raw-SQL facility and
-// maps rows with the IDENTICAL mapThread() — so differences measured on the
-// /posts/:id/thread-raw endpoint isolate each library's raw execution path (pool
-// acquisition, raw-query API, driver row decoding) from its default eager-loading
-// strategy and entity hydration, which only the idiomatic /posts/:id/thread endpoint
-// exercises. This mirrors the aggregation control, applied to the deep fetch.
+// maps rows with the IDENTICAL mapThread(). The endpoint standardizes SQL and mapping,
+// while pool acquisition, raw-query API, wire protocol, and driver row decoding can
+// still differ; comparison with the documentation-selected endpoint changes several
+// mechanisms together and therefore isolates no single cause. This mirrors the aggregation control, applied to the deep fetch.
 //
 // `ph` is the engine's placeholder token ('$1' for postgres wire protocol, '?' for
 // mysql/knex-style binding); both statements take the post id as their only bind.

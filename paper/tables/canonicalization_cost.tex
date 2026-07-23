@@ -8,10 +8,10 @@
 \toprule
 Operation & Fixture & Median ($\mu$s) & p95 block ($\mu$s) & Fastest HTTP p50 (ms) & Share \\
 \midrule
-    Point read & one seven-field row & 0.84 & 0.84 & 6 & 0.014\% \\
-    Range scan & 20 rows & 17.51 & 17.59 & 12 & 0.146\% \\
-    Deep fetch (graph) & post + author + 10 comments & 9.36 & 9.39 & 12 & 0.078\% \\
-    Deep fetch (flat rows) & post + author + 10 comments & 9.34 & 9.37 & 12 & 0.078\% \\
+    Point read & one seven-field row & 0.84 & 0.86 & 6 & 0.014\% \\
+    Range scan & 20 rows & 17.46 & 17.52 & 12 & 0.145\% \\
+    Deep fetch (graph) & post + author + 10 comments & 9.40 & 9.45 & 12 & 0.078\% \\
+    Deep fetch (flat rows) & post + author + 10 comments & 9.32 & 9.34 & 12 & 0.078\% \\
     Aggregation & four scalar fields & 0.05 & 0.05 & 6 & 0.001\% \\
 \bottomrule
 \end{tabular}

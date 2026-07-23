@@ -56,7 +56,7 @@ documentation-selected access layers and two tuned native baselines, over five a
 patterns, on the latest compatible stable versions as of the 15 July 2026 freeze.
 We report throughput with the \emph{high-load response-time p99 under equal closed-loop demand}
 (a fixed 50-connection point) from 25 repeated runs per cell, and on the deep fetch distinguish it
-from the tail at \emph{equal utilization}: at 50\% and in most 70\% cells the tails form a small band, showing that the near-saturation p99 is chiefly a capacity-and-queueing outcome rather than a sub-saturation latency difference.
+from the tail at \emph{nominally matched utilization}: at 50\% and in most 70\% cells the tails form a small band, showing that the near-saturation p99 is chiefly a capacity-and-queueing outcome rather than a sub-saturation latency difference.
 An automated cross-check verifies byte-identical responses before measurement.
 \textbf{Results:} The implementation-and-strategy difference is largest on the tested deep fetch: spreads $7.15\times$
 (PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
@@ -100,10 +100,9 @@ The author is not affiliated with, nor funded by, any of the database libraries 
 vendors evaluated in this study.
 
 \section*{Data availability}
-The primary-campaign replication package is publicly available at
-\url{https://github.com/mmiotk/express-db-access-performance} and permanently
-archived at Zenodo as release v1.12.12
-(\url{https://doi.org/10.5281/zenodo.21498786})~\cite{miotk2026artifact}. The current repository additionally includes the immutable documentation-page copies and the standalone canonical-constructor measurement introduced in this revision; the revised package must receive a new persistent release before submission. A reproducibility summary --- versions,
+The complete revised replication package is publicly available at
+\url{https://github.com/mmiotk/express-db-access-performance} and archived at Zenodo as release v1.12.13 under the concept DOI
+(\url{https://doi.org/10.5281/zenodo.21313858})~\cite{miotk2026artifact}. It includes the immutable documentation-page copies and standalone canonical-constructor measurement; the primary measurement matrix is unchanged from v1.12.12 (version DOI \texttt{10.5281/zenodo.21498786}). A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}

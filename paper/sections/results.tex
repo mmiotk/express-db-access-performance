@@ -111,9 +111,9 @@ leads on PostgreSQL (6{,}280) but falls to fourth on MySQL (3{,}520), where
 (Supplement Table~S27). In \emph{magnitude} (Supplement Table~S28, per-layer
 PostgreSQL$\div$MySQL ratios) every layer is faster on PostgreSQL, so the
 interaction lies in the \emph{spread}, not the sign: across the
-three reads it stays within $\approx$1.0--1.9$\times$, but the insert scatters from
+three reads it stays within $\approx$1.0--1.9$\times$, but the single-row insert scatters from
 $1.6\times$ (MikroORM) to $3.2\times$ (Prisma) and aggregation from $1.4\times$ to
-$1.9\times$ --- a two-to-one range on the writes that reorders the layers. A blocked
+$1.9\times$ --- a two-to-one range among the insert stack ratios that reorders the layers. A blocked
 permutation test (Section~\ref{sec:methodology}) confirms the interaction is
 nonzero but bounds only its existence; the coarse ($n=7$) rank correlations
 (Supplement Table~S27) are descriptive only. Because \emph{engine} here varies the
@@ -174,7 +174,10 @@ except two near-ties at the millisecond resolution. Because each 12~s run comple
 roughly 6{,}000 (slowest ORM) to 44{,}000 (native) deep-fetch requests, a run's
 top-1\% p99 rests on only ${\sim}60$--$440$ observations and is noisier for slower
 layers, so we report the median of the 25 run-level values rather than pooling
-requests (spread in Supplement Figure~S4). At 50\% of each layer's measured saturating throughput (Supplement Tables~S21--S22), tails converge near 2--5~ms on both engines; most 70\% cells remain in a similarly small band. The 85\% and 95\% cells are near-saturation sensitivity evidence, not part of this convergence claim, so the large
+requests (spread in Supplement Figure~S4). At the nominal 50\% load defined from each layer's
+$\widehat C_{50}$ capacity proxy (Supplement Tables~S21--S22), tails converge near 2--5~ms on both
+engines; most nominal 70\% cells remain in a similarly small band. Re-expressing those loads against
+the full-sweep maximum leaves them at 46.8--51.2\% and 65.5--71.6\% (Supplement Table~S45). The 85\% and 95\% cells are near-saturation sensitivity evidence, not part of this convergence claim, so the large
 high-load gap (\texttt{pg} 20~ms versus MikroORM 116~ms) largely dissolves at
 matched utilization: it is a capacity-and-queueing effect, not a difference in
 latency at a matched offered-load fraction. The coordinated-omission-corrected

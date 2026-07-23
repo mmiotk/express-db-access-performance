@@ -12,10 +12,13 @@ and the raw-data hashes in [`experiments/results/checksums.sha256`](experiments/
 - **Primary** (confirmatory): throughput + closed-loop p99 across 5 access patterns ×
   2 engines at the 50-connection operating point, 25 repeated runs per cell
   (`results/raw.json`).
-- **Secondary / exploratory**: the same-SQL bound, open-loop and utilization-matched
+- **Secondary / exploratory**: the same-SQL standardized contrast, open-loop and utilization-matched
   tail, layer×engine interaction, CPU accounting, durability, fan-out, pool-size,
-  cluster, mixed workload, robustness checks, and the standalone canonical-constructor microbenchmark.
-- **Audit evidence**: exact archived treatment-selection documentation (HTML plus capture timestamps and SHA-256 manifest) and both text and JSON environment fingerprints.
+  cluster, mixed workload, robustness checks, the standalone canonical-constructor microbenchmark,
+  and a sensitivity analysis that re-expresses the matched-utilization loads against the
+  full concurrency-sweep maximum.
+- **Audit evidence**: preserved pre-freeze Wayback responses for the treatment-selection
+  pages (HTML plus capture timestamps and SHA-256 manifest) and both text and JSON environment fingerprints.
 - The role of every table (Primary / Secondary / Exploratory) is tabulated in the
   paper's outcomes table (`paper/tables/outcomes.tex`) and mapped to its generator and
   input data in `experiments/MANIFEST.md`.
@@ -83,18 +86,18 @@ tar xzf express-db-access-performance-<version>.tar.gz
 cd express-db-access-performance-<version>/experiments
 sha256sum -c results/checksums.sha256      # verify the 37 archived JSON files
 npm ci
-# regenerate every table from the archived raw data (no database needed):
-node scripts/ci-tables.mjs && node scripts/gen-tables.mjs && \
-  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && node scripts/gen-tail.mjs && node scripts/gen-tail-regimes.mjs && node scripts/gen-native-contrasts.mjs && node scripts/gen-p99-spread.mjs && node scripts/gen-p99-significance.mjs && \
-  ENGINE=postgres node bench/analyze.mjs && ENGINE=mysql node bench/analyze.mjs && \
-  node scripts/stats2.mjs && node scripts/gen-canonicalization-table.mjs
+# regenerate every table with a standalone no-database renderer:
+node scripts/ci-tables.mjs && node scripts/gen-tables.mjs && node scripts/gen-deepfetch-table.mjs && \
+  node scripts/gen-r4-tables.mjs && node scripts/gen-r6-tables.mjs && node scripts/gen-scaling-patterns-table.mjs && node scripts/gen-tail.mjs && node scripts/gen-tail-regimes.mjs && node scripts/gen-native-contrasts.mjs && node scripts/gen-p99-spread.mjs && node scripts/gen-p99-significance.mjs && \
+  node scripts/gen-analysis-tables.mjs && \
+  node scripts/stats2.mjs && node scripts/gen-openloop-mysql.mjs && node scripts/gen-postreboot.mjs && node scripts/gen-canonicalization-table.mjs && \
+  node scripts/gen-capacity-sensitivity.mjs && node scripts/gen-txn-write-table.mjs
 npm run sync:tables && (cd ../paper && make)
 ```
 
-Every main-text and supplement table regenerates from the archived `results/*.json`
-with node built-ins and the committed generators; the estimators are seeded
+Every table with a standalone no-database renderer regenerates from the archived `results/*.json` with node built-ins and the committed generators; the estimators are seeded
 (`mulberry32`), so the bootstrap intervals and permutation p-values are bit-reproducible.
-**Caveats:** the round-trip-count table (Supplement S2) is derived from transient
+**Caveats:** Seven outputs have run-coupled renderers rather than separate no-database renderers: S6, S7, S14, S18, S19, S25, and Figure S2. Their archived JSON and committed TeX support numerical audit, but reproducing the TeX through the named script also reruns the database experiment. The round-trip-count table (Supplement S2) is derived from transient
 server statement logs that are not archived, so its committed `.tex`
 (`results/tables/query_counts.tex`) ships pre-generated rather than regenerable from the
 tarball; and the three protocol tables --- the stage-by-stage mapping (main-text Table 2,
@@ -104,18 +107,19 @@ tarball; and the three protocol tables --- the stage-by-stage mapping (main-text
 pre-authored, as does the descriptive five-pattern table (Supplement Table S39, `patterns.tex`). A
 machine-readable encoding of the whole protocol (inputs, mandatory and recommended stages, the
 cell-admission gate, outputs, applicability limits, and compliance levels) ships as
-`protocol-checklist.yaml`, so a benchmark can be audited against the protocol programmatically. Every
-other table regenerates from the archived `results/*.json` (the tail-regime table, `tail_regimes.tex`,
-from `raw.json` plus the utilization sweeps).
+`protocol-checklist.yaml`, so a benchmark can be audited against the protocol programmatically. The
+manifest marks every table as standalone-generated, run-coupled, pre-generated from unarchived server logs, or authored,
+and maps it to its exact inputs.
 
-**Clean-room verification (`notes/clean-room-reproduction.md`).** Running the chain above from the
-immutable v1.12.9 tarball verifies the raw data (35/35) and regenerates **45 of 50** committed tables
+**Clean-room verification (`notes/clean-room-reproduction.md`).** The historical v1.12.9 procedure recorded in that log verifies the raw data (35/35) and regenerates **45 of 50** committed tables
 byte-for-byte, confirming the seeded estimators are bit-reproducible. Five tables differ for
 presentation reasons only, not for any numeric or statistical result: `cv_all.tex` shows whichever
-engine `analyze.mjs` ran **last** (the chain ends with `ENGINE=mysql`; the committed table was
+engine `analyze.mjs` ran **last** (that historical chain ended with `ENGINE=mysql`; the committed table was
 generated PostgreSQL-last --- run `ENGINE=mysql` then `ENGINE=postgres` to reproduce the committed
 view); `ranks.tex` carries a hand-added third panel; `interaction.tex` and `txn_write.tex` carry
 hand-refined captions the generators do not emit; and `tail_regimes.tex` differs only in line-wrapping.
+
+**Current revision-candidate check (23 July 2026).** In a fresh temporary copy without `node_modules`, build outputs, Git metadata, PDFs, or ZIPs, all 37 JSON checksums verified and the complete standalone-renderer chain ran successfully. Recursive comparison of both table directories against the source candidate was empty. This is an author-run offline reconstruction on the same host, not a benchmark rerun or independent-machine reproduction; the seven run-coupled outputs, S2 statement logs, and authored tables retain the scopes stated above.
 
 ## 5. Expected outputs
 
@@ -131,6 +135,8 @@ hand-refined captions the generators do not emit; and `tail_regimes.tex` differs
   3,800 distinct inputs per adapter, 30,400 adapter-versus-baseline comparisons per engine
   (60,800 across both), zero divergences; coverage written to `experiments/semantic-equivalence.json`.
 - `npm run bench:canonicalization`: re-measures constructor cost; `npm run table:canonicalization` deterministically rebuilds its table from the archived JSON.
-- `npm run archive:documentation`: re-fetches exact pre-freeze Wayback pages and validates the recorded evidence terms; review hashes before replacing committed evidence.
+- `npm run table:capacity-sensitivity`: re-expresses the archived utilization loads against the
+  separately measured concurrency-sweep maximum; it performs no benchmark run.
+- `npm run archive:documentation`: re-fetches the recorded pre-freeze Wayback captures and validates the evidence terms; review hashes before replacing committed evidence.
 - `npm test`: 19/19 estimator unit tests pass (`bench/stats.test.mjs`).
-- The rebuilt `paper/ist/ist_main.pdf` and `paper/supplement.pdf`.
+- The rebuilt `paper/ist/ist_main.pdf` and `paper/_build/supplement.pdf`.

@@ -2,28 +2,32 @@
 \begin{table}[htbp]
   \centering
   \caption{Per-layer throughput rank (1 = fastest) on PostgreSQL versus MySQL for the
-    seven portable layers, backing the rank correlations. On the deep fetch the
-    two engines' orderings largely agree (Spearman $\rho=0.86$, Kendall $\tau=0.71$); on
-    the insert they scramble more ($\rho=0.68$, $\tau=0.52$), most visibly Prisma, which
-    is mid-pack on PostgreSQL (rank 4) but last on MySQL (rank 7). This is why aggregation
-    and writes are reported as transferring only moderately across engines. Excluding
+    seven portable layers, showing the concrete rank reversals behind the
+    backend-stack-transfer finding. The deep-fetch orderings largely agree; aggregation
+    and the insert reverse at the \emph{top}, not among near-ties: on aggregation
+    \texttt{drizzle} (PostgreSQL rank 1) and \texttt{knex} (MySQL rank 1) trade the lead
+    (a three-place move each), and on the insert \texttt{knex} drops from rank 1 to 3
+    while \texttt{drizzle} rises from 2 to 1; Prisma falls from mid-pack (rank 4) to last
+    (rank 7) on both. These reversals, not the coarse ($n=7$) coefficients they produce
+    (deep fetch $\rho=0.86$, $\tau=0.71$; aggregation $\rho=0.64$; insert $\rho=0.68$,
+    $\tau=0.52$), are the backend-stack-transfer result. Excluding
     MikroORM (the largest single outlier) leaves the read ordering similar (deep-fetch
     $\rho=0.77$, $\tau=0.60$) and the deep-fetch native-relative spread at $3.72\times$
     (PostgreSQL) and $3.76\times$ (MySQL), so no single layer drives these findings.}
   \label{tab:ranks}
-  \begin{tabular}{l cc cc}
+  \begin{tabular}{l cc cc cc}
     \toprule
-    & \multicolumn{2}{c}{Deep fetch} & \multicolumn{2}{c}{Insert} \\
-    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
-    Layer & PG & MySQL & PG & MySQL \\
+    & \multicolumn{2}{c}{Deep fetch} & \multicolumn{2}{c}{Aggregation} & \multicolumn{2}{c}{Insert} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Layer & PG & MySQL & PG & MySQL & PG & MySQL \\
     \midrule
-    \texttt{knex}      & 1 & 1 & 1 & 3 \\
-    \texttt{drizzle}   & 2 & 2 & 2 & 1 \\
-    \texttt{prisma}    & 4 & 6 & 4 & 7 \\
-    \texttt{sequelize} & 6 & 4 & 5 & 4 \\
-    \texttt{typeorm}   & 3 & 3 & 6 & 5 \\
-    \texttt{objection} & 5 & 5 & 3 & 2 \\
-    \texttt{mikroorm}  & 7 & 7 & 7 & 6 \\
+    \texttt{knex}      & 1 & 1 & 4 & 1 & 1 & 3 \\
+    \texttt{drizzle}   & 2 & 2 & 1 & 4 & 2 & 1 \\
+    \texttt{prisma}    & 4 & 6 & 6 & 7 & 4 & 7 \\
+    \texttt{sequelize} & 6 & 4 & 5 & 5 & 5 & 4 \\
+    \texttt{typeorm}   & 3 & 3 & 2 & 2 & 6 & 5 \\
+    \texttt{objection} & 5 & 5 & 7 & 6 & 3 & 2 \\
+    \texttt{mikroorm}  & 7 & 7 & 3 & 3 & 7 & 6 \\
     \bottomrule
   \end{tabular}
 \end{table}

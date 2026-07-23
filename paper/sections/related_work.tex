@@ -103,10 +103,7 @@ access-layer study to operationalize \emph{what code represents a library}, how 
 implementations are checked for semantic equivalence, and how strategy-sensitive results are
 contrasted. Our protocol supplies one concrete operationalization: a documentation-selected,
 predeclared treatment rule; a same-SQL diagnostic; and a per-cell gate requiring equivalent responses
-and verified write state \emph{before} timing. Correctness-before-timing has precedents (SPEC validation, TPC ACID, and SQLancer~\cite{rigger2020sqlancer}), while
-cross-implementation equivalence is also prior art: CYNTHIA constructs equivalent ORM queries and
-compares their results as a differential oracle~\cite{sotiropoulos2021cynthia}. We do not claim to
-invent that check. Our narrower contribution uses it as an explicit prerequisite for admitting
+and verified write state \emph{before} timing. Correctness-before-timing has precedents (SPEC validation, TPC ACID, and SQLancer~\cite{rigger2020sqlancer}); cross-implementation equivalence has the direct precedent discussed above. Our narrower contribution uses that check as an explicit prerequisite for admitting
 benchmark timings and combines it with predeclared treatment selection and operating-point
 separation. Together these constructs --- predeclared treatment-selection,
 cross-implementation admission-gated equivalence, and a same-SQL diagnostic --- yield one

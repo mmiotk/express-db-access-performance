@@ -1,0 +1,163 @@
+// Re-express the utilization experiment's offered loads against an independent
+// capacity denominator: the maximum throughput observed in the full concurrency
+// sweep. This is a sensitivity analysis of the denominator, not a new benchmark.
+import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const results = join(here, '..', 'results');
+const readJson = async (name) => JSON.parse(await readFile(join(results, name), 'utf8'));
+
+const utilization = [
+  ...(await readJson('utilization.postgres.json')),
+  ...(await readJson('utilization.mysql.json')),
+];
+const scaling = await readJson('scaling.json');
+const raw = await readJson('raw.json');
+
+const capacities = new Map();
+for (const row of utilization) {
+  const key = `${row.engine}/${row.adapter}`;
+  const previous = capacities.get(key);
+  if (previous !== undefined && previous !== row.capacity) {
+    throw new Error(`inconsistent capacity for ${key}: ${previous} versus ${row.capacity}`);
+  }
+  capacities.set(key, row.capacity);
+}
+
+const sweepMaxima = new Map();
+for (const row of scaling) {
+  const key = `${row.engine}/${row.adapter}`;
+  sweepMaxima.set(key, Math.max(sweepMaxima.get(key) ?? -Infinity, row.rps));
+}
+
+const order = [
+  'postgres/pg', 'postgres/knex', 'postgres/drizzle', 'postgres/prisma',
+  'postgres/typeorm', 'postgres/sequelize', 'postgres/objection', 'postgres/mikroorm',
+  'mysql/mysql2', 'mysql/knex', 'mysql/drizzle', 'mysql/prisma',
+  'mysql/typeorm', 'mysql/sequelize', 'mysql/objection', 'mysql/mikroorm',
+];
+
+// Reproduce the throughput bootstrap intervals emitted by ci-tables.mjs: the same
+// seed, cell order, and percentile-bootstrap estimator. This makes the prose-level
+// denominator-uncertainty ranges machine-derived rather than manually transcribed.
+const ciOrder = [
+  'pg', 'mysql2', 'pg-tuned', 'mysql2-tuned', 'knex', 'drizzle', 'prisma',
+  'sequelize', 'typeorm', 'objection', 'mikroorm',
+];
+const median = (values) => {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+};
+function mulberry32(a) {
+  return function next() {
+    a |= 0;
+    a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const random = mulberry32(0x57a75);
+function bootstrapCI(samples, iterations = 5000) {
+  const estimates = [];
+  for (let b = 0; b < iterations; b++) {
+    const resample = samples.map(() => samples[Math.floor(random() * samples.length)]);
+    estimates.push(median(resample));
+  }
+  estimates.sort((a, b) => a - b);
+  return [
+    Math.round(estimates[Math.floor(0.025 * iterations)]),
+    Math.round(estimates[Math.floor(0.975 * iterations)]),
+  ];
+}
+const capacityIntervals = new Map();
+for (const endpoint of ['point_read', 'range_scan', 'deep_fetch']) {
+  for (const adapter of ciOrder) {
+    for (const engine of ['postgres', 'mysql']) {
+      const row = raw.find((candidate) => candidate.adapter === adapter
+        && candidate.endpoint === endpoint && candidate.engine === engine);
+      if (!row) continue;
+      const interval = bootstrapCI(row.rps_samples);
+      if (endpoint === 'deep_fetch') capacityIntervals.set(engine + "/" + adapter, interval);
+    }
+  }
+}
+
+
+const rows = order.map((key) => {
+  const capacity = capacities.get(key);
+  const sweepMax = sweepMaxima.get(key);
+  if (capacity === undefined || sweepMax === undefined) {
+    throw new Error(`missing capacity input for ${key}`);
+  }
+  const [engine, adapter] = key.split('/');
+  const ratio = capacity / sweepMax;
+  return {
+    engine,
+    adapter,
+    capacity,
+    sweepMax,
+    ratio,
+    fraction50: 0.5 * ratio,
+    fraction70: 0.7 * ratio,
+  };
+});
+
+const min = (field) => Math.min(...rows.map((row) => row[field]));
+const max = (field) => Math.max(...rows.map((row) => row[field]));
+const pct = (value) => (100 * value).toFixed(1);
+const bootstrap50 = rows.flatMap((row) => {
+  const interval = capacityIntervals.get(row.engine + "/" + row.adapter);
+  if (!interval) throw new Error("missing bootstrap interval for " + row.engine + "/" + row.adapter);
+  const [lower, upper] = interval;
+  return [0.5 * row.capacity / upper, 0.5 * row.capacity / lower];
+});
+const bootstrap70 = bootstrap50.map((fraction) => 1.4 * fraction);
+
+const body = rows.map((row, index) => {
+  const engine = row.engine === 'postgres' ? 'PostgreSQL' : 'MySQL';
+  const separator = index === 8 ? '    \\midrule\n' : '';
+  return `${separator}    ${engine} & \\texttt{${row.adapter}} & ${row.capacity} & ${row.sweepMax} & ${pct(row.ratio)}\\% & ${pct(row.fraction50)}\\% & ${pct(row.fraction70)}\\% \\\\`;
+}).join('\n');
+
+const tex = `% auto-generated by scripts/gen-capacity-sensitivity.mjs
+\\begin{table}[htbp]
+  \\centering
+  \\footnotesize
+  \\caption{Sensitivity of the matched-utilization denominator on the deep fetch.
+    The experiment set its capacity proxy $\\widehat C_{50}$ to the median throughput
+    of the 25-run, 50-connection primary cell. Treating its published within-campaign
+    bootstrap interval as denominator uncertainty moves nominal 50\\% to
+    ${pct(Math.min(...bootstrap50))}--${pct(Math.max(...bootstrap50))}\\% and nominal 70\\% to
+    ${pct(Math.min(...bootstrap70))}--${pct(Math.max(...bootstrap70))}\\%. As a separately measured
+    alternative, $\\widehat C_{\\mathrm{sweep}}$ is the maximum throughput observed
+    on the full concurrency ladder. The ratio
+    $\\widehat C_{50}/\\widehat C_{\\mathrm{sweep}}$ spans
+    ${pct(min('ratio'))}--${pct(max('ratio'))}\\%; consequently, loads labelled
+    50\\% and 70\\% under the original proxy correspond to
+    ${pct(min('fraction50'))}--${pct(max('fraction50'))}\\% and
+    ${pct(min('fraction70'))}--${pct(max('fraction70'))}\\% of the sweep maximum.
+    This re-expression requires no new timing run and leaves both load bands
+    below saturation.}
+  \\label{tab:capacity_sensitivity}
+  \\begin{tabular}{l l r r r r r}
+    \\toprule
+    Engine & Layer & $\\widehat C_{50}$ & $\\widehat C_{\\mathrm{sweep}}$
+      & Ratio & nominal 50\\% & nominal 70\\% \\\\
+    \\midrule
+${body}
+    \\bottomrule
+  \\end{tabular}
+\\end{table}
+`;
+
+await writeFile(join(results, 'tables', 'capacity_sensitivity.tex'), tex);
+await writeFile(join(here, '..', '..', 'paper', 'tables', 'capacity_sensitivity.tex'), tex);
+console.log(
+  `wrote capacity_sensitivity.tex: ratio ${pct(min('ratio'))}-${pct(max('ratio'))}%, `
+  + `50% -> ${pct(min('fraction50'))}-${pct(max('fraction50'))}%, `
+  + `70% -> ${pct(min('fraction70'))}-${pct(max('fraction70'))}%`,
+);

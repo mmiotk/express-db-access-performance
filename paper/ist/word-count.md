@@ -18,14 +18,14 @@ appendices, and are excluded per Elsevier convention.
 
 | Component | Count |
 |---|---|
-| Body text (7 sections) | 9,819 |
+| Body text (7 sections) | 9,962 |
 | Structured abstract | 298 |
 | Tables and figures in the main text (8 × 200) | 1,600 |
 | Reference list (66 entries) | 2,069 |
-| **Total (IST rule)** | **13,786** |
+| **Total (IST rule)** | **13,929** |
 
-The total is **13,786 words**, leaving **1,214 words of headroom** under the 15,000-word Research Paper limit. The structured abstract is 298 words, below its 300-word limit. The separate online supplement contains 44 tables and four figures; it is supplementary material, not a manuscript appendix.
+The total is **13,929 words**, leaving **1,071 words of headroom** under the 15,000-word Research Paper limit. The structured abstract is 298 words, below its 300-word limit. The separate online supplement contains 45 tables and four figures; it is supplementary material, not a manuscript appendix.
 
-The count is reproducible with `texcount -brief` over the seven included body-section files and the extracted structured abstract. The rendered 66-entry reference list was counted conservatively from `pdftotext` output (including numbered entry labels and page folios). The eight main-text floats contribute 8 × 200 = 1,600 words. Required author declarations are submission metadata and are excluded.
+The count is reproducible with `texcount -sum -brief` over the seven included body-section files and the extracted structured abstract. The rendered 66-entry reference list was counted conservatively from `pdftotext` output (including numbered entry labels and page folios). The eight main-text floats contribute 8 × 200 = 1,600 words. Required author declarations are submission metadata and are excluded.
 
-Count date: 22 July 2026. Any later prose or float change requires this declaration to be regenerated.
+Count date: 23 July 2026. Any later prose or float change requires this declaration to be regenerated.
