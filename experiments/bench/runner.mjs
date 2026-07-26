@@ -23,6 +23,7 @@ import pg from 'pg';
 import mysql from 'mysql2/promise';
 import { ADAPTERS, config as cfg } from '../src/config.mjs';
 import { median, toCsv, texTableCombined } from './stats.mjs';
+import { attachDiagnosticCounter } from './diagnostics.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, '..', 'results');
@@ -45,6 +46,9 @@ const SEED_AUTHORS = cfg.seed.authors;
 // must set RESET_FLOOR=300000 so those rows survive the resets.
 const RESET_FLOOR = Number(env('RESET_FLOOR', SEED_POSTS));
 const PREFLIGHT = env('PREFLIGHT', RESET_FLOOR >= 300000 ? '1' : '0') === '1';
+// Diagnostic output inside a measured run rejects the cell by default; set this to
+// record it without rejecting (used when characterising a known-chatty driver).
+const ALLOW_TIMED_DIAGNOSTICS = env('ALLOW_TIMED_DIAGNOSTICS', '0') === '1';
 
 // Port allocator: never hand a server a port the databases (or anything else on the
 // host) listen on — a replicate of the first overnight run was lost to a collision
@@ -266,8 +270,14 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
   const base = `http://127.0.0.1:${port}`;
   const child = spawn(process.execPath, [join(here, '..', 'src', 'server.mjs')], {
     env: { ...process.env, TZ: 'UTC', ADAPTER: adapter, ENGINE: engine, PORT: String(port) },
-    stdio: ['ignore', 'inherit', 'inherit'],
+    // Piped, not inherited, so diagnostic output in the timed path is counted rather
+    // than merely scrolling past a human. A correct-but-wasteful adapter often
+    // announces itself this way: the Knex MySQL `returning` defect emitted 44,907
+    // warnings inside two pilot repetitions and was caught only because someone
+    // happened to watch the console. Output is still forwarded, so nothing is hidden.
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
+  const diagnostics = attachDiagnosticCounter(child);
 
   const wanted = only ?? wantEndpoints;
   const rows = [];
@@ -279,6 +289,7 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
       // identical seeded table rather than one grown by the earlier runs.
       if (ep.key === 'write') await resetWrites(engine);
       // warm-up (JIT + pool fill + plan cache) — measurements discarded
+      diagnostics.enter('warmup');
       if (WARMUP > 0) {
         await runAutocannon(ep.opts, { duration: WARMUP });
         await waitForIdle(base);
@@ -288,6 +299,8 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
       const p50 = []; const p90 = []; const p99 = []; const p975 = [];
       let errors = 0, timeouts = 0, non2xx = 0;
       const stopSampler = startSampler(child.pid, engine); // treatment tree + db + generator CPU
+      const diagBefore = diagnostics.measuredLines();
+      diagnostics.enter('measured');
       let res;
       try {
         for (let i = 0; i < repeats; i++) {
@@ -300,6 +313,18 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
         }
       } finally {
         res = stopSampler();
+        await diagnostics.settle();
+        diagnostics.enter('between');
+      }
+      const diagInTimedPath = diagnostics.measuredLines() - diagBefore;
+      if (diagInTimedPath > 0 && !ALLOW_TIMED_DIAGNOSTICS) {
+        throw new Error(
+          `${adapter}/${engine}/${ep.key}: rejected timed run ` +
+          `(${diagInTimedPath} diagnostic line(s) written during measurement; ` +
+          `a treatment doing per-request work it warns about is not admissible). ` +
+          `First: ${diagnostics.samples()[0] ?? 'n/a'}. ` +
+          `Set ALLOW_TIMED_DIAGNOSTICS=1 to record instead of reject.`,
+        );
       }
       if (errors !== 0 || timeouts !== 0 || non2xx !== 0) {
         throw new Error(
@@ -316,6 +341,10 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
         cpu_pct: res.cpuPct, cpu_children_pct: res.cpuChildrenPct, db_cpu_pct: res.dbCpuPct, gen_cpu_pct: res.genCpuPct,
         rss_mb: res.rssPeakMB,
         errors, timeouts, non2xx,
+        // Diagnostic output per window: a zero here is positive evidence that the
+        // treatment did no self-announcing work in the timed path (R7 sub-class).
+        diagnostic_lines_timed: diagInTimedPath,
+        diagnostic_lines_total: diagnostics.snapshot().lines,
         gc_count: srvStats.gc_count ?? null, gc_ms: srvStats.gc_ms ?? null,
         pool_used_avg: srvStats.pool_used_avg ?? null, pool_pending_avg: srvStats.pool_pending_avg ?? null, pool_pending_max: srvStats.pool_pending_max ?? null,
         connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: REPEATS,

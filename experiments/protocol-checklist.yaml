@@ -77,7 +77,7 @@ stages:
       name: implementation_review_provenance
       requirement: "Record who implemented and who independently reviewed every adapter and treatment assignment, which changes were proposed before measurement, and which cells were rerun."
       reports: "Whether semantic equivalence is complemented by evidence against correct-but-needlessly-slow adapter code."
-      this_study: "Automated specification, equivalence, SQL/plan, and state checks were run across the declared scope. Blind human-review packets and a register are shipped under notes/reviewer-packets; no independent human adapter or selection review is claimed in this revision candidate."
+      this_study: "Automated specification, equivalence, SQL/plan, and state checks were run across the declared scope. A timed-path diagnostic gate (bench/diagnostics.mjs) additionally rejects any cell whose treatment writes to stderr/stdout during a measured run, mechanising detection of the self-announcing sub-class of correct-but-wasteful code; it does not detect silent waste. Blind human-review packets and a register are shipped under notes/reviewer-packets; no independent human adapter or selection review is claimed in this revision candidate."
 
 cell_admission:
   rule: "Time a (treatment, workload-point) cell ONLY if semantic admission passes: specification-conformant and mutually equivalent non-mutating outputs, plus correct post-write state."
