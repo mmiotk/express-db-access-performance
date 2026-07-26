@@ -9,7 +9,10 @@
 #
 # Usage:
 #   scripts/release.sh <new-version> <new-version-doi>
-#   scripts/release.sh 1.12.16 10.5281/zenodo.21601234
+#   scripts/release.sh 1.12.16 10.5281/zenodo.21601234 --publish
+#
+# With --publish it also pushes and rebuilds the submission package; without it
+# everything is done locally and nothing leaves the machine.
 #
 #   scripts/release.sh --check           verify the declared version/DOI are consistent
 #                                        AND that HEAD is the tagged, pushed release
@@ -17,14 +20,10 @@
 #
 # Run it AFTER the Zenodo deposit exists, so no build ever carries a placeholder DOI.
 #
-# Full release sequence:
-#   1. scripts/release.sh <version> <doi>      version, DOI and AI counts
-#   2. make pdf supplement ist                 rebuild
-#   3. git commit -am "Prepare vX.Y.Z release"
-#   4. scripts/release.sh --refresh-counts     counts now include the release commit
-#   5. make pdf supplement ist && git commit --amend --no-edit
-#   6. git tag vX.Y.Z && git push origin HEAD --tags
-#   7. make ist-package                        gate passes only after step 6
+# One invocation does the whole release: propagates version and DOI, refreshes the
+# AI-provenance counts, rebuilds, commits, re-refreshes the counts so they include
+# the release commit, amends, and tags. With --publish it also pushes and rebuilds
+# the submission package.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -96,14 +95,24 @@ if [[ "${1:-}" == "--check" ]]; then
     fail=1
   fi
   if git remote get-url origin >/dev/null 2>&1; then
-    if ! git ls-remote --tags origin 2>/dev/null | grep -q "refs/tags/v$OLD_V\$"; then
-      echo "ARTIFACT: tag v$OLD_V is not pushed to origin; the GitHub tag cannot identify the release commit."
-      fail=1
-    fi
-    remote_head=$(git ls-remote --heads origin 2>/dev/null | awk '/refs\/heads\/(master|main)$/{print $1; exit}')
-    if [[ -n "$remote_head" && "$remote_head" != "$head_sha" ]]; then
-      echo "ARTIFACT: origin's default branch (${remote_head:0:7}) differs from HEAD; this revision is not public."
-      fail=1
+    # Capture once, then match with here-strings. Piping into `grep -q` or an
+    # early-exiting `awk` closes the pipe, SIGPIPEs git, and `set -o pipefail`
+    # then reports the whole pipeline as failed — which made this check claim a
+    # pushed tag was missing.
+    remote_tags=$(git ls-remote --tags origin 2>/dev/null || true)
+    remote_heads=$(git ls-remote --heads origin 2>/dev/null || true)
+    if [[ -z "$remote_tags$remote_heads" ]]; then
+      echo "ARTIFACT: could not reach origin; the public state is unverified."; fail=1
+    else
+      if ! grep -q "refs/tags/v$OLD_V\$" <<<"$remote_tags"; then
+        echo "ARTIFACT: tag v$OLD_V is not pushed to origin; the GitHub tag cannot identify the release commit."
+        fail=1
+      fi
+      remote_head=$(grep -E 'refs/heads/(master|main)$' <<<"$remote_heads" | head -1 | cut -f1)
+      if [[ -n "$remote_head" && "$remote_head" != "$head_sha" ]]; then
+        echo "ARTIFACT: origin's default branch (${remote_head:0:7}) differs from HEAD; this revision is not public."
+        fail=1
+      fi
     fi
   else
     echo "ARTIFACT: no 'origin' remote configured; cannot verify the revision is public."; fail=1
@@ -154,9 +163,55 @@ sed -i "s|^date-released:.*|date-released: \"${TODAY}\"|" "$CFF"
 
 refresh_counts
 
+
+# --- rebuild, commit, tag, and (optionally) publish ------------------------
+# Done here rather than left as a manual checklist because the steps are
+# order-dependent: the AI-provenance counts must be refreshed AFTER the release
+# commit exists, and the package gate only passes once the tag is pushed.
+
 echo
-"$0" --check
-echo
-echo "Next: make pdf && make supplement && make ist && make ist-package"
-echo "Then verify the package matches the builds:"
-echo "  md5sum paper/ist/_package/{ist_main,supplement}.pdf paper/ist/{ist_main,supplement}.pdf"
+echo "Rebuilding documents..."
+make pdf >/dev/null && make supplement >/dev/null && make ist >/dev/null
+make -C paper/ist docs >/dev/null 2>&1 || true
+
+for log in paper/_build/express_db_access.log paper/_build/supplement.log paper/ist/ist_main.log; do
+  n=$(grep -c undefined "$log" || true)
+  [[ "$n" == "0" ]] || { echo "ABORT: $log has $n undefined references."; exit 1; }
+done
+echo "  builds clean (0 undefined references)"
+
+git add -A
+git commit -q -m "Prepare v${NEW_V} release
+
+Artifact v${NEW_V}, version DOI ${NEW_D}.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+
+# The release commit itself changes the counts Section 3.9 quotes.
+refresh_counts
+make pdf >/dev/null && make supplement >/dev/null && make ist >/dev/null
+make -C paper/ist docs >/dev/null 2>&1 || true
+git add -A && git commit -q --amend --no-edit
+
+git tag -a "v${NEW_V}" -m "v${NEW_V}: IST revision artifact (DOI ${NEW_D})"
+echo "  tagged v${NEW_V} at $(git rev-parse --short HEAD)"
+
+if [[ "${3:-}" == "--publish" ]]; then
+  echo "Publishing..."
+  git push -q origin HEAD && git push -q origin "v${NEW_V}"
+  echo "  pushed branch and tag"
+  echo
+  "$0" --check || { echo "ABORT: post-publish check failed."; exit 1; }
+  make ist-package >/dev/null && echo "  submission package rebuilt"
+  echo
+  echo "md5 (package must match builds):"
+  md5sum paper/ist/_package/ist_main.pdf paper/ist/ist_main.pdf \
+         paper/ist/_package/supplement.pdf paper/ist/supplement.pdf | sed 's/^/  /'
+  echo
+  echo "DONE. paper/ist/ist-submission.zip is ready to upload."
+else
+  echo
+  echo "Committed and tagged locally, not pushed."
+  echo "To publish:  git push origin HEAD && git push origin v${NEW_V} && make ist-package"
+  echo "Or re-run with --publish next time."
+fi
