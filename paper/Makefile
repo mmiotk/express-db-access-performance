@@ -10,6 +10,8 @@ pdf:
 
 supplement:
 	latexmk -pdf supplement.tex
+	cp $(BUILD)/supplement.pdf supplement.pdf
+	cp $(BUILD)/supplement.pdf ist/supplement.pdf
 
 view: pdf
 	@xdg-open $(BUILD)/$(MAIN).pdf >/dev/null 2>&1 &

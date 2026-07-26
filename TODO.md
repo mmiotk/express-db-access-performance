@@ -56,4 +56,4 @@ Ordered roughly by priority. `[ ]` open, `[x]` done.
 ## 4. Packaging
 
 - [ ] `git remote add origin …`, first push.
-- [x] Zenodo v1.12.14 deposit prepared under version DOI 10.5281/zenodo.21597642.
+- [x] Zenodo v1.12.15 deposit prepared under version DOI 10.5281/zenodo.21599104.

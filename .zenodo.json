@@ -1,6 +1,6 @@
 {
   "title": "A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js",
-  "description": "Version 1.12.14 is the complete July 26 IST revision artifact. It adds an expected-result oracle derived from the deterministic seed specification, exact campaign-state and seed-parity gates, a corrected 90-cell primary campaign, a separate 42-cell same-host RQ2 validation campaign, fresh common-SQL/capacity/matched-utilization/long-tail analyses, exact measurement-source snapshots, a 63-judgement external-protocol audit, and blind human-review packets. The accepted campaigns contain 2,250 and 1,050 complete run-level observations with zero timed request failures. Sixty archived JSON inputs verify and the current-candidate author reconstruction regenerates 35 table outputs plus four derived analysis JSON files byte-for-byte. Independent human adapter review, independent third-party reproduction, and cross-host replication are not claimed.",
+  "description": "Version 1.12.15 is the complete July 26 IST revision artifact. It adds an expected-result oracle derived from the deterministic seed specification, exact campaign-state and seed-parity gates, a corrected 90-cell primary campaign, a separate 42-cell same-host RQ2 validation campaign, fresh common-SQL/capacity/matched-utilization/long-tail analyses, exact measurement-source snapshots, a 63-judgement external-protocol audit, and blind human-review packets. The accepted campaigns contain 2,250 and 1,050 complete run-level observations with zero timed request failures. Sixty archived JSON inputs verify and the current-candidate author reconstruction regenerates 35 table outputs plus four derived analysis JSON files byte-for-byte. Independent human adapter review, independent third-party reproduction, and cross-host replication are not claimed. This maintenance release also synchronizes both tracked supplement PDFs with the final 42-page supplement source.",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
@@ -30,5 +30,5 @@
       "scheme": "url"
     }
   ],
-  "version": "1.12.14"
+  "version": "1.12.15"
 }
