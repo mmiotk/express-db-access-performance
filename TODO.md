@@ -82,6 +82,10 @@
 
 ## 5. Open before submission
 
+- [ ] **Deposit v1.12.16 on Zenodo**, then `scripts/release.sh 1.12.16 <doi> --publish`.
+      Until this is done the manuscript's Data Availability statement points at a
+      release that does not contain the revision; `scripts/release.sh --check` fails
+      and `make ist-package` refuses to build. This is the only item blocking submission.
 - [ ] Obtain at least one completed independent review packet
       (`notes/reviewer-packets/`, register rows TS-01/TS-02, AD-01, PA-01).
       Protocol stage R7 is reported as **unsatisfied** until one is returned.

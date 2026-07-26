@@ -62,24 +62,13 @@ Table~\ref{tab:protocol_mapping} records how each control changed this experimen
 
 
 \subsection{Factors and treatments}
-We vary three factors. The \emph{access layer} has eleven levels across three tiers
-(schematic below): two native drivers with two engine-specific tuned baselines
+We vary three factors. The \emph{access layer} has eleven levels across three tiers. Two native
+drivers (\texttt{pg}, \texttt{mysql2}) and their two engine-specific tuned baselines
 (\texttt{pg-tuned} reuses named prepared statements, \texttt{mysql2-tuned} the binary protocol via
-\texttt{execute()}), the query builder Knex, and six ORMs; the tuned baselines are reference points,
-not selected treatments, leaving \emph{nine} policy-selected layers.
-\begin{center}\small
-\begin{tabular}{@{}l p{0.46\linewidth} l@{}}
-\toprule
-Tier & Implementations & Runs on \\
-\midrule
-Native driver         & \texttt{pg}, \texttt{mysql2}                        & its own engine \\
-Tuned native baseline & \texttt{pg-tuned}, \texttt{mysql2-tuned}            & its own engine \\
-Query builder         & Knex                                                & both engines \\
-ORM                   & Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM & both engines \\
-\bottomrule
-\end{tabular}
-\end{center}
-\noindent The 7 portable layers run on both engines and the 4 native/tuned on one, so
+\texttt{execute()}) each run only on their own engine; the query builder Knex and the six ORMs
+(Drizzle, Prisma, Sequelize, TypeORM, Objection, MikroORM) run on both. The tuned baselines are
+reference points, not selected treatments, leaving \emph{nine} policy-selected layers.
+The 7 portable layers run on both engines and the 4 native/tuned on one, so
 $4 + 7\times 2 = 18$ layer$\times$engine cells $\times$ 5 patterns $= 90$ measured configurations. We
 classify a library by its dominant interface, not its self-description
 (Section~\ref{sec:introduction}). The nine
@@ -148,7 +137,7 @@ statements are byte-identical across every layer on both engines; only the wire 
 byte-identical deep-fetch alternatives; it does not redefine the primary policy-selected
 treatment or estimate a library-intrinsic effect (Supplement Table~S18).
 
-Read admission has an expected-result layer independent of any timed reference. \texttt{bench/verify-spec.mjs} replays the documented seed PRNG and campaign fan-out fixture in memory, without querying a database or importing an access layer, and derives exact fields, values, ordering, graph membership, and aggregates. Database-generated timestamps are checked for presence and canonical ISO-8601 representation rather than a predicted instant. Across 1,000 random inputs per identifier type, boundary and list cases, and all six fan-out fixtures, all nine engine-compatible adapters (a different set of nine from the nine policy-selected layers: here the tuned baselines are included and the other engine's native driver excluded) pass 73,080 expected-result checks (Supplement Table~S38).
+Read admission has an expected-result layer independent of any timed reference. \texttt{bench/verify-spec.mjs} replays the documented seed PRNG and campaign fan-out fixture in memory, without querying a database or importing an access layer, and derives exact fields, values, ordering, graph membership, and aggregates. Database-generated timestamps are checked for presence and canonical ISO-8601 representation rather than a predicted instant. Across 1,000 random inputs per identifier type, boundary and list cases, and all six fan-out fixtures, all nine engine-compatible adapters (a different set of nine from the nine policy-selected layers: here the tuned baselines are included and the other engine's native driver excluded) pass 36,540 expected-result checks per engine (73,080 in total) (Supplement Table~S38).
 
 A separate differential layer asks whether implementations agree. Shared canonical constructors fix fields, key order, and scalar types; they copy already materialized rows and do no joining, regrouping, sorting, or caching. A 30-block standalone measurement places the ten-comment deep-fetch constructor at 9.35--9.36~\(\mu\)s, or 0.072\% of the smallest corresponding HTTP p50. The fixed probes in \texttt{verify.mjs} and randomized edge/input sweep in \texttt{verify-property.mjs} then compare serialized outputs across implementations, with no divergence (Supplement Table~S38). The specification and differential layers provide finite evidence for the declared task and tested inputs; neither is presented as proof for arbitrary inputs. A companion check
 (\texttt{bench/verify-writes.mjs}) validates database \emph{state}, not HTTP status: a separate out-of-band
@@ -180,14 +169,11 @@ separate from the server.
 Load was generated with \texttt{autocannon}~\cite{autocannon}, a closed-loop (constant-concurrency)
 HTTP/1.1 generator~\cite{schroeder2006open} recording a latency histogram. The accepted corrected-state primary matrix contains 90 configurations with 25 repeated runs each; the superseded campaign remains provenance only. With \texttt{INDEP=1}, each replicate randomizes adapter--engine blocks and boots one fresh server process for the selected read endpoints, which run sequentially in that process; the write endpoint uses another fresh process after the declared state rebuild (a PostgreSQL template restore or the disclosed MySQL in-place rebuild). Thus no application process crosses an adapter, engine, or replicate boundary, but read endpoints within one block share that process, and database buffers plus host/hypervisor state are not reset. At teardown, the server stops accepting requests, awaits every tracked handler promise, closes the adapter pool, and the runner awaits process exit. Each endpoint receives a discarded 15-second warm-up followed by one 12-second measurement at 50 connections. A forward/reverse-order write-cell check found no detectable order effect. The campaign records its ID, deterministic order seed, environment fingerprint, and exact source manifest.
 
-Within a replicate, every layer and engine draws target identifiers from one generator seeded on the endpoint and replicate, so all layers face the same identifier distribution. They do not receive an identical served sequence: the generator is consumed per request and shared with the warm-up, so layers of unequal throughput enter the measured window at different stream offsets. The pairing that licenses the paired analysis is the block design, not sequence identity. The inferential unit is the endpoint-level run; individual requests are subsamples. We
+Within a replicate, every layer and engine draws target identifiers from one generator seeded on endpoint and replicate, so all face the same identifier distribution --- though not an identical served sequence, since the generator is shared with the warm-up and layers of unequal throughput enter the measured window at different offsets. The paired analysis is licensed by the block design, not by sequence identity. The inferential unit is the endpoint-level run; individual requests are subsamples. We
 report the median of the 25 replicate values of throughput and of the run-level percentiles p50, p90,
 p97.5, and p99.
-Throughout, \emph{p99} denotes this \emph{median run-level p99} --- the
-median across replicates of each run's own p99 --- not the p99 of the pooled request distribution,
-which the design does not estimate. Ten 60~s re-measurements of the deep fetch give 12-versus-60-second rank correlations of 1.00 on both PostgreSQL and MySQL; the largest cell-median shifts are 5.6\% and 3.8\%, respectively (Supplement Table~S23). This is endpoint- and
-campaign-specific sensitivity evidence for the 12~s result, not a general claim that
-12~s is sufficient for p99 estimation. We sampled server CPU and peak RSS over the process tree, with database and load-generator CPU
+Throughout, \emph{p99} denotes this \emph{median run-level p99}, not the p99 of the pooled request
+distribution, which the design does not estimate. Ten 60~s re-measurements of the deep fetch give 12-versus-60-second rank correlations of 1.00 on both PostgreSQL and MySQL; the largest cell-median shifts are 5.6\% and 3.8\%, respectively (Supplement Table~S23). This is endpoint- and campaign-specific sensitivity evidence, not a general claim that 12~s suffices for p99 estimation. We sampled server CPU and peak RSS over the process tree, with database and load-generator CPU
 separately. Inserts were measured under each engine's \emph{default} durability (PostgreSQL
 \texttt{fsync} and \texttt{synchronous\_commit} on; MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1},
 \texttt{sync\_binlog=1}), the regime a deployment runs unless relaxed; a labelled secondary run relaxed
@@ -196,9 +182,7 @@ load we swept the deep fetch across 1--256 connections for every layer and
 engine~\cite{yu2014concurrency}; and a native \texttt{undici}-based constant-arrival generator drove the
 deep fetch under a fixed offered
 rate (250--4{,}000~req/s) rather than fixed concurrency, measuring from intended send time and clipping
-timeouts at their cutoff --- a coordinated-omission-corrected
-design~\cite{tene2015latency,krishnamachari2026stats} that checks the closed-loop tail's sensitivity to a different load model
-(Section~\ref{sec:results}).
+timeouts at their cutoff --- a coordinated-omission-corrected design~\cite{tene2015latency,krishnamachari2026stats} checking the closed-loop tail's sensitivity to a different load model (Section~\ref{sec:results}).
 
 \subsection{Analysis}
 We separate \emph{primary} outcomes, which carry the research-question claims, from \emph{secondary}

@@ -75,7 +75,7 @@ sensitivity to the workload sample.
 Deep-fetch ranks reproduce exactly on both stacks (Spearman $\rho=1.00$, maximum
 median drift $2.3\%$); aggregation reproduces 5/7 PostgreSQL and 7/7 MySQL positions
 ($\rho=0.96$ and $1.00$). MySQL insert is less stable: only 3/7 positions reproduce,
-$\rho=0.82$, the leader changes from Drizzle to Knex, and maximum drift reaches
+$\rho=0.82$, the leader changes from Drizzle to Knex, and maximum between-campaign median drift reaches
 $13.6\%$. We therefore promote a cross-stack reversal only when it occurs in both
 campaigns, exceeds the predeclared $5\%$ practical margin on both stacks, and paired
 bootstrap intervals exclude equality in opposite directions in both campaigns.
@@ -101,7 +101,7 @@ or defaults.
 The primary MySQL insert medians illustrate why fine ordering is not a headline:
 Drizzle, Objection, Knex, and the native driver lie between 1{,}766 and
 1{,}816~req/s, while several replicate distributions are visibly multimodal or
-heavy-tailed and reach $13.6\%$ CV (Supplement Figure~S1). Prisma is
+heavy-tailed and reach $13.6\%$ within-campaign CV --- numerically equal to the between-campaign drift above, but a different quantity (Supplement Figure~S1). Prisma is
 the slowest policy-selected treatment at 894~req/s, giving a $1.98\times$
 native-relative spread, but the broad interval on that spread is
 [1.65--2.09]. Under relaxed durability the native MySQL and Knex paths gain

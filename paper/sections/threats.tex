@@ -5,11 +5,10 @@ We organize the threats along the four standard validity
 categories~\cite{cook1979quasi,wohlin2012experimentation}.
 
 \paragraph{Construct validity of the measures}
-Our dependent variables are HTTP-level throughput (req/s) and tail latency
-(p99) at the Express endpoint, not query-execution time at the driver or
-database boundary --- deliberate, since it captures the full request round trip
-(Express routing, serialization), though the overhead we attribute to the
-\emph{access layer} may partly reflect these surrounding costs. We hold those
+Our dependent variables are HTTP-level throughput (req/s) and tail latency (p99) at the Express
+endpoint, not query-execution time at the driver boundary. This is deliberate --- it captures the
+full request round trip --- though overhead attributed to the \emph{access layer} may partly
+reflect Express routing and serialization. We hold those
 near-constant: every adapter satisfies a documented \emph{adapter contract} and
 funnels rows through shared canonical constructors (fixed field set, key order,
 typing, under \texttt{TZ=UTC}). These constructors copy and type-normalize already-grouped rows or entity graphs without querying, joining, regrouping, sorting, or caching. Their standalone median peaks at 17.6~\(\mu\)s (0.146\% of the fastest reported HTTP p50, on the range scan; 9.35~\(\mu\)s and 0.072\% on the deep fetch), too small to explain the multi-fold gap though near-ties stay practically unresolved. The specification-derived oracle replays the deterministic seed independently of all adapters and passes 73,080 expected-result checks. Differential checks then establish finite mutual equivalence. These checks found, among other defects, a Drizzle timestamp conversion that shifted PostgreSQL instants by the host UTC offset; it was fixed before measurement. The fixed-payload baseline
