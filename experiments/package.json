@@ -29,6 +29,7 @@
     "verify:writes": "npm run prisma:generate:pg && ENGINE=postgres node bench/verify-writes.mjs && npm run prisma:generate:mysql && ENGINE=mysql node bench/verify-writes.mjs",
     "verify:property": "npm run prisma:generate:pg && ENGINE=postgres node bench/verify-property.mjs && npm run prisma:generate:mysql && ENGINE=mysql node bench/verify-property.mjs",
     "audit:protocol": "node scripts/validate-protocol-audit.mjs",
+    "audit:agreement": "node scripts/score-protocol-agreement.mjs",
     "table:spec-oracle": "node scripts/gen-spec-oracle-table.mjs",
     "table:protocol-audit": "node scripts/gen-protocol-retro-table.mjs",
     "campaign:rq2": "scripts/rq2-campaign2.sh",

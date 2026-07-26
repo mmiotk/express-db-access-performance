@@ -1,7 +1,7 @@
 \section{Study Design}
 \label{sec:methodology}
 
-In Goal--Question--Metric terms, the study analyzes configured relational-access-layer implementations for the purpose of comparing throughput and response-time p99 under PostgreSQL and MySQL back ends~\cite{basili1988tame}. The viewpoint is the benchmark analyst evaluating policy-defined treatments; it is not a model of observed developer behavior. This is a controlled case study of one synthetic service, dataset, and environment, not inference about ORMs as a population. Following controlled software-engineering guidance~\cite{wohlin2012experimentation,kitchenham2002guidelines}, the study instantiates the protocol with three decisions: semantic admission before timing, a predeclared treatment-selection policy, and explicit operating points.
+In Goal--Question--Metric terms, the study analyzes configured relational-access-layer implementations for the purpose of comparing throughput and response-time p99 under PostgreSQL and MySQL back ends~\cite{basili1988tame}. The viewpoint is the benchmark analyst evaluating policy-defined treatments; it is not a model of observed developer behavior. This is a \emph{controlled benchmarking experiment} on one synthetic service, dataset, and environment, not inference about ORMs as a population. We use \emph{experiment} in the sense of controlled software-engineering guidance~\cite{wohlin2012experimentation,kitchenham2002guidelines}: the treatments are assigned and executed automatically rather than observed in situ, the factors are fixed by design, the run order is randomized in blocks, and each cell is measured repeatedly. That design is what licenses the paired within-campaign analysis; it also bounds external validity to the single instantiation measured here. The experiment instantiates the protocol with three decisions: semantic admission before timing, a predeclared treatment-selection policy, and explicit operating points.
 
 The primary RQ1--RQ3 treatment is the \emph{policy-selected documented configuration}: the path selected mechanically from frozen official documentation under the rule below. The protocol itself does not privilege documentation; another study may preregister an expert-tuned, usage-frequency, or vendor-recommended policy. A \emph{common-SQL raw-path sensitivity contrast} then has every portable layer execute the same SQL through its raw facility. SQL, API level, protocol, preparation, round trips, and mapping can still change together, so this contrast is compound evidence of sensitivity to standardization, not causal decomposition or a bound on library-intrinsic overhead (Supplement Table~S42).
 
@@ -25,7 +25,7 @@ connections at or above every layer's measured knee. Capacity is estimated rathe
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
-We state the protocol independently of the case study, then instantiate it. It provides a concrete discipline for comparing \emph{treatments} on a fixed \emph{workload}; Figure~\ref{fig:protocol} states its
+We state the protocol independently of this experiment, then instantiate it. It provides a concrete discipline for comparing \emph{treatments} on a fixed \emph{workload}; Figure~\ref{fig:protocol} states its
 inputs, mandatory and recommended stages, cell-admission rule, and output interpretation. The stages
 cover the admission-through-interpretation dimensions addressed here; they are not asserted to be a
 complete taxonomy of every threat to access-layer benchmarking.
@@ -35,18 +35,27 @@ complete taxonomy of every threat to access-layer benchmarking.
 % \usetikzlibrary is idempotent and valid in the body (tikz is pulled in by pgfplots).
 \input{\tabledir fig_protocol}
 
+The seven stages are cited throughout by stable identifiers: \emph{M1} semantic admission and
+\emph{M2} treatment definition are mandatory; \emph{R3} common-SQL raw-path sensitivity, \emph{R4}
+capacity characterization, \emph{R5} operating-point separation, \emph{R6} resource accounting, and
+\emph{R7} implementation-review provenance are recommended. For reporting compliance, M1 and M2
+form one mandatory validity-core level and R3--R7 define five additional claim-specific extensions
+--- the six-level reporting scheme of Supplement Table~S40, which records the level each workload
+cell attains here. The two are views of one taxonomy: the levels group the stages by the claim each
+licenses.
+
 \paragraph{Admission versus diagnosis} Semantic admission asks two distinct questions. First, does an implementation satisfy expected results derived from the declared task and deterministic seed rather than from the timed native path? Second, are competing implementations mutually equivalent under the declared comparator? Failure of either read check, or a mutation reaching the wrong database state, excludes the cell. These are finite conformance tests, not proof of correctness for arbitrary inputs. Workload constraints disqualify only when preregistered; query count, joins, and loading strategy are otherwise measured properties of the treatment.
 
 \paragraph{Applicability limits} the output comparator must match the output semantics: byte-identical comparison,
 used here, is valid only when equivalent outputs are deterministic and canonically serializable, and
 otherwise (unordered collections, floats, timestamps, nondeterministic identifiers) needs a semantic
-comparator (set equality, tolerance, canonicalization). The case study's outputs are deterministic and
+comparator (set equality, tolerance, canonicalization). The experiment's outputs are deterministic and
 canonically constructed, so byte-equality is valid here.
 
-\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages do not decide whether a fixed-load result exists; they license additional interpretations. Capacity characterization locates that result relative to a throughput knee. The common-SQL raw-path extension licenses only a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-review provenance records evidence against correct-but-needlessly-slow adapter code. In this case study M1--M2 cover the full matrix; R4 covers every pattern; R3, R5, and R6 are scoped to the deep fetch; and R7 remains unsatisfied because no independent human adapter review is claimed. Omission of a recommended stage therefore narrows the supported claim rather than automatically invalidating every reported number.
+\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages do not decide whether a fixed-load result exists; they license additional interpretations. Capacity characterization locates that result relative to a throughput knee. The common-SQL raw-path extension licenses only a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-review provenance records evidence against correct-but-needlessly-slow adapter code. In this experiment M1--M2 cover the full matrix; R4 covers every pattern; R3, R5, and R6 are scoped to the deep fetch; and R7 remains unsatisfied because no independent human adapter review is claimed. Omission of a recommended stage therefore narrows the supported claim rather than automatically invalidating every reported number. R7's absence here withholds the level-6 label and leaves the residual of Section~\ref{sec:threats} open; it does not withdraw the admission evidence licensing the reported comparisons.
 
 \smallskip
-Table~\ref{tab:protocol_mapping} records how each control changed this case study; that establishes consequence here, not universal necessity. Supplement Table~S37 separately applies the codebook to nine external benchmark sources. The machine-readable audit preserves 63 source-located judgements, but one author performed the coding, so it demonstrates bounded protocol application rather than inter-rater reproducibility. Blind forms for two treatment-selection raters and an adapter reviewer are shipped under \texttt{notes/reviewer-packets}; their status is reported as pending, not silently counted as validation.
+Table~\ref{tab:protocol_mapping} records how each control changed this experiment; that establishes consequence here, not universal necessity. Supplement Table~S37 separately applies the codebook to nine external benchmark sources. The machine-readable audit preserves 63 source-located judgements, but one author performed the coding, so it demonstrates bounded protocol application rather than inter-rater reproducibility. The audit record is structured for a second rater rather than merely open to one: additional codings attach alongside the author's without editing them, and a committed scorer (\texttt{npm run audit:agreement}) reports percent agreement and Cohen's kappa per stage together with every disagreeing cell. Result-blind forms for three independent exercises --- treatment selection, adapter implementation, and a re-coding of the same 63 judgements --- are shipped under \texttt{notes/reviewer-packets}, each completable on its own. All four register rows are reported as pending, and the scorer reports agreement as not computable rather than defaulting to a number, so an unperformed exercise cannot be silently counted as validation.
 
 \input{\tabledir protocol_mapping}
 
@@ -85,8 +94,9 @@ report this configuration rather than general library performance.
 
 \subsection{Objects: schema, workload, and data}
 The workload is a minimal blog domain (\texttt{authors} $1\!-\!*$ \texttt{posts} $1\!-\!*$
-\texttt{comments} $*\!-\!1$ \texttt{authors}). The five endpoints implement five representative access
-patterns~\cite{cooper2010ycsb} (Supplement Table~S39): a keyset page (primary-key cursor, not a large
+\texttt{comments} $*\!-\!1$ \texttt{authors}). The five endpoints implement five selected access
+patterns~\cite{cooper2010ycsb} (Supplement Table~S39), chosen to stress distinct aspects of the
+access layer rather than to sample the population of Express/database workloads: a keyset page (primary-key cursor, not a large
 \texttt{OFFSET}), a single-row read, a one-to-many list, the deep fetch (a post with its author
 and every comment, each with its own comment-author), and a per-author aggregation. A deterministic seed
 (2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments) is loaded by the native driver,
@@ -100,6 +110,7 @@ load across the working set; a skewed, production-like distribution is a planned
 (Section~\ref{sec:threats}).
 
 \subsection{The adapter contract and N+1 control}
+\label{sec:adapter}
 Every access layer implements the same factory interface (five query methods plus a teardown), so the
 server and load runner are layer-agnostic and each returns an \emph{identical result shape}. Each
 avoids the deep-fetch N+1 problem by its selected mechanism --- a hand-written
@@ -228,6 +239,54 @@ as of the freeze date (2026-07-15), recorded from the committed lockfile and an 
 capture (Supplement Table~S11); only Sequelize invokes the earlier-release exception (its version-7
 line is a prerelease, so the current 6.x stable line is used). Because access-layer performance is
 version-sensitive, this pins a dated snapshot rather than a permanent ranking (Section~\ref{sec:results}).
+
+\subsection{AI-assisted research tooling}
+\label{sec:ai-tooling}
+AI assistance extended to research software and data analysis, not language editing alone, so it is
+documented here as part of the method; the separately required manuscript-preparation declaration
+appears before the references.
+
+\paragraph{Tools, models, and provenance} The sole assistant was Claude (Anthropic), operated through
+the Claude Code command-line interface. Three model versions were involved: Claude Opus 4.8 (1M-token
+context), Claude Fable 5, and Claude Opus 5 (1M-token context) for the final revision. No other
+vendor's assistant contributed to the software, analysis, or text. Assistance is recorded per commit
+rather than asserted in aggregate: every AI-assisted commit carries a \texttt{Co-Authored-By} trailer
+naming the model, so its distribution is recoverable from the public history rather than taken on
+trust (\texttt{git log -{}-grep="Co-Authored-By: Claude"}).
+
+\paragraph{Affected components} Assistance covered the eleven adapters and harness scaffolding, the
+table- and figure-generating scripts (\texttt{scripts/gen-*.mjs}), the statistical estimators
+(\texttt{bench/stats.mjs}), and manuscript prose. The estimators are the one component in which
+generated code carries analytical rather than scaffolding logic: the generators are deterministic
+transformations from archived records to table cells, and the adapters are constrained by a fixed
+contract (Section~\ref{sec:adapter}).
+
+\paragraph{Review and independent validation} Author review is not offered as the safeguard; each
+category carries a check that does not depend on the generated code being correct. The estimators are
+unit-tested against hand-computed values and closed-form properties --- Wilcoxon signed-rank against a
+hand-computed $z$, bootstrap ratio intervals on inputs with known answers, permutation $p$-values
+verified for symmetry and for the $1/(B+1)$ floor (\texttt{bench/stats.test.mjs}). Every table cell
+traces to a raw per-cell record through a committed generator (\texttt{MANIFEST.md}), so no cell
+exists without a matching archived measurement. The adapters are gated by the specification-derived
+oracle (\texttt{bench/verify-spec.mjs}), which replays the deterministic seed in memory without
+importing an adapter or reading timed native-driver output, and by differential and write-state checks
+(Supplement Table~S38).
+
+\paragraph{Extent of assistance in analysis and interpretation} The assistance was not confined to
+implementation. The assistant contributed substantively to selecting the statistical procedures ---
+the paired sign-flip permutation test and its Wilcoxon cross-check, the geometric-mean paired ratio
+and its bootstrap interval, Cliff's delta, the equivalence test and its $\pm5\%$ margin, and the
+blocked interaction test --- and to drafting the interpretation of the resulting numbers. Every such
+procedure is nonetheless a named, published method whose applicability the author verified against
+performance-evaluation guidance~\cite{georges2007rigorous,arcuri2014hitchhiker,cliff1993dominance};
+none is generated or bespoke. The author reviewed, revised where necessary, and takes full
+responsibility for every choice, interpretive claim, and cited reference.
+
+Author independence is therefore not the control on this assistance; the mechanical checks above are,
+and a reader who discounts our review entirely can still run each of them. What they cannot establish
+is that the chosen analyses were the \emph{best} available rather than merely defensible. That
+judgement is disclosed as jointly reached and author-approved, and is a further reason the protocol
+asks for independent implementation review (R7, Section~\ref{sec:threats}).
 
 \subsection{Replication package}
 The harness --- the Express application, the adapter contract, all eleven adapters, the deterministic

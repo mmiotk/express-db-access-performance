@@ -1,8 +1,15 @@
 # TODO
 
-> Historical pre-protocol planning log. It is retained as development provenance, not as the current experiment status or terminology; current status is in `README.md`, `REPRODUCE.md`, and `experiments/MANIFEST.md`.
+> Historical pre-protocol planning log from the first two weeks of the project.
+> Retained as development provenance, **not** as current status or terminology.
+> Current status lives in `README.md`, `REPRODUCE.md`, and `experiments/MANIFEST.md`.
+>
+> Reviewed 2026-07-26: items that were still marked open here had in fact been
+> completed and shipped, which made this file misleading to an artifact reviewer.
+> Each is now marked done with a pointer to where the result actually lives.
+> Items that were genuinely superseded are marked `[~]`.
 
-Ordered roughly by priority. `[ ]` open, `[x]` done.
+`[ ]` open, `[x]` done, `[~]` superseded.
 
 ## 0. Validate the harness against live databases — DONE (2026-07-06)
 
@@ -24,36 +31,59 @@ Ordered roughly by priority. `[ ]` open, `[x]` done.
       → correlated subqueries touching only the author's rows (3k–8k req/s).
 - [x] **write isolation**: runner deletes `id > SEED_POSTS` before every cell.
 - [x] Scaled up: seed 2000/100000/1M, 50 conn, median of 3. Corrected run published.
-- [ ] Concurrency sweep (1/10/50/100/200) — locate saturation per layer.
-- [ ] Per-cell CPU/RSS sampling for a resource table.
-- [ ] Report CV per cell in a table (harness computes it; not yet emitted).
-- [ ] Investigate MikroORM's flat slowness (per-request `em.fork()` overhead?) and
-      why Objection trails on aggregation — confirm idiomatic, not harness artifacts.
-- [ ] Optional: k6 constant-arrival cross-run to bound coordinated omission.
-- [ ] Decide same-host vs two-machine (see METHODOLOGY open questions).
+- [x] Concurrency sweep (ladder 1–200, both engines) — protocol stage R4.
+      → Supplement Table S35; deep-fetch curve Figure S2.
+- [x] Per-cell CPU/RSS sampling for a resource table — protocol stage R6.
+      → Supplement Tables S4, S5, S10.
+- [x] Report CV per cell in a table. → Supplement Tables S1 (MySQL), S9 (PostgreSQL);
+      insert replicate dispersion in Figure S1.
+- [x] Investigate MikroORM's flat slowness and Objection's aggregation position.
+      → result-blind adapter self-audit; two avoidable timed-path operations found
+      and removed before campaign acceptance (`notes/adapter-self-audit.md`).
+      Round-trip count alone does not explain the ordering (Discussion; Table S2).
+- [x] Constant-arrival cross-run to bound coordinated omission — done with an
+      open-loop sweep rather than k6. → Supplement Tables S6, S17.
+- [x] Decide same-host vs two-machine: **same-host**, disclosed as a validity
+      threat. A second same-host validation campaign was run instead; a physically
+      independent host remains future work (Threats; Conclusion).
 
-## 1b. Venue (researched 2026-07-06 — see notes/venue.md)
+## 1b. Venue
 
-- [ ] Decide: **two-output strategy** — harness → SoftwareX (200 MEiN pts, ~$1,560);
-      study → IEEE Access (100 pts, fast, $2,160) or JSS (100 pts, free via
-      subscription). Single-paper fallback: IEEE Access. Low-cost/continuity: e-Informatica (40).
+- [x] Decided: **Information and Software Technology** (Elsevier), single output.
+      Submission build is `paper/ist/ist_main.tex`; see `notes/venue.md` for the
+      superseded two-output analysis.
 
 ## 2. Secondary studies (differentiators vs prior art)
 
-- [ ] Connection-pool-size sweep (isolated from the main comparison).
-- [ ] N+1 penalty study: naive vs eager loading per ORM (quantify the trap).
-- [ ] Cold-start / first-query latency per layer (bundle-size proxy from the notes).
+- [x] Connection-pool-size sweep (isolated from the main comparison).
+      → Supplement Tables S7 (PostgreSQL), S25 (MySQL).
+- [x] N+1 penalty study: the adapter contract now forbids N+1 by construction and
+      the fan-out sweep varies breadth 0–500 children. → Study Design (adapter
+      contract and N+1 control); Results.
+- [~] Cold-start / first-query latency per layer. Superseded: warm-up phases are
+      designed to *absorb* cold-start so it cannot confound steady-state throughput.
+      Listed as future work (cold-cache regimes) rather than an open task here.
 
 ## 3. Paper
 
-- [ ] Fill sections (skeleton in `paper/sections/`). Related work: cite the 3
-      peer-reviewed prior-art items + the vendor benchmarks from `notes/prior-art.md`.
-- [ ] Pick a venue. Candidates from the react-performance line: e-Informatica SE
-      Journal, or an empirical-SE / systems-performance venue.
-- [ ] Statistical treatment: medians + CV now; consider Mann–Whitney U + Cliff's
-      delta between adapters (as in the react-performance paper).
+- [x] Sections written; related work covers the peer-reviewed prior art and the
+      vendor benchmarks, with a structured coverage table.
+- [x] Venue picked (see 1b).
+- [x] Statistical treatment: medians, CV, seeded percentile bootstrap CIs, paired
+      sign-flip permutation cross-checked with Wilcoxon signed-rank, geometric-mean
+      paired ratios, paired TOST, blocked layer×engine interaction, Mann–Whitney U
+      and Cliff's delta. Estimators in `experiments/bench/stats.mjs`, unit-tested in
+      `bench/stats.test.mjs`; construction detail in `notes/supplement-methods`.
 
 ## 4. Packaging
 
-- [ ] `git remote add origin …`, first push.
+- [x] `git remote add origin …`, first push. (`origin/master` tracks GitHub.)
 - [x] Zenodo v1.12.15 deposit prepared under version DOI 10.5281/zenodo.21599104.
+
+## 5. Open before submission
+
+- [ ] Obtain at least one completed independent review packet
+      (`notes/reviewer-packets/`, register rows TS-01/TS-02, AD-01, PA-01).
+      Protocol stage R7 is reported as **unsatisfied** until one is returned.
+- [ ] Replicate the reduced RQ2 matrix on a physically independent host
+      (ranked below independent human review; not required for submission).

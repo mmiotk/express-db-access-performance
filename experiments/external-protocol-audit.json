@@ -2,6 +2,26 @@
   "schema_version": 1,
   "audit_id": "external-benchmark-protocol-audit-2026-07-23",
   "purpose": "Bounded retrospective application of the proposed comparability protocol to the nine benchmark sources retained by the scoping search.",
+  "schema_note": "study.coding holds the primary rater's judgements. Additional raters are stored under study.additional_codings[rater_id] with the same {code, locator, evidence} shape, so a second rater can be added without altering the primary record. Agreement is computed by scripts/score-protocol-agreement.mjs.",
+  "primary_rater": "author-1",
+  "raters": [
+    {
+      "id": "author-1",
+      "role": "primary",
+      "independent_of_manuscript": false,
+      "blind_to_results": false,
+      "codings_recorded": "study.coding",
+      "limitation": "Single-author coding demonstrates an executable use of the codebook but does not establish inter-rater reproducibility."
+    }
+  ],
+  "agreement": {
+    "statistic": null,
+    "percent_agreement": null,
+    "status": "not_computable: requires at least two independent codings",
+    "computed_by": "scripts/score-protocol-agreement.mjs",
+    "output": "results/protocol-audit-agreement.json",
+    "blank_form": "notes/reviewer-packets/protocol-audit-blind.md"
+  },
   "rater": {
     "id": "author-1",
     "independent_of_manuscript": false,
@@ -74,7 +94,8 @@
           "locator": "method and acknowledgements",
           "evidence": "No independent review provenance for the compared implementations is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "prisma_rawsql_2025",
@@ -122,7 +143,8 @@
           "locator": "Methods",
           "evidence": "No independent implementation-review record is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "orm_compare_jcct_2025",
@@ -170,7 +192,8 @@
           "locator": "research method",
           "evidence": "No independent review of the three implementations is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "zhadko2025orm",
@@ -218,7 +241,8 @@
           "locator": "Materials and methods",
           "evidence": "No independent review provenance for the endpoint implementations is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "pratama2023nodebench",
@@ -266,7 +290,8 @@
           "locator": "pp. 2242-2243, Materials and Method",
           "evidence": "No independent review provenance for the framework--library implementations is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "salunke2024pgmysql",
@@ -314,7 +339,8 @@
           "locator": "study design",
           "evidence": "No author-created set of competing access-layer adapters is evaluated."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "drizzle_benchmarks",
@@ -362,7 +388,8 @@
           "locator": "public benchmark repository",
           "evidence": "Implementations are publicly inspectable, but no independent review record is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "prisma_benchmarks",
@@ -410,7 +437,8 @@
           "locator": "public query views",
           "evidence": "Query implementations are inspectable, but no independent cross-product review record is reported."
         }
-      }
+      },
+      "additional_codings": {}
     },
     {
       "id": "imdbench",
@@ -458,7 +486,8 @@
           "locator": "public repository and target implementations",
           "evidence": "Code is publicly inspectable, but no independent review record for every target is reported."
         }
-      }
+      },
+      "additional_codings": {}
     }
   ]
 }

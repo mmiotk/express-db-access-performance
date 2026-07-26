@@ -79,6 +79,17 @@ Open source code without recorded review is `partial`.
 
 The audit asks what each source's evidence licenses under this codebook. Lower
 coverage does not invalidate its measurements; it narrows the conclusion. The single-rater exercise demonstrates one complete, source-located application of
-the checklist, but cannot establish inter-rater reproducibility or independent validity. Blank blind-rater
-forms are shipped in `notes/reviewer-packets/` so an independent replication can
-estimate agreement without exposure to this study's performance results.
+the checklist, but cannot establish inter-rater reproducibility or independent validity.
+
+A blank second-rater form covering exactly these 63 judgements is shipped as
+`notes/reviewer-packets/protocol-audit-blind.md`, so an independent replication
+can re-code the same items without exposure to this study's performance results
+or to the author's codings. Returned codings are entered under
+`studies[].additional_codings[<rater-id>]` in
+`experiments/external-protocol-audit.json` — the author's `coding` block is never
+edited — and scored by `npm run audit:agreement`, which reports percent agreement
+and Cohen's kappa overall and per stage plus every disagreeing cell. Until a
+second rater is recorded, that script reports agreement as not computable rather
+than defaulting to a number. Two further packets in the same directory cover
+treatment selection and adapter implementation; they concern different objects
+and do not produce an agreement statistic for this codebook.

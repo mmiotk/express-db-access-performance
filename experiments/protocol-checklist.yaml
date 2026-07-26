@@ -51,7 +51,7 @@ stages:
       requirement: "Fix each treatment's implementation and strategy by a rule declared reproducibly in advance. The protocol REQUIRES such a rule but PRIVILEGES NONE; documentation-first is one instantiation."
       check: "The selection rule is stated before measurement and applied uniformly; ties are broken by a stated tie-breaker."
       failure_if_skipped: "The query strategy chosen for a library is silently conflated with the library's own cost."
-      this_study: "Policy-selected documented configuration (first documented relation API under the archived-page conflict rule, with a documented-base-layer tie-break); this is the case study's artificial policy, not a practitioner-behavior model or protocol requirement."
+      this_study: "Policy-selected documented configuration (first documented relation API under the archived-page conflict rule, with a documented-base-layer tie-break); this is the experiment's artificial policy, not a practitioner-behavior model or protocol requirement."
 
   recommended:
     - id: R3
@@ -60,11 +60,11 @@ stages:
       reports: "A residual spread (a diagnostic contrast), NOT a causal decomposition and NOT a bound on the intrinsic library effect."
       this_study: "Common-SQL raw-path sensitivity contrast (Supplement Table S42); deep-fetch spread 7.01x/5.12x in the policy-selected documented treatment vs 1.71x/2.03x through raw facilities."
     - id: R4
-      name: capacity_identification
-      requirement: "Locate saturating throughput per treatment by a concurrency sweep, so the fixed operating point can be read against capacity."
+      name: capacity_characterization
+      requirement: "Locate estimated saturating throughput per treatment by a concurrency sweep, so the fixed operating point can be read against capacity."
       this_study: "Per-pattern concurrency sweep (Supplement Table S35); knees at or below 50 connections, 97-100% median utilization at the operating point."
     - id: R5
-      name: demand_and_utilization
+      name: operating_point_separation
       requirement: "Measure the tail at equal external demand AND at matched fractions of each treatment's estimated capacity, with denominator uncertainty disclosed; report them as distinct quantities."
       this_study: "High-load p99 under equal closed-loop demand versus matched-utilization tail (Supplement Tables S21-S22 and S43), with bootstrap and full-sweep denominator sensitivity (S45); the stable 50% and most 70% cells form a small band, while 85-95% cells are only near-saturation trends."
 

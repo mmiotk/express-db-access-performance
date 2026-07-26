@@ -35,6 +35,14 @@
 
 \noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.12.15 under the immutable version DOI \url{https://doi.org/10.5281/zenodo.21599104}; the concept DOI is \url{https://doi.org/10.5281/zenodo.21313858}. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
+\smallskip
+\noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
+estimators behind the tables in this supplement were implemented with assistance from Claude
+(Anthropic); the models, affected components, and the checks that independently validate the
+generated code are documented in the main text (Study Design, ``AI-assisted research tooling'').
+Every table below is regenerated from archived raw records by a committed generator listed in
+\texttt{MANIFEST.md}.
+
 \section{Dispersion on MySQL}
 \label{sup:cv-mysql}
 Table~\ref{tab:cv_mysql} reports run-level throughput dispersion on MySQL. All five patterns use the one corrected-state campaign. Figure~\ref{fig:insert_dispersion} foregrounds all corrected insert replicates because a median and CV can hide mixture or tail structure. Historical insert samples from the defective reset are preserved in the archive but are not used for the revised ordering.
@@ -101,7 +109,7 @@ timeout counts (10~s cap, clipped into the distribution).
 \label{sup:poolsize}
 The primary campaign fixes every layer's connection pool at 10 to isolate the
 access layer from pool tuning. Table~\ref{tab:poolsize} varies the pool from 1 to
-50 for a representative layer of each tier on the deep fetch (PostgreSQL, 50
+50 for one layer of each tier on the deep fetch (PostgreSQL, 50
 connections). The deep-fetch ordering (\texttt{pg} $>$ Knex $>$ Prisma $>$ MikroORM) is preserved at every pool size, and each layer's
 throughput saturates at a pool well below 50, so the fixed-pool choice does not
 appear to drive the ranking; a very small pool (1--2) is the one regime that compresses the
@@ -113,8 +121,8 @@ differences, because every layer then queues on connection acquisition.
 \label{sup:txn}
 Beyond the single-row insert of the primary matrix, Table~\ref{tab:txn_write}
 reports a transactional write, \texttt{POST /threads}, which inserts a post and
-five comments in one transaction through each layer's transaction facility, for a
-representative layer of each tier on PostgreSQL under default durability (median of five
+five comments in one transaction through each layer's transaction facility, for
+one layer of each tier on PostgreSQL under default durability (median of five
 runs, exploratory). The
 full layer\,$\times$\,engine matrix for this pattern is left to future work. The
 transaction commits once; its tighter clustering than the widest read spread
@@ -180,7 +188,7 @@ The two cheapest read patterns show the smallest between-layer spread and are
 summarized in the main text; their full throughput and p99 tables are given here.
 Table~\ref{tab:point_read} reports the point read (primary-key lookup) and
 Table~\ref{tab:range_scan} the keyset range scan, each by access layer and engine.
-The two most consequential patterns (deep fetch and insert) are tabulated
+The two patterns foregrounded in the analysis (deep fetch and insert) are tabulated
 in the main text; aggregation is reported in full below.
 
 \input{\tabledir point_read}
@@ -250,7 +258,7 @@ floor nor decompose engine, driver, and adapter costs.
 \label{sup:postreboot}
 Table~\ref{tab:postreboot} reports the environmental-robustness check: as the
 campaign's final stage, after a full restart of both database engines (cold buffer
-pools, fresh connections), a representative deep-fetch subset was re-measured against
+pools, fresh connections), a selected deep-fetch subset was re-measured against
 the primary median. The three-layer order is unchanged on PostgreSQL (\texttt{pg}, Prisma, MikroORM)
 and MySQL (\texttt{mysql2}, Prisma, MikroORM); absolute throughput is up to $16\%$ lower, a cold-buffer and run-to-run
 drift the paper's relative analysis is designed to absorb. Because PostgreSQL and
@@ -292,7 +300,7 @@ general rule that a 12-second window is sufficient.
 
 \section{Multi-worker scaling}
 \label{sup:cluster}
-Table~\ref{tab:cluster} scales a representative subset (three layers per engine) to 1, 2, and 4
+Table~\ref{tab:cluster} scales a selected subset (three layers per engine) to 1, 2, and 4
 Express workers (a shared-port \texttt{node} cluster), median of three runs. Because each process
 uses about one core and gains nothing from more, aggregate throughput rises roughly in proportion
 to workers over this range: on PostgreSQL the native driver leads at one worker
@@ -332,7 +340,7 @@ deep-fetch read dominates the cost; exploratory.
 \section{Concurrency sweep}
 \label{sup:scaling}
 Figure~\ref{fig:scaling} sweeps the deep fetch from 1 to 256 client
-connections for a representative layer of each tier, both engines. The 50-connection
+connections for one layer of each tier, both engines. The 50-connection
 operating point used throughout sits above the knee for every layer on this
 pattern; the ordering is load-robust above about 32 connections. This is the evidence behind the choice of
 operating point.
@@ -423,7 +431,7 @@ the single runnable entry point.
     matrix; every other experiment is a limited condition, most restricted to the
     deep fetch, and each conclusion is scoped accordingly. ``Layers'' counts
     implementations (the nine access layers plus, where present, the two tuned native
-    baselines); a representative subset is used where a caption says so. Engine
+    baselines); a selected subset is used where a caption says so. Engine
     entries name where the experiment was run (\texttt{pg} is PostgreSQL-only,
     \texttt{mysql2} MySQL-only).}
   \label{tab:scope}\\
@@ -507,7 +515,7 @@ read against it (main text, Study Design). The deep-fetch concurrency sweep
 review point 6.5 asks whether the other four patterns, reported only at the fixed 50-connection
 demand, sit at comparable utilization. To answer it we swept every access layer over a connection
 ladder (1, 4, 8, 16, 32, 50, 100, 200) on \emph{all five} patterns and both engines, medianed over
-three runs per point after a warm-up, and for each layer computed its saturating throughput (the ladder
+three runs per point after a warm-up, and for each layer computed its estimated saturating throughput (the ladder
 maximum), the utilization at 50 connections (throughput at 50 connections divided by that maximum),
 and the knee (the smallest connection count reaching 95\% of the maximum).
 
@@ -573,12 +581,14 @@ the patterns in prose; this table is the compact reference.
 
 \section{Protocol compliance levels and their coverage}
 \label{sup:protocol-compliance}
-The main text (Study Design) names six protocol compliance levels; Table~\ref{tab:protocol_compliance}
-records precisely which workload cells satisfy each in this case study. The mandatory validity core
+The main text (Study Design) defines the six protocol compliance levels and their mapping to the
+seven protocol stages: M1 and M2 form the mandatory validity core, and R3--R7 supply five
+claim-specific extensions. Table~\ref{tab:protocol_compliance}
+records precisely which workload cells satisfy each in this experiment. The mandatory validity core
 and capacity characterization hold across all five patterns on both engines; the three
 extensions --- common-SQL sensitivity, utilization-controlled latency, and resource accounting --- are
-demonstrated on the deep fetch, the most consequential pattern, as a representative-point
-instantiation rather than a claim of full-matrix coverage. The sixth, independent-implementation-review level is not satisfied: packets exist, but no external human review is claimed. Stating the levels and their coverage
+demonstrated on the deep fetch, the widest-spread tested pattern, as a representative-point
+instantiation rather than a claim of full-matrix coverage. The sixth, independent-implementation-review level is not satisfied: packets exist under \texttt{notes/reviewer-packets/}, but no external human review is claimed. Stating the levels and their coverage
 explicitly is what makes the protocol reusable: a later study can report its own compliance level per
 cell against the same ladder.
 

@@ -24,23 +24,23 @@
   output-equivalence semantics $\cdot$ operating-point definition
   (capacity $\mid$ demand $\mid$ utilization)};
 % --- MANDATORY stages (solid) ---
-\node[mand, below=of in] (m1) {\textbf{(1)~Semantic admission}\\[1pt]
+\node[mand, below=of in] (m1) {\textbf{(M1)~Semantic admission}\\[1pt]
   expected result and mutual equivalence; mutations reach intended state};
-\node[mand, below=of m1] (m2) {\textbf{(2)~Treatment-definition rule}\\[1pt]
+\node[mand, below=of m1] (m2) {\textbf{(M2)~Treatment definition}\\[1pt]
   implementation \& strategy fixed by a rule declared in advance
   (here: frozen-page policy)};
 % --- CELL-ADMISSION gate (decision) ---
 \node[gate, below=of m2] (g) {\textbf{Cell}\\\textbf{admission?}};
 % --- RECOMMENDED stages (dashed) ---
-\node[rec, below=16mm of g] (r3) {\textbf{(3)~Common-SQL raw-path sensitivity}\\[1pt]
+\node[rec, below=16mm of g] (r3) {\textbf{(R3)~Common-SQL raw-path sensitivity}\\[1pt]
   common SQL through raw facilities; compound sensitivity};
-\node[rec, below=of r3] (r4) {\textbf{(4)~Capacity identification}\\[1pt]
-  locate saturating throughput via concurrency sweep};
-\node[rec, below=of r4] (r5) {\textbf{(5)~Demand \& utilization}\\[1pt]
+\node[rec, below=of r3] (r4) {\textbf{(R4)~Capacity characterization}\\[1pt]
+  locate estimated saturating throughput via concurrency sweep};
+\node[rec, below=of r4] (r5) {\textbf{(R5)~Operating-point separation}\\[1pt]
   tail at equal demand and at matched fractions of own capacity};
-\node[rec, below=of r5] (r6) {\textbf{(6)~Resource normalization}\\[1pt]
+\node[rec, below=of r5] (r6) {\textbf{(R6)~Resource accounting}\\[1pt]
   expose compute use or compare under an equal budget};
-\node[rec, below=of r6] (r7) {\textbf{(7)~Implementation-review provenance}\\[1pt]
+\node[rec, below=of r6] (r7) {\textbf{(R7)~Implementation-review provenance}\\[1pt]
   record independent review, findings, and affected reruns};
 % --- OUTPUTS ---
 \node[io, below=of r7] (out) {\textbf{Outputs.} throughput $+$ tail per operating point;
@@ -69,6 +69,12 @@
 \draw[arr] (g) -- node[above, font=\scriptsize\bfseries]{fail} (rej);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{The comparability protocol. Semantic admission and treatment definition form the mandatory core. Recommended stages license common-SQL, capacity, utilization, resource, and implementation-provenance interpretations. A finite gate supplies task-conformance evidence; it does not prove arbitrary-input correctness.}
+\caption{The comparability protocol. Semantic admission (M1) and treatment definition (M2) form the
+  mandatory core. The recommended stages R3--R7 license common-SQL, capacity, utilization, resource,
+  and implementation-provenance interpretations, and may be scoped to a representative workload point
+  rather than the full matrix. A finite gate supplies task-conformance evidence; it does not prove
+  arbitrary-input correctness. For reporting compliance, M1 and M2 together form one mandatory
+  validity-core level and R3--R7 define five claim-specific extensions, giving the six-level scheme of
+  Supplement Table~S40.}
 \label{fig:protocol}
 \end{figure}

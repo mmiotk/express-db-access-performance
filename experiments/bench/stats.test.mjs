@@ -12,6 +12,7 @@ import {
   mannWhitneyU, cliffsDelta, cliffsMagnitude,
   pairedPermutation, wilcoxonSignedRank, pairedBootstrapRatioCI,
   pairedTOST, blockedInteraction,
+  percentAgreement, cohensKappa,
 } from './stats.mjs';
 
 // --- seeded PRNG (mulberry32): deterministic [0,1) generator for the MC tests --
@@ -200,4 +201,56 @@ test('blockedInteraction: p respects the 1/(B+1) resolution floor', () => {
   const B = 500;
   const r = blockedInteraction(D, { B, rand: mulberry32(6) });
   assert.ok(r.p >= 1 / (B + 1) - 1e-12);
+});
+
+// --- inter-rater agreement --------------------------------------------------
+
+test('percentAgreement: perfect, none, partial, degenerate', () => {
+  assert.equal(percentAgreement(['a', 'b', 'c'], ['a', 'b', 'c']), 1);
+  assert.equal(percentAgreement(['a', 'a'], ['b', 'b']), 0);
+  assert.equal(percentAgreement(['a', 'b', 'c', 'd'], ['a', 'b', 'x', 'y']), 0.5);
+  assert.equal(percentAgreement([], []), null);
+  assert.equal(percentAgreement(['a'], ['a', 'b']), null);
+});
+
+test('cohensKappa: perfect agreement on a balanced 2-category split is 1', () => {
+  const a = ['y', 'y', 'n', 'n'];
+  assert.equal(cohensKappa(a, a), 1);
+});
+
+test('cohensKappa: agreement at exactly chance level is 0', () => {
+  // Both raters split 2/2 across two categories, agreeing on half the items.
+  // po = 0.5; pe = (2/4)(2/4) + (2/4)(2/4) = 0.5; kappa = 0.
+  const a = ['y', 'y', 'n', 'n'];
+  const b = ['y', 'n', 'y', 'n'];
+  assert.ok(approx(cohensKappa(a, b), 0));
+});
+
+test('cohensKappa: hand-computed value on an unbalanced case', () => {
+  // 10 items. Agreement on 8 => po = 0.8.
+  // Rater A marginals: y=6, n=4.  Rater B marginals: y=6, n=4.
+  // pe = 0.6*0.6 + 0.4*0.4 = 0.52.  kappa = (0.8-0.52)/(1-0.52) = 0.58333...
+  const a = ['y', 'y', 'y', 'y', 'y', 'y', 'n', 'n', 'n', 'n'];
+  const b = ['y', 'y', 'y', 'y', 'y', 'n', 'y', 'n', 'n', 'n'];
+  assert.equal(percentAgreement(a, b), 0.8);
+  assert.ok(approx(cohensKappa(a, b), 0.28 / 0.48, 1e-12));
+});
+
+test('cohensKappa: systematic disagreement is negative', () => {
+  const a = ['y', 'y', 'n', 'n'];
+  const b = ['n', 'n', 'y', 'y'];
+  assert.ok(cohensKappa(a, b) < 0);
+});
+
+test('cohensKappa: symmetric in its arguments', () => {
+  const a = ['y', 'p', 'n', 'y', 'p', 'n', 'y'];
+  const b = ['y', 'n', 'n', 'p', 'p', 'y', 'y'];
+  assert.ok(approx(cohensKappa(a, b), cohensKappa(b, a), 1e-12));
+});
+
+test('cohensKappa: undefined cases return null, not a number', () => {
+  // pe === 1: both raters used one identical category throughout.
+  assert.equal(cohensKappa(['y', 'y', 'y'], ['y', 'y', 'y']), null);
+  assert.equal(cohensKappa([], []), null);
+  assert.equal(cohensKappa(['y'], ['y', 'n']), null);
 });

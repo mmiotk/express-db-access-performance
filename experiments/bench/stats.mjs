@@ -58,6 +58,44 @@ export function cliffsMagnitude(d) {
   return ad < 0.147 ? 'negligible' : ad < 0.33 ? 'small' : ad < 0.474 ? 'medium' : 'large';
 }
 
+// --- Categorical inter-rater agreement --------------------------------------
+// Used by scripts/score-protocol-agreement.mjs for the external protocol audit,
+// where two raters assign one of the codebook's nominal codes to each
+// (study, stage) item. Both take aligned label sequences: a[i] and b[i] are the
+// two raters' codes for the same item i.
+
+export function percentAgreement(a, b) {
+  if (a.length === 0 || a.length !== b.length) return null;
+  let hits = 0;
+  for (let i = 0; i < a.length; i++) if (a[i] === b[i]) hits++;
+  return hits / a.length;
+}
+
+// Cohen's kappa: (po - pe) / (1 - pe), chance-corrected agreement for nominal
+// codes. Returns null where kappa is undefined rather than a misleading number:
+// empty or mismatched input, and pe === 1 (both raters used one identical
+// category throughout, so there is no chance-corrected signal to report).
+export function cohensKappa(a, b) {
+  const n = a.length;
+  if (n === 0 || a.length !== b.length) return null;
+
+  const po = percentAgreement(a, b);
+
+  const marginalA = new Map();
+  const marginalB = new Map();
+  for (let i = 0; i < n; i++) {
+    marginalA.set(a[i], (marginalA.get(a[i]) ?? 0) + 1);
+    marginalB.set(b[i], (marginalB.get(b[i]) ?? 0) + 1);
+  }
+  let pe = 0;
+  for (const [label, countA] of marginalA) {
+    pe += (countA / n) * ((marginalB.get(label) ?? 0) / n);
+  }
+
+  if (pe === 1) return null;
+  return (po - pe) / (1 - pe);
+}
+
 // --- Paired / blocked comparisons -------------------------------------------
 // The primary campaign is a randomized-block design: within each replicate every
 // layer is driven by the identical request stream (seeded on endpoint+replicate,

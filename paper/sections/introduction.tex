@@ -13,7 +13,7 @@ following patterns such as Data Mapper and Active Record~\cite{fowler2002pattern
 empirical topic~\cite{chaniotis2015nodejs,kuffel2025nodejs,carmo2024backend},
 but that literature varies the runtime and framework, not the access layer.
 
-The most visible comparisons are vendor-authored. Peer-reviewed studies in the sources searched cover up to three ORMs in a controlled layer comparison; a broader Node-Bench study includes five access products but also changes frameworks and environments, while the dual-engine precedent holds the access layer fixed~\cite{colley2018orm,prisma_rawsql_2025,orm_compare_jcct_2025,pratama2023nodebench,zhadko2025orm,salunke2024pgmysql}. Table~\ref{tab:prior_art} records these coverage limits. The sole broad suite reporting a tail gives one P95 at one load point~\cite{drizzle_benchmarks}, and the academic studies time inside the process rather than through an HTTP framework~\cite{zhadko2025orm,imamsakti2025async}. These gaps motivate the case-study coverage, not a priority claim. A more basic gap is methodological: the reported
+The most visible comparisons are vendor-authored. Peer-reviewed studies in the sources searched cover up to three ORMs in a controlled layer comparison; a broader Node-Bench study includes five access products but also changes frameworks and environments, while the dual-engine precedent holds the access layer fixed~\cite{colley2018orm,prisma_rawsql_2025,orm_compare_jcct_2025,pratama2023nodebench,zhadko2025orm,salunke2024pgmysql}. Table~\ref{tab:prior_art} records these coverage limits. The sole broad suite reporting a tail gives one P95 at one load point~\cite{drizzle_benchmarks}, and the academic studies time inside the process rather than through an HTTP framework~\cite{zhadko2025orm,imamsakti2025async}. These gaps motivate the coverage of this experiment, not a priority claim. A more basic gap is methodological: the reported
 numbers are not established to be \emph{comparable} --- a layer returning fewer fields or
 erroring faster than it works can look faster, a library's chosen query strategy is
 conflated with its own cost, and a single, arbitrary load point conflates capacity,
@@ -21,11 +21,13 @@ tail latency under demand, and per-request latency. Establishing that comparabil
 problem this paper takes up.
 
 This paper addresses these gaps with a \emph{comparability protocol} and a
-non-vendor-authored case study that applies it (Section~\ref{sec:methodology} defines the
+non-vendor-authored benchmarking experiment that applies it (Section~\ref{sec:methodology} defines the
 term): an \emph{identical} Express application served through all nine access layers (two
 native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM, Objection,
-MikroORM) over five representative access patterns --- point read, keyset range scan,
+MikroORM) over five selected access patterns --- point read, keyset range scan,
 deep fetch, per-author aggregation, and insert --- rather than a production workload.
+The five are chosen to stress distinct aspects of the access layer, not as a
+representative sample of Express/database workloads.
 Seven layers run against \emph{both} engines under an identical schema, dataset, and pool
 size; two tuned native-driver baselines provide disclosed named-preparation and
 binary-protocol reference points rather than an optimization ceiling.
@@ -44,14 +46,14 @@ package.\footnote{Harness, deterministic seed, all adapters,
 raw per-cell measurements, and the table/figure-generating scripts:
 \texttt{https://github.com/mmiotk/express-db-access-performance}; the complete revision artifact is release v1.12.15 under the immutable version DOI \texttt{https://doi.org/10.5281/zenodo.21599104}, with concept DOI \texttt{https://doi.org/10.5281/zenodo.21313858}.}
 
-The case study answers three research questions, each scoped to the benchmarked
+The experiment answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
 \begin{enumerate}[label=\textbf{RQ\arabic*},leftmargin=*]
   \item \emph{(performance difference):} How large is the throughput and
         response-time-p99 \emph{difference} of the benchmarked implementations
         relative to the native-driver baseline, and how does it vary across the
         five access patterns? We keep distinct three quantities a fixed
-        operating point conflates: \emph{capacity} (saturating throughput),
+        operating point conflates: \emph{capacity} (estimated saturating throughput),
         \emph{high-load latency} (p99 under equal demand), and \emph{latency at
         matched utilization} (equal fractions of each layer's own capacity).
   \item \emph{(backend-stack transfer):} Does the observed layer ordering transfer
@@ -78,4 +80,4 @@ cell-admission criteria, interpretation, and limits): a concrete discipline for 
         and tail at matched utilization are reported as \emph{distinct} quantities, not
         conflated at one load point.
 \end{itemize}
-These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The claim is their access-layer-specific operational discipline, evaluated by the case-study ablation and a single-rater audit of nine external benchmarks, not invention of the principles or independent inter-rater validation. In this study the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss; common SQL and matched utilization changed two further interpretations. The machine-readable checklist, source-located audit, and result-blind review packets make that discipline available for independent reassessment.
+These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The claim is their access-layer-specific operational discipline, evaluated by the in-experiment ablation and a single-rater audit of nine external benchmarks, not invention of the principles or independent inter-rater validation. In this study the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss; common SQL and matched utilization changed two further interpretations. The machine-readable checklist, source-located audit, and result-blind review packets make that discipline available for independent reassessment.

@@ -16,6 +16,20 @@
 
 \textbf{Manuscript:} A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js \textbf{Journal:} Information and Software Technology \textbf{Revision date:} 26 July 2026
 
+\section*{Round 2 (26 July 2026 review)}
+
+No new benchmarking campaign; no reported number changed.
+
+\begin{itemize}
+  \item \textbf{AI disclosure moved into Methods} (new Section 3.9) per Elsevier's June 2026 policy: tool, models, developer, affected components, the scaffolding-versus-analytical split, how generated code was reviewed, and what independently validates it. Provenance is recorded per commit via \texttt{Co-Authored-By} trailers, so the distribution is re-derivable from the public history. \textbf{The prior disclosure's attribution to "Codex, OpenAI" was found to be unsupported by any repository evidence and has been removed}; the assistant was Claude (Anthropic) throughout. The section also discloses that assistance extended to selecting the statistical procedures and to drafting interpretation, not implementation alone, and argues that the mechanical checks rather than author independence are what a sceptical reader should rely on. The manuscript-preparation declaration stays before the references and cross-references Section 3.9. An AI-provenance note was added to the supplement, which had none.
+  \item \textbf{"Five representative access patterns" $\to$ "five selected access patterns"}, with an explicit statement in both places that the five stress distinct aspects of the access layer and are not a sample of a workload population. Weaker subset uses swept to "one layer of each tier" / "a selected subset".
+  \item \textbf{"Controlled case study" $\to$ "controlled benchmarking experiment"} throughout (\textasciitilde{}17 sites, both abstracts, table captions), with the design properties that justify the term stated in Section 3.
+  \item \textbf{Figure 1 bound to the six compliance levels.} Figure nodes relabelled \texttt{(M1)}--\texttt{(R7)}; the tokens defined once in the main text; a bridging sentence maps M1+M2 to the mandatory validity core and R3--R7 to five extensions, citing Supplement Table S40, which the body had never referenced. One canonical stage-name set now spans the figure, both tables, and the machine-readable checklist, replacing three competing sets. The compliance table's first column names the stage each level requires.
+  \item \textbf{Independent-review packets made completable.} Added the missing result-blind form for the 63 external-audit judgements; restructured the audit record so a second rater's codings attach without editing the author's (all 63 primary judgements verified unchanged); added a committed agreement scorer (percent agreement, Cohen's kappa per stage, full disagreement list) with nine new unit tests; created \texttt{completed/}; registered the packets in \texttt{MANIFEST.md} and \texttt{REPRODUCE.md}. R7 remains \textbf{unsatisfied} and the scorer reports agreement as not computable while one rater is recorded.
+  \item \textbf{Claims hardened against pending validation.} Threats now states what the automated evidence and the result-blind self-audit bound, and names the residual they cannot exclude; the Discussion separates what is demonstrated (the protocol is executable) from what is not (reusability by another person).
+  \item \textbf{Editorial.} "Estimated saturating throughput" at every ladder-maximum site; two dangling supplement claims corrected; a caption quoting a phrase absent from Figure 1 reconciled; two invalid cross-references fixed; the stale \texttt{TODO.md} reconciled against shipped work.
+\end{itemize}
+
 \section*{Semantic admission}
 
 \begin{itemize}

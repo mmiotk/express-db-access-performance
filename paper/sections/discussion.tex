@@ -39,7 +39,7 @@ is narrower: Prisma exceeds MikroORM on PostgreSQL and trails it on MySQL in bot
 campaigns, with paired intervals excluding equality in opposite directions
 (Supplement Table~S46). This supports backend-stack sensitivity in the tested
 implementations while leaving cross-host transfer unresolved. A five-replicate,
-representative-layer six-statement transaction remains exploratory and does not
+one-layer-per-tier six-statement transaction remains exploratory and does not
 extend the single-row-insert finding to writes as a class (Supplement Table~S8).
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking}
@@ -58,7 +58,7 @@ al.~\cite{raasveldt2018fair} to the access-layer sub-genre, and at least one pla
 part of the gap between some vendor-reported and controlled benchmark results.
 
 \paragraph{Evidence for the protocol contribution}
-The case-study record shows concrete consequences of the protocol stages: an
+The experimental record shows concrete consequences of the protocol stages: an
 independent seed specification caught shared state/fixture defects that mutual
 equality would miss; treatment provenance made the loading-policy sensitivity
 auditable; capacity characterization changed the tail interpretation; and the
@@ -72,6 +72,17 @@ not establish inter-rater agreement or independent general applicability. The
 methodological claim is consequently an access-layer-specific operational
 discipline and reusable artifact, not invention of the constituent controls or a
 complete theory of benchmarking validity.
+
+What is demonstrated is that the protocol is \emph{executable}: it admits and
+rejects concrete cells, it changed five interpretations here
+(Table~\ref{tab:protocol_mapping}), and it codes an external corpus to a
+reproducible per-stage result. What is not demonstrated is \emph{reusability by
+another person} --- that a second analyst applying the codebook reaches the same
+judgements, or that another team can instantiate the protocol without its author.
+That is an empirical question, left open rather than argued around: the codebook,
+audit record, agreement scorer, and result-blind forms are released so it can be
+settled against this study. The contribution should be read as a structured,
+testable proposal with one worked instantiation, not a validated methodology.
 
 \paragraph{Practical guidance}
 The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in this

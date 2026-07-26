@@ -1,8 +1,10 @@
 % hand-authored analytical table (authored, not data-generated): protocol
-% compliance levels and the workload cells that satisfy each in this case study.
+% compliance levels and the workload cells that satisfy each in this experiment.
 \begin{table}[htbp]
   \centering
-  \caption{Protocol compliance levels and which workload cells satisfy each in this case study. The
+  \caption{Protocol compliance levels and which workload cells satisfy each in this experiment. Each
+    level names the protocol stage (main text, Figure~1) it requires: the six levels group the seven stages by
+    the claim each licenses, with M1 and M2 combined into the mandatory validity core. The
     mandatory validity core and capacity characterization are exercised across the \emph{whole}
     matrix; the common-SQL, utilization, and resource extensions are demonstrated on the deep fetch --- the widest-spread tested pattern
     (main text, Results) --- as a representative-point instantiation, not a claim of full-matrix
@@ -12,21 +14,21 @@
   \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l p{0.30\linewidth} p{0.26\linewidth} p{0.24\linewidth}}
     \toprule
-    Compliance level & Requirement it adds & Cells satisfying it here & Evidence \\
+    Compliance level (protocol stages) & Requirement it adds & Cells satisfying it here & Evidence \\
     \midrule
-    Mandatory validity core & Specification-derived expected results, differential equivalence, correct write state, and a
+    Mandatory validity core (M1, M2) & Specification-derived expected results, differential equivalence, correct write state, and a
       predeclared treatment rule, on \emph{every} timed cell & All five patterns $\times$ two engines
       (all 90 cells) & Study Design; Table~S38; write verifier \\
     \midrule
-    Capacity characterization & Locate saturating throughput by a concurrency sweep at each workload
+    Capacity characterization (R4) & Locate estimated saturating throughput by a concurrency sweep at each workload
       point & All five patterns $\times$ two engines & Table~S35 \\
     \midrule
-    Common-SQL-sensitivity extension & Add a common-SQL raw-path sensitivity contrast & Deep fetch $\times$ two engines & Tables~S14, S42 \\
-    Utilization-controlled extension & Measure the tail at matched fractions of each treatment's own
+    Common-SQL-sensitivity extension (R3) & Add a common-SQL raw-path sensitivity contrast & Deep fetch $\times$ two engines & Tables~S14, S42 \\
+    Utilization-controlled extension (R5) & Measure the tail at matched fractions of each treatment's own
       capacity & Deep fetch $\times$ two engines & Tables~S21--S22, S43 \\
-    Resource-accounting extension & Report compute/memory demand or add an equal-budget sensitivity & Deep fetch on both
+    Resource-accounting extension (R6) & Report compute/memory demand or add an equal-budget sensitivity & Deep fetch on both
       engines; equal-CPU sensitivity is a PostgreSQL subset & Tables~S4, S5, S10 \\
-    Implementation-review extension & Independent review and recorded disposition for every treatment & Not satisfied; packets prepared, external reviewers pending & artifact reviewer packet \\
+    Implementation-review extension (R7) & Independent review and recorded disposition for every treatment & Not satisfied; packets prepared, external reviewers pending & \texttt{notes/reviewer-packets/} \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

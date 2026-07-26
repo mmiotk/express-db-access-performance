@@ -2,7 +2,7 @@
 \label{sec:related}
 
 We survey prior work along four \emph{coverage} axes --- taxonomy, engine, joint throughput/tail
-reporting, and vendor involvement --- spanned by the case study (Table~\ref{tab:prior_art}). We separately audit which comparability controls each source reports. A structured
+reporting, and vendor involvement --- spanned by this experiment (Table~\ref{tab:prior_art}). We separately audit which comparability controls each source reports. A structured
 scoping search (not a systematic review) of the ACM Digital Library, IEEE Xplore, Scopus, and Google
 Scholar (2006--July~2026) retained empirical comparisons of relational access layers or engines, with
 search details archived in the replication package (\texttt{notes/related-work-search.md}); being
@@ -91,13 +91,13 @@ access-layer study to operationalize \emph{what code represents a library}, how 
 implementations are checked for semantic equivalence, and how strategy-sensitive results are
 contrasted. Our protocol supplies one concrete operationalization: an arbitrary but predeclared treatment policy; a common-SQL raw-path sensitivity contrast; and a per-cell gate requiring specification-conformant, mutually equivalent responses and verified write state \emph{before} timing. Correctness-before-timing has precedents (SPEC validation, TPC ACID, and SQLancer~\cite{rigger2020sqlancer}); cross-implementation equivalence has the direct precedent discussed above. Our narrower contribution uses that check as an explicit prerequisite for admitting
 benchmark timings and combines it with predeclared treatment selection and operating-point
-separation. Together these constructs provide a concrete discipline for establishing and reporting comparability among competing implementations of one task. Its evidence is the case-study ablation and a single-rater retrospective audit of nine external benchmarks (Supplement Table~S37); this demonstrates utility and applicability, not independent inter-rater validation or invention of the underlying principles.
+separation. Together these constructs provide a concrete discipline for establishing and reporting comparability among competing implementations of one task. Its evidence is the in-experiment ablation and a single-rater retrospective audit of nine external benchmarks (Supplement Table~S37); this demonstrates utility and applicability, not independent inter-rater validation or invention of the underlying principles.
 
 \begin{table}[htbp]
   \centering
   \small
   \caption{Prior work on relational-database access-layer performance,
-    positioned along four \emph{coverage} axes our case study spans; the paper's contribution
+    positioned along four \emph{coverage} axes this experiment spans; the paper's contribution
     is the comparability protocol of Section~\ref{sec:introduction}, not this coverage.
     ``Products covered'' aggregates native drivers, query builders, and ORMs
     into one count; ``none'' marks studies that vary the engine or

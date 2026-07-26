@@ -18,7 +18,16 @@ Dear Editors,
 
 Please find enclosed the revised manuscript, ``A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js,'' submitted as a Research Paper to Information and Software Technology.
 
-This revision addresses the scientific-status concerns raised in the July 23 review:
+This version incorporates two rounds of pre-submission review. The second round (26 July) raised no fatal concern and confirmed that the artifact/DOI synchronization and wait-event interpretation flagged previously are resolved. It produced four required changes, all adopted:
+
+\begin{itemize}
+  \item \textbf{Generative-AI use in research methods is now documented in the Methods section} (Section 3.9), as current Elsevier policy requires for AI used in code development and data analysis, with the manuscript-preparation declaration retained separately before the references. Preparing it revealed that the previous disclosure misattributed part of the work to an OpenAI tool that the repository shows was never used; the attribution is corrected to Claude (Anthropic), with per-commit provenance a reader can re-derive from the public git history. The section also discloses that assistance extended to selecting the statistical procedures and drafting interpretation, not implementation alone, and identifies the mechanical checks --- unit-tested estimators, cell-to-record tracing, an oracle derived independently of the code under test --- that a sceptical reader can rely on instead of author review.
+  \item \textbf{Terminology narrowed to what the data support:} "five representative access patterns" is now "five selected access patterns" with an explicit non-representativeness statement, and the design is described as a controlled benchmarking experiment rather than a case study, consistent with the randomized-block, automated-treatment design and the methodological guidance already cited.
+  \item \textbf{The protocol's seven stages and six reporting-compliance levels are now bound together in the main text.} The stage identifiers appear in the figure itself, are defined once in the body, and map explicitly onto the six-level scheme, which the body now cites. One canonical stage-name set replaces three that had drifted apart.
+  \item \textbf{The independent-review packets were made completable.} An audit found that one of the three could not have been finished as shipped: no blank form existed for the 63 external-audit judgements, and no code path could score a returned one. A blind coding form, a rater-extensible audit record, and a unit-tested agreement scorer now ship with the artifact.
+\end{itemize}
+
+The first round addressed the scientific-status concerns raised in the July 23 review:
 
 \begin{itemize}
   \item It separates independent expected-result conformance from cross-implementation differential equivalence. A deterministic seed-specification oracle now checks reads without using native-driver output, while mutations are admitted only after database-state validation.
@@ -29,11 +38,11 @@ This revision addresses the scientific-status concerns raised in the July 23 rev
   \item Reproduction labels now distinguish current author-run isolated reconstruction, historical author-run archive-isolated reconstruction, current measurement re-execution, and independent third-party reproduction. The current candidate check verified 60/60 JSON hashes and regenerated 35 table outputs plus four derived JSON files byte-for-byte without starting either DBMS; third-party reproduction has not occurred and is not claimed.
 \end{itemize}
 
-The manuscript also records two residual limitations without disguising them: all adapters and treatment assignments remain single-author, and both measurement campaigns use the same virtualized host. The protocol now includes independent implementation-review provenance as a recommended stage; result-blind review packets are supplied, but no unperformed human audit is counted as evidence.
+The manuscript records two residual limitations without disguising them: all adapters and treatment assignments remain single-author, and both measurement campaigns use the same virtualized host. The protocol includes independent implementation-review provenance as a recommended stage; result-blind review packets are supplied, but no unperformed human audit is counted as evidence. That stage is reported as unsatisfied in both the compliance table and the machine-readable checklist, and the agreement scorer reports "not computable" rather than a number while only one rater is recorded. The manuscript states what the automated evidence and the result-blind self-audit do bound, and names the residual they cannot exclude, so no claim rests on validation that has not occurred.
 
 The artifact includes pinned dependencies, immutable documentation snapshots and hashes, exact 42-file source archives for both accepted campaigns, the seed oracle, campaign-state validator, raw per-repetition measurements, a machine-readable protocol checklist, the external-audit dataset, and generators mapping every reported table and figure to its inputs. The complete revision artifact is archived as v1.12.15 under immutable Zenodo version DOI 10.5281/zenodo.21599104; concept DOI 10.5281/zenodo.21313858 resolves to the release series.
 
-The article uses the required structured abstract. The separately documented conservative submission equivalent is 13,859 words, including all required declarations, leaving 1,141 words below the 15,000-word limit.
+The article uses the required structured abstract. The separately documented conservative submission equivalent is 14,783 words, including all required declarations, leaving 217 words below the 15,000-word limit.
 
 The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding. The manuscript includes declarations covering generative-AI assistance in writing and research software; the author accepts responsibility for all content and results.
 

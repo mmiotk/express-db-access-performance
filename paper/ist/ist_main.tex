@@ -49,7 +49,7 @@ support.
 \textbf{Methods:} The protocol requires task-derived read checks,
 cross-implementation equivalence, post-write state validation, a predeclared
 configuration-selection policy, and separate capacity and latency operating
-points. An open Express.js case study compares nine policy-selected configurations
+points. An open Express.js benchmarking experiment compares nine policy-selected configurations
 and two tuned native references on PostgreSQL, MySQL, and five access patterns in a
 25-run randomized-block campaign. A second same-host campaign tests selected rank
 reversals; a source-located audit applies the protocol to nine external benchmarks.
@@ -113,18 +113,13 @@ This research did not receive any specific grant from funding agencies in the
 public, commercial, or not-for-profit sectors.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the writing process}
-During the preparation of this work the author used large language models (Claude,
-Anthropic, and Codex, OpenAI) to draft and edit manuscript text and improve its readability
-and language. After using these tools, the author reviewed and edited the content as needed
-and takes full responsibility for the content of the published article.
-
-\section*{AI-assisted research software}
-Separately from the writing above, large language models (Claude, Anthropic, and Codex, OpenAI) also assisted
-the author in implementing and analyzing the benchmark harness. This is research tooling for
-which the author takes full responsibility, and the AI-assisted analytical code is publicly inspectable and checked: the statistical estimators carry unit tests against
-hand-computed values and known closed-form properties (\texttt{bench/stats.test.mjs}, run by
-\texttt{npm test}), every reported table cell traces to a raw per-cell record through a
-committed generator (\texttt{MANIFEST.md}), and the specification-derived read oracle checks expected results without using timed native-driver output; differential checks then establish finite cross-implementation equivalence; and write checks validate resulting database state before timing is trusted.
+During the preparation of this work the author used Claude (Anthropic) to draft and edit
+manuscript text and improve its readability and language. After using this tool, the author
+reviewed and edited the content as needed and takes full responsibility for the content of
+the published article. AI assistance that formed part of the research itself --- implementation
+of the benchmark harness and of the analysis code --- is separate from the writing use declared
+here and is documented in Section~\ref{sec:ai-tooling}, with the models, affected components,
+and the checks that independently validate the generated code.
 
 %% ------------------------------------------------------------------
 \bibliographystyle{elsarticle-num}

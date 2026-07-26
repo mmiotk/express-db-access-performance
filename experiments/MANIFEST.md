@@ -26,7 +26,7 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `scripts/ci-tables.mjs` (`RAW_FILE=current-primary.json`) | `results/current-primary.json` |
 | `tab:prior_art` (Table 1) | inline in `sections/related_work.tex` | authored synthesis | `notes/related-work-search.md` |
 | `fig:protocol` (Figure 1) | `fig_protocol.tex` | authored protocol diagram | `protocol-checklist.yaml` |
-| `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | case-study evidence cited in cells |
+| `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | in-experiment evidence cited in cells |
 | `tab:estimands` (Table 3) | `estimands.tex` | authored estimand consolidation | manuscript definitions |
 | `fig:insert_dispersion` (main figure) | `fig_insert_dispersion.tex` | `scripts/gen-rq2-insert-figure.mjs` | `results/current-primary.json` |
 
@@ -73,7 +73,7 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:protocol_retro` | S37 | `protocol_retro.tex` | `scripts/gen-protocol-retro-table.mjs` | `external-protocol-audit.json` |
 | `tab:semantic_equivalence` | S38 | `semantic_equivalence.tex`; unnumbered `spec_oracle.tex` panel | differential table authored from gate summary; `scripts/gen-spec-oracle-table.mjs` | `semantic-equivalence.json`, `spec-oracle.json` |
 | `tab:patterns` | S39 | `patterns.tex` | authored workload definition | endpoint contract |
-| `tab:protocol_compliance` | S40 | `protocol_compliance.tex` | authored compliance mapping | `protocol-checklist.yaml`, case-study evidence |
+| `tab:protocol_compliance` | S40 | `protocol_compliance.tex` | authored compliance mapping | `protocol-checklist.yaml`, in-experiment evidence |
 | `tab:native_contrasts` | S41 | `native_contrasts.tex` | `scripts/gen-native-contrasts.mjs` (`RAW_FILE=current-primary.json`) | `results/current-primary.json` |
 | `tab:samesql_components` | S42 | `samesql_components.tex` | authored component enumeration | `results/sameplan.*`, server capture |
 | `tab:tail_regimes` | S43 | `tail_regimes.tex` | `scripts/gen-tail-regimes.mjs` | `results/current-primary.json`, `results/utilization-corrected.{postgres,mysql}.json` |
@@ -101,6 +101,19 @@ The five per-pattern tables (`point_read`…`write`) carry a 95% bootstrap CI on
 new-experiment scripts (review round 4): `utilization.mjs` (utilization-controlled
 open loop), `cluster.mjs` + `cluster-server.mjs` (multi-worker), `mixed.mjs` (mixed
 read/write), and the parameterized `poolsize.mjs`/`fanout.mjs`.
+
+## External protocol audit and independent-review packets
+
+| Artifact | What it holds | Produced/checked by |
+|---|---|---|
+| `external-protocol-audit.json` | 63 source-located judgements (9 sources × 7 stages). The primary rater's codings are in `studies[].coding`; any additional rater's in `studies[].additional_codings[<rater-id>]`, same shape, so the primary record is never edited. | `scripts/validate-protocol-audit.mjs` (`npm run audit:protocol`) |
+| `results/protocol-audit-agreement.json` | Percent agreement and Cohen's kappa, overall and per stage, plus every disagreeing cell. Reports `not_computable` while only one rater is recorded. | `scripts/score-protocol-agreement.mjs` (`npm run audit:agreement`); estimators in `bench/stats.mjs`, tested in `bench/stats.test.mjs` |
+| `../notes/protocol-audit-codebook.md` | Code definitions and the seven stage definitions the coding applies. | — (authored) |
+| `../notes/reviewer-packets/` | Blank result-blind forms for the three pending independent reviews, plus `review-register.csv` and `completed/`. | — (authored; see `REPRODUCE.md` §6) |
+
+R7 is recorded as **unsatisfied**: all four register rows are `pending` and
+`completed/` is empty. No agreement statistic is claimed anywhere in the
+manuscript.
 
 ## Per-cell provenance (run id → table cell)
 

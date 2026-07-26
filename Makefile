@@ -2,7 +2,8 @@
 # Run `make help` for the available targets.
 
 .DEFAULT_GOAL := help
-.PHONY: help pdf supplement view setup bench tables results clean distclean
+.PHONY: help pdf supplement view setup bench tables results clean distclean \
+        ist ist-package release-check
 
 help: ## Show this help
 	@echo "Targets:"
@@ -21,6 +22,9 @@ ist: ## Build the IST/Elsevier submission PDF (paper/ist/ist_main.pdf)
 
 ist-package: ## Assemble the self-contained IST submission folder + zip
 	$(MAKE) -C paper/ist package
+
+release-check: ## Verify the release version and DOI agree across every declaration site
+	./scripts/release.sh --check
 
 view: ## Build and open the generic paper PDF
 	$(MAKE) -C paper view

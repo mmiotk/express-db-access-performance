@@ -29,4 +29,4 @@ The state preflight discovered that the historical MySQL rebuild could allocate 
 
 ## Interpretation limits
 
-The case-study treatment is selected mechanically from frozen documentation; it is not observed practitioner behavior. The common-SQL raw-path experiment is a compound sensitivity contrast. Capacity, tail under equal demand, and tail at matched utilization are distinct quantities. All adapters and treatment choices remain single-author; result-blind independent-review packets are provided, but no completed independent human audit is claimed.
+The experiment's treatment is selected mechanically from frozen documentation; it is not observed practitioner behavior. The common-SQL raw-path experiment is a compound sensitivity contrast. Capacity, tail under equal demand, and tail at matched utilization are distinct quantities. All adapters and treatment choices remain single-author; result-blind independent-review packets are provided, but no completed independent human audit is claimed.

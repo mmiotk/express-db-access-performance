@@ -172,6 +172,31 @@ hand-refined captions the generators do not emit; and `tail_regimes.tex` differs
   identifier is identical across engines; DBMS-generated timestamps are
   intentionally excluded. The current 662-row fixture hashes to
   `402e0aebbbc99f6ca32f6e176182fbb4fe753fe273f2e79fb00d5b73a99fe5ca`.
-- `npm run audit:protocol`: all 63 source-located external-audit judgements validate.
-- `npm test`: 21/21 unit tests pass.
+- `npm run audit:protocol`: all 63 source-located external-audit judgements validate;
+  reports the rater roster and how many judgements each rater has recorded.
+- `npm run audit:agreement`: computes inter-rater agreement for the external protocol
+  audit and writes `results/protocol-audit-agreement.json`. With only the author's
+  codings recorded it reports `not_computable` and no statistic — this is the expected
+  output for the submitted artifact, not a failure.
+- `npm test`: 28/28 unit tests pass.
 - The rebuilt `paper/ist/ist_main.pdf` and `paper/_build/supplement.pdf`.
+
+## 6. Independent-review packets (pending)
+
+The protocol's implementation-review stage (R7) is **not satisfied** in this
+artifact: the packets are prepared but no external human review is claimed. They
+are completable without re-running any measurement:
+
+| Row | Packet | Object reviewed |
+|---|---|---|
+| TS-01, TS-02 | `notes/reviewer-packets/treatment-selection-blind.md` | frozen treatment-selection rule applied to the 9 layers |
+| AD-01 | `notes/reviewer-packets/adapter-audit-blind.md` | adapter implementations, conformance and performance neutrality |
+| PA-01 | `notes/reviewer-packets/protocol-audit-blind.md` | re-coding of the 63 external-audit judgements |
+
+Status for all four rows is `pending` in
+`notes/reviewer-packets/review-register.csv`. A returned form is filed in
+`notes/reviewer-packets/completed/`, its codings entered under
+`studies[].additional_codings[<rater-id>]` in `external-protocol-audit.json`
+(leaving the author's `coding` block untouched), then scored with
+`npm run audit:protocol && npm run audit:agreement`. Disagreements are reported,
+not reconciled away.
