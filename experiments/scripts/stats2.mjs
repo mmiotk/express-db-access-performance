@@ -1,6 +1,6 @@
 // Inferential analysis on the selected primary dataset (RAW_FILE, default
 // results/current-primary.json; 25 independent replicates), RESPECTING THE PAIRED/BLOCKED DESIGN (revision round 2, review
-// 6.1/6.2/6.4/6.9/8). Within each replicate every layer runs the identical request
+// 6.1/6.2/6.4/6.9/8). Within each replicate every layer draws from the same seeded
 // stream, so layers are compared on per-replicate ratios, not as independent
 // groups. Everything is seeded and deterministic.
 //   (1) Paired TOST equivalence (a-priori ±5% margin) for pg vs Prisma, deep fetch,

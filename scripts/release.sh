@@ -117,6 +117,25 @@ if [[ "${1:-}" == "--check" ]]; then
   else
     echo "ARTIFACT: no 'origin' remote configured; cannot verify the revision is public."; fail=1
   fi
+  # The manuscript claims every reported table regenerates byte-for-byte from the
+  # archived data. That was false: corrections had been applied to paper/tables/
+  # by hand while the generators still emitted the old text, so `npm run
+  # tables:primary` silently reverted eight tables — including two retracted
+  # claims. This re-runs the documented chain and fails if it changes anything.
+  if [[ "${SKIP_REGEN:-}" != "1" ]]; then
+    if ( cd experiments && RAW_FILE=current-primary.json npm run tables:primary --silent >/dev/null 2>&1 ); then
+      changed=$(git diff --name-only paper/tables/ experiments/results/tables/ | wc -l)
+      if [[ "$changed" != "0" ]]; then
+        echo "REPRODUCIBILITY: regenerating tables from archived data changed $changed file(s);"
+        echo "                 the manuscript does not match its own generators:"
+        git diff --name-only paper/tables/ experiments/results/tables/ | sed 's/^/                   /'
+        fail=1
+      fi
+    else
+      echo "REPRODUCIBILITY: table regeneration chain failed to run."; fail=1
+    fi
+  fi
+
   # Any v1.x.y other than the declared one, excluding the deliberate historical
   # v1.12.9 clean-room references.
   stray=$(grep -rhoP 'v[0-9]+\.[0-9]+\.[0-9]+' "${FILES[@]}" 2>/dev/null \

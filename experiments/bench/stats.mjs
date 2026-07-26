@@ -148,8 +148,10 @@ export function kappaBootstrapCI(a, b, { B = 5000, level = 0.95, rand = Math.ran
 
 // --- Paired / blocked comparisons -------------------------------------------
 // The primary campaign is a randomized-block design: within each replicate every
-// layer is driven by the identical request stream (seeded on endpoint+replicate,
-// not layer), so the two layers' sample arrays are index-aligned by replicate.
+// layer is measured once, drawing from the same seeded identifier distribution
+// (seeded on endpoint+replicate, not layer) — not an identical served sequence,
+// since run lengths differ. The pairing these estimators exploit comes from the
+// block design: the two layers' sample arrays are index-aligned by replicate.
 // These estimators exploit that pairing; they require a,b of equal length with
 // a[i] and b[i] from the same replicate i.
 

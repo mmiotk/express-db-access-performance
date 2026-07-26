@@ -28,6 +28,7 @@ package: pdf
 	@for f in ../tables/*.tex;   do cp "$$f" "_package/tables_$$(basename $$f)";   done
 	cp $(MAIN).pdf _package/
 	cp ../_build/supplement.pdf _package/supplement.pdf
+	@rm -f ist-submission.zip
 	@cd _package && zip -qr ../ist-submission.zip . -x '*.DS_Store'
 	@echo "Self-contained sources: paper/ist/_package/  ->  ist-submission.zip"
 

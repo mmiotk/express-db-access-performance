@@ -4,6 +4,13 @@
 **Journal:** Information and Software Technology
 **Revision date:** 26 July 2026
 
+## Round 3 (26 July 2026 critical re-review)
+
+- **Reproducibility defect repaired.** Corrections from round 2 had been applied to `paper/tables/*.tex` while the generators still emitted the old text, so the documented regeneration chain silently reverted eight tables — including the retracted instrument claim and retired terminology. The fixes are now in the generator sources; three authored tables were removed from the sync set; the chain is idempotent, and `scripts/release.sh --check` fails the release if regeneration changes anything.
+- **Two false claims corrected.** A fourth "identical request stream" site survived in the Analysis subsection. And "the native implementation leads each of the ten engine--pattern comparisons" is contradicted by Table 4: on the MySQL insert the four fastest treatments span 1,766--1,816 req/s with overlapping intervals and the native driver ranks fourth. Both fixed; the second is now reported as a result.
+- **Companion documents realigned** with the corrected Section 3.9 (trailer coverage, cell traceability, AI role in analysis) and with the current test count.
+- Corrected the run-to-run CV claim (the 4.5% figure is the deep-fetch maximum; insert reaches 6.4%/13.6%), scoped the MySQL p99 range to policy-selected layers, fixed `MANIFEST.md` for the two floats moved to the supplement, and made the submission zip prune deleted members.
+
 ## Round 2 (26 July 2026 review)
 
 No new benchmarking campaign; no reported number changed.

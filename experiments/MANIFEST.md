@@ -27,8 +27,6 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:prior_art` (Table 1) | inline in `sections/related_work.tex` | authored synthesis | `notes/related-work-search.md` |
 | `fig:protocol` (Figure 1) | `fig_protocol.tex` | authored protocol diagram | `protocol-checklist.yaml` |
 | `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | in-experiment evidence cited in cells |
-| `tab:estimands` (Table 3) | `estimands.tex` | authored estimand consolidation | manuscript definitions |
-| `fig:insert_dispersion` (main figure) | `fig_insert_dispersion.tex` | `scripts/gen-rq2-insert-figure.mjs` | `results/current-primary.json` |
 
 ## Supplement tables
 
@@ -73,6 +71,7 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:protocol_retro` | S37 | `protocol_retro.tex` | `scripts/gen-protocol-retro-table.mjs` | `external-protocol-audit.json` |
 | `tab:semantic_equivalence` | S38 | `semantic_equivalence.tex`; unnumbered `spec_oracle.tex` panel | differential table authored from gate summary; `scripts/gen-spec-oracle-table.mjs` | `semantic-equivalence.json`, `spec-oracle.json` |
 | `tab:patterns` | S39 | `patterns.tex` | authored workload definition | endpoint contract |
+| `tab:estimands` | S47 | `estimands.tex` | authored estimand consolidation | manuscript definitions |
 | `tab:protocol_compliance` | S40 | `protocol_compliance.tex` | authored compliance mapping | `protocol-checklist.yaml`, in-experiment evidence |
 | `tab:native_contrasts` | S41 | `native_contrasts.tex` | `scripts/gen-native-contrasts.mjs` (`RAW_FILE=current-primary.json`) | `results/current-primary.json` |
 | `tab:samesql_components` | S42 | `samesql_components.tex` | authored component enumeration | `results/sameplan.*`, server capture |

@@ -21,10 +21,12 @@ when every layer runs common SQL through its raw facility (Section~\ref{sec:thre
 \input{\tabledir write}
 
 \subsection{RQ1: performance difference relative to the native baseline}
-The native implementation leads each of the ten engine--pattern comparisons:
+The native implementation leads nine of the ten engine--pattern comparisons:
 \texttt{pg} or \texttt{pg-tuned} is fastest on all five PostgreSQL patterns, and
-\texttt{mysql2} or \texttt{mysql2-tuned} on all five MySQL patterns. Among the
-selected treatments, the corresponding untuned native driver leads each comparison. The current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier version's headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
+\texttt{mysql2} on four of five MySQL patterns. The exception is the MySQL insert,
+where the four fastest treatments span 1{,}766--1{,}816~req/s with broadly overlapping
+intervals and the native driver ranks fourth (Table~\ref{tab:write}); that ordering is
+practically unresolved rather than a defeat, and we do not read a leader from it. The current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier version's headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
 
 \texttt{pg-tuned} and \texttt{mysql2-tuned} track their untuned counterparts within about
 $2\%$ on the deep fetch (\texttt{pg-tuned} 3{,}700 vs.\ \texttt{pg} 3{,}638;
@@ -127,7 +129,7 @@ that grows with breadth; it does not vary graph depth, schema, or query mix.
 
 \subsection{Tail latency}
 At equal closed-loop demand, deep-fetch p99 spans 18--108~ms on PostgreSQL and
-28--121~ms on MySQL (Table~\ref{tab:deep_fetch}). The run is the analysis unit; a
+28--121~ms among the policy-selected layers on MySQL (Table~\ref{tab:deep_fetch}). The run is the analysis unit; a
 12~s slow-layer run supplies only about 60 observations to its top percentile, so
 we use the median of 25 run-level p99 values and show their raw spread. Ten
 60-second repetitions preserve the practical ordering, with 12-versus-60-second rank correlation $1.00$ on both engines; the largest median shift is $5.6\%$ on PostgreSQL and $3.8\%$ on MySQL (Supplement Table~S23). This is

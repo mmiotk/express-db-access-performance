@@ -60,7 +60,7 @@ function cvTable(engine) {
 
 // --- 2. Significance of adjacent layers on the deep fetch ------------------
 // The design is paired: within each replicate every layer is driven by the
-// identical request stream, so adjacent layers are compared with PAIRED tests on
+// same seeded identifier distribution, so adjacent layers are compared with PAIRED tests on
 // the per-replicate log-ratios (permutation + Wilcoxon signed-rank), reporting the
 // geometric-mean paired ratio with a paired bootstrap 95% CI and paired dominance.
 // Seeded PRNG so every resample and permutation is bit-reproducible.
@@ -115,7 +115,8 @@ function significanceTable(engine, endpoint = 'deep_fetch') {
   \\centering
   \\caption{Paired comparison of adjacently ranked access layers on the deep
     fetch (${engine==="postgres"?"PostgreSQL":"MySQL"}), over the ${ranked[0].r.repeats} repeated runs. Because
-    every layer runs the identical per-replicate request stream, layers are compared
+    the design is a randomized block --- every layer measured once per replicate, from
+    the same seeded identifier distribution --- layers are compared
     on their per-replicate throughput ratios: median throughput (req/s; the per-cell
     bootstrap CI is in the pattern tables), the geometric-mean paired ratio A$/$B with a within-campaign
     paired bootstrap 95\\% CI, paired dominance (fraction of replicates in which A exceeds B), and the
