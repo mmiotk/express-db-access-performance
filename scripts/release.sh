@@ -89,10 +89,21 @@ if [[ "${1:-}" == "--check" ]]; then
   if [[ -z "$tag_sha" ]]; then
     echo "ARTIFACT: tag v$OLD_V does not exist locally."; fail=1
   elif [[ "$tag_sha" != "$head_sha" ]]; then
-    echo "ARTIFACT: HEAD ($(git rev-parse --short HEAD)) is not the tagged release commit"
-    echo "          (v$OLD_V = ${tag_sha:0:7}). The archived artifact does not contain"
-    echo "          $(git rev-list --count "v$OLD_V"..HEAD) later commit(s), so Data Availability is false."
-    fail=1
+    # Only substantive drift falsifies Data Availability. Commits that touch
+    # nothing but regenerable build artifacts leave the archived sources intact.
+    substantive=$(git diff --name-only "v$OLD_V" HEAD -- . \
+                  ':(exclude)paper/ist/ist-submission.zip' \
+                  ':(exclude)paper/ist/_package/**' | wc -l)
+    if [[ "$substantive" != "0" ]]; then
+      echo "ARTIFACT: HEAD ($(git rev-parse --short HEAD)) is not the tagged release commit"
+      echo "          (v$OLD_V = ${tag_sha:0:7}), and $substantive source file(s) differ,"
+      echo "          so Data Availability is false. Differing:"
+      git diff --name-only "v$OLD_V" HEAD -- . ':(exclude)paper/ist/ist-submission.zip' \
+        ':(exclude)paper/ist/_package/**' | head -10 | sed 's/^/            /'
+      fail=1
+    else
+      echo "NOTE: HEAD is past v$OLD_V but differs only in build artifacts; sources match the release."
+    fi
   fi
   if git remote get-url origin >/dev/null 2>&1; then
     # Capture once, then match with here-strings. Piping into `grep -q` or an
