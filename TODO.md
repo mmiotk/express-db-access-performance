@@ -78,7 +78,7 @@
 ## 4. Packaging
 
 - [x] `git remote add origin …`, first push. (`origin/master` tracks GitHub.)
-- [x] Zenodo v1.12.16 deposit prepared under version DOI 10.5281/zenodo.21609605.
+- [x] Zenodo v1.12.17 deposit prepared under version DOI 10.5281/zenodo.21610058.
 
 ## 5. Open before submission
 
