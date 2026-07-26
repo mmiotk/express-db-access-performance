@@ -1,77 +1,32 @@
-# Methodology
+# Methodology overview
 
-Design decisions for the benchmark, and the known pitfalls each one guards
-against. Grounded in the prior-art review (`notes/prior-art.md`), especially
-*Tell-Tale Tail Latencies* (Fritz et al., TPCTC 2021, arXiv:2107.11607) and
-*The Tail at Scale* (Dean & Barroso, 2013).
+This file is the short repository-level entry point. The normative treatment record is [`experiments/METHODOLOGY.md`](experiments/METHODOLOGY.md), the runnable procedure is [`REPRODUCE.md`](REPRODUCE.md), and table/figure provenance is in [`experiments/MANIFEST.md`](experiments/MANIFEST.md).
 
-## Factors
+## Factors and outcomes
 
-| Factor | Levels |
-|---|---|
-| Access layer | pg, mysql2, knex, drizzle, prisma, sequelize, typeorm, objection, mikroorm |
-| Engine | PostgreSQL 18.4, MySQL 9.7.1 |
-| Access pattern (endpoint) | point read, range scan (keyset), deep/nested fetch, aggregation, insert |
+- 11 configured treatments: nine policy-selected documented paths and two tuned native references. Seven portable layers run on PostgreSQL 18.4 and MySQL 9.7.1.
+- Five patterns: point read, keyset range scan, deep fetch, aggregation, and single-row insert.
+- Outcomes: throughput and run-level p50/p90/p97.5/p99. The inferential unit is the endpoint-level run, not an individual HTTP request.
 
-`pg` runs on PostgreSQL only, `mysql2` on MySQL only; every other layer runs on both.
+## Admission before timing
 
-## Response variables
+Read evidence has two separate layers:
 
-- **Throughput** — requests/second (autocannon `requests.average`).
-- **Tail latency** — p50, p90, p97.5, **p99** (ms). Reporting throughput *and*
-  the tail together, rather than one metric picked after the fact, is one requirement of
-  the comparability protocol that is the paper's contribution; vendor benchmarks report
-  one or the other and pick whichever flatters them.
+1. `bench/verify-spec.mjs` derives expected results by replaying the deterministic seed specification without importing an adapter or querying a database.
+2. `bench/verify.mjs` and `bench/verify-property.mjs` establish differential equivalence. The native result is a comparator in this layer, not an independent expected-result oracle.
 
-## Controls (what we hold constant so the layer is the only variable)
+`bench/verify-writes.mjs` checks the primary single-row insert's intended database state, identifier, and exact row-count change for all nine compatible adapters per engine. It checks commit atomicity and rollback for the adapters that also declare the secondary transactional method (five on PostgreSQL, four on MySQL); `write-admission.json` records that scope. These finite tests establish evidence for the declared task and tested inputs, not correctness for arbitrary programs.
 
-1. **Connection pool = 10** (min=max) for every adapter. Pool sizing is a known
-   confounder; fixing it isolates access-layer overhead. A pool-sizing sweep is a
-   planned secondary study, not mixed into the main comparison.
-2. **Identical schema and data** on both engines, loaded by the native driver from
-   a **deterministic seed** (fixed PRNG), independent of any adapter under test.
-3. **Same logical query** per endpoint. Each adapter must use its layer's
-   *recommended idiomatic* way to avoid N+1 on the deep fetch (join / `include` /
-   `with` / eager loading); the choice is documented at the top of each adapter.
-4. **Same result shape** returned to Express, so JSON serialization cost is equal.
-5. **Load generator in a separate process** from the server (and ideally a separate
-   machine — see below) to reduce observer interference.
+## Campaign controls
 
-## Pitfalls and mitigations
+- Pool size is fixed at 10; every endpoint receives a discarded 15-second warm-up and a 12-second measurement at 50 connections.
+- The revised primary run-level design uses `INDEP=1` and 25 repetitions. A fresh application process is used for every adapter-engine block; read endpoints within a block run sequentially, while database and host caches remain shared.
+- Request streams are deterministically paired by endpoint and replicate.
+- `bench/verify-campaign-state.mjs` checks exact base/fan-out counts, absence of stray rows, fan-out cardinalities, and the next allocated post identifier.
+- The headline single-row insert uses engine-default durability. Relaxed durability is a labelled sensitivity experiment and the Docker workflow default, not the primary insert regime.
 
-| Pitfall | Mitigation |
-|---|---|
-| **N+1 queries** silently inflating an ORM's numbers | Deep-fetch endpoint forces nested resolution; adapters use documented eager-loading; a correctness cross-check asserts all adapters return the same object. |
-| **Cold start / JIT / pool fill** contaminating early samples | Explicit warm-up phase per endpoint (`WARMUP`s), measurements discarded; then `REPEATS` measured runs, median reported. |
-| **Tail latency neglect** | p99 reported alongside throughput for every cell. |
-| **Coordinated omission** (load tester stalls, hiding tail) | autocannon issues requests continuously at fixed concurrency; per-request latency histogram; document `CONNECTIONS`. Cross-checking with a fixed-rate tool (k6 constant-arrival) is a planned robustness check. |
-| **Disk-sync noise** dominating over layer cost | Engines configured with durability off and working set in RAM (`docker-compose.yml`, or `scripts/db-local.sh` for the conda/no-Docker path used in the published run); benchmark targets access-layer CPU/allocation, not storage. |
-| **Plan-cache / prepared-statement warmth differences** | Warm-up runs the exact endpoint mix first; seed is `ANALYZE`d after load. |
-| **Write endpoint mutating the dataset** | The insert workload grows `posts` unboundedly and differently per engine, contaminating later read/aggregation cells and breaking reproducibility. The runner deletes benchmark inserts (`id > SEED_POSTS`) at the start of every cell, so each begins from the identical seeded table. |
-| **Query formulation confound in aggregation** | A pre-aggregated-comments join re-scans the whole comments table per request (full `GROUP BY`), so it measured SQL shape, not the access layer, and collapsed at scale. All adapters use the same correlated-subquery form (touching only the target author's rows); the endpoint then measures layer overhead on an identical, efficient plan. |
-| **Environment drift** | `bench/environment.mjs` records Node version, CPU, RAM, OS into `results/environment.txt`, cited in the paper's setup table. |
+The state preflight discovered that the historical MySQL rebuild could allocate benchmark inserts below the cleanup floor. Historical MySQL range-scan, aggregation, and insert cells are therefore not used as clean evidence. The accepted corrected-state primary campaign repeats all five patterns for all compatible native, tuned-native, query-builder, and ORM treatments in one 25-repetition randomized-block campaign (90 cells, 2,250 runs). A second independently ordered same-host campaign repeats the seven portable layers on deep fetch, aggregation, and insert (42 cells, 1,050 runs). It tests whole-campaign sensitivity but is not cross-host replication.
 
-## Reproducibility
+## Interpretation limits
 
-- `REPEATS` medians per cell; coefficient of variation across repeats is reported
-  as a stability signal (`bench/stats.mjs`, `bench/analyze.mjs`).
-- The **database seed** is deterministic (fixed mulberry32 PRNG); every engine gets
-  byte-identical data. The **load-generator request stream** (which post/author id
-  each request hits) uses `Math.random()` and is therefore *not* seeded — this is
-  absorbed by the ten measured runs and the low CV, but it means individual request
-  sequences are not reproducible.
-- The entire matrix is one command (`npm run bench`); `bench/analyze.mjs` and
-  `bench/scaling.mjs` produce the statistics and the concurrency-sweep figure.
-- Raw per-cell results (`results/raw.json`, `results/scaling.json`) back every number
-  in the paper.
-
-## Method decisions taken for the published run
-
-- **Same-host** client and server (removes network variance; understates network-bound
-  effects — a two-machine cross-run is noted as future work).
-- **Concurrency**: a primary operating point of `CONNECTIONS=50`, plus a 1–256 sweep
-  on the deep fetch (`bench/scaling.mjs`) to expose saturation.
-- **Resource sampling**: per-cell server-process CPU and peak RSS from `/proc`
-  (`bench/runner.mjs`), feeding the paper's resource table.
-- **Statistics**: medians + CV, and Mann–Whitney~U + Cliff's~δ between adjacent layers
-  (`bench/analyze.mjs`).
+The case-study treatment is selected mechanically from frozen documentation; it is not observed practitioner behavior. The common-SQL raw-path experiment is a compound sensitivity contrast. Capacity, tail under equal demand, and tail at matched utilization are distinct quantities. All adapters and treatment choices remain single-author; result-blind independent-review packets are provided, but no completed independent human audit is claimed.

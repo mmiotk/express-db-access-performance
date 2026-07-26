@@ -1,0 +1,700 @@
+
+> express-db-access-performance-experiments@0.1.0 test
+> node --test 'bench/*.test.mjs'
+
+✔ seed oracle replays a small fixture exactly (2.536479ms)
+✔ seed oracle materializes the declared fan-out fixture (1.99639ms)
+✔ median: odd, even, unsorted, empty (5.77815ms)
+✔ cv: known value, degenerate cases (0.285562ms)
+✔ mean and sd: hand-computed (0.228596ms)
+✔ logRatios and geomMeanRatio (0.234913ms)
+✔ winFraction: dominance with ties = 1/2 (0.269969ms)
+✔ cliffsDelta and magnitude thresholds (0.303576ms)
+✔ mannWhitneyU: identical -> p~1, separated -> small p, U symmetric (0.455726ms)
+✔ pairedPermutation: identical samples give p = 1 (2.675576ms)
+✔ pairedPermutation: well-separated gives small p; respects the 1/(B+1) floor (4.182776ms)
+✔ pairedPermutation: p is symmetric under swapping a,b (same seed) (1.717137ms)
+✔ wilcoxonSignedRank: all-zero differences -> p = 1 (0.362372ms)
+✔ wilcoxonSignedRank: constant positive shift, hand-computed z and p (0.248319ms)
+✔ pairedBootstrapRatioCI: identical -> [1,1] regardless of resampling (0.995912ms)
+✔ pairedBootstrapRatioCI: uniform 2x -> [2,2]; ordered lo<=hi otherwise (3.079501ms)
+✔ pairedTOST: identical samples are equivalent within +/-5% (0.795882ms)
+✔ pairedTOST: a 2x larger is NOT equivalent; a 2% shift IS (0.647566ms)
+✔ blockedInteraction: no layer effect -> F=0, p=1 (5.421611ms)
+✔ blockedInteraction: strong, consistent layer effect -> large F, small p (17.130482ms)
+✔ blockedInteraction: p respects the 1/(B+1) resolution floor (3.062466ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 140.978304
+
+> express-db-access-performance-experiments@0.1.0 verify:spec
+> npm run prisma:generate:pg && ENGINE=postgres node bench/verify-spec.mjs && npm run prisma:generate:mysql && ENGINE=mysql node bench/verify-spec.mjs
+
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:pg
+> prisma generate --schema=prisma/schema.postgres.prisma
+
+Prisma schema loaded from prisma/schema.postgres.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 98ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Building DB-independent seed oracle: 100000 posts, 1000000 comments; 1015 post inputs, 1007 author inputs
+  ✓ pg: 4060 expected-result checks
+  ✓ pg-tuned: 4060 expected-result checks
+  ✓ knex: 4060 expected-result checks
+  ✓ drizzle: 4060 expected-result checks
+  ✓ prisma: 4060 expected-result checks
+  ✓ sequelize: 4060 expected-result checks
+  ✓ typeorm: 4060 expected-result checks
+  ✓ objection: 4060 expected-result checks
+  ✓ mikroorm: 4060 expected-result checks
+
+ALL ADAPTERS MATCH THE SEED SPECIFICATION
+summary -> experiments/spec-oracle.json
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:mysql
+> prisma generate --schema=prisma/schema.mysql.prisma
+
+Prisma schema loaded from prisma/schema.mysql.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 90ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Building DB-independent seed oracle: 100000 posts, 1000000 comments; 1015 post inputs, 1007 author inputs
+  ✓ mysql2: 4060 expected-result checks
+  ✓ mysql2-tuned: 4060 expected-result checks
+  ✓ knex: 4060 expected-result checks
+  ✓ drizzle: 4060 expected-result checks
+  ✓ prisma: 4060 expected-result checks
+  ✓ sequelize: 4060 expected-result checks
+  ✓ typeorm: 4060 expected-result checks
+  ✓ objection: 4060 expected-result checks
+  ✓ mikroorm: 4060 expected-result checks
+
+ALL ADAPTERS MATCH THE SEED SPECIFICATION
+summary -> experiments/spec-oracle.json
+
+> express-db-access-performance-experiments@0.1.0 verify:fixed
+> npm run prisma:generate:pg && ENGINE=postgres node bench/verify.mjs && npm run prisma:generate:mysql && ENGINE=mysql node bench/verify.mjs
+
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:pg
+> prisma generate --schema=prisma/schema.postgres.prisma
+
+Prisma schema loaded from prisma/schema.postgres.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 91ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Verifying 9 adapters on postgres (baseline=pg, byte-level)
+
+baseline pg: 12 probes, bytes: getPost:1=186 thread:1=2814 threadRaw:1=2814 getPost:50000=210 thread:50000=2853 threadRaw:50000=2853 getPost:99999=209 thread:99999=1937 threadRaw:99999=1937 list:1000=3970 list:60000=4204 summary:1000=59
+  ✓ pg (baseline)
+  ✓ pg-tuned (byte-identical on 12 probes)
+  ✓ knex (byte-identical on 12 probes)
+  ✓ drizzle (byte-identical on 12 probes)
+  ✓ prisma (byte-identical on 12 probes)
+  ✓ sequelize (byte-identical on 12 probes)
+  ✓ typeorm (byte-identical on 12 probes)
+  ✓ objection (byte-identical on 12 probes)
+  ✓ mikroorm (byte-identical on 12 probes)
+
+Alternative documented deep-fetch strategy (postgres) --- byte-equivalent documented alternatives:
+  ✓ sequelize (alt byte-identical, a valid documented-strategy sensitivity candidate)
+  – typeorm (alt errors; not a valid drop-in on postgres)
+  – objection (alt not byte-identical; not a valid drop-in on postgres)
+  ✓ mikroorm (alt byte-identical, a valid documented-strategy sensitivity candidate)
+
+ALL BYTE-IDENTICAL
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:mysql
+> prisma generate --schema=prisma/schema.mysql.prisma
+
+Prisma schema loaded from prisma/schema.mysql.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 90ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Verifying 9 adapters on mysql (baseline=mysql2, byte-level)
+
+baseline mysql2: 12 probes, bytes: getPost:1=186 thread:1=2814 threadRaw:1=2814 getPost:50000=210 thread:50000=2853 threadRaw:50000=2853 getPost:99999=209 thread:99999=1937 threadRaw:99999=1937 list:1000=3970 list:60000=4204 summary:1000=59
+  ✓ mysql2 (baseline)
+  ✓ mysql2-tuned (byte-identical on 12 probes)
+  ✓ knex (byte-identical on 12 probes)
+  ✓ drizzle (byte-identical on 12 probes)
+  ✓ prisma (byte-identical on 12 probes)
+  ✓ sequelize (byte-identical on 12 probes)
+  ✓ typeorm (byte-identical on 12 probes)
+  ✓ objection (byte-identical on 12 probes)
+  ✓ mikroorm (byte-identical on 12 probes)
+
+Alternative documented deep-fetch strategy (mysql) --- byte-equivalent documented alternatives:
+  ✓ sequelize (alt byte-identical, a valid documented-strategy sensitivity candidate)
+  – typeorm (alt errors; not a valid drop-in on mysql)
+  ✓ objection (alt byte-identical, a valid documented-strategy sensitivity candidate)
+  ✓ mikroorm (alt byte-identical, a valid documented-strategy sensitivity candidate)
+
+ALL BYTE-IDENTICAL
+
+> express-db-access-performance-experiments@0.1.0 verify:property
+> npm run prisma:generate:pg && ENGINE=postgres node bench/verify-property.mjs && npm run prisma:generate:mysql && ENGINE=mysql node bench/verify-property.mjs
+
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:pg
+> prisma generate --schema=prisma/schema.postgres.prisma
+
+Prisma schema loaded from prisma/schema.postgres.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 90ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Property gate on postgres: baseline=pg; 1009 post ids (9 edge + 1000 random), 1007 author ids (7 edge + 1000 random), 8 keyset params; 9 adapters
+
+baseline pg: 3800 inputs/adapter
+  ✓ pg (baseline)
+  ✓ pg-tuned (byte-identical on 3800 inputs)
+  ✓ knex (byte-identical on 3800 inputs)
+  ✓ drizzle (byte-identical on 3800 inputs)
+  ✓ prisma (byte-identical on 3800 inputs)
+  ✓ sequelize (byte-identical on 3800 inputs)
+  ✓ typeorm (byte-identical on 3800 inputs)
+  ✓ objection (byte-identical on 3800 inputs)
+  ✓ mikroorm (byte-identical on 3800 inputs)
+
+ALL BYTE-IDENTICAL — 30400 adapter×input comparisons on postgres
+coverage summary -> experiments/semantic-equivalence.json (postgres)
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:mysql
+> prisma generate --schema=prisma/schema.mysql.prisma
+
+Prisma schema loaded from prisma/schema.mysql.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 90ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Property gate on mysql: baseline=mysql2; 1009 post ids (9 edge + 1000 random), 1007 author ids (7 edge + 1000 random), 8 keyset params; 9 adapters
+
+baseline mysql2: 3800 inputs/adapter
+  ✓ mysql2 (baseline)
+  ✓ mysql2-tuned (byte-identical on 3800 inputs)
+  ✓ knex (byte-identical on 3800 inputs)
+  ✓ drizzle (byte-identical on 3800 inputs)
+  ✓ prisma (byte-identical on 3800 inputs)
+  ✓ sequelize (byte-identical on 3800 inputs)
+  ✓ typeorm (byte-identical on 3800 inputs)
+  ✓ objection (byte-identical on 3800 inputs)
+  ✓ mikroorm (byte-identical on 3800 inputs)
+
+ALL BYTE-IDENTICAL — 30400 adapter×input comparisons on mysql
+coverage summary -> experiments/semantic-equivalence.json (mysql)
+
+> express-db-access-performance-experiments@0.1.0 verify:writes
+> npm run prisma:generate:pg && ENGINE=postgres node bench/verify-writes.mjs && npm run prisma:generate:mysql && ENGINE=mysql node bench/verify-writes.mjs
+
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:pg
+> prisma generate --schema=prisma/schema.postgres.prisma
+
+Prisma schema loaded from prisma/schema.postgres.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 91ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Write-state admission: 9 adapters on postgres (separate pg verifier)
+
+  ✓ pg (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ pg-tuned (createPost fields/id/row count; createThread not implemented)
+  ✓ knex (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ drizzle (createPost fields/id/row count; createThread not implemented)
+  ✓ prisma (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ sequelize (createPost fields/id/row count; createThread not implemented)
+  ✓ typeorm (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ objection (createPost fields/id/row count; createThread not implemented)
+  ✓ mikroorm (createPost + createThread fields/id/row counts + transaction atomicity)
+
+ALL WRITES SEMANTICALLY CORRECT
+scope summary -> experiments/write-admission.json
+
+> express-db-access-performance-experiments@0.1.0 prisma:generate:mysql
+> prisma generate --schema=prisma/schema.mysql.prisma
+
+Prisma schema loaded from prisma/schema.mysql.prisma.
+
+✔ Generated Prisma Client (v7.8.0) to ./node_modules/@prisma/client in 90ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+Write-state admission: 9 adapters on mysql (separate mysql2 verifier)
+
+  ✓ mysql2 (createPost fields/id/row count; createThread not implemented)
+  ✓ mysql2-tuned (createPost fields/id/row count; createThread not implemented)
+  ✓ knex (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ drizzle (createPost fields/id/row count; createThread not implemented)
+  ✓ prisma (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ sequelize (createPost fields/id/row count; createThread not implemented)
+  ✓ typeorm (createPost + createThread fields/id/row counts + transaction atomicity)
+  ✓ objection (createPost fields/id/row count; createThread not implemented)
+  ✓ mikroorm (createPost + createThread fields/id/row counts + transaction atomicity)
+
+ALL WRITES SEMANTICALLY CORRECT
+scope summary -> experiments/write-admission.json
+
+> express-db-access-performance-experiments@0.1.0 verify:campaign-state
+> ENGINE=postgres node bench/verify-campaign-state.mjs && ENGINE=mysql node bench/verify-campaign-state.mjs
+
+postgres campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+mysql campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+
+> express-db-access-performance-experiments@0.1.0 verify:seed-parity
+> node bench/verify-seed-parity.mjs
+
+{
+  "scope": "fan-out posts/comments; database-generated timestamps excluded",
+  "rows": 662,
+  "sha256": "402e0aebbbc99f6ca32f6e176182fbb4fe753fe273f2e79fb00d5b73a99fe5ca",
+  "status": "IDENTICAL ACROSS ENGINES"
+}
+date_utc: 2026-07-23T19:00:35.579Z
+node: v24.18.0
+platform: linux 6.17.0-29-generic (x64)
+cpu: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz x16
+mem_total_gb: 125.8
+loadavg: 1.28 1.00 1.42
+cpu_governor: unavailable
+turbo_no_turbo: unavailable
+numa_nodes: 1
+virtualization: vmware
+process_affinity: pid 3716089's current affinity list: 0-15
+git_commit: 61aa2b57168f53f02ec968189851374a4be8a002 (dirty)
+package_lock_sha256: b4449306ba3784814488c4633a04ebb74f9c867366efadc1b793d7f5e88f1510
+f3291450d463e4d2e2f45a0be70db85c3bb1ba75f4a2c6af986177eca38fe426  results/source-manifest-rq2-campaign2-corrected-state.json (42 files)
+postgres campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+mysql campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+
+===== replicate 1/25 (order=shuffle: mysql2-tuned,sequelize,prisma,sequelize,typeorm,knex,prisma,mikroorm,mysql2,pg-tuned,typeorm,objection,objection,drizzle,pg,mikroorm,drizzle,knex) =====
+
+== rep 1: mysql2-tuned on mysql ==
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3101
+  mysql2-tuned/mysql/point_read: 4265 req/s  p99=14ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=205MB
+  mysql2-tuned/mysql/range_scan: 2990 req/s  p99=18ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=210MB
+  mysql2-tuned/mysql/deep_fetch: 2453 req/s  p99=23ms  cpu=100% (kids 0%, db 73%)  err/to/n2=0/0/0  rss=209MB
+  mysql2-tuned/mysql/aggregation: 4514 req/s  p99=14ms  cpu=100% (kids 0%, db 319%)  err/to/n2=0/0/0  rss=210MB
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3102
+  mysql2-tuned/mysql/write: 1828 req/s  p99=106ms  cpu=50% (kids 0%, db 47%)  err/to/n2=0/0/0  rss=145MB
+
+== rep 1: sequelize on postgres ==
+[server] adapter=sequelize engine=postgres pool=10 :3103
+  sequelize/postgres/point_read: 3518 req/s  p99=17ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=205MB
+  sequelize/postgres/range_scan: 2374 req/s  p99=25ms  cpu=100% (kids 0%, db 32%)  err/to/n2=0/0/0  rss=211MB
+  sequelize/postgres/deep_fetch: 980 req/s  p99=62ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=246MB
+  sequelize/postgres/aggregation: 4871 req/s  p99=13ms  cpu=100% (kids 0%, db 320%)  err/to/n2=0/0/0  rss=245MB
+[server] adapter=sequelize engine=postgres pool=10 :3104
+  sequelize/postgres/write: 2668 req/s  p99=22ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=207MB
+
+== rep 1: prisma on mysql ==
+[server] adapter=prisma engine=mysql pool=10 :3105
+  prisma/mysql/point_read: 2035 req/s  p99=30ms  cpu=105% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=309MB
+  prisma/mysql/range_scan: 1551 req/s  p99=38ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=329MB
+  prisma/mysql/deep_fetch: 625 req/s  p99=91ms  cpu=105% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=333MB
+  prisma/mysql/aggregation: 2398 req/s  p99=28ms  cpu=100% (kids 0%, db 235%)  err/to/n2=0/0/0  rss=344MB
+[server] adapter=prisma engine=mysql pool=10 :3106
+  prisma/mysql/write: 910 req/s  p99=153ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=314MB
+
+== rep 1: sequelize on mysql ==
+[server] adapter=sequelize engine=mysql pool=10 :3107
+  sequelize/mysql/point_read: 2683 req/s  p99=21ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=215MB
+  sequelize/mysql/range_scan: 1995 req/s  p99=28ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=223MB
+  sequelize/mysql/deep_fetch: 896 req/s  p99=66ms  cpu=105% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=261MB
+  sequelize/mysql/aggregation: 3446 req/s  p99=19ms  cpu=100% (kids 0%, db 264%)  err/to/n2=0/0/0  rss=261MB
+[server] adapter=sequelize engine=mysql pool=10 :3108
+  sequelize/mysql/write: 1769 req/s  p99=106ms  cpu=85% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=209MB
+
+== rep 1: typeorm on postgres ==
+[server] adapter=typeorm engine=postgres pool=10 :3109
+  typeorm/postgres/point_read: 3768 req/s  p99=17ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=226MB
+  typeorm/postgres/range_scan: 2525 req/s  p99=24ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=264MB
+  typeorm/postgres/deep_fetch: 1186 req/s  p99=50ms  cpu=104% (kids 0%, db 115%)  err/to/n2=0/0/0  rss=272MB
+  typeorm/postgres/aggregation: 6015 req/s  p99=13ms  cpu=100% (kids 0%, db 375%)  err/to/n2=0/0/0  rss=272MB
+[server] adapter=typeorm engine=postgres pool=10 :3110
+  typeorm/postgres/write: 2619 req/s  p99=24ms  cpu=100% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=237MB
+
+== rep 1: knex on postgres ==
+[server] adapter=knex engine=postgres pool=10 :3111
+  knex/postgres/point_read: 5109 req/s  p99=13ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=202MB
+  knex/postgres/range_scan: 2947 req/s  p99=19ms  cpu=100% (kids 0%, db 42%)  err/to/n2=0/0/0  rss=209MB
+  knex/postgres/deep_fetch: 2510 req/s  p99=25ms  cpu=100% (kids 0%, db 245%)  err/to/n2=0/0/0  rss=208MB
+  knex/postgres/aggregation: 5671 req/s  p99=11ms  cpu=100% (kids 0%, db 345%)  err/to/n2=0/0/0  rss=209MB
+[server] adapter=knex engine=postgres pool=10 :3112
+  knex/postgres/write: 4703 req/s  p99=13ms  cpu=100% (kids 0%, db 80%)  err/to/n2=0/0/0  rss=201MB
+
+== rep 1: prisma on postgres ==
+[server] adapter=prisma engine=postgres pool=10 :3113
+  prisma/postgres/point_read: 3223 req/s  p99=20ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=300MB
+  prisma/postgres/range_scan: 2375 req/s  p99=27ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=298MB
+  prisma/postgres/deep_fetch: 1197 req/s  p99=50ms  cpu=105% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=301MB
+  prisma/postgres/aggregation: 4341 req/s  p99=16ms  cpu=100% (kids 0%, db 289%)  err/to/n2=0/0/0  rss=302MB
+[server] adapter=prisma engine=postgres pool=10 :3114
+  prisma/postgres/write: 2804 req/s  p99=23ms  cpu=105% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=304MB
+
+== rep 1: mikroorm on postgres ==
+[server] adapter=mikroorm engine=postgres pool=10 :3115
+  mikroorm/postgres/point_read: 2378 req/s  p99=26ms  cpu=100% (kids 0%, db 25%)  err/to/n2=0/0/0  rss=257MB
+  mikroorm/postgres/range_scan: 906 req/s  p99=64ms  cpu=105% (kids 0%, db 12%)  err/to/n2=0/0/0  rss=315MB
+  mikroorm/postgres/deep_fetch: 532 req/s  p99=102ms  cpu=110% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=325MB
+  mikroorm/postgres/aggregation: 5663 req/s  p99=11ms  cpu=100% (kids 0%, db 350%)  err/to/n2=0/0/0  rss=319MB
+[server] adapter=mikroorm engine=postgres pool=10 :3116
+  mikroorm/postgres/write: 1883 req/s  p99=36ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=232MB
+
+== rep 1: mysql2 on mysql ==
+[server] adapter=mysql2 engine=mysql pool=10 :3117
+  mysql2/mysql/point_read: 3836 req/s  p99=17ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=264MB
+  mysql2/mysql/range_scan: 3333 req/s  p99=20ms  cpu=105% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=290MB
+  mysql2/mysql/deep_fetch: 2409 req/s  p99=28ms  cpu=105% (kids 0%, db 85%)  err/to/n2=0/0/0  rss=290MB
+  mysql2/mysql/aggregation: 4484 req/s  p99=15ms  cpu=100% (kids 0%, db 340%)  err/to/n2=0/0/0  rss=290MB
+[server] adapter=mysql2 engine=mysql pool=10 :3118
+  mysql2/mysql/write: 1504 req/s  p99=111ms  cpu=40% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=252MB
+
+== rep 1: pg-tuned on postgres ==
+[server] adapter=pg-tuned engine=postgres pool=10 :3119
+  pg-tuned/postgres/point_read: 7060 req/s  p99=9ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=196MB
+  pg-tuned/postgres/range_scan: 3900 req/s  p99=16ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=202MB
+  pg-tuned/postgres/deep_fetch: 3863 req/s  p99=16ms  cpu=100% (kids 0%, db 230%)  err/to/n2=0/0/0  rss=203MB
+  pg-tuned/postgres/aggregation: 7643 req/s  p99=9ms  cpu=100% (kids 0%, db 255%)  err/to/n2=0/0/0  rss=203MB
+[server] adapter=pg-tuned engine=postgres pool=10 :3120
+  pg-tuned/postgres/write: 6330 req/s  p99=12ms  cpu=100% (kids 0%, db 75%)  err/to/n2=0/0/0  rss=191MB
+
+== rep 1: typeorm on mysql ==
+[server] adapter=typeorm engine=mysql pool=10 :3121
+  typeorm/mysql/point_read: 3021 req/s  p99=19ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=216MB
+  typeorm/mysql/range_scan: 2319 req/s  p99=25ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=221MB
+  typeorm/mysql/deep_fetch: 1030 req/s  p99=53ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=224MB
+  typeorm/mysql/aggregation: 3958 req/s  p99=15ms  cpu=100% (kids 0%, db 300%)  err/to/n2=0/0/0  rss=224MB
+[server] adapter=typeorm engine=mysql pool=10 :3122
+  typeorm/mysql/write: 1179 req/s  p99=146ms  cpu=80% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=213MB
+
+== rep 1: objection on postgres ==
+[server] adapter=objection engine=postgres pool=10 :3123
+  objection/postgres/point_read: 4052 req/s  p99=14ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=208MB
+  objection/postgres/range_scan: 2711 req/s  p99=21ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=215MB
+  objection/postgres/deep_fetch: 1046 req/s  p99=58ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=216MB
+  objection/postgres/aggregation: 3872 req/s  p99=15ms  cpu=100% (kids 0%, db 255%)  err/to/n2=0/0/0  rss=217MB
+[server] adapter=objection engine=postgres pool=10 :3124
+  objection/postgres/write: 3729 req/s  p99=17ms  cpu=100% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=222MB
+
+== rep 1: objection on mysql ==
+[server] adapter=objection engine=mysql pool=10 :3125
+  objection/mysql/point_read: 3137 req/s  p99=20ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=213MB
+  objection/mysql/range_scan: 2630 req/s  p99=22ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=219MB
+  objection/mysql/deep_fetch: 793 req/s  p99=68ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=219MB
+  objection/mysql/aggregation: 2956 req/s  p99=20ms  cpu=100% (kids 0%, db 225%)  err/to/n2=0/0/0  rss=220MB
+[server] adapter=objection engine=mysql pool=10 :3126
+  objection/mysql/write: 1586 req/s  p99=136ms  cpu=55% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=210MB
+
+== rep 1: drizzle on mysql ==
+[server] adapter=drizzle engine=mysql pool=10 :3127
+  drizzle/mysql/point_read: 2885 req/s  p99=22ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=290MB
+  drizzle/mysql/range_scan: 2136 req/s  p99=29ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=301MB
+  drizzle/mysql/deep_fetch: 1332 req/s  p99=46ms  cpu=105% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=301MB
+  drizzle/mysql/aggregation: 4096 req/s  p99=16ms  cpu=105% (kids 0%, db 315%)  err/to/n2=0/0/0  rss=302MB
+[server] adapter=drizzle engine=mysql pool=10 :3128
+  drizzle/mysql/write: 1705 req/s  p99=110ms  cpu=60% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=280MB
+
+== rep 1: pg on postgres ==
+[server] adapter=pg engine=postgres pool=10 :3129
+  pg/postgres/point_read: 6860 req/s  p99=9ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=197MB
+  pg/postgres/range_scan: 3803 req/s  p99=17ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=203MB
+  pg/postgres/deep_fetch: 3717 req/s  p99=17ms  cpu=100% (kids 0%, db 360%)  err/to/n2=0/0/0  rss=204MB
+  pg/postgres/aggregation: 6846 req/s  p99=9ms  cpu=100% (kids 0%, db 442%)  err/to/n2=0/0/0  rss=204MB
+[server] adapter=pg engine=postgres pool=10 :3130
+  pg/postgres/write: 5115 req/s  p99=13ms  cpu=100% (kids 0%, db 85%)  err/to/n2=0/0/0  rss=197MB
+
+== rep 1: mikroorm on mysql ==
+[server] adapter=mikroorm engine=mysql pool=10 :3131
+  mikroorm/mysql/point_read: 1853 req/s  p99=29ms  cpu=100% (kids 0%, db 20%)  err/to/n2=0/0/0  rss=282MB
+  mikroorm/mysql/range_scan: 855 req/s  p99=66ms  cpu=105% (kids 0%, db 15%)  err/to/n2=0/0/0  rss=354MB
+  mikroorm/mysql/deep_fetch: 474 req/s  p99=123ms  cpu=110% (kids 0%, db 25%)  err/to/n2=0/0/0  rss=359MB
+  mikroorm/mysql/aggregation: 4045 req/s  p99=15ms  cpu=100% (kids 0%, db 309%)  err/to/n2=0/0/0  rss=359MB
+[server] adapter=mikroorm engine=mysql pool=10 :3132
+  mikroorm/mysql/write: 1299 req/s  p99=91ms  cpu=95% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=255MB
+
+== rep 1: drizzle on postgres ==
+[server] adapter=drizzle engine=postgres pool=10 :3133
+  drizzle/postgres/point_read: 4137 req/s  p99=14ms  cpu=100% (kids 0%, db 47%)  err/to/n2=0/0/0  rss=236MB
+  drizzle/postgres/range_scan: 2727 req/s  p99=21ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=238MB
+  drizzle/postgres/deep_fetch: 1890 req/s  p99=29ms  cpu=100% (kids 0%, db 185%)  err/to/n2=0/0/0  rss=238MB
+  drizzle/postgres/aggregation: 6537 req/s  p99=10ms  cpu=100% (kids 0%, db 400%)  err/to/n2=0/0/0  rss=233MB
+[server] adapter=drizzle engine=postgres pool=10 :3134
+  drizzle/postgres/write: 3915 req/s  p99=15ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=242MB
+
+== rep 1: knex on mysql ==
+[server] adapter=knex engine=mysql pool=10 :3135
+  knex/mysql/point_read: 3408 req/s  p99=17ms  cpu=100% (kids 0%, db 37%)  err/to/n2=0/0/0  rss=208MB
+  knex/mysql/range_scan: 2867 req/s  p99=22ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=222MB
+  knex/mysql/deep_fetch: 2009 req/s  p99=29ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=223MB
+  knex/mysql/aggregation: 4043 req/s  p99=15ms  cpu=100% (kids 0%, db 305%)  err/to/n2=0/0/0  rss=225MB
+[server] adapter=knex engine=mysql pool=10 :3136
+  knex/mysql/write: 1838 req/s  p99=95ms  cpu=55% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=202MB
+[checkpoint] replicate 1/25 saved (90 cells)
+
+===== replicate 2/25 (order=shuffle: sequelize,prisma,typeorm,mysql2-tuned,objection,typeorm,mysql2,prisma,mikroorm,sequelize,drizzle,pg,knex,pg-tuned,drizzle,objection,mikroorm,knex) =====
+
+== rep 2: sequelize on mysql ==
+[server] adapter=sequelize engine=mysql pool=10 :3137
+  sequelize/mysql/point_read: 2693 req/s  p99=23ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=218MB
+  sequelize/mysql/range_scan: 2156 req/s  p99=26ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=224MB
+  sequelize/mysql/deep_fetch: 905 req/s  p99=68ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=275MB
+  sequelize/mysql/aggregation: 3480 req/s  p99=18ms  cpu=100% (kids 0%, db 260%)  err/to/n2=0/0/0  rss=269MB
+[server] adapter=sequelize engine=mysql pool=10 :3138
+  sequelize/mysql/write: 1467 req/s  p99=116ms  cpu=70% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=213MB
+
+== rep 2: prisma on mysql ==
+[server] adapter=prisma engine=mysql pool=10 :3139
+  prisma/mysql/point_read: 1999 req/s  p99=30ms  cpu=105% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=312MB
+  prisma/mysql/range_scan: 1571 req/s  p99=37ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=327MB
+  prisma/mysql/deep_fetch: 592 req/s  p99=96ms  cpu=105% (kids 0%, db 60%)  err/to/n2=0/0/0  rss=333MB
+  prisma/mysql/aggregation: 2429 req/s  p99=27ms  cpu=100% (kids 0%, db 235%)  err/to/n2=0/0/0  rss=344MB
+  FAILED prisma/mysql: Command failed: npx prisma generate --schema=/home/mmiotk/repositories/express-db-access-performance/experiments/prisma/schema.mysql.prisma
+
+== rep 2: typeorm on postgres ==
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+Error: connect ECONNREFUSED 127.0.0.1:5432
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1706:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '127.0.0.1',
+  port: 5432
+}
+
+Node.js v24.18.0
+  FAILED typeorm/postgres: server health timeout
+
+== rep 2: mysql2-tuned on mysql ==
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3142
+  mysql2-tuned/mysql/point_read: 4393 req/s  p99=13ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=205MB
+  mysql2-tuned/mysql/range_scan: 3365 req/s  p99=17ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=210MB
+  mysql2-tuned/mysql/deep_fetch: 2220 req/s  p99=26ms  cpu=100% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=211MB

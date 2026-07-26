@@ -40,7 +40,7 @@ stage warmupcurve node scripts/warmupcurve.mjs
 # S3 PRIMARY: 25 repeated runs x 18 cells (9+2 layers x engines),
 # shuffled cell order, 12s runs, 15s warm-up (exceeds the slowest cold-start
 # stabilization measured by S2: MikroORM 13s), write measured in a dedicated
-# boot after a physical rebuild, DEFAULT durability. THE dataset of the paper.
+# boot after the declared state rebuild, DEFAULT durability. THE dataset of the paper.
 stage primary env INDEP=1 REPLICATES=25 DURATION=12 WARMUP=15 \
   RESET_FLOOR=300000 REBUILD_WRITES=1 node bench/runner.mjs || exit 1
 

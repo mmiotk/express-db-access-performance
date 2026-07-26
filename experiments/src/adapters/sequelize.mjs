@@ -2,7 +2,7 @@
 // for the deep fetch. Aggregation via a raw SELECT to keep it comparable.
 import { Sequelize, DataTypes, Model, Op } from 'sequelize';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThread, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const c = engine === 'postgres' ? config.postgres : config.mysql;
@@ -55,7 +55,7 @@ export default async function createAdapter({ engine, config }) {
       return canonThread(j, j.author, j.comments || []);
     },
     // Alternative eager-loading strategy (review 6.3): select-in instead of the
-    // idiomatic single join (`separate: true` issues a separate batched query for
+    // policy-selected single join (`separate: true` issues a separate batched query for
     // the comments association).
     async getThreadAlt(id) {
       const post = await Post.findByPk(id, {

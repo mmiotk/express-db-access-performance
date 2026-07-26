@@ -1,45 +1,34 @@
+% auto-generated from experiments/external-protocol-audit.json
 \begin{table}[htbp]
   \centering
-  \caption{Retrospective application of the comparability protocol to the eight prior benchmarks located in the sources searched. The exercise is analytical only: nothing was re-run and no reported figure is disputed. For each study we name the protocol stages that are absent and state why its headline conclusion is not interpretable as a general access-layer claim without them.}
+  \caption{Single-rater retrospective protocol audit of the nine benchmark sources retained by the scoping search. Y = reported as satisfying the codebook; P = partial; -- = not reported; n/a = outside the access-layer estimand. No source was rerun. The author performed the coding, so this demonstrates a bounded application of the protocol but not inter-rater reproducibility. Per-cell source locators and evidence are preserved in \texttt{external-protocol-audit.json}.}
   \label{tab:protocol_retro}
   \begin{adjustbox}{max width=\textwidth}
-  \footnotesize
-  \begin{tabular}{p{2.3cm} p{3.0cm} p{9.3cm}}
+  \scriptsize
+  \begin{tabular}{p{2.0cm} c c c c c c c p{5.8cm}}
     \toprule
-    \textbf{Study} & \textbf{Stages absent} & \textbf{Conclusion not interpretable without them} \\
+    \textbf{Source} & \textbf{M1} & \textbf{M2} & \textbf{R3} & \textbf{R4} & \textbf{R5} & \textbf{R6} & \textbf{R7} & \textbf{Conclusion licensed by reported controls} \\
     \midrule
-    Colley et al. (2018) &
-    1 (oracle), 3 (same-SQL contrast), 4 (capacity), 5 (demand/utilization) &
-    Its cross-language ORM latency ranking cannot be read as a general access-layer ordering: with no capacity sweep (4), each latency sits at an unlocated operating point. \\
+    Colley et al. (2018) & -- & P & P & -- & -- & P & -- & Describes the selected ORM/non-ORM query examples; it does not establish a general ordering among ORM products or under load. \\
     \addlinespace
-    Procedia CS (prisma\_rawsql\_2025) &
-    1 (oracle), 3 (cross-layer control), 4 (capacity), 5 (demand/utilization) &
-    ``Optimized raw SQL beats Prisma'' does not generalize to ORMs-versus-raw broadly, because only one library family (Prisma) is sampled and no capacity sweep (4) locates where the compared operating point sits relative to saturation. \\
+    Yusmita et al. (2025) & -- & P & P & -- & -- & P & -- & Describes the two authored strategies; it does not isolate intrinsic ORM overhead or behavior at located capacity. \\
     \addlinespace
-    JCCT (orm\_compare\_jcct\_2025) &
-    1 (oracle), 3 (same-SQL contrast), 4 (capacity), 5 (demand/utilization) &
-    Its three-ORM response-time comparison supports an ordering of the measured default configurations, but not a library-only ordering, because strategy and library machinery are not separated. \\
+    Attala and Khemapatpapan (2025) & -- & P & -- & -- & -- & P & -- & Supports comparison of the implemented configurations on its workloads, not a library-only or saturation-relative ordering. \\
     \addlinespace
-    JCSI (zhadko2025orm) &
-    1 (oracle), 3 (same-SQL contrast), 4 (capacity), 5 (client-observed tail) &
-    The concurrency-dependent Prisma ranking flip cannot be read as client-facing: internal query stages, not client-observed request tails (5), were timed, and saturation was never located (4). \\
+    Zhadko-Bazilevych (2025) & -- & P & -- & P & -- & -- & -- & Supports an exploratory ordering of the implemented modes; the parallel-load result is not a matched-capacity client-tail comparison. \\
     \addlinespace
-    Salunke \& Ouda (2024) &
-    Not applicable: no access-layer treatment, so stages 2 and 3 have no referent &
-    They compare the PostgreSQL and MySQL engines head-to-head, not application access layers, so the protocol's unit of comparison is absent by design; their (valid) engine result yields no access-layer conclusion. \\
+    Pratama and Raharja (2023) & -- & P & P & -- & P & -- & -- & Reports the named framework--library--environment cells; simultaneous variation and unspecified task equivalence prevent an isolated access-layer ordering. \\
     \addlinespace
-    Drizzle (vendor) &
-    1 (oracle), 3 (same-SQL contrast), 4 (capacity), 5 (matched-utilization) &
-    Without a capacity sweep (stage 4) to locate the fixed k6 load point against each target's saturation throughput, the Drizzle suite's req/s and P95 ranking of the nine targets is not interpretable as a general access-layer claim. \\
+    Salunke and Ouda (2024) & n/a & n/a & n/a & P & n/a & P & n/a & Its engine estimand is outside the access-layer protocol; no access-layer conclusion should be inferred. \\
     \addlinespace
-    Prisma (vendor) &
-    1 (oracle), 3 (same-SQL contrast), 4 (capacity), 5 (tail/utilization) &
-    Because the Prisma vendor benchmark reports only median query latency over 500 iterations---no latency percentile and no throughput---its ``lowest median latency'' finding is not interpretable as a statement about behavior under load: no tail at equal demand or matched utilization (stage 5) and no saturating-capacity identification (stage 4) are reported. \\
+    Drizzle benchmark suite & -- & P & -- & P & P & P & P & Describes public target implementations at the dashboard load; it does not support utilization-matched or library-intrinsic attribution. \\
     \addlinespace
-    IMDBench / Gel Data (vendor) &
-    1 (oracle), 3 (same-SQL contrast), 4 (capacity), 5 (matched-utilization) &
-    Its throughput/latency ordering over three CRUD operations describes the tested load point, but cannot be generalized across utilization levels because capacity was not located per layer. \\
+    Prisma query-performance benchmarks & P & P & -- & -- & -- & -- & P & Describes median latency for the visible query implementations; it does not establish throughput, tail, or capacity behavior. \\
+    \addlinespace
+    IMDBench / Gel Data & P & P & P & -- & P & -- & P & Describes the public implementations and workload point; it does not separate strategy from layer or generalize across utilization. \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}
+  \vspace{2pt}
+  {\raggedright\footnotesize M1 semantic admission; M2 treatment definition; R3 common-SQL raw-path sensitivity; R4 capacity characterization; R5 operating-point separation; R6 resource accounting; R7 implementation-review provenance. \emph{Not reported} is not evidence that a control was never performed.\par}
 \end{table}

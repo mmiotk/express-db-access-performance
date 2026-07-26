@@ -38,14 +38,14 @@ for (const engine of ENGINES) {
       });
       try {
         await health(base);
-        await ac(`${base}/posts/1/thread`);           // warm all workers
+        await ac(`${base}/posts/1/thread`); await new Promise((r) => setTimeout(r, 250)); // warm all workers
         const rps = [], p99 = [];
-        for (let i = 0; i < REPS; i++) { const r = await ac(`${base}/posts/1/thread`); rps.push(r.rps); p99.push(r.p99); }
+        for (let i = 0; i < REPS; i++) { const r = await ac(`${base}/posts/1/thread`); await new Promise((done) => setTimeout(done, 250)); rps.push(r.rps); p99.push(r.p99); }
         const rec = { engine, adapter, workers, rps_med: median(rps), p99_med: median(p99), rps_samples: rps };
         out.push(rec);
         console.log(`  ${engine}/${adapter} x${workers}w: rps ${rec.rps_med}  p99 ${rec.p99_med}ms`);
       } catch (e) { console.error(`  FAILED ${engine}/${adapter} x${workers}: ${e.message}`); }
-      finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 500)); }
+      finally { if (child.exitCode === null) child.kill('SIGTERM'); await new Promise((resolve) => { if (child.exitCode !== null) return resolve(); const timeout = setTimeout(resolve, 5000); child.once('exit', () => { clearTimeout(timeout); resolve(); }); }); }
     }
   }
 }

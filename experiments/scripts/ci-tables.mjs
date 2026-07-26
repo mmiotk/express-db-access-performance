@@ -9,7 +9,13 @@ import { fileURLToPath } from 'node:url';
 import { median } from '../bench/stats.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const raw = JSON.parse(await readFile(join(here, '..', 'results', 'raw.json'), 'utf8'));
+const resultsDir = join(here, "..", "results");
+const rawFile = process.env.RAW_FILE || "raw.json";
+const outputDir = process.env.TABLE_DIR || join(resultsDir, "tables");
+const patternFilter = process.env.PATTERNS
+  ? new Set(process.env.PATTERNS.split(",").map((x) => x.trim()).filter(Boolean))
+  : null;
+const raw = JSON.parse(await readFile(join(resultsDir, rawFile), "utf8"));
 const ORDER = ['pg', 'mysql2', 'pg-tuned', 'mysql2-tuned', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
 const PATTERNS = { point_read: 'Point read', range_scan: 'Keyset range scan', deep_fetch: 'Deep fetch', aggregation: 'Aggregation', write: 'Insert' };
 const CAT = { pg: 'native-driver', mysql2: 'native-driver', 'pg-tuned': 'native-tuned', 'mysql2-tuned': 'native-tuned', knex: 'query-builder', drizzle: 'orm', prisma: 'orm', sequelize: 'orm', typeorm: 'orm', objection: 'orm', mikroorm: 'orm' };
@@ -48,6 +54,7 @@ const cell = (a, ep, eng) => {
 };
 
 for (const [ep, label] of Object.entries(PATTERNS)) {
+  if (patternFilter && !patternFilter.has(ep)) continue;
   const rows = ORDER.filter((a) => get(a, ep, 'postgres') || get(a, ep, 'mysql')).map((a) => {
     const pg = cell(a, ep, 'postgres'), my = cell(a, ep, 'mysql');
     return `    ${a} & ${CAT[a]} & ${pg.rps} & ${pg.p99} & ${my.rps} & ${my.p99} \\\\`;
@@ -57,7 +64,7 @@ for (const [ep, label] of Object.entries(PATTERNS)) {
   \\centering
   \\caption{${label}: throughput (req/s, higher is better; median with a
     within-campaign 95\\% bootstrap interval over the 25 repeated runs --- run-to-run
-    variability within one host and campaign, not across hardware or days) and
+    variability within the source campaign of each cell, not across hardware or days) and
     response-time p99 (ms, lower is better; median run-level p99 with the same
     within-campaign 95\\% bootstrap interval) by access layer and engine. p99 is reported at
     1~ms resolution, so cells differing by $\\le 1$~ms are practically unresolved (see the paired
@@ -76,6 +83,6 @@ ${rows}
   \\end{adjustbox}
 \\end{table}
 `;
-  await writeFile(join(here, '..', 'results', 'tables', `${ep}.tex`), tex);
+  await writeFile(join(outputDir, ep + ".tex"), tex);
 }
-console.log('wrote CI-augmented tables: ' + Object.keys(PATTERNS).join('.tex, ') + '.tex');
+console.log("wrote CI-augmented tables from " + rawFile + " to " + outputDir);

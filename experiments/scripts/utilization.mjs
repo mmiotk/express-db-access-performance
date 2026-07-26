@@ -2,7 +2,7 @@
 // is a SATURATED closed-loop response time and tracks throughput; it is not
 // sub-saturation latency. This measures the coordinated-omission-corrected tail at
 // MATCHED UTILIZATION: each layer is offered 50/70/85/95% of ITS OWN saturating
-// throughput (taken from the primary deep-fetch closed-loop rps in results/raw.json),
+// throughput (taken from the selected primary-data file),
 // replicated OL_REPS times, on both engines. Comparing layers at equal utilization
 // (not equal concurrency) decouples latency from capacity — the reviewer's ask.
 // Writes results/utilization.<engine>.json.
@@ -25,7 +25,9 @@ const REPS = Number(env('UL_REPS', 5));
 const DURATION_MS = Number(env('UL_DURATION_MS', 8000));
 const WARMUP_MS = 3000, TIMEOUT_MS = 10000, CONNECTIONS = 256;
 
-const raw = JSON.parse(await readFile(join(here, '..', 'results', 'raw.json'), 'utf8'));
+const rawFile = env('RAW_FILE', 'raw.json');
+const outFile = env('UL_OUT', 'utilization.' + UL_ENGINE + '.json');
+const raw = JSON.parse(await readFile(join(here, '..', 'results', rawFile), 'utf8'));
 const capacity = (adapter) => {
   const r = raw.find((x) => x.adapter === adapter && x.engine === UL_ENGINE && x.endpoint === 'deep_fetch');
   return r ? r.rps : null;                    // saturating closed-loop throughput
@@ -47,15 +49,16 @@ async function pass(base, rate, durationMs, seed) {
   const results = [];
   const fire = async (k, scheduledAt) => {
     const path = `/posts/${1 + Math.floor(rnd() * SEED_POSTS)}/thread`;
+    let deadline;
     try {
       const ac = new AbortController();
-      const deadline = setTimeout(() => ac.abort(), Math.max(1, scheduledAt + TIMEOUT_MS - performance.now()));
+      deadline = setTimeout(() => ac.abort(), Math.max(1, scheduledAt + TIMEOUT_MS - performance.now()));
       const res = await pool.request({ path, method: 'GET', signal: ac.signal });
       await res.body.text();
-      clearTimeout(deadline);
       lat[k] = performance.now() - scheduledAt;            // CO-corrected: from intended time
       if (res.statusCode === 200) completed++; else errors++;
     } catch { lat[k] = performance.now() - scheduledAt; timeouts++; }
+    finally { if (deadline) clearTimeout(deadline); }
   };
   for (let k = 0; k < total; k++) {
     const scheduledAt = t0 + k * interval;
@@ -73,10 +76,14 @@ async function pass(base, rate, durationMs, seed) {
 }
 
 const out = [];
+const failures = [];
 let port = 4700;
 for (const adapter of LAYERS) {
   const cap = capacity(adapter);
-  if (!cap) { console.error(`  no capacity for ${adapter}/${UL_ENGINE}; skipping`); continue; }
+  if (!cap) {
+    failures.push('missing capacity for ' + adapter + '/' + UL_ENGINE);
+    continue;
+  }
   const base = `http://127.0.0.1:${port++}`;
   if (adapter === 'prisma') execSync(`npx prisma generate --schema=prisma/schema.${UL_ENGINE}.prisma`, { stdio: 'ignore' });
   const child = spawn(process.execPath, [join(here, '..', 'src', 'server.mjs')], {
@@ -87,19 +94,36 @@ for (const adapter of LAYERS) {
     await health(base);
     for (const frac of FRACTIONS) {
       const rate = Math.max(1, Math.round(frac * cap));
-      await pass(base, Math.min(rate, cap), WARMUP_MS, 7);          // warm-up
-      const p99s = [], achs = [], tos = [];
+      const warm = await pass(base, Math.min(rate, cap), WARMUP_MS, 7);
+      if (warm.errors || warm.timeouts) throw new Error('warm-up failures at fraction ' + frac);
+      const p99s = [], achs = [], tos = [], errs = [];
       for (let i = 0; i < REPS; i++) {
         const r = await pass(base, rate, DURATION_MS, 100 + i);
-        p99s.push(r.p99); achs.push(r.achieved); tos.push(r.timeouts);
+        p99s.push(r.p99); achs.push(r.achieved); tos.push(r.timeouts); errs.push(r.errors);
       }
+      const errorsTotal = errs.reduce((a, b) => a + b, 0);
+      if (errorsTotal) throw new Error('non-2xx responses at fraction ' + frac + ': ' + errorsTotal);
       const rec = { engine: UL_ENGINE, adapter, capacity: cap, fraction: frac, offered: rate,
-        achieved_med: Math.round(median(achs)), p99_med: +median(p99s).toFixed(1), p99_samples: p99s, timeouts_total: tos.reduce((a, b) => a + b, 0) };
+        achieved_med: Math.round(median(achs)), p99_med: +median(p99s).toFixed(1),
+        p99_samples: p99s, achieved_samples: achs, errors_total: errorsTotal,
+        timeouts_total: tos.reduce((a, b) => a + b, 0) };
       out.push(rec);
       console.log(`  ${UL_ENGINE}/${adapter} @${(frac * 100).toFixed(0)}% (${rate}/s of ${cap}): p99 med ${rec.p99_med}ms  achieved ${rec.achieved_med}  to=${rec.timeouts_total}`);
     }
-  } catch (e) { console.error(`  FAILED ${UL_ENGINE}/${adapter}: ${e.message}`); }
-  finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); }
+  } catch (e) {
+    failures.push(UL_ENGINE + '/' + adapter + ': ' + e.message);
+    console.error('  FAILED ' + UL_ENGINE + '/' + adapter + ': ' + e.message);
+  } finally {
+    if (child.exitCode === null) child.kill('SIGTERM');
+    await new Promise((resolve) => {
+      if (child.exitCode !== null) return resolve();
+      const timeout = setTimeout(resolve, 5000);
+      child.once('exit', () => { clearTimeout(timeout); resolve(); });
+    });
+  }
 }
-await writeFile(join(here, '..', 'results', `utilization.${UL_ENGINE}.json`), JSON.stringify(out, null, 2));
-console.log(`\nwrote results/utilization.${UL_ENGINE}.json (${out.length} cells)`);
+if (failures.length || out.length !== LAYERS.length * FRACTIONS.length) {
+  throw new Error('utilization campaign rejected:\n- ' + failures.join('\n- '));
+}
+await writeFile(join(here, '..', 'results', outFile), JSON.stringify(out, null, 2));
+console.log('\nwrote results/' + outFile + ' (' + out.length + ' cells)');

@@ -1,12 +1,12 @@
-# Clean-room reproduction log
+# Historical archive-isolated author-reconstruction log
 
-A clean-room reproduction of the artifact, run from the **immutable Zenodo/`git archive` tarball**
+An archive-isolated reconstruction of the artifact by the author, run from the **immutable Zenodo/`git archive` tarball**
 (not the working repository), to demonstrate that the archived release reproduces its results from the
 raw data alone. It repeats the two steps the reviewer named --- checksum verification and table
 regeneration --- following `REPRODUCE.md` section 4.
 
 **Honest scope note.** This log was produced by the author, so it is *not* an independent third-party
-reproduction; it demonstrates that the documented clean-room chain works from the immutable archive
+reproduction; it demonstrates that the documented archive-isolated chain works from the immutable archive
 with no access to the working tree. An independent replication remains valuable and welcome.
 
 ## Environment
@@ -46,7 +46,7 @@ with no access to the working tree. An independent replication remains valuable 
 None of the five reflects a raw-data or estimator discrepancy: the underlying numbers are identical;
 the committed `.tex` files carry post-generation editorial refinements (captions, an added panel, a
 line wrap) and, for `cv_all`, the opposite engine-emission order. `REPRODUCE.md` records these as
-regeneration caveats so an independent reproducer knows what to expect.
+regeneration caveats so a future independent reproducer knows what to expect.
 
 ## Conclusion
 
@@ -54,9 +54,9 @@ From the immutable archive alone, the raw data verifies (35/35) and 45/50 tables
 byte-for-byte; the five exceptions are presentation-only and documented. The estimators are seeded and
 bit-reproducible.
 
-## Revision-candidate offline reconstruction (23 July 2026)
+## Pre-campaign revision-candidate offline reconstruction (23 July 2026)
 
-After the major-revision changes, the author also copied the current candidate to a fresh temporary
+Before the corrected campaign and its final derived data were added, the author copied that intermediate candidate to a fresh temporary
 directory while excluding `node_modules`, build directories, PDFs, ZIPs, and Git metadata. No database
 server was started. In that copy:
 
@@ -65,7 +65,7 @@ server was started. In that copy:
 3. recursive byte comparison of both `experiments/results/tables/` and `paper/tables/` against the
    source candidate produced an empty diff.
 
-This verifies the current candidate's **offline reconstruction path**, including the deterministic
-engine-specific analysis-table orchestrator and new Tables S44--S45. It does not rerun the benchmark
+This verified that intermediate candidate's **offline reconstruction path**, including the deterministic
+engine-specific analysis-table orchestrator and new Tables S44--S45. It is not the final revised-artifact check and does not rerun the benchmark
 measurements: seven explicitly marked outputs still have run-coupled renderers, the statement-count
 table depends on unarchived transient server logs, and authored tables are copied rather than generated.

@@ -33,8 +33,9 @@ export const config = {
   adapter: process.env.ADAPTER || 'pg',
   port: int(process.env.PORT, 3000),
 
-  // Connection pool — held constant across adapters so the comparison isolates
-  // the access layer, not pool tuning. See METHODOLOGY / paper threats section.
+  // Connection pool — held constant across adapters so pool policy does not vary with
+  // the treatment. This controls one configuration choice; it does not isolate the library.
+  // See METHODOLOGY / paper threats section.
   pool: {
     min: int(process.env.POOL_MIN, 10),
     max: int(process.env.POOL_MAX, 10),

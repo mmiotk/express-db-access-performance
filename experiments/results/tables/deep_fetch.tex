@@ -3,7 +3,7 @@
   \centering
   \caption{Deep fetch: throughput (req/s, higher is better; median with a
     within-campaign 95\% bootstrap interval over the 25 repeated runs --- run-to-run
-    variability within one host and campaign, not across hardware or days) and
+    variability within the source campaign of each cell, not across hardware or days) and
     response-time p99 (ms, lower is better; median run-level p99 with the same
     within-campaign 95\% bootstrap interval) by access layer and engine. p99 is reported at
     1~ms resolution, so cells differing by $\le 1$~ms are practically unresolved (see the paired
@@ -16,17 +16,17 @@
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
     Layer & Category & req/s [95\% CI] & p99 [95\% CI] & req/s [95\% CI] & p99 [95\% CI] \\
     \midrule
-    pg & native-driver & 3687~[3602--3737] & 20~[18--21] & -- & -- \\
-    mysql2 & native-driver & -- & -- & 2382~[2357--2451] & 28~[28--29] \\
-    pg-tuned & native-tuned & 3746~[3684--3828] & 18~[17--18] & -- & -- \\
-    mysql2-tuned & native-tuned & -- & -- & 2415~[2387--2427] & 25~[24--26] \\
-    knex & query-builder & 2487~[2465--2505] & 27~[26--28] & 2007~[1989--2031] & 30~[29--31] \\
-    drizzle & orm & 1865~[1837--1878] & 35~[32--35] & 1318~[1300--1336] & 47~[46--48] \\
-    prisma & orm & 1186~[1160--1203] & 51~[51--53] & 634~[618--644] & 93~[89--95] \\
-    sequelize & orm & 991~[977--998] & 60~[59--61] & 886~[868--898] & 67~[66--68] \\
-    typeorm & orm & 1204~[1188--1223] & 50~[49--52] & 1017~[987--1029] & 57~[56--59] \\
-    objection & orm & 1028~[1020--1037] & 57~[56--58] & 834~[828--855] & 69~[67--71] \\
-    mikroorm & orm & 516~[499--525] & 116~[113--119] & 480~[474--488] & 120~[118--128] \\
+    pg & native-driver & 3638~[3602--3662] & 18~[17--20] & -- & -- \\
+    mysql2 & native-driver & -- & -- & 2416~[2413--2425] & 28~[27--28] \\
+    pg-tuned & native-tuned & 3700~[3656--3773] & 18~[16--19] & -- & -- \\
+    mysql2-tuned & native-tuned & -- & -- & 2398~[2386--2419] & 25~[24--26] \\
+    knex & query-builder & 2431~[2415--2459] & 27~[25--28] & 1982~[1963--2006] & 30~[29--31] \\
+    drizzle & orm & 1829~[1815--1846] & 34~[33--35] & 1301~[1290--1308] & 48~[46--49] \\
+    prisma & orm & 1175~[1160--1179] & 52~[51--53] & 630~[623--638] & 91~[89--94] \\
+    sequelize & orm & 978~[973--983] & 60~[60--61] & 880~[871--886] & 68~[67--68] \\
+    typeorm & orm & 1219~[1205--1233] & 49~[48--50] & 1017~[1008--1030] & 57~[56--58] \\
+    objection & orm & 1017~[1011--1029] & 56~[54--58] & 836~[824--849] & 70~[68--70] \\
+    mikroorm & orm & 519~[512--528] & 108~[107--112] & 472~[464--475] & 121~[118--126] \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

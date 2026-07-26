@@ -1,0 +1,464 @@
+{
+  "schema_version": 1,
+  "audit_id": "external-benchmark-protocol-audit-2026-07-23",
+  "purpose": "Bounded retrospective application of the proposed comparability protocol to the nine benchmark sources retained by the scoping search.",
+  "rater": {
+    "id": "author-1",
+    "independent_of_manuscript": false,
+    "count": 1,
+    "blind": false,
+    "agreement_statistic": null,
+    "limitation": "Single-author coding demonstrates an executable use of the codebook but does not establish inter-rater reproducibility."
+  },
+  "codebook": "notes/protocol-audit-codebook.md",
+  "allowed_codes": [
+    "satisfied",
+    "partial",
+    "not_reported",
+    "not_applicable",
+    "unclear"
+  ],
+  "stages": [
+    "M1_semantic_admission",
+    "M2_treatment_definition",
+    "R3_common_sql_raw_path",
+    "R4_capacity_characterization",
+    "R5_operating_point_separation",
+    "R6_resource_accounting",
+    "R7_implementation_review_provenance"
+  ],
+  "studies": [
+    {
+      "id": "colley2018orm",
+      "label": "Colley et al. (2018)",
+      "source": {
+        "type": "peer_reviewed",
+        "url": "https://doi.org/10.1109/ICCECOME.2018.8659222",
+        "inspected_copy": "https://derekcolley.co.uk/paper2.pdf"
+      },
+      "scope": "Entity Framework-generated versus hand-written SQL examples for selected Contoso operations; not an eight-ORM head-to-head comparison.",
+      "licensed_interpretation": "Describes the selected ORM/non-ORM query examples; it does not establish a general ordering among ORM products or under load.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_reported",
+          "locator": "pp. 49-52, examples and Table I",
+          "evidence": "The paper reports SQL, reads and elapsed/compile time but no expected-result or post-write-state admission procedure."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "pp. 49-50, Contoso MVC example",
+          "evidence": "The implementation is identifiable, but no predeclared rule chooses the ORM and non-ORM query forms or records alternatives."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "partial",
+          "locator": "p. 51, Table I",
+          "evidence": "ORM and non-ORM implementations are contrasted, but the SQL texts/plans differ and the comparison is not a cross-layer common-SQL raw-path intervention."
+        },
+        "R4_capacity_characterization": {
+          "code": "not_reported",
+          "locator": "p. 51, Table I",
+          "evidence": "Selected query timings are reported without a load sweep or saturation estimate."
+        },
+        "R5_operating_point_separation": {
+          "code": "not_reported",
+          "locator": "p. 51, Table I",
+          "evidence": "No client-observed equal-demand tail or matched-utilization comparison is reported."
+        },
+        "R6_resource_accounting": {
+          "code": "partial",
+          "locator": "p. 51, Table I",
+          "evidence": "Logical and physical reads are reported with query time, but no application/database compute normalization or equal-budget comparison is provided."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "not_reported",
+          "locator": "method and acknowledgements",
+          "evidence": "No independent review provenance for the compared implementations is reported."
+        }
+      }
+    },
+    {
+      "id": "prisma_rawsql_2025",
+      "label": "Yusmita et al. (2025)",
+      "source": {
+        "type": "peer_reviewed",
+        "url": "https://doi.org/10.1016/j.procs.2025.09.061",
+        "inspected_copy": "https://www.sciencedirect.com/science/article/pii/S187705092502722X"
+      },
+      "scope": "Prisma ORM versus optimized raw SQL on PostgreSQL across eight query patterns.",
+      "licensed_interpretation": "Describes the two authored strategies; it does not isolate intrinsic ORM overhead or behavior at located capacity.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_reported",
+          "locator": "Methods and results, pp. 1201-1210",
+          "evidence": "No independent expected-result or state-level admission gate is reported."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "Methods, Prisma/raw-SQL implementations",
+          "evidence": "The two strategies are named and containerized, but no premeasurement policy is reported for selecting the Prisma path or optimized SQL."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "partial",
+          "locator": "Abstract and methods",
+          "evidence": "Raw SQL is a treatment, but it is optimized against Prisma-generated access rather than common SQL executed through several layers' raw facilities."
+        },
+        "R4_capacity_characterization": {
+          "code": "not_reported",
+          "locator": "Methods and reported metrics",
+          "evidence": "Execution time and resources are reported without a per-treatment saturation sweep."
+        },
+        "R5_operating_point_separation": {
+          "code": "not_reported",
+          "locator": "Abstract and results",
+          "evidence": "No matched-capacity utilization tail is reported."
+        },
+        "R6_resource_accounting": {
+          "code": "partial",
+          "locator": "Abstract and reported metrics",
+          "evidence": "CPU and memory accompany execution time, but the comparison is not normalized to equal compute."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "not_reported",
+          "locator": "Methods",
+          "evidence": "No independent implementation-review record is reported."
+        }
+      }
+    },
+    {
+      "id": "orm_compare_jcct_2025",
+      "label": "Attala and Khemapatpapan (2025)",
+      "source": {
+        "type": "peer_reviewed",
+        "url": "https://doi.org/10.14456/jcct.2025.16",
+        "inspected_copy": "https://so13.tci-thaijo.org/index.php/jcct/article/download/2330/1683"
+      },
+      "scope": "Prisma, TypeORM and Sequelize on PostgreSQL for four relationship types.",
+      "licensed_interpretation": "Supports comparison of the implemented configurations on its workloads, not a library-only or saturation-relative ordering.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_reported",
+          "locator": "pp. 204-207, research method",
+          "evidence": "Controlled schema and dataset sizes are reported, but no output-equivalence or post-write-state gate is described."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "pp. 204-207, controlled variables and implementation",
+          "evidence": "The ORM products and environment are fixed; a rule selecting each query/loading path and alternatives is not reported."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "not_reported",
+          "locator": "pp. 207-211, results",
+          "evidence": "The reported ORM implementations are not complemented by a common-SQL raw-path contrast."
+        },
+        "R4_capacity_characterization": {
+          "code": "not_reported",
+          "locator": "pp. 207-211, Tables 1-3",
+          "evidence": "Dataset sizes vary, but no load sweep locates treatment-specific saturation."
+        },
+        "R5_operating_point_separation": {
+          "code": "not_reported",
+          "locator": "pp. 207-211, response-time results",
+          "evidence": "No client tail under equal demand and matched utilization is reported."
+        },
+        "R6_resource_accounting": {
+          "code": "partial",
+          "locator": "pp. 207-211, Tables 1-3",
+          "evidence": "Memory and CPU accompany response time, but no equal-resource or throughput-per-resource estimand is reported."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "not_reported",
+          "locator": "research method",
+          "evidence": "No independent review of the three implementations is reported."
+        }
+      }
+    },
+    {
+      "id": "zhadko2025orm",
+      "label": "Zhadko-Bazilevych (2025)",
+      "source": {
+        "type": "peer_reviewed",
+        "url": "https://doi.org/10.35784/jcsi.7951",
+        "inspected_copy": "https://ph.pollub.pl/index.php/jcsi/article/download/7951/5289/39325"
+      },
+      "scope": "Sequelize, Prisma and TypeORM on PostgreSQL under cached, uncached and parallel modes.",
+      "licensed_interpretation": "Supports an exploratory ordering of the implemented modes; the parallel-load result is not a matched-capacity client-tail comparison.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_reported",
+          "locator": "pp. 426-427, Materials and methods",
+          "evidence": "Nine analogous endpoints are implemented, but no independent expected-output or write-state admission check is reported."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "pp. 426-429, endpoint descriptions",
+          "evidence": "Framework-specific query shapes are described, but no policy selects those shapes before measurement."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "not_reported",
+          "locator": "pp. 427-429, Results",
+          "evidence": "Internal SQL stages are timed; no common-SQL raw facility is exercised across the layers."
+        },
+        "R4_capacity_characterization": {
+          "code": "partial",
+          "locator": "pp. 426-430, cached/uncached/parallel modes",
+          "evidence": "Several execution modes are compared, but no per-layer throughput knee or saturation denominator is estimated."
+        },
+        "R5_operating_point_separation": {
+          "code": "not_reported",
+          "locator": "p. 427, timing-stage description",
+          "evidence": "Average internal stages and total request time are shown; no percentile tail at equal demand and matched utilization is reported."
+        },
+        "R6_resource_accounting": {
+          "code": "not_reported",
+          "locator": "pp. 426-430, reported timing stages",
+          "evidence": "The inspected results report timing stages but no compute or memory measure."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "not_reported",
+          "locator": "Materials and methods",
+          "evidence": "No independent review provenance for the endpoint implementations is reported."
+        }
+      }
+    },
+    {
+      "id": "pratama2023nodebench",
+      "label": "Pratama and Raharja (2023)",
+      "source": {
+        "type": "peer_reviewed",
+        "url": "https://doi.org/10.62527/joiv.7.4.1762",
+        "inspected_copy": "https://pdfs.semanticscholar.org/980c/2367d976c06844924e6efda2878e59798417.pdf"
+      },
+      "scope": "Five Node.js access products crossed with eleven frameworks and VirtualBox, Docker, and Podman environments on MySQL.",
+      "licensed_interpretation": "Reports the named framework--library--environment cells; simultaneous variation and unspecified task equivalence prevent an isolated access-layer ordering.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_reported",
+          "locator": "pp. 2242-2243, Materials and Method / Node-Bench Method",
+          "evidence": "The four-step method installs, tests, records, and averages results; no expected-output, cross-implementation-equivalence, or post-write-state admission procedure is reported."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "pp. 2240, 2243, Abstract and Research Flowchart",
+          "evidence": "Frameworks, access products, and environments are named, but no result-independent rule selects query paths, product pairings, or material alternatives."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "partial",
+          "locator": "pp. 2240, 2243, Abstract and Node-Bench Method",
+          "evidence": "Raw-query and ORM products are present, but common SQL is not executed through every product raw facility and framework/environment also vary."
+        },
+        "R4_capacity_characterization": {
+          "code": "not_reported",
+          "locator": "pp. 2243-2245, Tables I-III",
+          "evidence": "One requests/latency/throughput result is reported per visible cell without a per-treatment concurrency sweep or saturation estimate."
+        },
+        "R5_operating_point_separation": {
+          "code": "partial",
+          "locator": "pp. 2243-2245, Tables I-III",
+          "evidence": "Latency and throughput are jointly reported at the Node-Bench condition, but no percentile tail, equal-demand definition, or matched-capacity comparison is given."
+        },
+        "R6_resource_accounting": {
+          "code": "not_reported",
+          "locator": "pp. 2242-2245, hardware description and Tables I-III",
+          "evidence": "Host specifications are reported, but the measured cells contain requests, latency, and throughput rather than application/database CPU or memory."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "not_reported",
+          "locator": "pp. 2242-2243, Materials and Method",
+          "evidence": "No independent review provenance for the framework--library implementations is reported."
+        }
+      }
+    },
+    {
+      "id": "salunke2024pgmysql",
+      "label": "Salunke and Ouda (2024)",
+      "source": {
+        "type": "peer_reviewed",
+        "url": "https://doi.org/10.3390/fi16100382",
+        "inspected_copy": "https://www.mdpi.com/1999-5903/16/10/382"
+      },
+      "scope": "PostgreSQL-versus-MySQL engine benchmark; no access-layer treatment.",
+      "licensed_interpretation": "Its engine estimand is outside the access-layer protocol; no access-layer conclusion should be inferred.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_applicable",
+          "locator": "study design",
+          "evidence": "The unit of comparison is the DBMS engine rather than substitutable application access layers."
+        },
+        "M2_treatment_definition": {
+          "code": "not_applicable",
+          "locator": "study design",
+          "evidence": "No access-layer implementation is varied."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "not_applicable",
+          "locator": "study design",
+          "evidence": "A cross-layer raw-facility contrast has no referent."
+        },
+        "R4_capacity_characterization": {
+          "code": "partial",
+          "locator": "workload-scaling experiments",
+          "evidence": "Workload scale is varied, but the paper is not coded as locating per-access-layer capacity."
+        },
+        "R5_operating_point_separation": {
+          "code": "not_applicable",
+          "locator": "study design",
+          "evidence": "The protocol's access-layer matched-utilization interpretation is outside this study's estimand."
+        },
+        "R6_resource_accounting": {
+          "code": "partial",
+          "locator": "Methods and resource-utilization results",
+          "evidence": "Engine resource utilization is reported, but the access-layer resource-normalization stage is outside the study estimand."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "not_applicable",
+          "locator": "study design",
+          "evidence": "No author-created set of competing access-layer adapters is evaluated."
+        }
+      }
+    },
+    {
+      "id": "drizzle_benchmarks",
+      "label": "Drizzle benchmark suite",
+      "source": {
+        "type": "vendor",
+        "url": "https://orm.drizzle.team/benchmarks",
+        "inspected_copy": "https://orm.drizzle.team/benchmarks"
+      },
+      "scope": "HTTP load benchmark of Drizzle and selected alternatives on PostgreSQL, with throughput, latency and CPU.",
+      "licensed_interpretation": "Describes public target implementations at the dashboard load; it does not support utilization-matched or library-intrinsic attribution.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "not_reported",
+          "locator": "How it works / run instructions",
+          "evidence": "Prepared requests and a shared dataset are described; an expected-result and post-write-state admission gate is not."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "Benchmark Config and repository instructions",
+          "evidence": "Versions and runnable targets are visible, but no product-neutral rule for choosing each layer's strategy is reported."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "not_reported",
+          "locator": "How it works",
+          "evidence": "The suite discusses whether Drizzle or SQL is fast but does not report a common-SQL raw-path contrast across all targets."
+        },
+        "R4_capacity_characterization": {
+          "code": "partial",
+          "locator": "How it works / k6 load",
+          "evidence": "A large prepared HTTP workload is used, but per-target knees are not reported as capacity estimates."
+        },
+        "R5_operating_point_separation": {
+          "code": "partial",
+          "locator": "dashboard and How it works",
+          "evidence": "Throughput and p95 are reported under load; matched fractions of separately estimated capacity are not."
+        },
+        "R6_resource_accounting": {
+          "code": "partial",
+          "locator": "dashboard and How it works",
+          "evidence": "CPU is reported with throughput and p95, but targets are not compared under an equal compute budget."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "partial",
+          "locator": "public benchmark repository",
+          "evidence": "Implementations are publicly inspectable, but no independent review record is reported."
+        }
+      }
+    },
+    {
+      "id": "prisma_benchmarks",
+      "label": "Prisma query-performance benchmarks",
+      "source": {
+        "type": "vendor",
+        "url": "https://benchmarks.prisma.io/",
+        "inspected_copy": "https://benchmarks.prisma.io/"
+      },
+      "scope": "Prisma, Drizzle and TypeORM median query latency over 500 iterations.",
+      "licensed_interpretation": "Describes median latency for the visible query implementations; it does not establish throughput, tail, or capacity behavior.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "partial",
+          "locator": "methodology: equivalent queries",
+          "evidence": "The site states that equivalent queries are run, but no independent expected-result or mutation-state admission procedure is reported."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "methodology and query views",
+          "evidence": "Queries and versions are inspectable, but no predeclared rule selecting among each layer's documented APIs is reported."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "not_reported",
+          "locator": "query benchmark methodology",
+          "evidence": "Layer-native queries are compared without a common-SQL raw-path sensitivity contrast."
+        },
+        "R4_capacity_characterization": {
+          "code": "not_reported",
+          "locator": "methodology: 500 iterations",
+          "evidence": "The site reports medians over iterations, not a concurrency sweep locating saturation."
+        },
+        "R5_operating_point_separation": {
+          "code": "not_reported",
+          "locator": "results table",
+          "evidence": "Median latency and dispersion are shown without throughput or matched-utilization tails."
+        },
+        "R6_resource_accounting": {
+          "code": "not_reported",
+          "locator": "results table",
+          "evidence": "The inspected query benchmark reports latency dispersion, not application/database compute or memory."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "partial",
+          "locator": "public query views",
+          "evidence": "Query implementations are inspectable, but no independent cross-product review record is reported."
+        }
+      }
+    },
+    {
+      "id": "imdbench",
+      "label": "IMDBench / Gel Data",
+      "source": {
+        "type": "vendor",
+        "url": "https://github.com/geldata/imdbench",
+        "inspected_copy": "https://github.com/edgedb/imdbench"
+      },
+      "scope": "Realistic CRUD throughput and latency benchmark for several ORMs, drivers and Gel/EdgeDB.",
+      "licensed_interpretation": "Describes the public implementations and workload point; it does not separate strategy from layer or generalize across utilization.",
+      "coding": {
+        "M1_semantic_admission": {
+          "code": "partial",
+          "locator": "README, Queries",
+          "evidence": "Tasks and requested return shapes are stated in detail, but a pre-timing expected-result and post-write-state gate is not reported."
+        },
+        "M2_treatment_definition": {
+          "code": "partial",
+          "locator": "README and target implementations",
+          "evidence": "Runnable implementations are public, but no predeclared product-neutral selection rule is reported."
+        },
+        "R3_common_sql_raw_path": {
+          "code": "partial",
+          "locator": "README, Raw SQL",
+          "evidence": "Tuned raw-SQL implementations are included, but not as common SQL executed through every access layer's raw facility."
+        },
+        "R4_capacity_characterization": {
+          "code": "not_reported",
+          "locator": "README, Methodology and Results",
+          "evidence": "Iterations per second and latency are reported without a per-treatment capacity sweep."
+        },
+        "R5_operating_point_separation": {
+          "code": "partial",
+          "locator": "README, Results",
+          "evidence": "Throughput and latency are reported at the benchmark load; matched-utilization tails are not."
+        },
+        "R6_resource_accounting": {
+          "code": "not_reported",
+          "locator": "README, Methodology and Results",
+          "evidence": "The inspected summary reports throughput and latency but no resource accounting."
+        },
+        "R7_implementation_review_provenance": {
+          "code": "partial",
+          "locator": "public repository and target implementations",
+          "evidence": "Code is publicly inspectable, but no independent review record for every target is reported."
+        }
+      }
+    }
+  ]
+}

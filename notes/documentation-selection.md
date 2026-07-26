@@ -1,6 +1,6 @@
 # Documentation-selection rubric (machine-readable)
 
-Selection rubric for the RQ1 **documentation-selected implementation-and-strategy**
+Selection rubric for the RQ1 **policy-selected documented implementation-and-strategy**
 treatment. This file is the reproducibility artifact backing Supplement Table S16
 (`paper/tables/adapter_choices.tex`), methodology Section 3.4
 (`paper/sections/methodology.tex`, `sec:3.4`), the Threats construct-validity
@@ -9,13 +9,13 @@ section (Table S33). It is not counted against the manuscript word budget.
 
 ## 1. What this treatment is (and is not)
 
-The documentation-selected treatment is an **intentionally artificial, predeclared
+The policy-selected documented treatment is an **intentionally artificial, predeclared
 treatment-selection policy**, fixed before any timing was collected. It is **not** a
 practitioner survey, not a usage measurement, and not a validated developer persona.
 It records what one **mechanical selection rule** picks, so that the RQ1 treatment is
 reproducible and independently re-checkable, not a claim that this is the most common,
 the idiomatic, or the performance-optimal API. An equivalent available reading of the
-same object is **"documentation-primary configuration under a predeclared selection
+same object is **"policy-selected configuration under a predeclared selection
 rule."**
 
 Because the rule is mechanical rather than surveyed, its external construct validity is
@@ -26,7 +26,7 @@ paragraph and Supplement Table S33.
 ## 2. Freeze date and provenance
 
 - **Freeze date:** 2026-07-15 (the date the lockfile / library versions were pinned).
-- **Measurement window:** 2026-07-16 to 2026-07-18, single virtualized host.
+- **Measurement windows:** original campaign 2026-07-16 to 2026-07-18; corrected-state campaign started 2026-07-23. Both use the same virtualized host; the corrected campaign's separate provenance record will record its completion timestamp.
 - **Authoritative pinned-version source:** Supplement Table S11 (`tab:versions` in
   `paper/supplement.tex`) and the committed `experiments/package.json`. Where the
   version column inside `experiments/METHODOLOGY.md` disagrees with these, Table S11 /
@@ -45,7 +45,7 @@ Decided **before measurement**:
 > request. Record the API not chosen as the *documented alternative not used*.
 
 For the native drivers (`pg`, `mysql2`) and the query builder (`knex`) there is **no
-relation / eager-loading API**, so the documentation-selected deep fetch is a
+relation / eager-loading API**, so the policy-selected documented deep fetch is a
 hand-written parameterized JOIN — the shared no-fan-out baseline every layer targets.
 
 **Operationalizing "presents first" for reassessment.** "Presents first" is resolved
@@ -57,14 +57,14 @@ than editorial.
 
 ## 4. The tie-break rule and its decisions
 
-Where several official paths are **equally prominent**, the tie is broken toward **the
-API at the library's own taxonomy tier**, recording the others as documented
-alternatives.
+Where several official paths are **equally prominent**, the tie is broken toward
+**the lower-level API that the library documents as its base layer**, recording the
+others as documented alternatives.
 
 - **Drizzle — the one borderline case.** Drizzle's documentation presents two
   co-prominent paths: its **SQL-style core query builder** (`select(...).innerJoin(...)`)
   and its **higher-level relational-query API** (`db.query.posts.findFirst({ with: { ... } })`).
-  The tie-break selects the API at Drizzle's own taxonomy tier — the **core SQL-style
+  The tie-break selects the API at Drizzle's documented base layer — the **core SQL-style
   builder** (`.innerJoin()`), which Drizzle documents as its base layer — and records the
   higher-level relational-query API as the documented alternative not used.
 - **All other eight layers required no tie-break.** Each presents a single unambiguous
@@ -78,12 +78,12 @@ not tie-breaks in API selection; they are the alternative loading path a separat
 sensitivity check (Supplement Table S18) can exercise where it is a byte-identical
 drop-in.
 
-## 5. The nine documentation-selected layers
+## 5. The nine policy-selected documented layers
 
 The access-layer factor has eleven levels; the two **tuned** native baselines
-(`pg-tuned`, `mysql2-tuned`) are labelled reference points, **not** documentation-selected
+(`pg-tuned`, `mysql2-tuned`) are labelled reference points, **not** policy-selected documented
 treatments, and are excluded from this rubric. That leaves the **nine** below (round-trip
-counts are the deep/nested fetch; "measured" = server-side statement logging,
+counts are the deep fetch; "measured" = server-side statement logging,
 "by construction" = identical hand-written plan).
 
 | # | Layer | Tier | Selected deep-fetch API / method | Round-trips | Documented alternative not used | Official documentation base URL | Pinned version |
@@ -111,7 +111,7 @@ roots) retained as navigation metadata. The exact justifying URL for each choice
 
 The replication package ships the exact archived HTML for every justifying page under `experiments/documentation-snapshots/pages`, plus a machine-readable manifest containing the source URL, capture timestamp, Wayback URL, SHA-256, byte length, and evidence terms. All committed pages are the nearest retrievable official-page capture at or before the 2026-07-15 freeze; the recorded timestamps, rather than an assumed exact-day capture, define the preserved evidence. The archive script labels any future live fallback as post-freeze evidence and forbids treating it as a freeze copy.
 
-Contradictory official pages are resolved in this order: the page for the pinned stable major version; the relation/eager-loading section over quick-start or marketing material; then first presentation within that section. Remaining equal prominence invokes the taxonomy-tier tie-break above. If still unresolved, the choice is recorded as ambiguous and both treatments must be predeclared.
+Contradictory official pages are resolved in this order: the page for the pinned stable major version; the relation/eager-loading section over quick-start or marketing material; then first presentation within that section. Remaining equal prominence invokes the documented-base-layer tie-break above. If still unresolved, the choice is recorded as ambiguous and both treatments must be predeclared.
 
 The preserved state proves what the page contained at its capture timestamp, not that it remained unchanged on every day through the freeze. This is the residual archival limitation.
 
@@ -119,29 +119,29 @@ The preserved state proves what the page contained at its capture timestamp, not
 
 ```yaml
 rubric:
-  name: documentation-selected implementation-and-strategy
-  alternative_framing: documentation-primary configuration under a predeclared selection rule
+  name: policy-selected documented implementation-and-strategy
+  alternative_framing: policy-selected configuration under a predeclared selection rule
   policy_type: intentionally-artificial predeclared treatment-selection policy
   is_practitioner_survey: false
   freeze_date: 2026-07-15
-  measurement_window: [2026-07-16, 2026-07-18]
+  measurement_windows: [original 2026-07-16..2026-07-18, corrected-state start 2026-07-23]
   authoritative_version_source: [Supplement Table S11, experiments/package.json]
   selection_rule: >-
     Use the eager-loading / relation-loading API the library's official documentation for
     the pinned major version presents first in its loading-related-records section, with
     query logging, hooks, and validation off and any identity map scoped per request.
   tie_break_rule: >-
-    Where several official paths are equally prominent, select the API at the library's
-    own taxonomy tier; record the others as documented alternatives.
+    Where several official paths are equally prominent, select the lower-level API that
+    the library documents as its base layer; record the others as documented alternatives.
   tie_break_cases:
     drizzle:
       borderline: true
       competing_paths: [SQL-style core query builder, higher-level relational-query API]
       selected: SQL-style core query builder (.innerJoin)
-      rationale: API at Drizzle's own taxonomy tier (its documented base layer)
+      rationale: API at Drizzle's documented base layer (the core SQL-style builder)
   snapshot_manifest: experiments/documentation-snapshots/manifest.json
   snapshot_retrieval: Internet Archive Wayback Machine, nearest exact-page capture at/before freeze date
-  excluded_from_rubric: [pg-tuned, mysql2-tuned]   # tuned reference baselines, not documentation-selected
+  excluded_from_rubric: [pg-tuned, mysql2-tuned]   # tuned reference baselines, not policy-selected documented
   layers:
     - id: pg
       tier: native-driver

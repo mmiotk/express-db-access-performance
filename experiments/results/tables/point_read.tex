@@ -3,7 +3,7 @@
   \centering
   \caption{Point read: throughput (req/s, higher is better; median with a
     within-campaign 95\% bootstrap interval over the 25 repeated runs --- run-to-run
-    variability within one host and campaign, not across hardware or days) and
+    variability within the source campaign of each cell, not across hardware or days) and
     response-time p99 (ms, lower is better; median run-level p99 with the same
     within-campaign 95\% bootstrap interval) by access layer and engine. p99 is reported at
     1~ms resolution, so cells differing by $\le 1$~ms are practically unresolved (see the paired
@@ -16,17 +16,17 @@
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
     Layer & Category & req/s [95\% CI] & p99 [95\% CI] & req/s [95\% CI] & p99 [95\% CI] \\
     \midrule
-    pg & native-driver & 6835~[6597--6892] & 9~[9--10] & -- & -- \\
-    mysql2 & native-driver & -- & -- & 4368~[4314--4420] & 16~[16--16] \\
-    pg-tuned & native-tuned & 6806~[6622--6964] & 9~[9--9] & -- & -- \\
-    mysql2-tuned & native-tuned & -- & -- & 4268~[4212--4331] & 14~[13--14] \\
-    knex & query-builder & 4942~[4794--5131] & 13~[12--13] & 3814~[3771--3870] & 15~[15--16] \\
-    drizzle & orm & 4199~[4161--4254] & 14~[14--15] & 2928~[2866--2977] & 21~[21--22] \\
-    prisma & orm & 3255~[3222--3310] & 20~[20--21] & 2074~[2050--2095] & 29~[28--29] \\
-    sequelize & orm & 3518~[3483--3591] & 17~[16--17] & 2764~[2726--2798] & 20~[20--21] \\
-    typeorm & orm & 4185~[4171--4242] & 15~[15--15] & 3059~[3032--3097] & 19~[19--19] \\
-    objection & orm & 3977~[3943--4040] & 15~[15--16] & 3275~[3221--3310] & 17~[17--18] \\
-    mikroorm & orm & 2455~[2425--2484] & 24~[23--25] & 2067~[2044--2086] & 27~[26--28] \\
+    pg & native-driver & 6713~[6665--6748] & 10~[10--10] & -- & -- \\
+    mysql2 & native-driver & -- & -- & 4296~[4248--4366] & 16~[16--16] \\
+    pg-tuned & native-tuned & 6708~[6667--6820] & 10~[10--10] & -- & -- \\
+    mysql2-tuned & native-tuned & -- & -- & 4278~[4226--4312] & 14~[14--15] \\
+    knex & query-builder & 4909~[4843--4939] & 12~[12--13] & 3723~[3699--3759] & 16~[16--16] \\
+    drizzle & orm & 4121~[4069--4162] & 14~[14--14] & 2854~[2828--2874] & 22~[22--23] \\
+    prisma & orm & 3219~[3207--3243] & 20~[20--21] & 2027~[2019--2041] & 29~[29--30] \\
+    sequelize & orm & 3466~[3383--3507] & 17~[16--18] & 2680~[2627--2709] & 22~[21--23] \\
+    typeorm & orm & 4168~[4091--4184] & 15~[15--15] & 2961~[2945--2998] & 19~[19--20] \\
+    objection & orm & 3927~[3863--3964] & 15~[15--16] & 3146~[3123--3168] & 18~[18--19] \\
+    mikroorm & orm & 2373~[2338--2396] & 25~[25--27] & 2004~[1997--2043] & 28~[27--29] \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

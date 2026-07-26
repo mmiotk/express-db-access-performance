@@ -1,0 +1,149 @@
+{
+  "note": "Expected-result read oracle derived from src/seed-spec.mjs, not from a native-driver response.",
+  "seedSpecification": {
+    "dataPrngSeed": 42,
+    "postsReplayed": 100000,
+    "commentsReplayed": 1000000,
+    "campaignFanoutIncluded": true,
+    "campaignFanoutPosts": 6,
+    "campaignFanoutComments": 661
+  },
+  "engines": {
+    "postgres": {
+      "adapters": 9,
+      "randomInputsPerType": 1000,
+      "inputSeed": 73199217,
+      "postInputs": 1015,
+      "authorInputs": 1007,
+      "listInputs": 8,
+      "checks": 36540,
+      "failedAdapters": 0,
+      "timestampPolicy": "presence and canonical ISO-8601 representation; instant is DB-generated",
+      "perAdapter": [
+        {
+          "name": "pg",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "pg-tuned",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "knex",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "drizzle",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "prisma",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "sequelize",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "typeorm",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "objection",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "mikroorm",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        }
+      ],
+      "status": "ALL MATCH SPECIFICATION"
+    },
+    "mysql": {
+      "adapters": 9,
+      "randomInputsPerType": 1000,
+      "inputSeed": 73199217,
+      "postInputs": 1015,
+      "authorInputs": 1007,
+      "listInputs": 8,
+      "checks": 36540,
+      "failedAdapters": 0,
+      "timestampPolicy": "presence and canonical ISO-8601 representation; instant is DB-generated",
+      "perAdapter": [
+        {
+          "name": "mysql2",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "mysql2-tuned",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "knex",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "drizzle",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "prisma",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "sequelize",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "typeorm",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "objection",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        },
+        {
+          "name": "mikroorm",
+          "checks": 4060,
+          "failures": [],
+          "status": "PASS"
+        }
+      ],
+      "status": "ALL MATCH SPECIFICATION"
+    }
+  }
+}

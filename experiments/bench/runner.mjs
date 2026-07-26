@@ -44,6 +44,7 @@ const SEED_AUTHORS = cfg.seed.authors;
 // runs. Defaults to the seed size; campaigns with fan-out posts (ids 250001..)
 // must set RESET_FLOOR=300000 so those rows survive the resets.
 const RESET_FLOOR = Number(env('RESET_FLOOR', SEED_POSTS));
+const PREFLIGHT = env('PREFLIGHT', RESET_FLOOR >= 300000 ? '1' : '0') === '1';
 
 // Port allocator: never hand a server a port the databases (or anything else on the
 // host) listen on — a replicate of the first overnight run was lost to a collision
@@ -73,10 +74,15 @@ function endpoints(base, rep = 0) {
   ];
 }
 
-function waitForHealth(base, timeoutMs = 30000) {
+function waitForHealth(base, child, timeoutMs = 30000) {
   const deadline = Date.now() + timeoutMs;
   return new Promise((resolve, reject) => {
     const tick = async () => {
+      if (child.exitCode !== null || child.signalCode !== null) {
+        return reject(new Error(
+          `server exited before health (code=${child.exitCode}, signal=${child.signalCode})`,
+        ));
+      }
       try {
         const res = await fetch(`${base}/health`);
         if (res.ok) return resolve(true);
@@ -86,6 +92,19 @@ function waitForHealth(base, timeoutMs = 30000) {
     };
     tick();
   });
+}
+
+async function waitForIdle(base, timeoutMs = 30000) {
+  const deadline = Date.now() + timeoutMs;
+  for (;;) {
+    try {
+      const stats = await (await fetch(`${base}/stats`)).json();
+      if (stats.active_handlers === 0) return;
+    } catch { // server health handling reports a clearer failure elsewhere
+    }
+    if (Date.now() > deadline) throw new Error('server handler-drain timeout');
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
 }
 
 function runAutocannon(opts, { duration }) {
@@ -191,8 +210,19 @@ async function rebuildDb(engine) {
     const c = await mysql.createConnection(cfg.mysql);
     await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]);
     await c.query('OPTIMIZE TABLE posts');
-    const [[{ ai }]] = await c.query('SELECT COALESCE(MAX(id),0)+1 AS ai FROM posts');
-    await c.query(`ALTER TABLE posts AUTO_INCREMENT = ${Number(ai)}`);
+    if (RESET_FLOOR > SEED_POSTS) {
+      // Keep generated writes above the deletion floor. MySQL 9.7.1 can lower
+      // the allocator to MAX(id)+1 after OPTIMIZE; an explicit sentinel at the
+      // floor advances the actual allocator even when information_schema is stale.
+      await c.query(
+        'INSERT INTO posts(id, author_id, title, body, views) VALUES (?, 1, ?, ?, 0)',
+        [RESET_FLOOR, '__runner_sequence_sentinel__', ''],
+      );
+      await c.query('DELETE FROM posts WHERE id = ?', [RESET_FLOOR]);
+    } else {
+      const [[{ ai }]] = await c.query('SELECT COALESCE(MAX(id),0)+1 AS ai FROM posts');
+      await c.query('ALTER TABLE posts AUTO_INCREMENT = ' + Number(ai));
+    }
     await c.end();
   }
 }
@@ -204,17 +234,20 @@ function ensurePrismaClient(engine) {
   execFileSync('npx', ['prisma', 'generate', `--schema=${schema}`], { stdio: 'ignore' });
 }
 
-// The write endpoint inserts rows; delete them so every cell starts from the
-// identical seeded table (reproducibility + isolation between adapters/engines).
-// Seeded posts have id <= SEED_POSTS; benchmark inserts have id > SEED_POSTS and
-// carry no comments, so this is FK-safe.
+// The write endpoint inserts rows; restore rows and the exact allocator so warm-up
+// rate cannot change the measured ID sequence. Seeded/fan-out posts stay at or
+// below RESET_FLOOR and benchmark inserts have no comments, so deletion is FK-safe.
 async function resetWrites(engine) {
   if (engine === 'postgres') {
     const c = new pg.Client(cfg.postgres); await c.connect();
-    await c.query('DELETE FROM posts WHERE id > $1', [RESET_FLOOR]); await c.end();
+    await c.query('DELETE FROM posts WHERE id > $1', [RESET_FLOOR]);
+    await c.query("SELECT setval(pg_get_serial_sequence('posts', 'id'), $1, true)", [RESET_FLOOR]);
+    await c.end();
   } else {
     const c = await mysql.createConnection(cfg.mysql);
-    await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]); await c.end();
+    await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]);
+    await c.query('ALTER TABLE posts AUTO_INCREMENT = ' + Number(RESET_FLOOR + 1));
+    await c.end();
   }
 }
 
@@ -229,28 +262,41 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
   const wanted = only ?? wantEndpoints;
   const rows = [];
   try {
-    await waitForHealth(base);
-    await resetWrites(engine); // start every cell from the identical seeded table
+    await waitForHealth(base, child);
     for (const ep of endpoints(base, rep).filter((e) => wanted.includes(e.key))) {
       // The write endpoint grows the table, so reset before the warm-up and before
       // every measured run (not just once per cell), so each run starts from the
       // identical seeded table rather than one grown by the earlier runs.
       if (ep.key === 'write') await resetWrites(engine);
       // warm-up (JIT + pool fill + plan cache) — measurements discarded
-      if (WARMUP > 0) await runAutocannon(ep.opts, { duration: WARMUP });
+      if (WARMUP > 0) {
+        await runAutocannon(ep.opts, { duration: WARMUP });
+        await waitForIdle(base);
+      }
 
       const reqps = [];
       const p50 = []; const p90 = []; const p99 = []; const p975 = [];
       let errors = 0, timeouts = 0, non2xx = 0;
       const stopSampler = startSampler(child.pid, engine); // treatment tree + db + generator CPU
-      for (let i = 0; i < repeats; i++) {
-        if (ep.key === 'write') await resetWrites(engine);
-        const r = await runAutocannon(ep.opts, { duration: DURATION });
-        reqps.push(r.requests.average);
-        p50.push(r.latency.p50); p90.push(r.latency.p90); p975.push(r.latency.p97_5 ?? r.latency.p975); p99.push(r.latency.p99);
-        errors += r.errors ?? 0; timeouts += r.timeouts ?? 0; non2xx += r.non2xx ?? 0;
+      let res;
+      try {
+        for (let i = 0; i < repeats; i++) {
+          if (ep.key === "write") await resetWrites(engine);
+          const r = await runAutocannon(ep.opts, { duration: DURATION });
+          await waitForIdle(base);
+          reqps.push(r.requests.average);
+          p50.push(r.latency.p50); p90.push(r.latency.p90); p975.push(r.latency.p97_5 ?? r.latency.p975); p99.push(r.latency.p99);
+          errors += r.errors ?? 0; timeouts += r.timeouts ?? 0; non2xx += r.non2xx ?? 0;
+        }
+      } finally {
+        res = stopSampler();
       }
-      const res = stopSampler();
+      if (errors !== 0 || timeouts !== 0 || non2xx !== 0) {
+        throw new Error(
+          `${adapter}/${engine}/${ep.key}: rejected timed run ` +
+          `(errors=${errors}, timeouts=${timeouts}, non2xx=${non2xx})`,
+        );
+      }
       let srvStats = {};
       try { srvStats = await (await fetch(`${base}/stats`)).json(); } catch { /* optional */ }
       rows.push({
@@ -270,20 +316,27 @@ async function benchCell(adapter, engine, port, { repeats = REPEATS, rep = 0, on
       console.log(`  ${adapter}/${engine}/${ep.key}: ${Math.round(median(reqps))} req/s  p99=${median(p99)}ms  cpu=${res.cpuPct}% (kids ${res.cpuChildrenPct}%, db ${res.dbCpuPct}%)  err/to/n2=${errors}/${timeouts}/${non2xx}  rss=${res.rssPeakMB}MB`);
     }
   } finally {
-    child.kill('SIGTERM');
-    await new Promise((r) => setTimeout(r, 500));
+    if (child.exitCode === null) child.kill('SIGTERM');
+    await new Promise((resolve) => {
+      if (child.exitCode !== null) return resolve();
+      const timeout = setTimeout(resolve, 5000);
+      child.once('exit', () => {
+        clearTimeout(timeout);
+        resolve();
+      });
+    });
   }
   return rows;
 }
 
-// INDEP mode (P3/P8): each replicate boots a FRESH server per cell and takes one
-// measured run, so replicates are independent processes rather than repeats within
-// one process; cell order is randomized per replicate. Writes results/raw-indep.json
+// INDEP mode (P3/P8): each replicate boots a fresh server for each adapter-engine read block; selected read endpoints run sequentially in that process. Writes use a separate fresh server after the declared state rebuild. No process crosses adapter, engine, or replicate boundaries; host and DB cache state remain shared. Cell-block order is randomized per replicate. Writes results/raw-indep.json
 // (separate from raw.json), with rps_samples holding the N repeated run
 // values for bootstrap CIs and CV.
 async function mainIndep() {
   const REPLICATES = Number(env('REPLICATES', 5));
   const OUT = env('INDEP_OUT', 'raw-indep');
+  const CAMPAIGN_ID = env('CAMPAIGN_ID', OUT);
+  const ORDER_SEED = Number(env('ORDER_SEED', 20260723));
   // ORDER=shuffle (default) randomizes cell order per replicate; ORDER=forward and
   // ORDER=reverse fix it, so an order-reversal A/B run can demonstrate the absence
   // of history effects. REBUILD_WRITES=1 (default) measures the write endpoint in
@@ -293,43 +346,168 @@ async function mainIndep() {
   const READ_EPS = ['point_read', 'range_scan', 'deep_fetch', 'aggregation'].filter((e) => wantEndpoints.includes(e));
   const DO_WRITE = wantEndpoints.includes('write');
   const cells = [];
+  if (PREFLIGHT) {
+    for (const engine of wantEngines) {
+      execFileSync(process.execPath, [join(here, 'verify-campaign-state.mjs')], {
+        env: { ...process.env, ENGINE: engine },
+        stdio: 'inherit',
+      });
+    }
+  }
   for (const engine of wantEngines) for (const adapter of wantAdapters) {
     const meta = ADAPTERS[adapter];
     if (meta && meta.engines.includes(engine)) cells.push({ adapter, engine });
   }
   const acc = new Map();
+  const startupEvents = [];
   const K = (a, e, ep) => `${a}|${e}|${ep}`;
   const push = (r) => {
     const k = K(r.adapter, r.engine, r.endpoint);
-    if (!acc.has(k)) acc.set(k, { adapter: r.adapter, engine: r.engine, category: r.category, endpoint: r.endpoint, rps: [], p50: [], p90: [], p975: [], p99: [], cpu: [], cpuKids: [], cpuDb: [], cpuGen: [], rss: [], errors: 0, timeouts: 0, non2xx: 0 });
+    if (!acc.has(k)) acc.set(k, { adapter: r.adapter, engine: r.engine, category: r.category, endpoint: r.endpoint, rps: [], p50: [], p90: [], p975: [], p99: [], cpu: [], cpuKids: [], cpuDb: [], cpuGen: [], rss: [], startupRetries: [], errors: 0, timeouts: 0, non2xx: 0 });
     const a = acc.get(k);
     a.rps.push(r.rps); a.p50.push(r.p50); a.p90.push(r.p90); a.p975.push(r.p975); a.p99.push(r.p99);
     a.cpu.push(r.cpu_pct); a.cpuKids.push(r.cpu_children_pct); a.cpuDb.push(r.db_cpu_pct); a.cpuGen.push(r.gen_cpu_pct); a.rss.push(r.rss_mb);
     (a.gc ??= []).push(r.gc_count); (a.gcMs ??= []).push(r.gc_ms);
     (a.poolUsed ??= []).push(r.pool_used_avg); (a.poolPend ??= []).push(r.pool_pending_avg); (a.poolPendMax ??= []).push(r.pool_pending_max);
+    a.startupRetries.push(r.startup_retries ?? 0);
     a.errors += r.errors; a.timeouts += r.timeouts; a.non2xx += r.non2xx;
+  };
+  const benchWithStartupRetry = async (adapter, engine, options) => {
+    const maxAttempts = 2;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const rows = await benchCell(adapter, engine, nextPort(), options);
+        return rows.map((row) => ({ ...row, startup_retries: attempt - 1 }));
+      } catch (error) {
+        const startupFailure = /server (health timeout|exited before health)/.test(error.message);
+        startupEvents.push({
+          adapter,
+          engine,
+          replicate: options.rep + 1,
+          endpoints: options.only,
+          attempt,
+          startupFailure,
+          message: error.message,
+        });
+        if (!startupFailure || attempt === maxAttempts) throw error;
+        console.error(
+          `  REJECTED START ${adapter}/${engine} attempt ${attempt}/${maxAttempts}: ` +
+          `${error.message}; retrying before warm-up`,
+        );
+      }
+    }
+    throw new Error("unreachable startup-retry state");
   };
   for (let rep = 0; rep < REPLICATES; rep++) {
     const order = cells.slice();
     if (ORDER === 'shuffle') {
-      for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+      const orderRand = mulberry32(fnv1a([CAMPAIGN_ID, ORDER_SEED, rep, 'order'].join(':')));
+      for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(orderRand() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
     } else if (ORDER === 'reverse') order.reverse();
     console.log(`\n===== replicate ${rep + 1}/${REPLICATES} (order=${ORDER}: ${order.map((c) => c.adapter).join(',')}) =====`);
     for (const { adapter, engine } of order) {
       console.log(`\n== rep ${rep + 1}: ${adapter} on ${engine} ==`);
       try {
-        if (READ_EPS.length) (await benchCell(adapter, engine, nextPort(), { repeats: 1, rep, only: READ_EPS })).forEach(push);
+        if (READ_EPS.length) {
+          (await benchWithStartupRetry(adapter, engine, { repeats: 1, rep, only: READ_EPS }))
+            .forEach(push);
+        }
         if (DO_WRITE) {
           if (REBUILD_WRITES) await rebuildDb(engine); // fresh physical state, then a dedicated boot
-          (await benchCell(adapter, engine, nextPort(), { repeats: 1, rep, only: ['write'] })).forEach(push);
+          (await benchWithStartupRetry(adapter, engine, { repeats: 1, rep, only: ["write"] }))
+            .forEach(push);
+          await resetWrites(engine); // leave the next cell and campaign end at the declared seed state
         }
-      } catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
+      } catch (e) {
+        console.error(`  FAILED ${adapter}/${engine}: ${e.message}`);
+        await writeFile(
+          join(resultsDir, `${OUT}.startup-events.json`),
+          JSON.stringify(startupEvents, null, 2),
+        );
+        await writeFile(
+          join(resultsDir, `${OUT}.partial.json`),
+          JSON.stringify([...acc.values()], null, 2),
+        );
+        throw new Error(
+          `campaign rejected at replicate ${rep + 1}, ${adapter}/${engine}: ${e.message}`,
+        );
+      }
+    }
+    const expectedEndpoints = [...READ_EPS, ...(DO_WRITE ? ["write"] : [])];
+    const expectedCellCount = cells.length * expectedEndpoints.length;
+    const replicateProblems = [];
+    if (acc.size !== expectedCellCount) {
+      replicateProblems.push(`roster has ${acc.size} keys, expected ${expectedCellCount}`);
+    }
+    for (const { adapter, engine } of cells) {
+      for (const endpoint of expectedEndpoints) {
+        const key = K(adapter, engine, endpoint);
+        const row = acc.get(key);
+        if (!row) {
+          replicateProblems.push(`${key}: missing after replicate ${rep + 1}`);
+        } else if (row.rps.length !== rep + 1 || row.p99.length !== rep + 1) {
+          replicateProblems.push(
+            `${key}: samples=${row.rps.length}/${row.p99.length}, expected ${rep + 1}`,
+          );
+        }
+      }
+    }
+    if (replicateProblems.length) {
+      throw new Error(
+        `replicate completeness gate failed:\n${replicateProblems.join("\n")}`,
+      );
     }
     // checkpoint: persist accumulated samples after every replicate so a crash in a
     // long overnight run loses at most the replicate in progress
     await writeFile(join(resultsDir, `${OUT}.partial.json`),
       JSON.stringify([...acc.values()], null, 2));
     console.log(`[checkpoint] replicate ${rep + 1}/${REPLICATES} saved (${acc.size} cells)`);
+  }
+  const expectedKeys = [];
+  for (const { adapter, engine } of cells) {
+    for (const endpoint of [...READ_EPS, ...(DO_WRITE ? ["write"] : [])]) {
+      expectedKeys.push(K(adapter, engine, endpoint));
+    }
+  }
+  const completenessProblems = [];
+  for (const key of expectedKeys) {
+    const row = acc.get(key);
+    if (!row) {
+      completenessProblems.push(`${key}: missing`);
+      continue;
+    }
+    for (const [metric, values] of Object.entries({
+      rps: row.rps,
+      p50: row.p50,
+      p90: row.p90,
+      p975: row.p975,
+      p99: row.p99,
+    })) {
+      if (values.length !== REPLICATES) {
+        completenessProblems.push(
+          `${key}: ${metric} has ${values.length}, expected ${REPLICATES}`,
+        );
+      }
+    }
+    if (row.errors !== 0 || row.timeouts !== 0 || row.non2xx !== 0) {
+      completenessProblems.push(
+        `${key}: errors/timeouts/non2xx=${row.errors}/${row.timeouts}/${row.non2xx}`,
+      );
+    }
+  }
+  if (acc.size !== expectedKeys.length) {
+    completenessProblems.push(
+      `roster has ${acc.size} keys, expected exactly ${expectedKeys.length}`,
+    );
+  }
+  await writeFile(
+    join(resultsDir, `${OUT}.startup-events.json`),
+    JSON.stringify(startupEvents, null, 2),
+  );
+  if (completenessProblems.length) {
+    throw new Error(
+      `campaign completeness gate failed:\n${completenessProblems.join("\n")}`,
+    );
   }
   const m0 = (xs) => { const v = xs.filter((x) => x != null); return v.length ? Math.round(median(v)) : null; };
   const rows = [...acc.values()].map((a) => ({
@@ -342,7 +520,9 @@ async function mainIndep() {
     pool_used_avg: m0(a.poolUsed ?? []), pool_pending_avg: m0(a.poolPend ?? []), pool_pending_max: m0(a.poolPendMax ?? []),
     errors: a.errors, timeouts: a.timeouts, non2xx: a.non2xx,
     connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: a.rps.length, independent: true,
-    order_mode: ORDER, rebuild_writes: REBUILD_WRITES, paired_streams: true,
+    campaign_id: CAMPAIGN_ID, order_mode: ORDER, order_seed: ORDER_SEED,
+    rebuild_writes: REBUILD_WRITES, preflight: PREFLIGHT, paired_streams: true,
+    startup_retries: Math.max(0, ...a.startupRetries),
     rps_samples: a.rps.map((x) => Math.round(x)), p99_samples: a.p99, p975_samples: a.p975,
   }));
   // artifact evidence of the paired id streams: first 50 ids per endpoint per replicate
@@ -353,7 +533,8 @@ async function mainIndep() {
       const s = streamFor(ep, rep); sample[ep][`rep${rep}`] = Array.from({ length: 50 }, () => s(ep === 'aggregation' || ep === 'write' ? SEED_AUTHORS : SEED_POSTS));
     }
   }
-  await writeFile(join(resultsDir, 'traces-sample.json'), JSON.stringify(sample, null, 2));
+  const tracesOut = OUT === 'raw-indep' ? 'traces-sample.json' : OUT + '-traces-sample.json';
+  await writeFile(join(resultsDir, tracesOut), JSON.stringify(sample, null, 2));
   await writeFile(join(resultsDir, `${OUT}.json`), JSON.stringify(rows, null, 2));
   console.log(`\nWrote ${rows.length} rows → results/${OUT}.json (${REPLICATES} repeated runs, order=${ORDER}, paired streams, write-rebuild=${REBUILD_WRITES}, ${DURATION}s runs).`);
 }
@@ -372,6 +553,7 @@ async function main() {
         all.push(...rows);
       } catch (e) {
         console.error(`  FAILED ${adapter}/${engine}: ${e.message}`);
+        throw new Error(`benchmark rejected at ${adapter}/${engine}: ${e.message}`);
       }
     }
   }

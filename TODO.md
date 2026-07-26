@@ -1,5 +1,7 @@
 # TODO
 
+> Historical pre-protocol planning log. It is retained as development provenance, not as the current experiment status or terminology; current status is in `README.md`, `REPRODUCE.md`, and `experiments/MANIFEST.md`.
+
 Ordered roughly by priority. `[ ]` open, `[x]` done.
 
 ## 0. Validate the harness against live databases — DONE (2026-07-06)

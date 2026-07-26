@@ -6,27 +6,24 @@
       ylabel={Throughput (req/s)},xmode=log,log basis x=2,legend pos=north west,
       legend columns=2,legend cell align=left,font=\small,grid=both,
       title={deep fetch scaling on PostgreSQL}]
-    \addplot+[mark=*] coordinates {(1,729) (8,3293) (32,3717) (64,3636) (128,3590) (256,3556)};
+    \addplot+[mark=*] coordinates {(1,727) (8,3542) (32,3654) (64,3755) (128,3621) (256,3554)};
     \addlegendentry{pg}
-    \addplot+[mark=square*] coordinates {(1,1017) (8,3753) (32,3899) (64,3852) (128,3815) (256,3688)};
-    \addlegendentry{pg-tuned}
-    \addplot+[mark=triangle*] coordinates {(1,663) (8,2408) (32,2540) (64,2523) (128,2451) (256,2412)};
+    \addplot+[mark=square*] coordinates {(1,654) (8,2332) (32,2465) (64,2533) (128,2429) (256,2443)};
     \addlegendentry{knex}
-    \addplot+[mark=diamond*] coordinates {(1,596) (8,1790) (32,1935) (64,1933) (128,1867) (256,1792)};
+    \addplot+[mark=triangle*] coordinates {(1,581) (8,1774) (32,1886) (64,1865) (128,1821) (256,1750)};
     \addlegendentry{drizzle}
-    \addplot+[mark=o] coordinates {(1,684) (8,1133) (32,1183) (64,1148) (128,1150) (256,1118)};
+    \addplot+[mark=diamond*] coordinates {(1,700) (8,1095) (32,1180) (64,1132) (128,1151) (256,1165)};
     \addlegendentry{prisma}
-    \addplot+[mark=square] coordinates {(1,599) (8,1002) (32,1042) (64,1030) (128,1013) (256,964)};
+    \addplot+[mark=o] coordinates {(1,609) (8,1000) (32,1024) (64,1014) (128,1013) (256,989)};
     \addlegendentry{sequelize}
-    \addplot+[mark=triangle] coordinates {(1,530) (8,1227) (32,1279) (64,1253) (128,1224) (256,1205)};
+    \addplot+[mark=square] coordinates {(1,524) (8,1227) (32,1281) (64,1239) (128,1272) (256,1221)};
     \addlegendentry{typeorm}
-    \addplot+[mark=x] coordinates {(1,724) (8,1072) (32,1099) (64,1057) (128,1014) (256,955)};
+    \addplot+[mark=triangle] coordinates {(1,706) (8,1004) (32,1035) (64,1036) (128,1005) (256,1030)};
     \addlegendentry{objection}
-    \addplot+[mark=+] coordinates {(1,321) (8,494) (32,513) (64,513) (128,497) (256,458)};
+    \addplot+[mark=x] coordinates {(1,323) (8,533) (32,526) (64,514) (128,518) (256,494)};
     \addlegendentry{mikroorm}
   \end{axis}
   \end{tikzpicture}
-  \caption{Throughput of each access layer on the deep fetch as concurrency
-    increases (postgres). The native driver leads at every concurrency level, with the query builder and Drizzle next and the data-mapper ORMs (Prisma among them) below; the ordering is stable above about 32 connections and compresses only at very low concurrency.}
+  \caption{Deep-fetch throughput of each configured layer across the declared concurrency ladder (postgres). The curve maximum is used as an alternative empirical capacity denominator; uncertainty is assessed from the repeated point measurements.}
   \label{fig:scaling}
 \end{figure}

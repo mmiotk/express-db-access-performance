@@ -13,3 +13,21 @@ const WORKERS = Number(process.env.WORKERS || 1);
 cluster.setupPrimary({ exec: join(here, '..', 'src', 'server.mjs') });
 for (let i = 0; i < WORKERS; i++) cluster.fork();
 cluster.on('exit', (w, code, sig) => { if (code && code !== 0) console.error(`[cluster] worker ${w.process.pid} exited code=${code} sig=${sig}`); });
+
+let shuttingDown = false;
+const shutdown = () => {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  const workers = Object.values(cluster.workers).filter(Boolean);
+  if (!workers.length) return process.exit(0);
+  const force = setTimeout(() => process.exit(1), 5000);
+  force.unref();
+  let remaining = workers.length;
+  cluster.on('exit', () => {
+    remaining--;
+    if (remaining === 0) { clearTimeout(force); process.exit(0); }
+  });
+  for (const worker of workers) worker.process.kill('SIGTERM');
+};
+process.once('SIGTERM', shutdown);
+process.once('SIGINT', shutdown);

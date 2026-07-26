@@ -3,6 +3,7 @@
   \centering
   \caption{Number of SQL round trips each access layer issues per request on PostgreSQL, captured from server-side statement logging. The native drivers, Knex, and Drizzle issue a two-query deep fetch; the data-mapper ORMs' eager-loading strategies choose their own counts. Full generated SQL and \texttt{EXPLAIN} plans are in the replication package.}
   \label{tab:query_counts}
+  \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l r r r r r}
     \toprule
     Layer & Point read & Range scan & Deep fetch & Aggregation & Insert \\
@@ -17,4 +18,5 @@
     \texttt{mikroorm} & 1 & 1 & 1 & 1 & 1 \\
     \bottomrule
   \end{tabular}
+  \end{adjustbox}
 \end{table}

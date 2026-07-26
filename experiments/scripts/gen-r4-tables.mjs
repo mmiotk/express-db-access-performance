@@ -8,7 +8,10 @@ const out2 = async (name, tex) => { await writeFile(join(here, '..', 'results', 
 
 // --- utilization: p99 at each utilization fraction, per layer, per engine -----
 for (const engine of ['postgres', 'mysql']) {
-  const d = await R(`utilization.${engine}.json`); if (!d) continue;
+  const utilFile = engine === 'postgres'
+    ? (process.env.UTIL_PG_FILE || 'utilization-corrected.postgres.json')
+    : (process.env.UTIL_MY_FILE || 'utilization-corrected.mysql.json');
+  const d = await R(utilFile); if (!d) continue;
   const layers = [...new Set(d.map((x) => x.adapter))];
   const fr = [...new Set(d.map((x) => x.fraction))].sort((a, b) => a - b);
   const rows = layers.map((a) => {
@@ -23,7 +26,7 @@ for (const engine of ['postgres', 'mysql']) {
   \\caption{Utilization-controlled open-loop tail on the deep fetch (${eng}):
     coordinated-omission-corrected p99 (ms, median of five runs) when each layer is
     offered a fixed fraction of its $\\widehat C_{50}$ capacity proxy (the 25-run
-    median throughput at 50 connections). At nominal 50\\% and across most nominal 70\\% cells the tails are small and similar across layers, so the large high-load p99 gap is chiefly a capacity/queueing effect. A full-sweep-denominator sensitivity is reported in Supplement Table~S45. The noisier 85\\% and 95\\% cells are near-saturation sensitivity evidence, not a precise convergence claim.}
+    median throughput at 50 connections). The 50\\% and 70\\% columns carry the sub-saturation comparison and are interpreted with the denominator sensitivity in Supplement Table~S45. The 85\\% and 95\\% columns are near-saturation sensitivity evidence, not a precise convergence claim.}
   \\label{tab:${label}}
   \\begin{tabular}{l ${fr.map(() => 'r').join(' ')}}
     \\toprule
@@ -56,15 +59,9 @@ ${rows}
 \\begin{table}[htbp]
   \\centering
   \\caption{Multi-worker deep-fetch throughput (req/s, median of three runs) as each
-    layer is scaled to 1, 2, and 4 Express workers (node cluster, shared port). Because each
-    process uses about one core, aggregate throughput rises roughly in proportion
-    to workers over this range: Prisma, low at one worker (PostgreSQL
-    1{,}117), rises to 2{,}275 at two and 4{,}449 at four workers, recovering
-    native-like aggregate throughput at four times the processes. This bounded
-    1-to-4-worker check measures no database-side saturation and stops before any
-    layer's knee, so a layer's low per-process throughput may be addressed by
-    additional application processes until another bottleneck is reached, at a
-    proportional cost in cores.}
+    layer is scaled to 1, 2, and 4 Express workers (node cluster, shared port). This bounded 1-to-4-worker sensitivity reports aggregate throughput for the
+    displayed subset. It does not locate database-side saturation or establish
+    scalability beyond four co-located application processes.}
   \\label{tab:cluster}
   \\begin{tabular}{l ${workers.map(() => 'r').join(' ')}}
     \\toprule
@@ -89,9 +86,9 @@ ${rows.join('\n')}
   \\centering
   \\caption{Mixed read/write workload: throughput (req/s) and p99 (ms) under an
     autocannon request mix interleaving the deep-fetch read with single-row inserts,
-    at 90:10 and 70:30 read:write, both engines, median of five runs with a physical
-    write reset per run. The layer ordering matches the read ordering and is
-    insensitive to the mix (the deep-fetch read dominates); exploratory.}
+    at 90:10 and 70:30 read:write, both engines, median of five runs with an exact
+    row-and-allocator reset per run. This is an exploratory sensitivity check; its
+    observed ordering is interpreted from the displayed cells rather than assumed.}
   \\label{tab:mixed}
   \\begin{tabular}{l l l r r}
     \\toprule

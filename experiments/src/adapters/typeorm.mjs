@@ -3,7 +3,7 @@
 import 'reflect-metadata';
 import { DataSource, EntitySchema, LessThan } from 'typeorm';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThread, canonSummary } from './_canon.mjs';
 
 const Author = new EntitySchema({
   name: 'Author', tableName: 'authors',

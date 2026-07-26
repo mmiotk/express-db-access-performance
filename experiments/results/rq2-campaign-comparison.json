@@ -1,0 +1,684 @@
+{
+  "scope": "Descriptive comparison of two corrected-state campaigns on one host. Campaign dates are not paired. Headline reversals must recur, exceed the predeclared plus or minus 5 percent margin on both stacks, and have paired-bootstrap intervals excluding equality in opposite directions in both campaigns. No cross-host transfer is inferred.",
+  "primaryFile": "current-primary.json",
+  "validationFile": "rq2-validation-campaign.json",
+  "validationCells": 42,
+  "repetitionsPerCell": 25,
+  "comparisons": [
+    {
+      "endpoint": "deep_fetch",
+      "label": "Deep fetch",
+      "engine": "postgres",
+      "primaryLeader": "knex",
+      "validationLeader": "knex",
+      "primaryOrder": [
+        "knex",
+        "drizzle",
+        "typeorm",
+        "prisma",
+        "objection",
+        "sequelize",
+        "mikroorm"
+      ],
+      "validationOrder": [
+        "knex",
+        "drizzle",
+        "typeorm",
+        "prisma",
+        "objection",
+        "sequelize",
+        "mikroorm"
+      ],
+      "spearman": 1,
+      "exactRankMatches": 7,
+      "maxAbsoluteMedianDriftPct": 2.297872340425533,
+      "medianDriftPctByLayer": {
+        "knex": 0.16454134101193674,
+        "drizzle": 0.16402405686166688,
+        "prisma": -2.297872340425533,
+        "sequelize": 0.10224948875254825,
+        "typeorm": -0.3281378178835115,
+        "objection": -0.1966568338249708,
+        "mikroorm": -1.5414258188824692
+      }
+    },
+    {
+      "endpoint": "deep_fetch",
+      "label": "Deep fetch",
+      "engine": "mysql",
+      "primaryLeader": "knex",
+      "validationLeader": "knex",
+      "primaryOrder": [
+        "knex",
+        "drizzle",
+        "typeorm",
+        "sequelize",
+        "objection",
+        "prisma",
+        "mikroorm"
+      ],
+      "validationOrder": [
+        "knex",
+        "drizzle",
+        "typeorm",
+        "sequelize",
+        "objection",
+        "prisma",
+        "mikroorm"
+      ],
+      "spearman": 1,
+      "exactRankMatches": 7,
+      "maxAbsoluteMedianDriftPct": 2.0634920634920673,
+      "medianDriftPctByLayer": {
+        "knex": 1.2613521695257424,
+        "drizzle": -0.9223674096848544,
+        "prisma": -2.0634920634920673,
+        "sequelize": 0.11363636363637131,
+        "typeorm": 0.2949852507374562,
+        "objection": -0.11961722488038617,
+        "mikroorm": 0.21186440677967155
+      }
+    },
+    {
+      "endpoint": "aggregation",
+      "label": "Aggregation",
+      "engine": "postgres",
+      "primaryLeader": "drizzle",
+      "validationLeader": "drizzle",
+      "primaryOrder": [
+        "drizzle",
+        "typeorm",
+        "mikroorm",
+        "knex",
+        "sequelize",
+        "prisma",
+        "objection"
+      ],
+      "validationOrder": [
+        "drizzle",
+        "typeorm",
+        "knex",
+        "mikroorm",
+        "sequelize",
+        "prisma",
+        "objection"
+      ],
+      "spearman": 0.9642857142857143,
+      "exactRankMatches": 5,
+      "maxAbsoluteMedianDriftPct": 2.8308400460299143,
+      "medianDriftPctByLayer": {
+        "knex": 0.17930787161557493,
+        "drizzle": -0.3900156006240274,
+        "prisma": -2.8308400460299143,
+        "sequelize": 1.5135135135135203,
+        "typeorm": -0.5270092226614009,
+        "objection": 0.2676659528907832,
+        "mikroorm": -0.3576537911301858
+      }
+    },
+    {
+      "endpoint": "aggregation",
+      "label": "Aggregation",
+      "engine": "mysql",
+      "primaryLeader": "mikroorm",
+      "validationLeader": "mikroorm",
+      "primaryOrder": [
+        "mikroorm",
+        "knex",
+        "drizzle",
+        "typeorm",
+        "sequelize",
+        "objection",
+        "prisma"
+      ],
+      "validationOrder": [
+        "mikroorm",
+        "knex",
+        "drizzle",
+        "typeorm",
+        "sequelize",
+        "objection",
+        "prisma"
+      ],
+      "spearman": 1,
+      "exactRankMatches": 7,
+      "maxAbsoluteMedianDriftPct": 0.996775139255357,
+      "medianDriftPctByLayer": {
+        "knex": 0.8042221663734583,
+        "drizzle": 0.5046681806712083,
+        "prisma": -0.6305170239596425,
+        "sequelize": 0.996775139255357,
+        "typeorm": 0.798557444616188,
+        "objection": -0.3728813559322086,
+        "mikroorm": 0.7509386733416834
+      }
+    },
+    {
+      "endpoint": "write",
+      "label": "Insert",
+      "engine": "postgres",
+      "primaryLeader": "knex",
+      "validationLeader": "knex",
+      "primaryOrder": [
+        "knex",
+        "drizzle",
+        "objection",
+        "prisma",
+        "sequelize",
+        "typeorm",
+        "mikroorm"
+      ],
+      "validationOrder": [
+        "knex",
+        "drizzle",
+        "objection",
+        "prisma",
+        "sequelize",
+        "typeorm",
+        "mikroorm"
+      ],
+      "spearman": 1,
+      "exactRankMatches": 7,
+      "maxAbsoluteMedianDriftPct": 1.3444145685651443,
+      "medianDriftPctByLayer": {
+        "knex": 0.41475660336172115,
+        "drizzle": -1.3444145685651443,
+        "prisma": 1.1502782931354316,
+        "sequelize": -0.03822629969418845,
+        "typeorm": 1.324503311258285,
+        "objection": -1.2698412698412653,
+        "mikroorm": -0.052798310454060804
+      }
+    },
+    {
+      "endpoint": "write",
+      "label": "Insert",
+      "engine": "mysql",
+      "primaryLeader": "drizzle",
+      "validationLeader": "knex",
+      "primaryOrder": [
+        "drizzle",
+        "objection",
+        "knex",
+        "sequelize",
+        "typeorm",
+        "mikroorm",
+        "prisma"
+      ],
+      "validationOrder": [
+        "knex",
+        "drizzle",
+        "sequelize",
+        "objection",
+        "typeorm",
+        "mikroorm",
+        "prisma"
+      ],
+      "spearman": 0.8214285714285714,
+      "exactRankMatches": 3,
+      "maxAbsoluteMedianDriftPct": 13.572854291417169,
+      "medianDriftPctByLayer": {
+        "knex": -0.1686340640809414,
+        "drizzle": -3.4140969162995582,
+        "prisma": 0.7829977628635243,
+        "sequelize": 13.572854291417169,
+        "typeorm": -0.5904059040590437,
+        "objection": -5.589374654122858,
+        "mikroorm": 3.7995149555375862
+      }
+    }
+  ],
+  "crossBackendRankReversals": [
+    {
+      "endpoint": "deep_fetch",
+      "label": "Deep fetch",
+      "primary": [
+        {
+          "pair": "prisma|objection",
+          "pgRatio": 1.1553588987217305,
+          "mysqlRatio": 0.7535885167464115,
+          "material": true,
+          "pgRatioCI": [
+            1.13671875,
+            1.1640316205533596
+          ],
+          "mysqlRatioCI": [
+            0.7432273262661955,
+            0.7645631067961165
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|sequelize",
+          "pgRatio": 1.2014314928425358,
+          "mysqlRatio": 0.7159090909090909,
+          "material": true,
+          "pgRatioCI": [
+            1.18488253319714,
+            1.2077789150460594
+          ],
+          "mysqlRatioCI": [
+            0.7099322799097065,
+            0.725
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "sequelize|objection",
+          "pgRatio": 0.9616519174041298,
+          "mysqlRatio": 1.0526315789473684,
+          "material": false,
+          "pgRatioCI": [
+            0.9495145631067962,
+            0.9692765113974232
+          ],
+          "mysqlRatioCI": [
+            1.0381406436233611,
+            1.071342200725514
+          ],
+          "intervalResolved": true
+        }
+      ],
+      "validation": [
+        {
+          "pair": "prisma|objection",
+          "pgRatio": 1.1310344827586207,
+          "mysqlRatio": 0.7389221556886227,
+          "material": true,
+          "pgRatioCI": [
+            1.1134820562560621,
+            1.1454005934718101
+          ],
+          "mysqlRatioCI": [
+            0.7297619047619047,
+            0.7506053268765133
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|sequelize",
+          "pgRatio": 1.1726251276813076,
+          "mysqlRatio": 0.7003405221339387,
+          "material": true,
+          "pgRatioCI": [
+            1.1593462717058223,
+            1.1813524590163935
+          ],
+          "mysqlRatioCI": [
+            0.6910935738444194,
+            0.7095671981776766
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "sequelize|objection",
+          "pgRatio": 0.9645320197044335,
+          "mysqlRatio": 1.0550898203592813,
+          "material": false,
+          "pgRatioCI": [
+            0.950533462657614,
+            0.9770916334661355
+          ],
+          "mysqlRatioCI": [
+            1.0455089820359282,
+            1.0673886883273165
+          ],
+          "intervalResolved": true
+        }
+      ],
+      "persistentPairs": [
+        "prisma|objection",
+        "prisma|sequelize",
+        "sequelize|objection"
+      ],
+      "persistentMaterialPairs": [
+        "prisma|objection",
+        "prisma|sequelize"
+      ],
+      "persistentIntervalResolvedMaterialPairs": [
+        "prisma|objection",
+        "prisma|sequelize"
+      ]
+    },
+    {
+      "endpoint": "aggregation",
+      "label": "Aggregation",
+      "primary": [
+        {
+          "pair": "drizzle|mikroorm",
+          "pgRatio": 1.146280400572246,
+          "mysqlRatio": 0.9919899874843554,
+          "material": false,
+          "pgRatioCI": [
+            1.1221945137157108,
+            1.1643141512848354
+          ],
+          "mysqlRatioCI": [
+            0.9791096742103954,
+            1.0047762694821518
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "knex|drizzle",
+          "pgRatio": 0.8700468018720748,
+          "mysqlRatio": 1.0040373454453697,
+          "material": false,
+          "pgRatioCI": [
+            0.8517654378596983,
+            0.8881239242685026
+          ],
+          "mysqlRatioCI": [
+            0.9909932449337002,
+            1.0175349428208387
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "knex|typeorm",
+          "pgRatio": 0.9184782608695652,
+          "mysqlRatio": 1.024987120041216,
+          "material": false,
+          "pgRatioCI": [
+            0.8978758169934641,
+            0.9485195154777928
+          ],
+          "mysqlRatioCI": [
+            1.0143405889884762,
+            1.0363308425663489
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|objection",
+          "pgRatio": 1.1630085653104925,
+          "mysqlRatio": 0.8064406779661017,
+          "material": true,
+          "pgRatioCI": [
+            1.1400747065101386,
+            1.1764705882352942
+          ],
+          "mysqlRatioCI": [
+            0.7983924983255191,
+            0.8184955141476881
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "typeorm|mikroorm",
+          "pgRatio": 1.0858369098712446,
+          "mysqlRatio": 0.9717146433041302,
+          "material": false,
+          "pgRatioCI": [
+            1.0589285714285714,
+            1.1044016005820299
+          ],
+          "mysqlRatioCI": [
+            0.964524931778715,
+            0.9814343845371313
+          ],
+          "intervalResolved": true
+        }
+      ],
+      "validation": [
+        {
+          "pair": "drizzle|mikroorm",
+          "pgRatio": 1.145908111988514,
+          "mysqlRatio": 0.9895652173913043,
+          "material": false,
+          "pgRatioCI": [
+            1.1340742068471052,
+            1.1615287542815937
+          ],
+          "mysqlRatioCI": [
+            0.9763079960513327,
+            1.001493280238925
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "knex|drizzle",
+          "pgRatio": 0.8750195771339075,
+          "mysqlRatio": 1.0070298769771528,
+          "material": false,
+          "pgRatioCI": [
+            0.8648188293589346,
+            0.8814067181832519
+          ],
+          "mysqlRatioCI": [
+            0.9910692135946415,
+            1.0285642062689586
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "knex|mikroorm",
+          "pgRatio": 1.002692031586504,
+          "mysqlRatio": 0.9965217391304347,
+          "material": false,
+          "pgRatioCI": [
+            0.9924501168434298,
+            1.0125831385942836
+          ],
+          "mysqlRatioCI": [
+            0.9821649739905871,
+            1.014713216957606
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "knex|typeorm",
+          "pgRatio": 0.925,
+          "mysqlRatio": 1.0250447227191413,
+          "material": false,
+          "pgRatioCI": [
+            0.9131721756290084,
+            0.9411863835524098
+          ],
+          "mysqlRatioCI": [
+            1.0101910828025478,
+            1.0447914000511902
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|objection",
+          "pgRatio": 1.1270688734650294,
+          "mysqlRatio": 0.80435522286492,
+          "material": true,
+          "pgRatioCI": [
+            1.1162420382165605,
+            1.1451265481960151
+          ],
+          "mysqlRatioCI": [
+            0.791680757524518,
+            0.8143835616438356
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "typeorm|mikroorm",
+          "pgRatio": 1.0839913854989232,
+          "mysqlRatio": 0.9721739130434782,
+          "material": false,
+          "pgRatioCI": [
+            1.0666906345497034,
+            1.0932949847204745
+          ],
+          "mysqlRatioCI": [
+            0.9615004935834156,
+            0.9813339970134395
+          ],
+          "intervalResolved": true
+        }
+      ],
+      "persistentPairs": [
+        "drizzle|mikroorm",
+        "knex|drizzle",
+        "knex|typeorm",
+        "prisma|objection",
+        "typeorm|mikroorm"
+      ],
+      "persistentMaterialPairs": [
+        "prisma|objection"
+      ],
+      "persistentIntervalResolvedMaterialPairs": [
+        "prisma|objection"
+      ]
+    },
+    {
+      "endpoint": "write",
+      "label": "Insert",
+      "primary": [
+        {
+          "pair": "knex|drizzle",
+          "pgRatio": 1.119775116108531,
+          "mysqlRatio": 0.9796255506607929,
+          "material": false,
+          "pgRatioCI": [
+            1.0852750420369925,
+            1.166749256689792
+          ],
+          "mysqlRatioCI": [
+            0.7895322939866369,
+            1.0954433497536946
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "knex|objection",
+          "pgRatio": 1.2119047619047618,
+          "mysqlRatio": 0.9845047039291643,
+          "material": false,
+          "pgRatioCI": [
+            1.1741164241164241,
+            1.2679052234787291
+          ],
+          "mysqlRatioCI": [
+            0.8480176211453745,
+            1.0955569080949483
+          ],
+          "intervalResolved": false
+        },
+        {
+          "pair": "prisma|mikroorm",
+          "pgRatio": 1.4229144667370643,
+          "mysqlRatio": 0.7227162489894907,
+          "material": true,
+          "pgRatioCI": [
+            1.4046997389033942,
+            1.4662379421221865
+          ],
+          "mysqlRatioCI": [
+            0.6824534161490683,
+            0.8035555555555556
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|sequelize",
+          "pgRatio": 1.0301987767584098,
+          "mysqlRatio": 0.5948103792415169,
+          "material": false,
+          "pgRatioCI": [
+            1.0143450358625896,
+            1.0572755417956656
+          ],
+          "mysqlRatioCI": [
+            0.534503631961259,
+            0.6174825174825175
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|typeorm",
+          "pgRatio": 1.0498636540708999,
+          "mysqlRatio": 0.6597785977859778,
+          "material": false,
+          "pgRatioCI": [
+            1.0336648814078042,
+            1.0724070450097847
+          ],
+          "mysqlRatioCI": [
+            0.6332853025936599,
+            0.7108339828526891
+          ],
+          "intervalResolved": true
+        }
+      ],
+      "validation": [
+        {
+          "pair": "prisma|mikroorm",
+          "pgRatio": 1.440042260961437,
+          "mysqlRatio": 0.7017133956386293,
+          "material": true,
+          "pgRatioCI": [
+            1.4267083985393845,
+            1.4655913978494624
+          ],
+          "mysqlRatioCI": [
+            0.6825645035183737,
+            0.7185301016419078
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|sequelize",
+          "pgRatio": 1.0424474187380497,
+          "mysqlRatio": 0.5278265963678969,
+          "material": false,
+          "pgRatioCI": [
+            1.0311313591495823,
+            1.0690196078431373
+          ],
+          "mysqlRatioCI": [
+            0.5098152424942263,
+            0.6486291486291487
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|typeorm",
+          "pgRatio": 1.0480584390618992,
+          "mysqlRatio": 0.6688938381588716,
+          "material": false,
+          "pgRatioCI": [
+            1.0351681957186545,
+            1.0755013763271726
+          ],
+          "mysqlRatioCI": [
+            0.6470154753131908,
+            0.7213771016813451
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "sequelize|objection",
+          "pgRatio": 0.7006966773847803,
+          "mysqlRatio": 1.0005861664712778,
+          "material": false,
+          "pgRatioCI": [
+            0.6764395139989435,
+            0.7276513048306497
+          ],
+          "mysqlRatioCI": [
+            0.8079355951696378,
+            1.1024824952259706
+          ],
+          "intervalResolved": false
+        }
+      ],
+      "persistentPairs": [
+        "prisma|mikroorm",
+        "prisma|sequelize",
+        "prisma|typeorm"
+      ],
+      "persistentMaterialPairs": [
+        "prisma|mikroorm"
+      ],
+      "persistentIntervalResolvedMaterialPairs": [
+        "prisma|mikroorm"
+      ]
+    }
+  ]
+}

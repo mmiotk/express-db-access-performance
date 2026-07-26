@@ -1,33 +1,32 @@
 # Express database access-layer performance
 
-> **In English.** Replication package for the paper *A Comparative Analysis of
-> Relational Database Access-Layer Performance in Express.js across PostgreSQL and
-> MySQL*. It contains a reproducible benchmark harness (`experiments/`, JS/Node +
-> autocannon) comparing the full access-layer taxonomy — native driver
+> **In English.** Replication package for the paper *A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js*. It contains a reproducible benchmark harness (`experiments/`, JS/Node +
+> autocannon) comparing a broad product cross-section — native driver
 > (`pg`/`mysql2`), query builder (`knex`), and ORMs (`drizzle`, `prisma`,
 > `sequelize`, `typeorm`, `objection`, `mikroorm`) — on **both** engines, reporting
 > throughput **and** tail latency (p50/p90/p99); the LaTeX sources (`paper/`); and
-> working notes (`notes/`). To reproduce: `cd experiments && npm ci && npm run setup
-> && npm run bench && npm run sync:tables`, then build the PDF with `make`.
+> working notes (`notes/`). Start with [`REPRODUCE.md`](REPRODUCE.md), which separates workflow reproduction, reconstruction from archived data, and numerical re-execution on the pinned reference engines.
 
 Repozytorium artykułu — źródła LaTeX, harness benchmarkowy (JS/Node) i notatki
 robocze (Obsidian). Odpowiednik gatunkowy [`react-rendering-performance`], ale dla
 warstwy dostępu do relacyjnej bazy danych w Express.js.
 
-## Dlaczego to (luka badawcza)
+## Dlaczego ten projekt
 
-Deep-research nad prior artem (podsumowanie: [`notes/prior-art.md`](notes/prior-art.md))
-pokazał, że istniejące porównania warstw dostępu w Node.js są **rozproszone i
-zdominowane przez benchmarki wendorów**, i mają cztery powtarzalne braki:
+Istniejące porównania Node.js obejmują benchmarki wendorów oraz mniejsze badania
+akademickie. Ich estymandy są jednak różne: część zmienia jednocześnie framework,
+warstwę dostępu i środowisko; część mierzy tylko czas wewnątrz procesu; nieliczne
+lokalizują nasycenie albo sprawdzają równoważność odpowiedzi przed rankingiem.
+Szczegółowy, ostrożny przegląd zakresu znajduje się w
+[`notes/related-work-search.md`](notes/related-work-search.md), a kodowany audyt
+dziewięciu źródeł w
+[`experiments/external-protocol-audit.json`](experiments/external-protocol-audit.json).
 
-1. **Brak MySQL** — praktycznie wszystkie benchmarki są PostgreSQL-only.
-2. **Brak neutralnej, pełnej taksonomii** w jednym recenzowanym badaniu
-   (sterownik natywny + query builder + wszystkie główne ORM).
-3. **Rozdzielone metryki** — prace raportują *albo* throughput *albo* latencję,
-   rzadko ogon rozkładu (p95/p99) razem z przepustowością.
-4. **Brak fokusu na warstwie HTTP/Express** (realistyczny request roundtrip).
-
-Ten projekt celuje we wszystkie cztery naraz.
+Projekt wnosi protokół ustalania porównywalności oraz kontrolowane studium przypadku:
+dwie pełne warstwy backendowe, szeroki przekrój produktów, throughput i p99 na
+poziomie HTTP, 25 powtórzeń, osobne warunki capacity/equal demand/matched
+utilization i jawne ograniczenia interpretacji. Nie jest to twierdzenie, że żaden
+wcześniejszy benchmark nie miał tych elementów ani że ranking jest uniwersalny.
 
 ## Struktura
 
@@ -38,16 +37,19 @@ notes/         # vault Obsidiana: prior-art (deep research), projekt benchmarku,
 .github/       # CI: build PDF + smoke-test harnessu
 ```
 
-## Szybki start
+## Szybki start — odtworzenie workflow
 
 ```bash
 cd experiments
 npm ci
 npm run setup      # docker compose up + migrate + seed (postgres + mysql)
-npm run bench      # pełna matryca → results/ + tabele LaTeX
+npm run bench:quick # krótki test workflow
+# pełna numeryczna kampania: zob. REPRODUCE.md
 npm run sync:tables
 cd ../paper && make
 ```
+
+Ta ścieżka przypina obrazy PostgreSQL 18.4 i MySQL 9.7.1, lecz uruchamia je z relaxed durability i w topologii kontenerowej. Odtwarza workflow, ale nie gwarantuje headline insertów z domyślną trwałością; numeryczna reegzekucja wymaga procedury z [`REPRODUCE.md`](REPRODUCE.md). Ten sam dokument rozróżnia author-run archive-isolated reconstruction od niezależnej reprodukcji, której repozytorium nie deklaruje.
 
 Szczegóły harnessu: [`experiments/README.md`](experiments/README.md).
 Metodologia i pułapki pomiarowe: [`METHODOLOGY.md`](METHODOLOGY.md).

@@ -11,12 +11,12 @@
     \toprule
     \textbf{Estimand / quantity} & \textbf{What it identifies} & \textbf{What it does \emph{not} identify} & \textbf{Where reported} \\
     \midrule
-    Documentation-selected implementation-and-strategy effect (RQ1, primary) &
-    Performance of the configuration selected by the predeclared documentation-primary rule (throughput, p99) &
+    Policy-selected documented configuration performance (RQ1, primary) &
+    Performance of the configuration selected by the frozen-page policy (throughput, p99) &
     Library-only overhead; the most common or most performant usage &
     Tables~\ref{tab:deep_fetch},~\ref{tab:write} \\
     \addlinespace
-    Same-SQL (raw-path) standardized contrast (diagnostic) &
+    Common-SQL raw-path sensitivity contrast (diagnostic) &
     Residual spread once every layer runs common SQL through its raw facility &
     A causal decomposition or a bound on the library effect; the share from SQL formulation or query count &
     Supplement Table~S42 \\
@@ -24,7 +24,7 @@
     Performance-conscious deep-fetch regime &
     Speed recoverable within a narrow byte-equivalent tuning budget (faster documented loading strategy) &
     Gains from SQL rewrites, caching, or schema change; non-drop-in strategies (excluded) &
-    Table~\ref{tab:deepfetch_regimes} \\
+    Supplement Table~S18 \\
     \addlinespace
     Per-pattern capacity (saturating throughput) &
     Each pattern's throughput knee per layer and engine, locating relative utilization at the operating point &
@@ -37,13 +37,13 @@
     Table~\ref{tab:deep_fetch} \\
     \addlinespace
     Matched-utilization tail (p99 at matched fractions of own capacity) &
-    p99 when each layer is offered equal fractions (50/70/85/95\%) of its estimated capacity proxy &
-    The tail under equal external demand; the capacity-and-queueing component it removes &
+    p99 when each layer is offered 50\% and most 70\% of its estimated capacity; 85--95\% cells are secondary near-saturation trends &
+    The tail under equal external demand; a precise claim near 85--95\% utilization &
     Supplement Tables~S43, S45 \\
     \addlinespace
     Layer$\times$engine interaction magnitude (RQ2) &
     The spread of each layer's PostgreSQL$\div$MySQL stack ratio and the concrete rank reversals &
-    The interaction's size from the permutation test (bounds existence only); its sign (every layer faster on PostgreSQL) &
+    A pure DBMS effect; stability across campaigns, hosts, or deployments &
     Supplement Table~S28; \S\ref{sec:results} (RQ2) \\
     \bottomrule
   \end{tabular}

@@ -7,7 +7,7 @@ See [[prior-art]] for why. Full rationale in `../METHODOLOGY.md`.
 - **Access layer** (9): pg, mysql2 (native) · knex (query builder) · drizzle
   (lightweight ORM) · prisma, sequelize, typeorm, objection, mikroorm (ORM).
 - **Engine** (2): PostgreSQL 16, MySQL 8.4.
-- **Access pattern** (5 endpoints): point read, range scan, deep/nested fetch
+- **Access pattern** (5 endpoints): point read, range scan, deep fetch
   (N+1-sensitive), aggregation, insert.
 
 ## Domain schema

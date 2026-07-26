@@ -1,0 +1,60 @@
+{
+  "scope": "Within one corrected-state campaign on one host; not cross-campaign or cross-host evidence.",
+  "tests": [
+    {
+      "endpoint": "point_read",
+      "label": "Point read",
+      "statistic": "randomized-block F on paired log throughput ratios",
+      "permutationUnit": "layer labels within campaign replicate",
+      "F": 139.96397377208123,
+      "p": 0.00004999750012499375,
+      "permutations": 20000,
+      "layers": 7,
+      "campaignReplicates": 25
+    },
+    {
+      "endpoint": "range_scan",
+      "label": "Range",
+      "statistic": "randomized-block F on paired log throughput ratios",
+      "permutationUnit": "layer labels within campaign replicate",
+      "F": 386.16109651163424,
+      "p": 0.00004999750012499375,
+      "permutations": 20000,
+      "layers": 7,
+      "campaignReplicates": 25
+    },
+    {
+      "endpoint": "deep_fetch",
+      "label": "Deep fetch",
+      "statistic": "randomized-block F on paired log throughput ratios",
+      "permutationUnit": "layer labels within campaign replicate",
+      "F": 458.5320757616378,
+      "p": 0.00004999750012499375,
+      "permutations": 20000,
+      "layers": 7,
+      "campaignReplicates": 25
+    },
+    {
+      "endpoint": "aggregation",
+      "label": "Aggregation",
+      "statistic": "randomized-block F on paired log throughput ratios",
+      "permutationUnit": "layer labels within campaign replicate",
+      "F": 179.51508061167297,
+      "p": 0.00004999750012499375,
+      "permutations": 20000,
+      "layers": 7,
+      "campaignReplicates": 25
+    },
+    {
+      "endpoint": "write",
+      "label": "Insert",
+      "statistic": "randomized-block F on paired log throughput ratios",
+      "permutationUnit": "layer labels within campaign replicate",
+      "F": 127.05145545051694,
+      "p": 0.00004999750012499375,
+      "permutations": 20000,
+      "layers": 7,
+      "campaignReplicates": 25
+    }
+  ]
+}

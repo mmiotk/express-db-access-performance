@@ -100,8 +100,6 @@ export default async function createAdapter({ engine, config }) {
 
     async authorSummary(id) {
       const em = orm.em.fork();
-      const knex = em.getConnection().getKnex?.();
-      // MikroORM's SQL drivers expose the underlying knex; fall back to raw exec.
       const rows = await em.getConnection().execute(
         `SELECT a.id AS author_id,
                 (SELECT COUNT(*)               FROM posts p WHERE p.author_id = a.id) AS posts,
@@ -110,7 +108,6 @@ export default async function createAdapter({ engine, config }) {
                    WHERE p.author_id = a.id) AS comments
            FROM authors a
           WHERE a.id = ?`, [id]);
-      void knex;
       return canonSummary(rows[0]);
     },
 

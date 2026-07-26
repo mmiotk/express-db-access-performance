@@ -7,7 +7,7 @@
 // overflow IDs; empty and boundary keyset pages), and asserts that every
 // adapter returns a BYTE-IDENTICAL JSON response to the native-driver baseline
 // on every one of them. It is differential property-based testing: the property
-// is `adapter(input) === baseline(input)` and the native driver is the oracle.
+// is `adapter(input) === baseline(input)` and the native driver is the differential comparator.
 // Because the dataset is deterministic and finite, testing thousands of inputs
 // is inexpensive relative to the measurement campaign.
 //

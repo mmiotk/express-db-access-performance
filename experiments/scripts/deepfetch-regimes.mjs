@@ -1,9 +1,8 @@
-// Performance-conscious co-primary regime (review 6.4). For each ORM with a documented
-// join<->select-in choice whose alternative is byte-identical to the documentation-primary
-// deep fetch, measure BOTH strategies on ONE harness (a warmup pass, then AL_REPEATS timed
-// repeats each), so the two co-primary regimes --- documentation-primary (/thread) and
-// performance-conscious (the faster of a layer's two byte-equivalent documented strategies,
-// /thread vs /thread-alt) --- are directly comparable. This is a self-contained deep-fetch
+// Legacy post-hoc fixed-ID sensitivity (excluded from manuscript estimands). For each ORM with a documented
+// join<->select-in choice whose alternative is byte-identical to the policy-selected
+// deep fetch, measure both strategies on one harness (a warmup pass, then AL_REPEATS timed
+// repeats each). The larger measured value is outcome-selected and is retained only as
+// provenance; it is not a protocol-compliant treatment or primary result. This is a self-contained deep-fetch
 // harness (fixed post id, warmup + 25 repeats); absolute req/s therefore differ from the
 // seeded-id primary matrix by design, but the two regimes here share one harness. Writes
 // results/deepfetch-regimes.json.
@@ -27,6 +26,7 @@ const REPEATS = Number(env('AL_REPEATS', 25));
 const DIRECTION = { sequelize: 'join->select-in', typeorm: 'join->select-in', mikroorm: 'join->select-in', objection: 'select-in->join' };
 
 function health(base, tries = 300) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
+async function waitIdle(base, timeoutMs = 30000) { const deadline = Date.now() + timeoutMs; for (;;) { const s = await (await fetch(`${base}/stats`)).json(); if (s.active_handlers === 0) return; if (Date.now() > deadline) throw new Error('handler-drain timeout'); await new Promise((r) => setTimeout(r, 25)); } }
 function run(path, base, duration) {
   return new Promise((resolve, reject) => {
     autocannon({ url: `${base}${path}`, connections: CONNECTIONS, duration }, (err, r) => err ? reject(err) : resolve(Math.round(r.requests.average)));
@@ -46,7 +46,7 @@ for (const engine of ENGINES) {
     try {
       await health(base);
       // gate: the alternative strategy must be a byte-identical drop-in to count as a
-      // semantically-equivalent, performance-conscious option (also checked by verify.mjs).
+      // semantically equivalent, post-hoc outcome-selected option (also checked by verify.mjs).
       const a = await (await fetch(`${base}/posts/1/thread`)).text();
       const altRes = await fetch(`${base}/posts/1/thread-alt`);
       const b = await altRes.text();
@@ -57,12 +57,17 @@ for (const engine of ENGINES) {
         console.error(`  ${engine}/${adapter}: EXCLUDED --- ${reason}`);
         continue;
       }
-      await run('/posts/1/thread', base, WARMUP);       // warmup: JIT, pool fill, plan cache
-      await run('/posts/1/thread-alt', base, WARMUP);
+      await run('/posts/1/thread', base, WARMUP); await waitIdle(base);       // warmup: JIT, pool fill, plan cache
+      await run('/posts/1/thread-alt', base, WARMUP); await waitIdle(base);
       const doc = [], alt = [];
       for (let i = 0; i < REPEATS; i++) {
-        doc.push(await run('/posts/1/thread', base, DURATION));
-        alt.push(await run('/posts/1/thread-alt', base, DURATION));
+        if (i % 2 === 0) {
+          doc.push(await run('/posts/1/thread', base, DURATION)); await waitIdle(base);
+          alt.push(await run('/posts/1/thread-alt', base, DURATION)); await waitIdle(base);
+        } else {
+          alt.push(await run('/posts/1/thread-alt', base, DURATION)); await waitIdle(base);
+          doc.push(await run('/posts/1/thread', base, DURATION)); await waitIdle(base);
+        }
       }
       const doc_med = median(doc), alt_med = median(alt);
       const perf = Math.max(doc_med, alt_med); // faster of the two byte-equivalent documented strategies
@@ -72,9 +77,9 @@ for (const engine of ENGINES) {
         perf_over_doc: +(perf / doc_med).toFixed(3),
         doc_samples: doc, alt_samples: alt };
       out.push(rec);
-      console.log(`  ${engine}/${adapter} (${rec.direction}): doc-primary ${doc_med} vs alt ${alt_med} rps -> performance-conscious ${perf} (${rec.perf_over_doc}x)`);
+      console.log(`  ${engine}/${adapter} (${rec.direction}): doc-primary ${doc_med} vs alt ${alt_med} rps -> post-hoc best ${perf} (${rec.perf_over_doc}x)`);
     } catch (e) { console.error(`  FAILED ${engine}/${adapter}: ${e.message}`); }
-    finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); }
+    finally { if (child.exitCode === null) child.kill('SIGTERM'); await new Promise((resolve) => { if (child.exitCode !== null) return resolve(); const timeout = setTimeout(resolve, 5000); child.once('exit', () => { clearTimeout(timeout); resolve(); }); }); }
   }
 }
 await writeFile(join(here, '..', 'results', 'deepfetch-regimes.json'), JSON.stringify(out, null, 2));

@@ -1,0 +1,59 @@
+[
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "category": "native-driver",
+    "endpoint": "write",
+    "rps": [
+      1803
+    ],
+    "p50": [
+      26
+    ],
+    "p90": [
+      30
+    ],
+    "p975": [
+      51
+    ],
+    "p99": [
+      67
+    ],
+    "cpu": [
+      60
+    ],
+    "cpuKids": [
+      0
+    ],
+    "cpuDb": [
+      50
+    ],
+    "cpuGen": [
+      19
+    ],
+    "rss": [
+      153
+    ],
+    "startupRetries": [
+      0
+    ],
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0,
+    "gc": [
+      16
+    ],
+    "gcMs": [
+      42
+    ],
+    "poolUsed": [
+      9.1
+    ],
+    "poolPend": [
+      34.7
+    ],
+    "poolPendMax": [
+      40
+    ]
+  }
+]

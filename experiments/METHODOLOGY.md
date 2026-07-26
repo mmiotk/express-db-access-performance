@@ -1,4 +1,4 @@
-# Documentation-selected deep-fetch choices, per access layer
+# Policy-selected documented deep-fetch choices, per access layer
 
 ## Purpose and principle
 
@@ -8,7 +8,7 @@ strategy we deliberately did *not* use. The deep fetch materializes one post wit
 its author and all of its comments, each comment with its own comment-author
 (the `post → author`, `post → comments → comment-author` graph).
 
-The guiding principle is that **each layer uses the path selected by the predeclared documentation rule** — the relation-loading API that the pinned-version official documentation presents first — rather than a claim about a typical, competent, or performance-tuning developer. The two explicitly labelled *tuned* native adapters (`pg-tuned`, `mysql2-tuned`) are separate reference points, not documentation-selected treatments.
+The guiding principle is that **each layer uses the path selected by the predeclared documentation rule** — the relation-loading API that the pinned-version official documentation presents first — rather than a claim about a typical, competent, or performance-tuning developer. The two explicitly labelled *tuned* native adapters (`pg-tuned`, `mysql2-tuned`) are separate reference points, not policy-selected documented treatments.
 For every layer we additionally verify that **query logging is disabled**, that no
 lifecycle hooks or validation run on the read path, and that entity tracking /
 identity maps (where they exist) are either absent or scoped so they cannot leak
@@ -18,7 +18,7 @@ relational-fetch treatment, not about incidental instrumentation.
 ## Library inclusion and exclusion
 
 The eleven levels of the access-layer factor were fixed before measurement by the
-criteria below; the aim is a representative cross-section of the taxonomy, not an
+criteria below; the aim is a broad product cross-section, not an
 exhaustive catalogue.
 
 **Inclusion criteria.** A candidate library is included if it:
@@ -49,12 +49,12 @@ manuscript summarizes this in Section 3 (Factors and treatments).
 
 ## Selection protocol (fixed before measurement)
 
-The documentation-selected API for each layer was chosen by a single rule, decided **before** any
+The policy-selected documented API for each layer was chosen by a single rule, decided **before** any
 timing was collected: *use the eager-loading (relation-loading) API that the
 library's own official documentation for the pinned major version presents first in
 its "loading related records / eager loading / populating relations" section, with
 query logging, lifecycle hooks, and validation disabled and any identity map scoped
-per request.* This makes the documentation-selected treatment a documented, reproducible choice
+per request.* This makes the policy-selected documented treatment a documented, reproducible choice
 rather than an editorial one; the exact API, the pinned version, and the
 documentation page that justifies each choice are recorded below. We did not invite
 the library maintainers to review the adapters; that is disclosed as a limitation.
@@ -85,7 +85,7 @@ that table (`mysql2`, `pg-tuned`, `mysql2-tuned`) issue the identical hand-writt
 two-statement plan (`THREAD_Q1` + `THREAD_Q2` in `src/adapters/_threadraw.mjs`), so
 their deep fetch is two round-trips by construction.
 
-A separate *same-SQL* standardized contrast (`getThreadRaw`, endpoint `/posts/:id/thread-raw`) runs the identical two-statement plan through every layer's raw-SQL facility. It standardizes SQL and row mapping while jointly changing the API, protocol, query strategy, hydration, and other mechanisms; it is diagnostic and isolates no single cause.
+A separate **common-SQL raw-path sensitivity contrast** (`getThreadRaw`, endpoint `/posts/:id/thread-raw`) runs the identical two-statement plan through every layer's raw-SQL facility. It fixes SQL and row mapping while jointly changing the API, protocol, query strategy, hydration, and other mechanisms; it is diagnostic and isolates no single cause.
 
 ---
 
@@ -102,7 +102,7 @@ A separate *same-SQL* standardized contrast (`getThreadRaw`, endpoint `/posts/:i
 - **Round-trips:** 2 (measured).
 - **Alternative not used:** n/a (hand-written SQL). One could collapse to a single
   post⋈comments join, but that fans out the post row across comments; the two-query
-  split is the documentation-selected no-fan-out plan and is the shared baseline all layers target.
+  split is the policy-selected documented no-fan-out plan and is the shared baseline all layers target.
 - **Logging:** disabled — `new pg.Pool(...)` carries no logging option.
 - **Tracking / hooks / validation:** none. Native driver: no identity map, no
   lifecycle hooks, no validation on the read path.
@@ -148,7 +148,7 @@ A separate *same-SQL* standardized contrast (`getThreadRaw`, endpoint `/posts/:i
   .select(...).where('c.post_id', id).orderBy('c.id')`.
 - **Round-trips:** 2 (measured).
 - **Alternative not used:** n/a (hand-written SQL). Knex is a query builder with no
-  eager-loading / relation abstraction; the two explicit joins are the documentation-selected form.
+  eager-loading / relation abstraction; the two explicit joins are the policy-selected documented form.
 - **Logging:** disabled — `knexFactory({...})` sets no `log:` handler and `debug` is
   left at its `false` default.
 - **Tracking / hooks / validation:** none. Query builder: no identity map, no hooks,
@@ -254,7 +254,7 @@ Five layers expose a documented alternative loading strategy that a planned
 follow-up sensitivity experiment could exercise, swapping only the loading path while
 holding everything else fixed:
 
-| Layer | Chosen (documentation-selected default) | Documented alternative not used |
+| Layer | Chosen (policy-selected documented path) | Documented alternative not used |
 |-------|----------------------------|---------------------------------|
 | drizzle | manual core builder with explicit joins | relational query API (`db.query...with`) |
 | prisma | `relationLoadStrategy: 'query'` (default) | `relationLoadStrategy: 'join'` |
@@ -270,3 +270,14 @@ baseline). Note the two directions cancel across the ORMs — some default to a 
 JOIN (Sequelize, TypeORM, MikroORM) and some to separate batched queries (Prisma,
 Objection) — so a sensitivity sweep would probe both directions of the
 join-vs-select-in trade-off.
+
+
+## Semantic admission and campaign-state evidence
+
+Read admission has two distinct layers. `bench/verify-spec.mjs` imports `src/seed-spec.mjs` and replays the deterministic seed and fan-out fixture without importing an adapter or querying a database. It checks expected fields, values, ordering, graph membership, and aggregates; database-generated timestamps are checked for presence and canonical ISO-8601 representation. Random inputs, boundary and list cases, and all six fan-out fixtures yield 73,080 passing expected-result checks across both engines. `bench/verify-seed-parity.mjs` separately compares every declared fan-out value and generated identifier across the engines after excluding only DBMS-generated timestamps. Separately, `bench/verify.mjs` and `bench/verify-property.mjs` establish differential equivalence among implementations. In those checks the native path is a comparator, not an independent expected-result oracle. For mutations, `bench/verify-writes.mjs` checks the primary single-row insert's intended database state, identifier, and row-count change for all nine compatible adapters per engine. It checks atomic commit and rollback where the secondary transactional method is implemented (five adapters on PostgreSQL, four on MySQL); `write-admission.json` records the per-adapter scope. These finite checks provide evidence for the declared task and tested inputs; they do not prove arbitrary program correctness.
+
+`bench/verify-campaign-state.mjs` checks exact base and fan-out counts, absence of stray posts, every fan-out cardinality, and the actual next allocated post identifier. This preflight found that the historical MySQL rebuild could leave generated inserts below the cleanup floor after `OPTIMIZE TABLE`. The corrected harness advances the allocator with an insert/delete sentinel at id 300000, resets after every write cell, and runs the preflight before and after accepted campaigns. Run `npm run verify:campaign-state`, `npm run verify:seed-parity`, `npm run campaign:rq2`, and then `npm run analyze:rq2`; the separate same-host sensitivity uses `npm run campaign:rq2-validation` and `npm run analyze:rq2-validation`. Historical contaminated cells remain provenance only. Fine MySQL insert ranks are not promoted because only 3/7 positions reproduce in the second campaign.
+
+## Independent-review status
+
+Every adapter and treatment assignment remains single-author. Automated semantic admission cannot detect correct-but-needlessly-slow code. Result-blind treatment and adapter-review packets plus a disposition register are shipped under `notes/reviewer-packets/`. They are prepared for independent human review, but no such review is claimed in this revision candidate.

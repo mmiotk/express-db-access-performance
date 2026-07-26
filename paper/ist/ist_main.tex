@@ -41,34 +41,30 @@
   country={Poland}}
 
 \begin{abstract}
-\textbf{Context:} Node.js/Express services reach relational databases through a
-spectrum of access layers (native drivers, query builders, and object-relational
-mappers, or ORMs), yet practitioners choose largely on vendor
-benchmarks whose numbers are rarely shown to be comparable --- fragmented,
-PostgreSQL-only, and seldom reporting the tail (p99).
-\textbf{Objectives:} We contribute a reusable \emph{comparability protocol} for
-access-layer benchmarking --- a semantic-equivalence correctness gate, a
-documentation-selected estimand paired with a same-SQL standardized contrast, and separated
-operating points --- realized in an open harness and demonstrated through a
-dual-engine PostgreSQL/MySQL case study.
-\textbf{Methods:} An identical Express application is served through nine
-documentation-selected access layers and two tuned native baselines, over five access
-patterns, on the latest compatible stable versions as of the 15 July 2026 freeze.
-We report throughput with the \emph{high-load response-time p99 under equal closed-loop demand}
-(a fixed 50-connection point) from 25 repeated runs per cell, and on the deep fetch distinguish it
-from the tail at \emph{nominally matched utilization}: at 50\% and in most 70\% cells the tails form a small band, showing that the near-saturation p99 is chiefly a capacity-and-queueing outcome rather than a sub-saturation latency difference.
-An automated cross-check verifies byte-identical responses before measurement.
-\textbf{Results:} The implementation-and-strategy difference is largest on the tested deep fetch: spreads $7.15\times$
-(PostgreSQL) and $4.96\times$ (MySQL) between native and the slowest ORM,
-against only $1.68\times$ and $2.01\times$ among the raw paths running common SQL --- a
-standardized contrast that isolates no single mechanism. The read ordering transfers
-between the tested backend stacks, but the aggregation and insert orderings
-reverse: Prisma drops to last on the MySQL insert. No layer exceeds
-$\approx\!110\%$ of one application core on the deep fetch, where the
-documentation-selected native driver also has the highest throughput.
-\textbf{Conclusion:} Access-layer
-rankings are configuration-specific and version-sensitive, so the durable
-contribution is the protocol and its harness, not any single ranking.
+\textbf{Context:} Relational access-layer benchmarks can compare unequal
+results or report latency at unequal proximity to saturation.
+\textbf{Objectives:} We develop and evaluate a protocol for deciding when
+configured implementations are comparable and what conclusions their measurements
+support.
+\textbf{Methods:} The protocol requires task-derived read checks,
+cross-implementation equivalence, post-write state validation, a predeclared
+configuration-selection policy, and separate capacity and latency operating
+points. An open Express.js case study compares nine policy-selected configurations
+and two tuned native references on PostgreSQL, MySQL, and five access patterns in a
+25-run randomized-block campaign. A second same-host campaign tests selected rank
+reversals; a source-located audit applies the protocol to nine external benchmarks.
+\textbf{Results:} The largest observed spread is the tested deep fetch:
+$7.01\times$ on PostgreSQL and $5.12\times$ on MySQL. With common SQL executed
+through raw facilities, the spreads are $1.71\times$ and $2.03\times$; this
+compound contrast isolates no single mechanism. Deep-fetch p99 contracts from
+18--108 to 2.3--4.9~ms on PostgreSQL and from 28--121 to 1.9--5.5~ms on MySQL at
+the stable 50\% capacity target. Four material cross-stack rank reversals recur in
+both same-host campaigns; close MySQL insert ranks do not.
+\textbf{Conclusion:} The protocol provides an auditable discipline for
+establishing and reporting comparability, rather than a claim of universal
+rankings or library-intrinsic overhead. Its external audit has one rater and the
+adapters lack independent human review, so independent applicability remains to
+be tested.
 \end{abstract}
 
 \begin{keyword}
@@ -100,17 +96,16 @@ The author is not affiliated with, nor funded by, any of the database libraries 
 vendors evaluated in this study.
 
 \section*{Data availability}
-The complete revised replication package is publicly available at
-\url{https://github.com/mmiotk/express-db-access-performance} and archived at Zenodo as release v1.12.13 under the concept DOI
-(\url{https://doi.org/10.5281/zenodo.21313858})~\cite{miotk2026artifact}. It includes the immutable documentation-page copies and standalone canonical-constructor measurement; the primary measurement matrix is unchanged from v1.12.12 (version DOI \texttt{10.5281/zenodo.21498786}). A reproducibility summary --- versions,
+The public repository is available at
+\url{https://github.com/mmiotk/express-db-access-performance}; the archived published baseline is release v1.12.13 under the Zenodo concept DOI
+(\url{https://doi.org/10.5281/zenodo.21313858})~\cite{miotk2026artifact}. The present revision candidate adds the specification oracle, state preflight, corrected-state campaign, external-audit dataset, and review packets. A new immutable version DOI will be recorded before submission; until then these additions are not described as archived. A reproducibility summary --- versions,
 requirements, the run commands, the time and resources needed, and which results the
 harness regenerates automatically from the archived raw data --- is in Supplement
 Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
 (PostgreSQL~18.4 and MySQL~9.7.1), installed via the user-space conda path documented in
-\texttt{REPRODUCE.md}; the convenience Docker path pins \emph{older} engines (PostgreSQL~16,
-MySQL~8.4) and reproduces the workflow but not the published numbers. A machine-readable encoding of
+\texttt{REPRODUCE.md}; the convenience Docker path pins the same engine versions but uses relaxed durability in a containerized topology and therefore reproduces the workflow, not the headline default-durability insert numbers. A machine-readable encoding of
 the protocol --- inputs, mandatory and recommended stages, the cell-admission gate, and compliance
-levels --- ships as \texttt{protocol-checklist.yaml} for auditing a benchmark against the protocol. A clean-room reproduction from the archived tarball (35/35 raw-data checksums; byte-for-byte regeneration of 45 of 50 tables) is logged in \texttt{notes/clean-room-reproduction.md}.
+levels --- ships as \texttt{protocol-checklist.yaml} for auditing a benchmark against the protocol. The corrected campaign also records aggregate and per-file SHA-256 for the exact measurement source and schemas, supplementing the dirty-worktree commit identifier; exact 42-file source archives preserve and verify the measurement-time source state of both accepted campaigns. Reproduction status is separated explicitly. On 26 July 2026, an author-run isolated reconstruction of the current candidate verified 60/60 archived JSON hashes and regenerated 35 table outputs and four analysis JSON files byte-for-byte without starting either DBMS. An earlier author-run archive-isolated check of immutable v1.12.9 verified 35/35 inputs and reproduced 45/50 then-committed tables; its five presentation-only differences are identified in \texttt{notes/clean-room-reproduction.md}. Neither check is independent reproduction or a re-execution of the current measurements, and neither is described as such.
 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the
@@ -123,15 +118,12 @@ and language. After using these tools, the author reviewed and edited the conten
 and takes full responsibility for the content of the published article.
 
 \section*{AI-assisted research software}
-Separately from the writing above, a large language model (Claude, Anthropic) also assisted
+Separately from the writing above, large language models (Claude, Anthropic, and Codex, OpenAI) also assisted
 the author in implementing and analyzing the benchmark harness. This is research tooling for
-which the author takes full responsibility, and all AI-assisted analytical code is
-independently inspectable and verified: the statistical estimators carry unit tests against
+which the author takes full responsibility, and the AI-assisted analytical code is publicly inspectable and checked: the statistical estimators carry unit tests against
 hand-computed values and known closed-form properties (\texttt{bench/stats.test.mjs}, run by
 \texttt{npm test}), every reported table cell traces to a raw per-cell record through a
-committed generator (\texttt{MANIFEST.md}), and the byte-level correctness cross-check
-independently confirms that all layers return identical responses before any timing is
-trusted.
+committed generator (\texttt{MANIFEST.md}), and the specification-derived read oracle checks expected results without using timed native-driver output; differential checks then establish finite cross-implementation equivalence; and write checks validate resulting database state before timing is trusted.
 
 %% ------------------------------------------------------------------
 \bibliographystyle{elsarticle-num}

@@ -1,6 +1,6 @@
 // Round-6 longer-window tail sensitivity (reviewer Priority 5 / Q4):
-// compares the 12 s primary p99 (raw.json) against a 60 s re-measurement
-// (taillong.json, ~5x the requests, ~300 tail observations/run) for the deep fetch,
+// compares the 12 s primary p99 (current-primary.json) against a 60 s re-measurement
+// (taillong-corrected.json, ~5x the requests, ~300 tail observations/run) for the deep fetch,
 // both engines. Writes tables/taillong.tex and prints the headline correlations.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -8,8 +8,10 @@ import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, '..', 'results');
-const raw = JSON.parse(readFileSync(join(resultsDir, 'raw.json'), 'utf8')).filter((r) => r.endpoint === 'deep_fetch');
-const tl = JSON.parse(readFileSync(join(resultsDir, 'taillong.json'), 'utf8')).filter((r) => r.endpoint === 'deep_fetch');
+const rawFile = process.env.RAW_FILE || 'current-primary.json';
+const tailFile = process.env.TAIL_FILE || 'taillong-corrected.json';
+const raw = JSON.parse(readFileSync(join(resultsDir, rawFile), 'utf8')).filter((r) => r.endpoint === 'deep_fetch');
+const tl = JSON.parse(readFileSync(join(resultsDir, tailFile), 'utf8')).filter((r) => r.endpoint === 'deep_fetch');
 const rawK = new Map(raw.map((r) => [`${r.adapter}|${r.engine}`, r]));
 
 const med = (xs) => { const s = [...xs].sort((a, b) => a - b); const n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
@@ -22,7 +24,12 @@ for (const en of ['postgres', 'mysql']) {
   const cells = tl.filter((r) => r.engine === en).map((r) => ({ r, o: rawK.get(`${r.adapter}|${en}`) })).filter((x) => x.o);
   cells.sort((a, b) => a.o.p99 - b.o.p99);
   const p99_12 = cells.map((x) => x.o.p99), p99_60 = cells.map((x) => med(x.r.p99_samples)), p975_60 = cells.map((x) => med(x.r.p975_samples));
-  stats[en] = { rho12v60: spearman(p99_12, p99_60), rho975: spearman(p99_60, p975_60), maxcv: Math.max(...cells.map((x) => cv(x.r.p99_samples))) };
+  stats[en] = {
+    rho12v60: spearman(p99_12, p99_60),
+    rho975: spearman(p99_60, p975_60),
+    maxcv: Math.max(...cells.map((x) => cv(x.r.p99_samples))),
+    maxRelativeShift: Math.max(...cells.map((x) => 100 * Math.abs(med(x.r.p99_samples) - x.o.p99) / Math.max(1, x.o.p99))),
+  };
   body += `    \\multicolumn{6}{l}{\\emph{${en === 'postgres' ? 'PostgreSQL' : 'MySQL'}}} \\\\\n`;
   for (const { r, o } of cells) {
     body += `    \\quad\\texttt{${r.adapter}} & ${o.p99} & ${med(r.p99_samples)} & ${med(r.p975_samples)} & ${cv(r.p99_samples).toFixed(1)} & ${med(r.rps_samples)} \\\\\n`;
@@ -32,11 +39,14 @@ for (const en of ['postgres', 'mysql']) {
 const cap = `Longer-window tail sensitivity on the deep fetch. Each cell's primary p99 is
     measured over a 12~s window ($\\approx$60 tail observations per run in the slowest
     cells); the re-measurement uses a 60~s window ($\\approx$300 tail observations) at the
-    same 50-connection operating point, 10 repeated runs. The p99 ranking is preserved
-    exactly (Spearman $\\rho=1.00$ on both engines), the per-cell p99 barely moves, the
-    p97.5 ordering matches the p99 ordering ($\\rho=1.00$), and the run-to-run p99 CV stays
-    small (max ${stats.postgres.maxcv.toFixed(1)}\\% PostgreSQL, ${stats.mysql.maxcv.toFixed(1)}\\% MySQL),
-    so the 12~s window is adequate for the tail ranking despite the modest per-run tail count.`;
+    same 50-connection operating point, 10 repeated runs. The 12-vs-60~s p99 rank correlation is $\\rho=${stats.postgres.rho12v60.toFixed(2)}$
+    on PostgreSQL and $\\rho=${stats.mysql.rho12v60.toFixed(2)}$ on MySQL; the corresponding
+    p97.5-vs-p99 correlations are ${stats.postgres.rho975.toFixed(2)} and
+    ${stats.mysql.rho975.toFixed(2)}. The largest relative median shift is
+    ${stats.postgres.maxRelativeShift.toFixed(1)}\\% and ${stats.mysql.maxRelativeShift.toFixed(1)}\\%,
+    and the maximum run-level p99 CV is ${stats.postgres.maxcv.toFixed(1)}\\% and
+    ${stats.mysql.maxcv.toFixed(1)}\\%, respectively. These quantities characterize
+    within-campaign tail-window sensitivity rather than deployment-general uncertainty.`;
 
 const tex = `\\begin{table}[htbp]
   \\centering

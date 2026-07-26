@@ -4,12 +4,13 @@
   \centering
   \caption{Randomized differential semantic-equivalence coverage
     (\texttt{bench/verify-property.mjs}). A fixed-seed generator (mulberry32, seed
-    99005011) draws inputs across the full key range; the native driver is the oracle and every
+    99005011) draws inputs across the full key range; the native response is the differential comparator and every
     adapter response must be byte-identical to it, with any thrown error captured as a comparable
     value so an input-dependent crash also counts as a divergence. The gate is re-run against the
     seeded database (2{,}000 authors, 100{,}000 posts, 1{,}000{,}000 comments), not derived from
     \texttt{results/raw.json}.}
   \label{tab:semantic_equivalence}
+  \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l l}
     \toprule
     Dimension & Coverage \\
@@ -29,4 +30,5 @@
     Divergences          & \textbf{0} (\textsc{all byte-identical}) \\
     \bottomrule
   \end{tabular}
+  \end{adjustbox}
 \end{table}

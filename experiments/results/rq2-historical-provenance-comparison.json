@@ -1,0 +1,893 @@
+{
+  "note": "Historical provenance comparison only. Historical MySQL range_scan, aggregation, and write cells failed the revised state-admission standard and are ineligible as replication evidence; campaigns are not paired across dates.",
+  "correctedRows": 90,
+  "records": [
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "knex",
+      "historicalRps": 4942,
+      "correctedRps": 4909,
+      "correctedToHistorical": 0.9933225414811817,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "drizzle",
+      "historicalRps": 4199,
+      "correctedRps": 4121,
+      "correctedToHistorical": 0.9814241486068112,
+      "historicalRank": 2,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "prisma",
+      "historicalRps": 3255,
+      "correctedRps": 3219,
+      "correctedToHistorical": 0.9889400921658986,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "sequelize",
+      "historicalRps": 3518,
+      "correctedRps": 3466,
+      "correctedToHistorical": 0.9852188743604321,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "typeorm",
+      "historicalRps": 4185,
+      "correctedRps": 4168,
+      "correctedToHistorical": 0.9959378733572282,
+      "historicalRank": 3,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "objection",
+      "historicalRps": 3977,
+      "correctedRps": 3927,
+      "correctedToHistorical": 0.9874277093286397,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "mikroorm",
+      "historicalRps": 2455,
+      "correctedRps": 2373,
+      "correctedToHistorical": 0.9665987780040733,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "knex",
+      "historicalRps": 3814,
+      "correctedRps": 3723,
+      "correctedToHistorical": 0.976140534871526,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "drizzle",
+      "historicalRps": 2928,
+      "correctedRps": 2854,
+      "correctedToHistorical": 0.9747267759562842,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "prisma",
+      "historicalRps": 2074,
+      "correctedRps": 2027,
+      "correctedToHistorical": 0.9773384763741563,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "sequelize",
+      "historicalRps": 2764,
+      "correctedRps": 2680,
+      "correctedToHistorical": 0.9696092619392185,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "typeorm",
+      "historicalRps": 3059,
+      "correctedRps": 2961,
+      "correctedToHistorical": 0.9679633867276888,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "objection",
+      "historicalRps": 3275,
+      "correctedRps": 3146,
+      "correctedToHistorical": 0.9606106870229008,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "point_read",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "mikroorm",
+      "historicalRps": 2067,
+      "correctedRps": 2004,
+      "correctedToHistorical": 0.969521044992743,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "knex",
+      "historicalRps": 3220,
+      "correctedRps": 3130,
+      "correctedToHistorical": 0.9720496894409938,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "drizzle",
+      "historicalRps": 2780,
+      "correctedRps": 2746,
+      "correctedToHistorical": 0.9877697841726619,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "prisma",
+      "historicalRps": 2443,
+      "correctedRps": 2422,
+      "correctedToHistorical": 0.9914040114613181,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "sequelize",
+      "historicalRps": 2478,
+      "correctedRps": 2428,
+      "correctedToHistorical": 0.9798224374495561,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "typeorm",
+      "historicalRps": 2564,
+      "correctedRps": 2555,
+      "correctedToHistorical": 0.9964898595943837,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "objection",
+      "historicalRps": 2686,
+      "correctedRps": 2660,
+      "correctedToHistorical": 0.9903201787043932,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "mikroorm",
+      "historicalRps": 905,
+      "correctedRps": 903,
+      "correctedToHistorical": 0.9977900552486187,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "knex",
+      "historicalRps": 2995,
+      "correctedRps": 2958,
+      "correctedToHistorical": 0.9876460767946578,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "drizzle",
+      "historicalRps": 2165,
+      "correctedRps": 2145,
+      "correctedToHistorical": 0.9907621247113164,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "prisma",
+      "historicalRps": 1538,
+      "correctedRps": 1526,
+      "correctedToHistorical": 0.9921976592977894,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "sequelize",
+      "historicalRps": 2105,
+      "correctedRps": 2082,
+      "correctedToHistorical": 0.9890736342042755,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "typeorm",
+      "historicalRps": 2262,
+      "correctedRps": 2217,
+      "correctedToHistorical": 0.980106100795756,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "objection",
+      "historicalRps": 2582,
+      "correctedRps": 2534,
+      "correctedToHistorical": 0.981409759876065,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "range_scan",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "mikroorm",
+      "historicalRps": 856,
+      "correctedRps": 848,
+      "correctedToHistorical": 0.9906542056074766,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "knex",
+      "historicalRps": 2487,
+      "correctedRps": 2431,
+      "correctedToHistorical": 0.9774829111379172,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "drizzle",
+      "historicalRps": 1865,
+      "correctedRps": 1829,
+      "correctedToHistorical": 0.9806970509383378,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "prisma",
+      "historicalRps": 1186,
+      "correctedRps": 1175,
+      "correctedToHistorical": 0.9907251264755481,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "sequelize",
+      "historicalRps": 991,
+      "correctedRps": 978,
+      "correctedToHistorical": 0.9868819374369324,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "typeorm",
+      "historicalRps": 1204,
+      "correctedRps": 1219,
+      "correctedToHistorical": 1.0124584717607974,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "objection",
+      "historicalRps": 1028,
+      "correctedRps": 1017,
+      "correctedToHistorical": 0.9892996108949417,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "mikroorm",
+      "historicalRps": 516,
+      "correctedRps": 519,
+      "correctedToHistorical": 1.005813953488372,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "knex",
+      "historicalRps": 2007,
+      "correctedRps": 1982,
+      "correctedToHistorical": 0.9875435974090683,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "drizzle",
+      "historicalRps": 1318,
+      "correctedRps": 1301,
+      "correctedToHistorical": 0.9871016691957512,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "prisma",
+      "historicalRps": 634,
+      "correctedRps": 630,
+      "correctedToHistorical": 0.9936908517350158,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "sequelize",
+      "historicalRps": 886,
+      "correctedRps": 880,
+      "correctedToHistorical": 0.9932279909706546,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "typeorm",
+      "historicalRps": 1017,
+      "correctedRps": 1017,
+      "correctedToHistorical": 1,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "objection",
+      "historicalRps": 834,
+      "correctedRps": 836,
+      "correctedToHistorical": 1.0023980815347722,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historicalEligible": true,
+      "engine": "mysql",
+      "layer": "mikroorm",
+      "historicalRps": 480,
+      "correctedRps": 472,
+      "correctedToHistorical": 0.9833333333333333,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "knex",
+      "historicalRps": 5666,
+      "correctedRps": 5577,
+      "correctedToHistorical": 0.9842922696787857,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "drizzle",
+      "historicalRps": 6280,
+      "correctedRps": 6410,
+      "correctedToHistorical": 1.0207006369426752,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "prisma",
+      "historicalRps": 4408,
+      "correctedRps": 4345,
+      "correctedToHistorical": 0.9857078039927405,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "sequelize",
+      "historicalRps": 4813,
+      "correctedRps": 4625,
+      "correctedToHistorical": 0.9609391232079784,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "typeorm",
+      "historicalRps": 6098,
+      "correctedRps": 6072,
+      "correctedToHistorical": 0.995736306985897,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "objection",
+      "historicalRps": 3812,
+      "correctedRps": 3736,
+      "correctedToHistorical": 0.9800629590766002,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "mikroorm",
+      "historicalRps": 5745,
+      "correctedRps": 5592,
+      "correctedToHistorical": 0.9733681462140992,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "knex",
+      "historicalRps": 3842,
+      "correctedRps": 3979,
+      "correctedToHistorical": 1.0356585111920875,
+      "historicalRank": 1,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "drizzle",
+      "historicalRps": 3520,
+      "correctedRps": 3963,
+      "correctedToHistorical": 1.1258522727272726,
+      "historicalRank": 4,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "prisma",
+      "historicalRps": 2328,
+      "correctedRps": 2379,
+      "correctedToHistorical": 1.0219072164948453,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "sequelize",
+      "historicalRps": 3216,
+      "correctedRps": 3411,
+      "correctedToHistorical": 1.060634328358209,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "typeorm",
+      "historicalRps": 3767,
+      "correctedRps": 3882,
+      "correctedToHistorical": 1.030528271834351,
+      "historicalRank": 2,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "objection",
+      "historicalRps": 2763,
+      "correctedRps": 2950,
+      "correctedToHistorical": 1.067680057908071,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "aggregation",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "mikroorm",
+      "historicalRps": 3741,
+      "correctedRps": 3995,
+      "correctedToHistorical": 1.0678962844159317,
+      "historicalRank": 3,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "knex",
+      "historicalRps": 4841,
+      "correctedRps": 4581,
+      "correctedToHistorical": 0.9462920884114853,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "drizzle",
+      "historicalRps": 4085,
+      "correctedRps": 4091,
+      "correctedToHistorical": 1.001468788249694,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "prisma",
+      "historicalRps": 2774,
+      "correctedRps": 2695,
+      "correctedToHistorical": 0.971521268925739,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "sequelize",
+      "historicalRps": 2732,
+      "correctedRps": 2616,
+      "correctedToHistorical": 0.9575402635431918,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "typeorm",
+      "historicalRps": 2648,
+      "correctedRps": 2567,
+      "correctedToHistorical": 0.9694108761329305,
+      "historicalRank": 6,
+      "correctedRank": 6
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "objection",
+      "historicalRps": 3907,
+      "correctedRps": 3780,
+      "correctedToHistorical": 0.9674942411057077,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": true,
+      "engine": "postgres",
+      "layer": "mikroorm",
+      "historicalRps": 1979,
+      "correctedRps": 1894,
+      "correctedToHistorical": 0.9570490146538656,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "knex",
+      "historicalRps": 1670,
+      "correctedRps": 1779,
+      "correctedToHistorical": 1.0652694610778444,
+      "historicalRank": 3,
+      "correctedRank": 3
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "drizzle",
+      "historicalRps": 1729.5,
+      "correctedRps": 1816,
+      "correctedToHistorical": 1.0500144550448107,
+      "historicalRank": 1,
+      "correctedRank": 1
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "prisma",
+      "historicalRps": 886,
+      "correctedRps": 894,
+      "correctedToHistorical": 1.0090293453724606,
+      "historicalRank": 7,
+      "correctedRank": 7
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "sequelize",
+      "historicalRps": 1478,
+      "correctedRps": 1503,
+      "correctedToHistorical": 1.016914749661705,
+      "historicalRank": 4,
+      "correctedRank": 4
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "typeorm",
+      "historicalRps": 1345,
+      "correctedRps": 1355,
+      "correctedToHistorical": 1.0074349442379182,
+      "historicalRank": 5,
+      "correctedRank": 5
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "objection",
+      "historicalRps": 1728,
+      "correctedRps": 1807,
+      "correctedToHistorical": 1.0457175925925926,
+      "historicalRank": 2,
+      "correctedRank": 2
+    },
+    {
+      "endpoint": "write",
+      "historicalEligible": false,
+      "engine": "mysql",
+      "layer": "mikroorm",
+      "historicalRps": 1257,
+      "correctedRps": 1237,
+      "correctedToHistorical": 0.9840891010342084,
+      "historicalRank": 6,
+      "correctedRank": 6
+    }
+  ],
+  "transfer": [
+    {
+      "endpoint": "point_read",
+      "historical": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 4942
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 3814
+        }
+      },
+      "corrected": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 4909
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 3723
+        }
+      }
+    },
+    {
+      "endpoint": "range_scan",
+      "historical": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 3220
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 2995
+        }
+      },
+      "corrected": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 3130
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 2958
+        }
+      }
+    },
+    {
+      "endpoint": "deep_fetch",
+      "historical": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 2487
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 2007
+        }
+      },
+      "corrected": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 2431
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 1982
+        }
+      }
+    },
+    {
+      "endpoint": "aggregation",
+      "historical": {
+        "postgres": {
+          "leader": "drizzle",
+          "rps": 6280
+        },
+        "mysql": {
+          "leader": "knex",
+          "rps": 3842
+        }
+      },
+      "corrected": {
+        "postgres": {
+          "leader": "drizzle",
+          "rps": 6410
+        },
+        "mysql": {
+          "leader": "mikroorm",
+          "rps": 3995
+        }
+      }
+    },
+    {
+      "endpoint": "write",
+      "historical": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 4841
+        },
+        "mysql": {
+          "leader": "drizzle",
+          "rps": 1729.5
+        }
+      },
+      "corrected": {
+        "postgres": {
+          "leader": "knex",
+          "rps": 4581
+        },
+        "mysql": {
+          "leader": "drizzle",
+          "rps": 1816
+        }
+      }
+    }
+  ]
+}

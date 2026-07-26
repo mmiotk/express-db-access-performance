@@ -1,0 +1,24 @@
+[
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "replicate": 1,
+    "endpoints": [
+      "point_read"
+    ],
+    "attempt": 1,
+    "startupFailure": true,
+    "message": "server exited before health (code=0, signal=null)"
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "replicate": 1,
+    "endpoints": [
+      "point_read"
+    ],
+    "attempt": 2,
+    "startupFailure": true,
+    "message": "server exited before health (code=0, signal=null)"
+  }
+]

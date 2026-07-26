@@ -51,7 +51,7 @@ for (const eng of ['postgres', 'mysql']) {
     for (const a of Object.keys(byA)) out += `- ${a}: ${byA[a].map(([f, p]) => `${Math.round(f * 100)}%->${p}ms`).join(' ')}\n`;
   } catch (e) { out += `  (${eng}: ${e.message})\n`; }
 }
-out += '\n## Same-SQL control (sameplan.json: idiomatic vs raw)\n';
+out += '\n## Common-SQL sensitivity (sameplan.json: policy-selected vs raw)\n';
 try { const sp = R('sameplan.json'); out += '  ' + JSON.stringify(sp).slice(0, 800) + '\n'; } catch (e) { out += `  (${e.message})\n`; }
 out += '\n## Cluster (multi-worker; was: native overtakes Prisma once cores used)\n';
 try { const cl = R('cluster.json'); out += '  ' + JSON.stringify(cl).slice(0, 700) + '\n'; } catch (e) { out += `  (${e.message})\n`; }

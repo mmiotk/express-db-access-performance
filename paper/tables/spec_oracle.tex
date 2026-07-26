@@ -1,0 +1,20 @@
+% auto-generated from experiments/spec-oracle.json
+\begin{center}
+  \begin{minipage}{0.96\linewidth}\small
+  \centering
+  \textbf{Specification-derived read admission.} Expected fields, values, ordering,
+    graph membership, and aggregates are computed by replaying the deterministic
+    seed, not from native-driver responses. Timestamps are checked for presence and
+    canonical ISO-8601 representation because their instants are database-generated.\\[4pt]
+  \begin{adjustbox}{max width=\linewidth}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Engine & Adapters & Post inputs & Author inputs & List cases & Checks & Failed \\
+    \midrule
+    PostgreSQL & 9 & 1015 & 1007 & 8 & 36{,}540 & 0 \\
+    MySQL & 9 & 1015 & 1007 & 8 & 36{,}540 & 0 \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+  \end{minipage}
+\end{center}

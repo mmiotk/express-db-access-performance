@@ -9,18 +9,18 @@
 #
 # Schema (informal):
 #   inputs[]            : the four declared inputs a protocol instance must fix
-#   stages.mandatory[]  : a comparison is VALID only if all mandatory stages hold
-#   stages.recommended[]: enrich the comparison; may be scoped to a workload point
+#   stages.mandatory[]  : defines a stable, semantically admitted comparison
+#   stages.recommended[]: licenses additional interpretations; may be scoped
 #   cell_admission      : the per-cell pass/fail gate applied before timing
 #   outputs             : what the protocol licenses reporting, and how to read it
-#   applicability_limits: when the byte-identical oracle is valid vs. a comparator
+#   applicability_limits: when byte-identical comparison is valid and which comparator is declared
 #   compliance_levels[] : named coverage levels an instantiation may reach
 
 protocol:
   name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
   author: "Mateusz Miotk, University of Gdansk"
-  release: "v1.12.13 complete revision; primary-campaign data unchanged from v1.12.12"
-  doi: "10.5281/zenodo.21313858 (concept DOI resolving to v1.12.13)"
+  release: "post-review revision candidate, 2026-07-23"
+  doi: "10.5281/zenodo.21313858 (concept DOI; published v1.12.13 predates this candidate)"
   spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
 
 inputs:
@@ -40,24 +40,25 @@ inputs:
 stages:
   mandatory:
     - id: M1
-      name: correctness_oracle
-      requirement: "Admit a treatment only if its non-mutating outputs are equivalent under the semantics AND its mutations produce the intended database state (validated field values, generated identifiers, row-count changes, transactional rollback) - not merely a 2xx status."
-      check: "Independent-oracle comparison of every treatment's output and post-write state before any timing."
+      name: semantic_admission
+      requirement: "Admit a treatment only if reads satisfy an expected-result oracle derived independently from the timed native implementation, implementations are mutually equivalent under the declared comparator, and mutations produce the intended database state - not merely a 2xx status."
+      check: "Specification-derived expected-result checks plus differential equivalence for reads; field-, identifier-, row-count-, and rollback-level checks for writes."
       failure_if_skipped: "A layer that returns fewer fields, writes wrong, or errors faster than it works can appear faster - a spurious ranking."
-      this_study: "bench/verify.mjs (12 fixed probes), bench/verify-property.mjs (property-based sweep, 60,800 comparisons, 0 divergences), bench/verify-writes.mjs (post-write state on both engines)."
+      this_study: "bench/verify-spec.mjs replays the deterministic seed specification without using native-driver output (73,080 expected-result checks); bench/verify-seed-parity.mjs establishes identical declared fan-out values and generated identifiers across the engines; bench/verify.mjs and bench/verify-property.mjs add fixed and randomized cross-implementation equivalence; bench/verify-writes.mjs validates post-write state on both engines."
+      epistemic_limit: "These finite checks establish evidence of conformance to the declared benchmark task for tested inputs and comparability among implementations; they are not a proof of correctness for all possible inputs."
     - id: M2
-      name: treatment_definition_rule
+      name: treatment_definition
       requirement: "Fix each treatment's implementation and strategy by a rule declared reproducibly in advance. The protocol REQUIRES such a rule but PRIVILEGES NONE; documentation-first is one instantiation."
       check: "The selection rule is stated before measurement and applied uniformly; ties are broken by a stated tie-breaker."
       failure_if_skipped: "The query strategy chosen for a library is silently conflated with the library's own cost."
-      this_study: "Documentation-selected (first documented API), with a tie-breaker (select the API at the library's own taxonomy tier); this is the case study's policy, not a protocol requirement."
+      this_study: "Policy-selected documented configuration (first documented relation API under the archived-page conflict rule, with a documented-base-layer tie-break); this is the case study's artificial policy, not a practitioner-behavior model or protocol requirement."
 
   recommended:
     - id: R3
-      name: strategy_standardization
-      requirement: "Add a standardized contrast holding the query strategy fixed, read against a common-strategy baseline (e.g. same-SQL raw path)."
+      name: common_sql_raw_path_sensitivity
+      requirement: "Add a contrast in which layers execute common SQL through their raw facilities."
       reports: "A residual spread (a diagnostic contrast), NOT a causal decomposition and NOT a bound on the intrinsic library effect."
-      this_study: "Same-SQL raw-path contrast (Supplement Table S42); deep-fetch spread 7.15x/4.96x documentation-selected vs 1.68x/2.01x same-SQL."
+      this_study: "Common-SQL raw-path sensitivity contrast (Supplement Table S42); deep-fetch spread 7.01x/5.12x in the policy-selected documented treatment vs 1.71x/2.03x through raw facilities."
     - id: R4
       name: capacity_identification
       requirement: "Locate saturating throughput per treatment by a concurrency sweep, so the fixed operating point can be read against capacity."
@@ -67,21 +68,33 @@ stages:
       requirement: "Measure the tail at equal external demand AND at matched fractions of each treatment's estimated capacity, with denominator uncertainty disclosed; report them as distinct quantities."
       this_study: "High-load p99 under equal closed-loop demand versus matched-utilization tail (Supplement Tables S21-S22 and S43), with bootstrap and full-sweep denominator sensitivity (S45); the stable 50% and most 70% cells form a small band, while 85-95% cells are only near-saturation trends."
 
+    - id: R6
+      name: resource_accounting
+      requirement: "Report compute and memory use with throughput, or add a clearly labelled equal-budget sensitivity comparison."
+      reports: "Whether a throughput ordering persists when resource demand is exposed or constrained."
+      this_study: "Application, database, and generator CPU plus peak RSS are reported; the deep fetch also has an exploratory equal-CPU comparison."
+    - id: R7
+      name: implementation_review_provenance
+      requirement: "Record who implemented and who independently reviewed every adapter and treatment assignment, which changes were proposed before measurement, and which cells were rerun."
+      reports: "Whether semantic equivalence is complemented by evidence against correct-but-needlessly-slow adapter code."
+      this_study: "Automated specification, equivalence, SQL/plan, and state checks were run across the declared scope. Blind human-review packets and a register are shipped under notes/reviewer-packets; no independent human adapter or selection review is claimed in this revision candidate."
+
 cell_admission:
-  rule: "Time a (treatment, workload-point) cell ONLY if the correctness oracle passes: equivalent non-mutating outputs AND correct post-write state."
+  rule: "Time a (treatment, workload-point) cell ONLY if semantic admission passes: specification-conformant and mutually equivalent non-mutating outputs, plus correct post-write state."
   disqualifiers:
-    - "non-equivalent output"
-    - "invalid or unsuccessful write"
+    - "expected-result mismatch against the declared task specification"
+    - "non-equivalent output under the declared cross-implementation comparator"
+    - "invalid or unsuccessful write state"
 
 outputs:
   reports: "Throughput and tail latency per operating point."
   interpretation:
     - "Descriptive of the treatment as defined - not a causal decomposition."
     - "Rankings are configuration-specific and version-specific."
-    - "Only relative, within-condition differences are meant to travel across environments."
+    - "Relative differences are reported within the declared condition; transfer across environments requires independent evaluation."
 
 applicability_limits:
-  byte_identical_oracle_valid_when: "Equivalent outputs are deterministic and canonically serializable."
+  byte_identical_comparison_valid_when: "Equivalent outputs are deterministic and canonically serializable."
   otherwise_use_semantic_comparator_for:
     - "unordered collections (set equality)"
     - "floating-point values (numeric tolerance)"
@@ -97,12 +110,15 @@ compliance_levels:
       name: capacity_characterization
       holds_when: "R4 has located the cell's throughput knee."
     - id: L3
-      name: standardized_strategy_extension
-      holds_when: "R3 standardized contrast has been run for the cell."
+      name: common_sql_sensitivity_extension
+      holds_when: "R3 common-SQL raw-path contrast has been run for the cell."
     - id: L4
       name: utilization_controlled_extension
       holds_when: "R5 matched-utilization tail has been measured for the cell and its capacity denominator is stated."
     - id: L5
-      name: resource_normalized_extension
-      holds_when: "Throughput is reported per CPU-second (application and combined app+db)."
-  coverage_in_this_study: "L1 and L2 hold across all five patterns on both engines; L3-L5 are demonstrated on the deep fetch as a representative-point instantiation (Supplement Table S40 maps each cell to the levels it satisfies)."
+      name: resource_accounting_extension
+      holds_when: "R6 resource use or an equal-compute sensitivity is reported."
+    - id: L6
+      name: independently_reviewed_implementation_extension
+      holds_when: "R7 has a recorded independent review and disposition for every treatment in scope."
+  coverage_in_this_study: "L1 and L2 hold across all five patterns on both engines; L3-L5 are demonstrated on the deep fetch as a representative-point instantiation. L6 is pending independent human review and is not counted as satisfied."

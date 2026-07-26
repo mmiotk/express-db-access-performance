@@ -1,6 +1,6 @@
-// P7 — robustness of the "writes are engine-bound" finding to the durability
-// configuration. The primary run uses asymmetric relaxed durability (PG all fsyncs
-// off; MySQL log-flush off but doublewrite on). Here we re-measure the insert endpoint
+// Legacy three-regime durability sensitivity (not the generator for Supplement S3).
+// The current primary campaign uses default durability; every regime here is labelled.
+// This script is retained as exploratory mechanism evidence. Here we re-measure the insert endpoint
 // for the native driver and the slowest ORM on each engine under three regimes,
 // toggled at runtime (no restart): (1) the primary asymmetric-relaxed, (2) full
 // default durability, (3) symmetric relaxed (MySQL doublewrite also off, if dynamic).
@@ -16,7 +16,8 @@ import mysql from 'mysql2/promise';
 import { config as cfg } from '../src/config.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const SEED_POSTS = cfg.seed.posts, SEED_AUTHORS = cfg.seed.authors;
+const SEED_AUTHORS = cfg.seed.authors;
+const RESET_FLOOR = Number(process.env.RESET_FLOOR ?? 300000);
 const rnd = (n) => 1 + Math.floor(Math.random() * n);
 const CELLS = [
   { adapter: 'pg', engine: 'postgres' }, { adapter: 'prisma', engine: 'postgres' }, { adapter: 'mikroorm', engine: 'postgres' },
@@ -43,10 +44,11 @@ const REGIMES = {
 };
 
 async function resetWrites(engine) {
-  if (engine === 'postgres') { const c = new pg.Client(cfg.postgres); await c.connect(); await c.query('DELETE FROM posts WHERE id > $1', [SEED_POSTS]); await c.end(); }
-  else { const c = await mysql.createConnection(cfg.mysql); await c.query('DELETE FROM posts WHERE id > ?', [SEED_POSTS]); await c.end(); }
+  if (engine === 'postgres') { const c = new pg.Client(cfg.postgres); await c.connect(); await c.query('DELETE FROM posts WHERE id > $1', [RESET_FLOOR]); await c.query("SELECT setval(pg_get_serial_sequence('posts', 'id'), $1, true)", [RESET_FLOOR]); await c.end(); }
+  else { const c = await mysql.createConnection(cfg.mysql); await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]); await c.query('ALTER TABLE posts AUTO_INCREMENT = ' + Number(RESET_FLOOR + 1)); await c.end(); }
 }
 function health(base, tries = 100) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
+async function waitIdle(base, timeoutMs = 30000) { const deadline = Date.now() + timeoutMs; for (;;) { const s = await (await fetch(`${base}/stats`)).json(); if (s.active_handlers === 0) return; if (Date.now() > deadline) throw new Error('handler-drain timeout'); await new Promise((r) => setTimeout(r, 25)); } }
 function acRun(base, dur) { return new Promise((res, rej) => autocannon({ url: base, connections: CONNECTIONS, duration: dur, requests: [{ method: 'POST', path: '/posts', headers: { 'content-type': 'application/json' }, setupRequest: (r) => ({ ...r, body: JSON.stringify({ authorId: rnd(SEED_AUTHORS), title: 'bench', body: 'x' }) }) }] }, (e, r) => e ? rej(e) : res(r))); }
 
 // coarse DB-process CPU% over a window: sum utime+stime ticks of matching processes
@@ -70,20 +72,20 @@ try {
       const child = spawn(process.execPath, [join(here, '..', 'src', 'server.mjs')], { env: { ...process.env, ADAPTER: adapter, ENGINE: engine, PORT: String(p) }, stdio: ['ignore', 'ignore', 'inherit'] });
       try {
         await health(base);
-        await resetWrites(engine); await acRun(base, WARMUP);
+        await resetWrites(engine); await acRun(base, WARMUP); await waitIdle(base);
         await resetWrites(engine);
         const stop = dbCpuSampler(engine === 'postgres' ? 'postgres' : 'mysqld');
-        const r = await acRun(base, DURATION);
+        const r = await acRun(base, DURATION); await waitIdle(base);
         const dbCpu = stop();
         out.push({ regime, adapter, engine, rps: Math.round(r.requests.average), p99: r.latency.p99, db_cpu: dbCpu });
         console.log(`  ${regime}/${adapter}/${engine}: ${Math.round(r.requests.average)} req/s  p99=${r.latency.p99}ms  dbCPU~${dbCpu}%`);
       } catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
-      finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); }
+      finally { if (child.exitCode === null) child.kill('SIGTERM'); await new Promise((resolve) => { if (child.exitCode !== null) return resolve(); const timeout = setTimeout(resolve, 5000); child.once('exit', () => { clearTimeout(timeout); resolve(); }); }); await resetWrites(engine); }
     }
   }
 } finally {
-  await REGIMES['asym-relaxed'](); // restore primary config
-  console.log('\nrestored primary asym-relaxed durability');
+  await REGIMES['default-durable'](); // restore the current primary durability regime
+  console.log('\nrestored default durability');
 }
 await writeFile(join(here, '..', 'results', 'durability.json'), JSON.stringify(out, null, 2));
 

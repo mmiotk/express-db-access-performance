@@ -4,7 +4,7 @@
   \centering
   \caption{Protocol compliance levels and which workload cells satisfy each in this case study. The
     mandatory validity core and capacity characterization are exercised across the \emph{whole}
-    matrix; the three extensions are demonstrated on the deep fetch --- the widest-spread tested pattern
+    matrix; the common-SQL, utilization, and resource extensions are demonstrated on the deep fetch --- the widest-spread tested pattern
     (main text, Results) --- as a representative-point instantiation, not a claim of full-matrix
     coverage. This is what the protocol box means by recommended stages that ``may be scoped to a
     representative workload point.''}
@@ -14,19 +14,19 @@
     \toprule
     Compliance level & Requirement it adds & Cells satisfying it here & Evidence \\
     \midrule
-    Mandatory validity core & Correctness oracle (byte-identical outputs $+$ correct write state) and a
+    Mandatory validity core & Specification-derived expected results, differential equivalence, correct write state, and a
       predeclared treatment rule, on \emph{every} timed cell & All five patterns $\times$ two engines
-      (all 90 cells) & Study Design; Table~S38; \texttt{verify-writes.mjs} \\
+      (all 90 cells) & Study Design; Table~S38; write verifier \\
     \midrule
     Capacity characterization & Locate saturating throughput by a concurrency sweep at each workload
       point & All five patterns $\times$ two engines & Table~S35 \\
     \midrule
-    Standardized-strategy extension & Add a same-SQL standardized contrast against a common-strategy
-      baseline & Deep fetch $\times$ two engines & Main-text same-SQL table; Table~S14 \\
+    Common-SQL-sensitivity extension & Add a common-SQL raw-path sensitivity contrast & Deep fetch $\times$ two engines & Tables~S14, S42 \\
     Utilization-controlled extension & Measure the tail at matched fractions of each treatment's own
-      capacity & Deep fetch $\times$ two engines & Main-text tail-regime table; Tables~S21--S22 \\
-    Resource-normalized extension & Compare under an equal compute budget & Deep fetch $\times$ two
-      engines & Tables~S4, S5 \\
+      capacity & Deep fetch $\times$ two engines & Tables~S21--S22, S43 \\
+    Resource-accounting extension & Report compute/memory demand or add an equal-budget sensitivity & Deep fetch on both
+      engines; equal-CPU sensitivity is a PostgreSQL subset & Tables~S4, S5, S10 \\
+    Implementation-review extension & Independent review and recorded disposition for every treatment & Not satisfied; packets prepared, external reviewers pending & artifact reviewer packet \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

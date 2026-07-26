@@ -2,7 +2,7 @@
 // Same two-query deep fetch to avoid N+1.
 import mysql from 'mysql2/promise';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ config }) {
   const pool = mysql.createPool({

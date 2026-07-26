@@ -2,7 +2,7 @@
 // per run; the reviewer asks for a mixed workload. This interleaves the deep
 // read (GET /posts/:id/thread) with single-row inserts (POST /posts) at documented
 // mixes (default 90/10 and 70/30) via autocannon weighted requests, on representative
-// layers and both engines, with a physical write reset before each run. Exploratory /
+// layers and both engines, with an exact row-and-allocator reset before each run. Exploratory /
 // sensitivity, not part of the primary matrix. Writes results/mixed.json.
 import { spawn, execSync } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
@@ -21,7 +21,7 @@ const MIXES = env('MX_MIXES', '90:10,70:30').split(',');       // read:write per
 const CONNECTIONS = Number(env('MX_CONN', 50));
 const DURATION = Number(env('MX_DURATION', 10));
 const REPS = Number(env('MX_REPS', 5));
-const FLOOR = cfg.seed.posts;
+const FLOOR = Number(env('RESET_FLOOR', 300000));
 const layersFor = (e) => env('MX_LAYERS', `${e === 'mysql' ? 'mysql2' : 'pg'},knex,prisma,mikroorm`).split(',');
 
 const drain = () => new Promise((r) => setTimeout(r, 800));
@@ -30,16 +30,27 @@ async function resetDb(engine) {
     const c = new pg.Client(cfg.postgres); await c.connect();
     await c.query('DELETE FROM comments WHERE post_id > $1', [FLOOR]);
     await c.query('DELETE FROM posts WHERE id > $1', [FLOOR]);
+    await c.query("SELECT setval(pg_get_serial_sequence('posts', 'id'), $1, true)", [FLOOR]);
     await c.end();
   } else {
     const c = await mysql.createConnection({ host: cfg.mysql.host, port: cfg.mysql.port, user: cfg.mysql.user, password: cfg.mysql.password, database: cfg.mysql.database });
     await c.query('DELETE FROM comments WHERE post_id > ?', [FLOOR]);
     await c.query('DELETE FROM posts WHERE id > ?', [FLOOR]);
+    await c.query('ALTER TABLE posts AUTO_INCREMENT = ' + Number(FLOOR + 1));
     await c.end();
   }
 }
 
 function health(base, tries = 150) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
+async function waitIdle(base, timeoutMs = 30000) {
+  const deadline = Date.now() + timeoutMs;
+  for (;;) {
+    const stats = await (await fetch(`${base}/stats`)).json();
+    if (stats.active_handlers === 0) return;
+    if (Date.now() > deadline) throw new Error('handler-drain timeout');
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+}
 function run(base, readW, writeW) {
   return new Promise((resolve, reject) => autocannon({
     url: base, connections: CONNECTIONS, duration: DURATION,
@@ -64,15 +75,23 @@ for (const engine of ENGINES) {
       await health(base);
       for (const mix of MIXES) {
         const [readW, writeW] = mix.split(':').map(Number);
-        await resetDb(engine); await run(base, readW, writeW); await drain();  // warm-up
+        await resetDb(engine); await run(base, readW, writeW); await waitIdle(base); await drain();  // warm-up
         const rps = [], p99 = [];
-        for (let i = 0; i < REPS; i++) { await resetDb(engine); const r = await run(base, readW, writeW); rps.push(r.rps); p99.push(r.p99); await drain(); }
+        for (let i = 0; i < REPS; i++) { await resetDb(engine); const r = await run(base, readW, writeW); await waitIdle(base); rps.push(r.rps); p99.push(r.p99); await drain(); }
         const rec = { engine, adapter, mix, rps_med: median(rps), p99_med: median(p99), rps_samples: rps };
         out.push(rec);
         console.log(`  ${engine}/${adapter} ${mix} r:w: rps ${rec.rps_med}  p99 ${rec.p99_med}ms`);
       }
     } catch (e) { console.error(`  FAILED ${engine}/${adapter}: ${e.message}`); }
-    finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); await resetDb(engine).catch(() => {}); }
+    finally {
+      if (child.exitCode === null) child.kill('SIGTERM');
+      await new Promise((resolve) => {
+        if (child.exitCode !== null) return resolve();
+        const timeout = setTimeout(resolve, 5000);
+        child.once('exit', () => { clearTimeout(timeout); resolve(); });
+      });
+      await resetDb(engine).catch(() => {});
+    }
   }
 }
 await writeFile(join(here, '..', 'results', 'mixed.json'), JSON.stringify(out, null, 2));

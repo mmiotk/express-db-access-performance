@@ -3,10 +3,10 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "pg>knex",
-    "ratio": 1.479,
+    "ratio": 1.491,
     "ratioCI": [
-      1.457,
-      1.5
+      1.468,
+      1.512
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -17,10 +17,10 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "knex>drizzle",
-    "ratio": 1.332,
+    "ratio": 1.329,
     "ratioCI": [
-      1.314,
-      1.351
+      1.31,
+      1.348
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -31,10 +31,10 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "drizzle>typeorm",
-    "ratio": 1.542,
+    "ratio": 1.498,
     "ratioCI": [
-      1.521,
-      1.565
+      1.479,
+      1.515
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -45,24 +45,24 @@
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "typeorm>prisma",
-    "ratio": 1.015,
+    "ratio": 1.046,
     "ratioCI": [
-      1.004,
-      1.028
+      1.032,
+      1.06
     ],
-    "winFraction": 0.64,
-    "perm_p": 0.022998850057497126,
-    "wilcoxon_p": 0.0238,
-    "cliffs_delta_unpaired": 0.3
+    "winFraction": 0.88,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 0.83
   },
   {
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "prisma>objection",
-    "ratio": 1.154,
+    "ratio": 1.144,
     "ratioCI": [
-      1.133,
-      1.176
+      1.126,
+      1.162
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -75,22 +75,22 @@
     "pair": "objection>sequelize",
     "ratio": 1.041,
     "ratioCI": [
-      1.026,
-      1.055
+      1.028,
+      1.053
     ],
-    "winFraction": 0.88,
+    "winFraction": 0.94,
     "perm_p": 0.00004999750012499375,
     "wilcoxon_p": 0.0002,
-    "cliffs_delta_unpaired": 0.76
+    "cliffs_delta_unpaired": 0.88
   },
   {
     "engine": "postgres",
     "endpoint": "deep_fetch",
     "pair": "sequelize>mikroorm",
-    "ratio": 1.931,
+    "ratio": 1.904,
     "ratioCI": [
-      1.897,
-      1.969
+      1.865,
+      1.946
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,

@@ -1,4 +1,4 @@
-// Post-hoc statistical analysis over results/raw.json (which must carry per-run
+// Post-hoc statistical analysis over a per-run results JSON (RAW_FILE, default raw.json) (which must carry per-run
 // sample arrays; produced by the current runner). Emits three LaTeX tables:
 //   results/tables/cv_all.tex             — coefficient of variation, layer × pattern
 //   results/tables/significance_deep_fetch.tex — adjacent-layer paired ratio + permutation p
@@ -17,11 +17,12 @@ const tex = (s) => String(s).replace(/_/g, '\\_');
 
 const ORDER = ['pg', 'mysql2', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
 const PATTERNS = ['point_read', 'range_scan', 'deep_fetch', 'aggregation', 'write'];
-const ENGINE = process.env.ENGINE || 'postgres';
+const ENGINE = process.env.ENGINE || "postgres";
+const RAW_FILE = process.env.RAW_FILE || "raw.json";
 
-const rows = JSON.parse(await readFile(join(here, '..', 'results', 'raw.json'), 'utf8'));
+const rows = JSON.parse(await readFile(join(here, "..", "results", RAW_FILE), "utf8"));
 if (!rows.some((r) => Array.isArray(r.rps_samples))) {
-  console.error('raw.json has no per-run samples — re-run bench/runner.mjs first.');
+  console.error(RAW_FILE + " has no per-run samples; re-run bench/runner.mjs first.");
   process.exit(1);
 }
 const get = (adapter, endpoint, engine = ENGINE) => rows.find((r) => r.adapter === adapter && r.endpoint === endpoint && r.engine === engine);

@@ -19,6 +19,7 @@ const DURATION = Number(process.env.FO_DURATION ?? 8), WARMUP = 2, CONNECTIONS =
 const median = (a) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
 
 function health(base, tries = 100) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
+async function waitIdle(base, timeoutMs = 30000) { const deadline = Date.now() + timeoutMs; for (;;) { const s = await (await fetch(`${base}/stats`)).json(); if (s.active_handlers === 0) return; if (Date.now() > deadline) throw new Error('handler-drain timeout'); await new Promise((r) => setTimeout(r, 25)); } }
 function run(base, id, dur) { return new Promise((res, rej) => autocannon({ url: base, connections: CONNECTIONS, duration: dur, requests: [{ method: 'GET', path: `/posts/${id}/thread` }] }, (e, r) => e ? rej(e) : res(r))); }
 
 // FO_LAYERS restricts to a representative subset (review 4, §E6: replicate the
@@ -36,16 +37,16 @@ for (const engine of ENGINES) for (const adapter of Object.keys(ADAPTERS)) {
   });
   try {
     await health(base);
-    await run(base, BASE_ID + 2, WARMUP); // warm on the 10-comment post
+    await run(base, BASE_ID + 2, WARMUP); await waitIdle(base); // warm on the 10-comment post
     for (let i = 0; i < FANOUT.length; i++) {
       const id = BASE_ID + i;
       const samples = [], p99s = [];
-      for (let k = 0; k < REPS; k++) { const r = await run(base, id, DURATION); samples.push(Math.round(r.requests.average)); p99s.push(r.latency.p99); }
+      for (let k = 0; k < REPS; k++) { const r = await run(base, id, DURATION); await waitIdle(base); samples.push(Math.round(r.requests.average)); p99s.push(r.latency.p99); }
       out.push({ adapter, engine, fanout: FANOUT[i], rps: median(samples), p99: median(p99s), rps_samples: samples });
       console.log(`  ${adapter}/${engine} fanout=${FANOUT[i]}: ${median(samples)} req/s p99=${median(p99s)}ms`);
     }
   } catch (e) { console.error(`  FAILED ${adapter}/${engine}: ${e.message}`); }
-  finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); }
+  finally { if (child.exitCode === null) child.kill('SIGTERM'); await new Promise((resolve) => { if (child.exitCode !== null) return resolve(); const timeout = setTimeout(resolve, 5000); child.once('exit', () => { clearTimeout(timeout); resolve(); }); }); }
 }
 await writeFile(join(here, '..', 'results', 'fanout.json'), JSON.stringify(out, null, 2));
 console.log('wrote results/fanout.json');

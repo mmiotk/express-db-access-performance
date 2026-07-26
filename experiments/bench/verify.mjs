@@ -27,8 +27,8 @@ async function probe(name) {
       out[`thread:${id}`] = JSON.stringify(await db.getThread(id));
       out[`threadRaw:${id}`] = JSON.stringify(await db.getThreadRaw(id));
       // Alternative documented deep-fetch strategy (join<->select-in), where the layer
-      // exposes one. It must be byte-identical to the doc-primary thread to count as a
-      // semantically-equivalent, performance-conscious option (review 6.4).
+      // exposes one. It must be byte-identical to the policy-selected thread to count as a
+      // semantically equivalent documented alternative (review 6.4).
       if (typeof db.getThreadAlt === 'function') {
         try { out[`threadAlt:${id}`] = JSON.stringify(await db.getThreadAlt(id)); }
         catch (e) { out[`threadAlt:${id}`] = `ERROR:${e.message}`; }
@@ -51,7 +51,7 @@ const keys = Object.keys(base);
 console.log(`baseline ${baseline}: ${keys.length} probes, bytes: ` +
   keys.map((k) => `${k}=${Buffer.byteLength(base[k])}`).join(' '));
 
-// internal consistency of the baseline itself: idiomatic thread === same-SQL thread
+// internal consistency of the baseline itself: policy-selected thread === same-SQL thread
 let bad = 0;
 for (const id of POST_IDS) {
   if (base[`thread:${id}`] !== base[`threadRaw:${id}`]) {
@@ -66,7 +66,7 @@ for (const name of names) {
     const r = await probe(name);
     const diffs = keys.filter((k) => r[k] !== base[k]);
     // Alternative-strategy equivalence: the layer's getThreadAlt must byte-match the
-    // baseline thread on every probe id to be a valid performance-conscious option.
+    // baseline thread on every probe id to be a valid documented-alternative sensitivity treatment.
     if (POST_IDS.some((id) => `threadAlt:${id}` in r)) {
       const altDiffs = POST_IDS.filter((id) => r[`threadAlt:${id}`] !== base[`thread:${id}`]);
       const errored = POST_IDS.some((id) => String(r[`threadAlt:${id}`]).startsWith('ERROR:'));
@@ -89,9 +89,9 @@ for (const name of names) {
   }
 }
 if (altRows.length) {
-  console.log(`\nAlternative documented deep-fetch strategy (${engine}) --- valid performance-conscious drop-ins:`);
+  console.log(`\nAlternative documented deep-fetch strategy (${engine}) --- byte-equivalent documented alternatives:`);
   for (const a of altRows) {
-    console.log(a.valid ? `  ✓ ${a.name} (alt byte-identical, a valid faster-strategy candidate)`
+    console.log(a.valid ? `  ✓ ${a.name} (alt byte-identical, a valid documented-strategy sensitivity candidate)`
                         : `  – ${a.name} (${a.reason}; not a valid drop-in on ${engine})`);
   }
 }

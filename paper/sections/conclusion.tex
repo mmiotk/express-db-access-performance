@@ -1,37 +1,10 @@
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-This paper's contribution is a \textbf{comparability protocol} that turns access-layer
-benchmarking into a controlled experiment rather than vendor-style number-reporting: it
-admits a layer's timing only once that layer returns byte-identical results (semantic
-equivalence), pairs a documentation-selected estimand with a same-SQL standardized contrast
-(strategy standardization), and separates capacity, tail-under-demand, and matched-utilization
-latency (operating-point separation). An open, reusable harness operationalizes it,
-demonstrated by a dual-engine case study --- eleven implementations across PostgreSQL and
-MySQL over five access patterns (Section~\ref{sec:introduction}).
+This paper proposes a concrete discipline for access-layer comparisons: derive expected read results from the declared task, check mutual equivalence and post-write state before timing, define each configured treatment by a predeclared policy, and report fixed-demand latency separately from capacity and matched utilization. The case-study policy selects documented configurations from frozen pages; it is reproducible evidence about those treatments, not observed practitioner behavior. The common-SQL raw-path experiment is a compound sensitivity contrast, not a library-intrinsic overhead estimate.
 
-Across the five tested patterns, the documentation-selected implementation-and-strategy difference
-is largest on the deep fetch that assembles a nested object graph and is smaller on point reads and
-aggregation. Among the raw
-paths running common SQL the spread is far smaller (Section~\ref{sec:results}).
+In the pinned Express.js case study, the largest observed gap occurs on the tested deep fetch: $7.01\times$ on PostgreSQL and $5.12\times$ on MySQL, narrowing to $1.71\times$ and $2.03\times$ when the layers use common SQL through raw facilities. At stable 50\% and most 70\% capacity targets, p99 values form a much smaller band than at the high-load point. These are treatment- and campaign-specific observations; handwritten native SQL and ORM relation APIs are deliberately asymmetric practical implementations.
 
-On the pinned compatible stable library versions no single server process uses more than about 1.1 application cores,
-while adding workers increases aggregate throughput at additional resource cost. The native
-implementation leads each of the ten engine--pattern comparisons; read orderings are similar between the tested backend stacks while aggregation and insert orderings reverse (Prisma drops from mid-pack to last on
-the MySQL insert), cautioning against generalizing single-engine results. Rankings are also
-version-sensitive: an earlier headline did not survive re-running on newer releases
-(Section~\ref{sec:discussion}).
+The evidence record separates completed checks from unperformed validation. The seed-derived oracle, state preflight, second same-host campaign, machine-readable checklist, and retrospective audit make the method inspectable. The external audit has one rater, every adapter remains single-author, and both campaigns use the same virtualized host. Result-blind review packets are therefore provided rather than an unsupported claim of independent implementation validation.
 
-Development also surfaced a reusable checklist of genre-specific benchmarking pitfalls --- one,
-a fast-but-wrong write path that passed the read-level cross-check, added by this very re-run
-(Section~\ref{sec:discussion}).
-
-These findings held under a concurrency sweep (1 to 256 connections), resting on large
-between-layer effect sizes with non-overlapping bootstrap intervals, the descriptive
-adjacent-rank permutation tests agreeing (Section~\ref{sec:results}).
-
-Extensions would deepen the evidence --- a two-machine cross-run to bound observer
-interference beyond the open-loop check, more engines and dataset sizes, and a dedicated study
-of the N+1 penalty and cold-start latency --- and the released harness, re-run against
-Prisma~7, makes these straightforward, addressing the repeatability gap documented in
-computer-systems research~\cite{collberg2016repeatability}.
+Future work should obtain independent treatment and adapter reviews, estimate inter-rater agreement when the protocol is applied to external benchmarks, repeat the reduced RQ2 matrix on a physically independent host, and extend the workload across datasets, topologies, and cold-cache regimes. The released harness and explicit compliance levels make those extensions additive rather than changes to an implied universal ranking.

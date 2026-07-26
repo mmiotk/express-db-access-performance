@@ -1,9 +1,9 @@
 // Native driver, TUNED variant — mysql2 with pool.execute(): the binary protocol
-// with server-side prepared statements, cached per connection. The idiomatic
+// with server-side prepared statements, cached per connection. The policy-selected
 // `mysql2` baseline uses pool.query() (text protocol, no statement reuse); this
-// variant is a tuned practitioner reference point. Same SQL, same canonical output.
+// variant is a tuned reference point. Same SQL, same canonical output.
 import mysql from 'mysql2/promise';
-import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { THREAD_Q1, THREAD_Q2 } from './_threadraw.mjs';
 import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ config }) {
@@ -38,7 +38,7 @@ export default async function createAdapter({ config }) {
       return canonThreadRows(postRows[0], commentRows);
     },
 
-    // Same-SQL control coincides with the idiomatic path for this adapter.
+    // Same-SQL control coincides with the policy-selected path for this adapter.
     async getThreadRaw(id) {
       return this.getThread(id);
     },

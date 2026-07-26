@@ -12,15 +12,21 @@ const FANOUT = [0, 1, 10, 50, 100, 500];
 const BASE_ID = 250001;
 const AUTHOR = 1000;
 const NA = config.seed.authors;
+const BASE_COMMENTS = config.seed.posts * config.seed.commentsPerPost;
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rnd = mulberry32(0xfa0);
 const pick = () => 1 + Math.floor(rnd() * NA);
+// Materialize the fixture once, then load identical comment-author assignments
+// into both engines. Reusing one advancing PRNG inside the two engine loops
+// would produce different rows despite the same topology.
+const FANOUT_AUTHORS = FANOUT.map((n) => Array.from({ length: n }, () => pick()));
 
 // PostgreSQL
 {
   const c = new pg.Client(config.postgres); await c.connect();
   await c.query('DELETE FROM comments WHERE post_id >= $1', [BASE_ID]);
+  await c.query("SELECT setval($1::regclass, $2, true)", ["comments_id_seq", BASE_COMMENTS]);
   await c.query('DELETE FROM posts WHERE id >= $1', [BASE_ID]);
   for (let i = 0; i < FANOUT.length; i++) {
     const id = BASE_ID + i, n = FANOUT[i];
@@ -28,7 +34,7 @@ const pick = () => 1 + Math.floor(rnd() * NA);
       [id, AUTHOR, `Fanout post ${n}`, `Body of fanout post with ${n} comments. `.repeat(2)]);
     for (let batch = 0; batch < n; batch += 100) {
       const m = Math.min(100, n - batch);
-      const vals = Array.from({ length: m }, (_, k) => `($1, ${pick()}, 'Fanout comment ${batch + k + 1}. ')`).join(',');
+      const vals = Array.from({ length: m }, (_, k) => `($1, ${FANOUT_AUTHORS[i][batch + k]}, 'Fanout comment ${batch + k + 1}. ')`).join(',');
       await c.query(`INSERT INTO comments(post_id, author_id, body) VALUES ${vals}`.replaceAll('$1', String(id)));
     }
   }
@@ -41,6 +47,7 @@ const pick = () => 1 + Math.floor(rnd() * NA);
 {
   const c = await mysql.createConnection(config.mysql);
   await c.query('DELETE FROM comments WHERE post_id >= ?', [BASE_ID]);
+  await c.query('ALTER TABLE comments AUTO_INCREMENT = ' + Number(BASE_COMMENTS + 1));
   await c.query('DELETE FROM posts WHERE id >= ?', [BASE_ID]);
   for (let i = 0; i < FANOUT.length; i++) {
     const id = BASE_ID + i, n = FANOUT[i];
@@ -48,10 +55,17 @@ const pick = () => 1 + Math.floor(rnd() * NA);
       [id, AUTHOR, `Fanout post ${n}`, `Body of fanout post with ${n} comments. `.repeat(2)]);
     for (let batch = 0; batch < n; batch += 100) {
       const m = Math.min(100, n - batch);
-      const vals = Array.from({ length: m }, (_, k) => [id, pick(), `Fanout comment ${batch + k + 1}. `]);
+      const vals = Array.from({ length: m }, (_, k) => [id, FANOUT_AUTHORS[i][batch + k], `Fanout comment ${batch + k + 1}. `]);
       await c.query('INSERT INTO comments(post_id, author_id, body) VALUES ?', [vals]);
     }
   }
+  // MySQL 9.7.1 can leave the in-memory allocator below an explicitly requested
+  // AUTO_INCREMENT value after bulk explicit-id inserts. Advance it by observing
+  // id 300000, then remove the sentinel; the next generated id remains 300001.
+  await c.query(
+    "INSERT INTO posts(id, author_id, title, body, views) VALUES (300000, 1, '__fanout_sequence_sentinel__', '', 0)",
+  );
+  await c.query('DELETE FROM posts WHERE id = 300000');
   await c.query('ALTER TABLE posts AUTO_INCREMENT = 300001');
   const [rows] = await c.query('SELECT p.id, count(c.id) n FROM posts p LEFT JOIN comments c ON c.post_id=p.id WHERE p.id>=? GROUP BY p.id ORDER BY p.id', [BASE_ID]);
   console.log('MySQL fanout:', rows.map((r) => `${r.id}=${r.n}`).join(' '));

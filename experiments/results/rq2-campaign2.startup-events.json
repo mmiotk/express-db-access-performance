@@ -1,0 +1,13 @@
+[
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "replicate": 16,
+    "endpoints": [
+      "write"
+    ],
+    "attempt": 1,
+    "startupFailure": true,
+    "message": "server health timeout"
+  }
+]

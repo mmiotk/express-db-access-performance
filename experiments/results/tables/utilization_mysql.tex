@@ -4,20 +4,20 @@
   \caption{Utilization-controlled open-loop tail on the deep fetch (MySQL):
     coordinated-omission-corrected p99 (ms, median of five runs) when each layer is
     offered a fixed fraction of its $\widehat C_{50}$ capacity proxy (the 25-run
-    median throughput at 50 connections). At nominal 50\% and across most nominal 70\% cells the tails are small and similar across layers, so the large high-load p99 gap is chiefly a capacity/queueing effect. A full-sweep-denominator sensitivity is reported in Supplement Table~S45. The noisier 85\% and 95\% cells are near-saturation sensitivity evidence, not a precise convergence claim.}
+    median throughput at 50 connections). The 50\% and 70\% columns carry the sub-saturation comparison and are interpreted with the denominator sensitivity in Supplement Table~S45. The 85\% and 95\% columns are near-saturation sensitivity evidence, not a precise convergence claim.}
   \label{tab:utilization_mysql}
   \begin{tabular}{l r r r r}
     \toprule
     Layer & 50\% & 70\% & 85\% & 95\% \\
     \midrule
-    \texttt{mysql2} & 4.2 & 7.7 & 20.9 & 39.7 \\
-    \texttt{knex} & 1.9 & 2.7 & 13.7 & 4.1 \\
-    \texttt{drizzle} & 3.7 & 6.1 & 14.9 & 17.6 \\
-    \texttt{prisma} & 5.2 & 5.6 & 11.9 & 51.4 \\
-    \texttt{sequelize} & 2.5 & 3.2 & 6.8 & 21 \\
-    \texttt{typeorm} & 2.8 & 3.6 & 3 & 36.5 \\
-    \texttt{objection} & 2.9 & 3.2 & 3.7 & 32.9 \\
-    \texttt{mikroorm} & 4 & 4.2 & 8.7 & 31.2 \\
+    \texttt{mysql2} & 4.7 & 7.4 & 12.8 & 27.3 \\
+    \texttt{knex} & 1.9 & 1.9 & 8.9 & 22.7 \\
+    \texttt{drizzle} & 3.9 & 5.6 & 15.6 & 58 \\
+    \texttt{prisma} & 5.5 & 6.6 & 9.5 & 71.5 \\
+    \texttt{sequelize} & 3.1 & 3.3 & 10.1 & 11.2 \\
+    \texttt{typeorm} & 2.8 & 3 & 3.3 & 17.3 \\
+    \texttt{objection} & 2.9 & 3 & 4.5 & 11.5 \\
+    \texttt{mikroorm} & 4.1 & 4.2 & 4.7 & 13.8 \\
     \bottomrule
   \end{tabular}
 \end{table}

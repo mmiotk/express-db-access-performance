@@ -72,15 +72,24 @@ stores only; runtime/framework benchmarks that hold the access layer fixed;
 SEO/content-farm "2026 ORM benchmark" pages with unverifiable version numbers and
 no reproducible method.
 
+## Methodological-precedent search
+
+Because the coverage query is performance-focused, a separate July 2026 query
+searched `ORM differential testing equivalent queries`, `cross-ORM equivalence`,
+and `correctness before performance benchmark`, with backward/forward chaining.
+This search retained CYNTHIA (Sotiropoulos et al., ICSE 2021) as the direct
+cross-ORM differential-equivalence precedent. CYNTHIA is included in the
+methodological positioning even though it is not a performance benchmark and is
+therefore not one of the nine sources coded in the retrospective performance-
+benchmark audit. The separation is by study type, not an exclusion of the prior
+art.
+
 ## Result
 
 The retained works are cited in Section 2 and summarized in Table 3
 (`tab:prior_art`). Each covers at most two or three of the four positioning
-properties. The most recent peer-reviewed access-layer study located (JCSI 37,
-Dec 2025) covers three ORMs, PostgreSQL only, and instruments internal query
-stages rather than the client-observed HTTP round trip. TechEmpower Framework
+properties. The most recent peer-reviewed access-layer study located (JCSI 37, Dec 2025) covers three ORMs, PostgreSQL only, and instruments internal query stages rather than the client-observed HTTP round trip. The broader 2023 Node-Bench paper covers five access products but crosses them with framework and virtualization/container choices rather than holding one access-layer task fixed. TechEmpower Framework
 Benchmarks exercised MySQL through Express but fixed a single driver or ORM per
 framework variant, and the project was archived in March 2026.
 
-Every DOI, year, volume, and page in the bibliography was machine-verified against
-Crossref before submission.
+Bibliographic metadata for the two sources added in the July 23 revision were checked against their DOI and publisher records; the final bibliography is rechecked during the submission audit.

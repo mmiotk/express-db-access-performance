@@ -1,0 +1,539 @@
+
+> express-db-access-performance-experiments@0.1.0 verify:campaign-state
+> ENGINE=postgres node bench/verify-campaign-state.mjs && ENGINE=mysql node bench/verify-campaign-state.mjs
+
+postgres campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+mysql campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+
+> express-db-access-performance-experiments@0.1.0 verify:seed-parity
+> node bench/verify-seed-parity.mjs
+
+{
+  "scope": "fan-out posts/comments; database-generated timestamps excluded",
+  "rows": 662,
+  "sha256": "402e0aebbbc99f6ca32f6e176182fbb4fe753fe273f2e79fb00d5b73a99fe5ca",
+  "status": "IDENTICAL ACROSS ENGINES"
+}
+date_utc: 2026-07-23T17:25:29.345Z
+node: v24.18.0
+platform: linux 6.17.0-29-generic (x64)
+cpu: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz x16
+mem_total_gb: 125.8
+loadavg: 0.60 0.61 1.17
+cpu_governor: unavailable
+turbo_no_turbo: unavailable
+numa_nodes: 1
+virtualization: vmware
+process_affinity: pid 3680656's current affinity list: 0-15
+git_commit: 61aa2b57168f53f02ec968189851374a4be8a002 (dirty)
+package_lock_sha256: b4449306ba3784814488c4633a04ebb74f9c867366efadc1b793d7f5e88f1510
+253c273ea1bead3002384d73da937e1d3a76ae0fc367045e43f710767282bdf9  results/source-manifest-rq2-campaign2-corrected-state.json (33 files)
+postgres campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+mysql campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+
+===== replicate 1/25 (order=shuffle: mysql2-tuned,sequelize,prisma,sequelize,typeorm,knex,prisma,mikroorm,mysql2,pg-tuned,typeorm,objection,objection,drizzle,pg,mikroorm,drizzle,knex) =====
+
+== rep 1: mysql2-tuned on mysql ==
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3101
+  mysql2-tuned/mysql/point_read: 4175 req/s  p99=15ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=206MB
+  mysql2-tuned/mysql/range_scan: 3076 req/s  p99=19ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=211MB
+  mysql2-tuned/mysql/deep_fetch: 2450 req/s  p99=24ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=211MB
+  mysql2-tuned/mysql/aggregation: 4359 req/s  p99=15ms  cpu=100% (kids 0%, db 310%)  err/to/n2=0/0/0  rss=212MB
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3102
+  mysql2-tuned/mysql/write: 1861 req/s  p99=119ms  cpu=55% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=149MB
+
+== rep 1: sequelize on postgres ==
+[server] adapter=sequelize engine=postgres pool=10 :3103
+  sequelize/postgres/point_read: 3387 req/s  p99=17ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=205MB
+  sequelize/postgres/range_scan: 2468 req/s  p99=24ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=212MB
+  sequelize/postgres/deep_fetch: 1001 req/s  p99=59ms  cpu=102% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=232MB
+  sequelize/postgres/aggregation: 4892 req/s  p99=14ms  cpu=100% (kids 0%, db 325%)  err/to/n2=0/0/0  rss=234MB
+[server] adapter=sequelize engine=postgres pool=10 :3104
+  sequelize/postgres/write: 2611 req/s  p99=24ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=207MB
+
+== rep 1: prisma on mysql ==
+[server] adapter=prisma engine=mysql pool=10 :3105
+  prisma/mysql/point_read: 2057 req/s  p99=29ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=310MB
+  prisma/mysql/range_scan: 1538 req/s  p99=40ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=329MB
+  prisma/mysql/deep_fetch: 646 req/s  p99=87ms  cpu=105% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=334MB
+  prisma/mysql/aggregation: 2394 req/s  p99=25ms  cpu=100% (kids 0%, db 230%)  err/to/n2=0/0/0  rss=344MB
+[server] adapter=prisma engine=mysql pool=10 :3106
+  prisma/mysql/write: 825 req/s  p99=101ms  cpu=85% (kids 0%, db 62%)  err/to/n2=0/0/0  rss=318MB
+
+== rep 1: sequelize on mysql ==
+[server] adapter=sequelize engine=mysql pool=10 :3107
+  sequelize/mysql/point_read: 2673 req/s  p99=21ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=217MB
+  sequelize/mysql/range_scan: 2048 req/s  p99=28ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=225MB
+  sequelize/mysql/deep_fetch: 875 req/s  p99=68ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=263MB
+  sequelize/mysql/aggregation: 3458 req/s  p99=19ms  cpu=100% (kids 0%, db 265%)  err/to/n2=0/0/0  rss=259MB
+[server] adapter=sequelize engine=mysql pool=10 :3108
+  sequelize/mysql/write: 1395 req/s  p99=146ms  cpu=70% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=208MB
+
+== rep 1: typeorm on postgres ==
+[server] adapter=typeorm engine=postgres pool=10 :3109
+  typeorm/postgres/point_read: 4191 req/s  p99=14ms  cpu=102% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=258MB
+  typeorm/postgres/range_scan: 2562 req/s  p99=24ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=264MB
+  typeorm/postgres/deep_fetch: 1222 req/s  p99=47ms  cpu=105% (kids 0%, db 120%)  err/to/n2=0/0/0  rss=271MB
+  typeorm/postgres/aggregation: 6138 req/s  p99=11ms  cpu=100% (kids 0%, db 380%)  err/to/n2=0/0/0  rss=271MB
+[server] adapter=typeorm engine=postgres pool=10 :3110
+  typeorm/postgres/write: 2461 req/s  p99=34ms  cpu=100% (kids 0%, db 60%)  err/to/n2=0/0/0  rss=237MB
+
+== rep 1: knex on postgres ==
+[server] adapter=knex engine=postgres pool=10 :3111
+  knex/postgres/point_read: 4567 req/s  p99=14ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=201MB
+  knex/postgres/range_scan: 3193 req/s  p99=19ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=208MB
+  knex/postgres/deep_fetch: 2544 req/s  p99=23ms  cpu=100% (kids 0%, db 252%)  err/to/n2=0/0/0  rss=208MB
+  knex/postgres/aggregation: 5584 req/s  p99=11ms  cpu=100% (kids 0%, db 350%)  err/to/n2=0/0/0  rss=208MB
+[server] adapter=knex engine=postgres pool=10 :3112
+  knex/postgres/write: 4475 req/s  p99=20ms  cpu=95% (kids 0%, db 80%)  err/to/n2=0/0/0  rss=196MB
+
+== rep 1: prisma on postgres ==
+[server] adapter=prisma engine=postgres pool=10 :3113
+  prisma/postgres/point_read: 3324 req/s  p99=20ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=300MB
+  prisma/postgres/range_scan: 2438 req/s  p99=26ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=299MB
+  prisma/postgres/deep_fetch: 1233 req/s  p99=49ms  cpu=105% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=304MB
+  prisma/postgres/aggregation: 4381 req/s  p99=16ms  cpu=100% (kids 0%, db 295%)  err/to/n2=0/0/0  rss=304MB
+[server] adapter=prisma engine=postgres pool=10 :3114
+  prisma/postgres/write: 2701 req/s  p99=24ms  cpu=105% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=307MB
+
+== rep 1: mikroorm on postgres ==
+[server] adapter=mikroorm engine=postgres pool=10 :3115
+  mikroorm/postgres/point_read: 2488 req/s  p99=24ms  cpu=100% (kids 0%, db 25%)  err/to/n2=0/0/0  rss=274MB
+  mikroorm/postgres/range_scan: 906 req/s  p99=62ms  cpu=105% (kids 0%, db 12%)  err/to/n2=0/0/0  rss=320MB
+  mikroorm/postgres/deep_fetch: 533 req/s  p99=107ms  cpu=110% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=329MB
+  mikroorm/postgres/aggregation: 5723 req/s  p99=12ms  cpu=100% (kids 0%, db 364%)  err/to/n2=0/0/0  rss=331MB
+[server] adapter=mikroorm engine=postgres pool=10 :3116
+  mikroorm/postgres/write: 1876 req/s  p99=31ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=221MB
+
+== rep 1: mysql2 on mysql ==
+[server] adapter=mysql2 engine=mysql pool=10 :3117
+  mysql2/mysql/point_read: 4413 req/s  p99=15ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=267MB
+  mysql2/mysql/range_scan: 3322 req/s  p99=20ms  cpu=105% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=290MB
+  mysql2/mysql/deep_fetch: 2472 req/s  p99=26ms  cpu=105% (kids 0%, db 90%)  err/to/n2=0/0/0  rss=289MB
+  mysql2/mysql/aggregation: 4513 req/s  p99=15ms  cpu=102% (kids 0%, db 350%)  err/to/n2=0/0/0  rss=290MB
+[server] adapter=mysql2 engine=mysql pool=10 :3118
+  mysql2/mysql/write: 1851 req/s  p99=105ms  cpu=50% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=250MB
+
+== rep 1: pg-tuned on postgres ==
+[server] adapter=pg-tuned engine=postgres pool=10 :3119
+  pg-tuned/postgres/point_read: 6893 req/s  p99=10ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=195MB
+  pg-tuned/postgres/range_scan: 3833 req/s  p99=17ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=202MB
+  pg-tuned/postgres/deep_fetch: 3764 req/s  p99=16ms  cpu=100% (kids 0%, db 230%)  err/to/n2=0/0/0  rss=203MB
+  pg-tuned/postgres/aggregation: 7702 req/s  p99=8ms  cpu=100% (kids 0%, db 255%)  err/to/n2=0/0/0  rss=203MB
+[server] adapter=pg-tuned engine=postgres pool=10 :3120
+  pg-tuned/postgres/write: 5967 req/s  p99=15ms  cpu=95% (kids 0%, db 75%)  err/to/n2=0/0/0  rss=195MB
+
+== rep 1: typeorm on mysql ==
+[server] adapter=typeorm engine=mysql pool=10 :3121
+  typeorm/mysql/point_read: 2991 req/s  p99=20ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=217MB
+  typeorm/mysql/range_scan: 2288 req/s  p99=25ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=221MB
+  typeorm/mysql/deep_fetch: 1036 req/s  p99=56ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=225MB
+  typeorm/mysql/aggregation: 3971 req/s  p99=15ms  cpu=100% (kids 0%, db 296%)  err/to/n2=0/0/0  rss=224MB
+[server] adapter=typeorm engine=mysql pool=10 :3122
+  typeorm/mysql/write: 1387 req/s  p99=95ms  cpu=90% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=213MB
+
+== rep 1: objection on postgres ==
+[server] adapter=objection engine=postgres pool=10 :3123
+  objection/postgres/point_read: 3888 req/s  p99=16ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=205MB
+  objection/postgres/range_scan: 2575 req/s  p99=23ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=211MB
+  objection/postgres/deep_fetch: 1000 req/s  p99=56ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=213MB
+  objection/postgres/aggregation: 3865 req/s  p99=16ms  cpu=100% (kids 0%, db 255%)  err/to/n2=0/0/0  rss=213MB
+[server] adapter=objection engine=postgres pool=10 :3124
+  objection/postgres/write: 3915 req/s  p99=15ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=218MB
+
+== rep 1: objection on mysql ==
+[server] adapter=objection engine=mysql pool=10 :3125
+  objection/mysql/point_read: 3224 req/s  p99=18ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=214MB
+  objection/mysql/range_scan: 2577 req/s  p99=21ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=218MB
+  objection/mysql/deep_fetch: 861 req/s  p99=67ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=221MB
+  objection/mysql/aggregation: 2797 req/s  p99=23ms  cpu=100% (kids 0%, db 205%)  err/to/n2=0/0/0  rss=222MB
+[server] adapter=objection engine=mysql pool=10 :3126
+  objection/mysql/write: 1813 req/s  p99=103ms  cpu=60% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=212MB
+
+== rep 1: drizzle on mysql ==
+[server] adapter=drizzle engine=mysql pool=10 :3127
+  drizzle/mysql/point_read: 2879 req/s  p99=21ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=286MB
+  drizzle/mysql/range_scan: 2130 req/s  p99=30ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=297MB
+  drizzle/mysql/deep_fetch: 1341 req/s  p99=45ms  cpu=105% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=297MB
+  drizzle/mysql/aggregation: 4058 req/s  p99=17ms  cpu=105% (kids 0%, db 313%)  err/to/n2=0/0/0  rss=301MB
+[server] adapter=drizzle engine=mysql pool=10 :3128
+  drizzle/mysql/write: 1827 req/s  p99=99ms  cpu=60% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=276MB
+
+== rep 1: pg on postgres ==
+[server] adapter=pg engine=postgres pool=10 :3129
+  pg/postgres/point_read: 6619 req/s  p99=10ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=196MB
+  pg/postgres/range_scan: 3804 req/s  p99=18ms  cpu=110% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=203MB
+  pg/postgres/deep_fetch: 3547 req/s  p99=21ms  cpu=100% (kids 0%, db 345%)  err/to/n2=0/0/0  rss=202MB
+  pg/postgres/aggregation: 6851 req/s  p99=10ms  cpu=100% (kids 0%, db 445%)  err/to/n2=0/0/0  rss=201MB
+[server] adapter=pg engine=postgres pool=10 :3130
+  pg/postgres/write: 5712 req/s  p99=12ms  cpu=100% (kids 0%, db 105%)  err/to/n2=0/0/0  rss=196MB
+
+== rep 1: mikroorm on mysql ==
+[server] adapter=mikroorm engine=mysql pool=10 :3131
+  mikroorm/mysql/point_read: 2070 req/s  p99=29ms  cpu=100% (kids 0%, db 25%)  err/to/n2=0/0/0  rss=237MB
+  mikroorm/mysql/range_scan: 826 req/s  p99=73ms  cpu=105% (kids 0%, db 15%)  err/to/n2=0/0/0  rss=338MB
+  mikroorm/mysql/deep_fetch: 491 req/s  p99=112ms  cpu=110% (kids 0%, db 25%)  err/to/n2=0/0/0  rss=345MB
+  mikroorm/mysql/aggregation: 4037 req/s  p99=15ms  cpu=100% (kids 0%, db 305%)  err/to/n2=0/0/0  rss=346MB
+[server] adapter=mikroorm engine=mysql pool=10 :3132
+  mikroorm/mysql/write: 1317 req/s  p99=107ms  cpu=95% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=254MB
+
+== rep 1: drizzle on postgres ==
+[server] adapter=drizzle engine=postgres pool=10 :3133
+  drizzle/postgres/point_read: 4132 req/s  p99=15ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=237MB
+  drizzle/postgres/range_scan: 2771 req/s  p99=21ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=240MB
+  drizzle/postgres/deep_fetch: 1838 req/s  p99=36ms  cpu=100% (kids 0%, db 185%)  err/to/n2=0/0/0  rss=241MB
+  drizzle/postgres/aggregation: 5633 req/s  p99=11ms  cpu=100% (kids 0%, db 345%)  err/to/n2=0/0/0  rss=235MB
+[server] adapter=drizzle engine=postgres pool=10 :3134
+  drizzle/postgres/write: 4132 req/s  p99=15ms  cpu=100% (kids 0%, db 75%)  err/to/n2=0/0/0  rss=250MB
+
+== rep 1: knex on mysql ==
+[server] adapter=knex engine=mysql pool=10 :3135
+  knex/mysql/point_read: 3798 req/s  p99=16ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=208MB
+  knex/mysql/range_scan: 2983 req/s  p99=20ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=222MB
+  knex/mysql/deep_fetch: 2009 req/s  p99=30ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=224MB
+  knex/mysql/aggregation: 4047 req/s  p99=15ms  cpu=100% (kids 0%, db 305%)  err/to/n2=0/0/0  rss=226MB
+[server] adapter=knex engine=mysql pool=10 :3136
+  knex/mysql/write: 1485 req/s  p99=111ms  cpu=45% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=200MB
+[checkpoint] replicate 1/25 saved (90 cells)
+
+===== replicate 2/25 (order=shuffle: sequelize,prisma,typeorm,mysql2-tuned,objection,typeorm,mysql2,prisma,mikroorm,sequelize,drizzle,pg,knex,pg-tuned,drizzle,objection,mikroorm,knex) =====
+
+== rep 2: sequelize on mysql ==
+[server] adapter=sequelize engine=mysql pool=10 :3137
+  sequelize/mysql/point_read: 2527 req/s  p99=22ms  cpu=100% (kids 0%, db 25%)  err/to/n2=0/0/0  rss=216MB
+  sequelize/mysql/range_scan: 2090 req/s  p99=27ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=222MB
+  sequelize/mysql/deep_fetch: 911 req/s  p99=64ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=264MB
+  sequelize/mysql/aggregation: 3478 req/s  p99=17ms  cpu=100% (kids 0%, db 265%)  err/to/n2=0/0/0  rss=264MB
+[server] adapter=sequelize engine=mysql pool=10 :3138
+  sequelize/mysql/write: 1492 req/s  p99=103ms  cpu=75% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=209MB
+
+== rep 2: prisma on mysql ==
+[server] adapter=prisma engine=mysql pool=10 :3139
+  prisma/mysql/point_read: 1969 req/s  p99=32ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=310MB
+  prisma/mysql/range_scan: 1523 req/s  p99=39ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=327MB
+  prisma/mysql/deep_fetch: 625 req/s  p99=91ms  cpu=105% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=331MB
+  prisma/mysql/aggregation: 2469 req/s  p99=24ms  cpu=100% (kids 0%, db 235%)  err/to/n2=0/0/0  rss=343MB
+[server] adapter=prisma engine=mysql pool=10 :3140
+  prisma/mysql/write: 842 req/s  p99=165ms  cpu=90% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=319MB
+
+== rep 2: typeorm on postgres ==
+[server] adapter=typeorm engine=postgres pool=10 :3141
+  typeorm/postgres/point_read: 4056 req/s  p99=16ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=259MB
+  typeorm/postgres/range_scan: 2542 req/s  p99=25ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=266MB
+  typeorm/postgres/deep_fetch: 1230 req/s  p99=45ms  cpu=105% (kids 0%, db 125%)  err/to/n2=0/0/0  rss=269MB
+  typeorm/postgres/aggregation: 6170 req/s  p99=11ms  cpu=100% (kids 0%, db 380%)  err/to/n2=0/0/0  rss=269MB
+[server] adapter=typeorm engine=postgres pool=10 :3142
+  typeorm/postgres/write: 2596 req/s  p99=26ms  cpu=100% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=238MB
+
+== rep 2: mysql2-tuned on mysql ==
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3143
+  mysql2-tuned/mysql/point_read: 3764 req/s  p99=16ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=203MB
+  mysql2-tuned/mysql/range_scan: 3260 req/s  p99=18ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=209MB
+  mysql2-tuned/mysql/deep_fetch: 2427 req/s  p99=24ms  cpu=100% (kids 0%, db 75%)  err/to/n2=0/0/0  rss=209MB
+  mysql2-tuned/mysql/aggregation: 4475 req/s  p99=14ms  cpu=100% (kids 0%, db 310%)  err/to/n2=0/0/0  rss=210MB
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3144
+  mysql2-tuned/mysql/write: 1592 req/s  p99=114ms  cpu=45% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=144MB
+
+== rep 2: objection on mysql ==
+[server] adapter=objection engine=mysql pool=10 :3145
+  objection/mysql/point_read: 3161 req/s  p99=19ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=213MB
+  objection/mysql/range_scan: 2562 req/s  p99=23ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=219MB
+  objection/mysql/deep_fetch: 874 req/s  p99=65ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=220MB
+  objection/mysql/aggregation: 2986 req/s  p99=20ms  cpu=100% (kids 0%, db 226%)  err/to/n2=0/0/0  rss=221MB
+[server] adapter=objection engine=mysql pool=10 :3146
+  objection/mysql/write: 1452 req/s  p99=104ms  cpu=50% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=211MB
+
+== rep 2: typeorm on mysql ==
+[server] adapter=typeorm engine=mysql pool=10 :3147
+  typeorm/mysql/point_read: 3053 req/s  p99=19ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=219MB
+  typeorm/mysql/range_scan: 2243 req/s  p99=27ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=224MB
+  typeorm/mysql/deep_fetch: 1035 req/s  p99=56ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=226MB
+  typeorm/mysql/aggregation: 3889 req/s  p99=17ms  cpu=100% (kids 0%, db 295%)  err/to/n2=0/0/0  rss=226MB
+[server] adapter=typeorm engine=mysql pool=10 :3148
+  typeorm/mysql/write: 1392 req/s  p99=112ms  cpu=92% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=211MB
+
+== rep 2: mysql2 on mysql ==
+[server] adapter=mysql2 engine=mysql pool=10 :3149
+  mysql2/mysql/point_read: 4374 req/s  p99=15ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=266MB
+  mysql2/mysql/range_scan: 3358 req/s  p99=20ms  cpu=105% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=288MB
+  mysql2/mysql/deep_fetch: 2448 req/s  p99=27ms  cpu=105% (kids 0%, db 85%)  err/to/n2=0/0/0  rss=289MB
+  mysql2/mysql/aggregation: 4459 req/s  p99=16ms  cpu=100% (kids 0%, db 344%)  err/to/n2=0/0/0  rss=290MB
+[server] adapter=mysql2 engine=mysql pool=10 :3150
+  mysql2/mysql/write: 1859 req/s  p99=96ms  cpu=50% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=251MB
+
+== rep 2: prisma on postgres ==
+[server] adapter=prisma engine=postgres pool=10 :3151
+  prisma/postgres/point_read: 3084 req/s  p99=21ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=299MB
+  prisma/postgres/range_scan: 2406 req/s  p99=27ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=299MB
+  prisma/postgres/deep_fetch: 1208 req/s  p99=50ms  cpu=105% (kids 0%, db 62%)  err/to/n2=0/0/0  rss=305MB
+  prisma/postgres/aggregation: 4484 req/s  p99=14ms  cpu=100% (kids 0%, db 298%)  err/to/n2=0/0/0  rss=306MB
+[server] adapter=prisma engine=postgres pool=10 :3152
+  prisma/postgres/write: 2761 req/s  p99=23ms  cpu=105% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=306MB
+
+== rep 2: mikroorm on postgres ==
+[server] adapter=mikroorm engine=postgres pool=10 :3153
+  mikroorm/postgres/point_read: 2397 req/s  p99=25ms  cpu=105% (kids 0%, db 20%)  err/to/n2=0/0/0  rss=272MB
+  mikroorm/postgres/range_scan: 906 req/s  p99=62ms  cpu=105% (kids 0%, db 10%)  err/to/n2=0/0/0  rss=317MB
+  mikroorm/postgres/deep_fetch: 533 req/s  p99=107ms  cpu=110% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=324MB
+  mikroorm/postgres/aggregation: 5517 req/s  p99=12ms  cpu=100% (kids 0%, db 345%)  err/to/n2=0/0/0  rss=322MB
+[server] adapter=mikroorm engine=postgres pool=10 :3154
+  mikroorm/postgres/write: 1847 req/s  p99=34ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=229MB
+
+== rep 2: sequelize on postgres ==
+[server] adapter=sequelize engine=postgres pool=10 :3155
+  sequelize/postgres/point_read: 3578 req/s  p99=17ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=207MB
+  sequelize/postgres/range_scan: 2503 req/s  p99=25ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=212MB
+  sequelize/postgres/deep_fetch: 1015 req/s  p99=58ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=259MB
+  sequelize/postgres/aggregation: 4467 req/s  p99=14ms  cpu=100% (kids 0%, db 295%)  err/to/n2=0/0/0  rss=256MB
+[server] adapter=sequelize engine=postgres pool=10 :3156
+  sequelize/postgres/write: 2722 req/s  p99=22ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=206MB
+
+== rep 2: drizzle on mysql ==
+[server] adapter=drizzle engine=mysql pool=10 :3157
+  drizzle/mysql/point_read: 2904 req/s  p99=21ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=287MB
+  drizzle/mysql/range_scan: 2063 req/s  p99=30ms  cpu=105% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=300MB
+  drizzle/mysql/deep_fetch: 1319 req/s  p99=48ms  cpu=105% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=300MB
+  drizzle/mysql/aggregation: 4068 req/s  p99=16ms  cpu=105% (kids 0%, db 310%)  err/to/n2=0/0/0  rss=300MB
+[server] adapter=drizzle engine=mysql pool=10 :3158
+  drizzle/mysql/write: 1727 req/s  p99=118ms  cpu=60% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=278MB
+
+== rep 2: pg on postgres ==
+[server] adapter=pg engine=postgres pool=10 :3159
+  pg/postgres/point_read: 6807 req/s  p99=9ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=197MB
+  pg/postgres/range_scan: 3917 req/s  p99=17ms  cpu=103% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=205MB
+  pg/postgres/deep_fetch: 3643 req/s  p99=19ms  cpu=100% (kids 0%, db 350%)  err/to/n2=0/0/0  rss=228MB
+  pg/postgres/aggregation: 6851 req/s  p99=11ms  cpu=100% (kids 0%, db 450%)  err/to/n2=0/0/0  rss=229MB
+[server] adapter=pg engine=postgres pool=10 :3160
+  pg/postgres/write: 6330 req/s  p99=11ms  cpu=100% (kids 0%, db 110%)  err/to/n2=0/0/0  rss=196MB
+
+== rep 2: knex on postgres ==
+[server] adapter=knex engine=postgres pool=10 :3161
+  knex/postgres/point_read: 4930 req/s  p99=12ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=202MB
+  knex/postgres/range_scan: 3224 req/s  p99=19ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=212MB
+  knex/postgres/deep_fetch: 2478 req/s  p99=27ms  cpu=100% (kids 0%, db 244%)  err/to/n2=0/0/0  rss=215MB
+  knex/postgres/aggregation: 5730 req/s  p99=11ms  cpu=100% (kids 0%, db 353%)  err/to/n2=0/0/0  rss=221MB
+[server] adapter=knex engine=postgres pool=10 :3162
+  knex/postgres/write: 4716 req/s  p99=14ms  cpu=100% (kids 0%, db 85%)  err/to/n2=0/0/0  rss=198MB
+
+== rep 2: pg-tuned on postgres ==
+[server] adapter=pg-tuned engine=postgres pool=10 :3163
+  pg-tuned/postgres/point_read: 6909 req/s  p99=9ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=193MB
+  pg-tuned/postgres/range_scan: 3806 req/s  p99=17ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=202MB
+  pg-tuned/postgres/deep_fetch: 3728 req/s  p99=18ms  cpu=100% (kids 0%, db 219%)  err/to/n2=0/0/0  rss=202MB
+  pg-tuned/postgres/aggregation: 7649 req/s  p99=9ms  cpu=100% (kids 0%, db 255%)  err/to/n2=0/0/0  rss=202MB
+[server] adapter=pg-tuned engine=postgres pool=10 :3164
+  pg-tuned/postgres/write: 6185 req/s  p99=11ms  cpu=100% (kids 0%, db 75%)  err/to/n2=0/0/0  rss=195MB
+
+== rep 2: drizzle on postgres ==
+[server] adapter=drizzle engine=postgres pool=10 :3165
+  drizzle/postgres/point_read: 4220 req/s  p99=13ms  cpu=100% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=237MB
+  drizzle/postgres/range_scan: 2687 req/s  p99=22ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=240MB
+  drizzle/postgres/deep_fetch: 1850 req/s  p99=33ms  cpu=100% (kids 0%, db 180%)  err/to/n2=0/0/0  rss=238MB
+  drizzle/postgres/aggregation: 6454 req/s  p99=10ms  cpu=100% (kids 0%, db 400%)  err/to/n2=0/0/0  rss=236MB
+[server] adapter=drizzle engine=postgres pool=10 :3166
+  drizzle/postgres/write: 3461 req/s  p99=32ms  cpu=100% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=243MB
+
+== rep 2: objection on postgres ==
+[server] adapter=objection engine=postgres pool=10 :3167
+  objection/postgres/point_read: 3882 req/s  p99=16ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=212MB
+  objection/postgres/range_scan: 2687 req/s  p99=22ms  cpu=100% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=216MB

@@ -1,0 +1,47 @@
+[
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "category": "native-driver",
+    "endpoint": "write",
+    "rps": 1803,
+    "p50": 26,
+    "p90": 30,
+    "p975": 51,
+    "p99": 67,
+    "cpu_pct": 60,
+    "cpu_children_pct": 0,
+    "db_cpu_pct": 50,
+    "gen_cpu_pct": 19,
+    "rss_mb": 153,
+    "gc_count": 16,
+    "gc_ms": 42,
+    "pool_used_avg": 9,
+    "pool_pending_avg": 35,
+    "pool_pending_max": 40,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0,
+    "connections": 50,
+    "duration": 1,
+    "warmup": 1,
+    "repeats": 1,
+    "independent": true,
+    "campaign_id": "runner-failclosed-smoke",
+    "order_mode": "shuffle",
+    "order_seed": 7,
+    "rebuild_writes": true,
+    "preflight": true,
+    "paired_streams": true,
+    "startup_retries": 0,
+    "rps_samples": [
+      1803
+    ],
+    "p99_samples": [
+      67
+    ],
+    "p975_samples": [
+      51
+    ]
+  }
+]

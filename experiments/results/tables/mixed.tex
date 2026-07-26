@@ -3,9 +3,9 @@
   \centering
   \caption{Mixed read/write workload: throughput (req/s) and p99 (ms) under an
     autocannon request mix interleaving the deep-fetch read with single-row inserts,
-    at 90:10 and 70:30 read:write, both engines, median of five runs with a physical
-    write reset per run. The layer ordering matches the read ordering and is
-    insensitive to the mix (the deep-fetch read dominates); exploratory.}
+    at 90:10 and 70:30 read:write, both engines, median of five runs with an exact
+    row-and-allocator reset per run. This is an exploratory sensitivity check; its
+    observed ordering is interpreted from the displayed cells rather than assumed.}
   \label{tab:mixed}
   \begin{tabular}{l l l r r}
     \toprule

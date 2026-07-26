@@ -37,9 +37,9 @@ export default async function createAdapter({ engine, config }) {
 - **Same pool size** for every layer: read `config.pool.min/max` (default 10/10).
 - **Same result shape**: return plain objects with the columns above. The deep
   fetch MUST actually resolve the nested `author` on every comment — this is
-  where naive ORM usage triggers N+1. Each adapter should use that layer's
-  *idiomatic recommended* way to avoid N+1 (join / `include` / `with` / relation
-  loading), and that choice is documented in a top-of-file comment.
+  where naive ORM usage triggers N+1. Each adapter must use the path selected by the frozen treatment policy to avoid N+1
+  (join / `include` / `with` / relation loading); the exact choice, alternative,
+  source snapshot, and tie decision are recorded in the documentation manifest.
 - **No per-request connect**: open the pool once in the factory, reuse it.
 - **No caching layer** in front of the DB.
 

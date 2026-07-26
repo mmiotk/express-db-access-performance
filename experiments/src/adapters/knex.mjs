@@ -2,7 +2,7 @@
 // both engines by switching the client.
 import knexFactory from 'knex';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const knex = knexFactory({
@@ -61,7 +61,11 @@ export default async function createAdapter({ engine, config }) {
     },
 
     async createPost({ authorId, title, body }) {
-      const rows = await knex('posts').insert({ author_id: authorId, title, body }, ['id']);
+      const insert = knex('posts').insert({ author_id: authorId, title, body });
+      // Knex's returning option is supported by PostgreSQL but not MySQL.
+      // Passing it on MySQL emits one warning per request and would make console
+      // I/O part of the measured treatment.
+      const rows = engine === 'postgres' ? await insert.returning('id') : await insert;
       // pg returns [{id}], mysql returns [insertId]
       const id = typeof rows[0] === 'object' ? rows[0].id : rows[0];
       return { id: Number(id) };
@@ -71,7 +75,8 @@ export default async function createAdapter({ engine, config }) {
     // transaction, through Knex's transaction facility.
     async createThread({ authorId, title, body, comments }) {
       return knex.transaction(async (trx) => {
-        const rows = await trx('posts').insert({ author_id: authorId, title, body }, ['id']);
+        const insert = trx('posts').insert({ author_id: authorId, title, body });
+        const rows = engine === 'postgres' ? await insert.returning('id') : await insert;
         const pid = typeof rows[0] === 'object' ? rows[0].id : rows[0];
         await trx('comments').insert(comments.map((c) => ({ post_id: pid, author_id: c.authorId, body: c.body })));
         return { post_id: Number(pid), comments: comments.length };

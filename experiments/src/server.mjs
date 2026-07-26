@@ -15,12 +15,21 @@ const db = await createAdapter({ engine, config });
 const app = express();
 app.use(express.json());
 
-// tiny async wrapper so a rejected query becomes a 500 instead of a hang
-const h = (fn) => (req, res) => fn(req, res).catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error(err);
-  res.status(500).json({ error: String(err && err.message || err) });
-});
+// Track handler promises independently of sockets: autocannon can close a socket
+// while an adapter operation is still settling. Shutdown waits for these promises
+// before closing the database pool, keeping teardown errors outside the artifact.
+const activeHandlers = new Set();
+const h = (fn) => (req, res) => {
+  const task = Promise.resolve()
+    .then(() => fn(req, res))
+    .catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      if (!res.headersSent) res.status(500).json({ error: String(err && err.message || err) });
+    })
+    .finally(() => activeHandlers.delete(task));
+  activeHandlers.add(task);
+};
 
 app.get('/health', (_req, res) => res.json({ ok: true, adapter: db.name, engine }));
 
@@ -47,6 +56,7 @@ if (typeof db.poolStats === 'function') {
   }, 200).unref();
 }
 app.get('/stats', (_req, res) => res.json({
+  active_handlers: activeHandlers.size,
   gc_count: gc.count, gc_ms: Math.round(gc.ms),
   pool_samples: pool.samples,
   pool_used_avg: pool.samples ? +(pool.usedSum / pool.samples).toFixed(1) : null,
@@ -71,7 +81,7 @@ app.get('/posts/:id/thread', h(async (req, res) => {
 
 // 3b. same-plan deep-fetch control: the IDENTICAL two-statement plan and identical
 //     row mapping executed through this layer's raw-SQL facility (adapters/_threadraw)
-//     — isolates raw execution path from eager-loading strategy + hydration.
+//     — contrasts the raw execution path with the selected compound treatment.
 app.get('/posts/:id/thread-raw', h(async (req, res) => {
   const thread = await db.getThreadRaw(Number(req.params.id));
   if (!thread) return res.status(404).json({ error: 'not found' });
@@ -147,8 +157,13 @@ const server = app.listen(config.port, () => {
   console.log(`[server] adapter=${db.name} engine=${engine} pool=${config.pool.max} :${config.port}`);
 });
 
+let shuttingDown = false;
 async function shutdown() {
-  server.close();
+  if (shuttingDown) return;
+  shuttingDown = true;
+  const closed = new Promise((resolve) => server.close(resolve));
+  while (activeHandlers.size) await Promise.allSettled([...activeHandlers]);
+  await closed;
   await db.close();
   process.exit(0);
 }

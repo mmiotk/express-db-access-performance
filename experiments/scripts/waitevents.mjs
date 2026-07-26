@@ -1,6 +1,5 @@
-// Direct mechanism evidence for the MySQL insert bottleneck (review 6.6). The
-// primary data shows MySQL single-row inserts are engine-bound rather than
-// layer-bound; this script measures WHERE the time goes by sampling
+// Wait-event sensitivity for the MySQL insert path (review 6.6). This script
+// tests whether a shared default-durability commit path contributes materially by sampling
 // performance_schema commit-path wait instruments around a fixed insert workload:
 //
 //   wait/io/file/innodb/innodb_log_file   -- redo-log flush (fsync on commit)
@@ -8,11 +7,10 @@
 //
 // For each representative layer at MySQL's DEFAULT durability
 // (innodb_flush_log_at_trx_commit=1, sync_binlog=1) it reports the per-insert
-// commit-flush wait and its share of per-insert wall time. If that share is large
-// and roughly equal across layers, the commit flush is a shared engine floor that
-// caps throughput regardless of the access layer -- the mechanism behind RQ2. A
-// relaxed-durability contrast (trx_commit=0, sync_binlog=0) confirms the floor by
-// removing it. PostgreSQL (fsync=on) is run as a foil.
+// commit-flush waits. Because performance_schema timers sum waits across concurrent
+// threads, wait/wall is an aggregate ratio that may exceed 100%, not a causal time
+// fraction. A relaxed-durability contrast (trx_commit=0, sync_binlog=0) is a
+// compound sensitivity intervention. PostgreSQL (fsync=on) is run as a foil.
 //
 // Writes results/waitevents.json + paper table waitevents.tex.
 import { spawn } from 'node:child_process';
@@ -21,6 +19,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Pool } from 'undici';
 import mysql from 'mysql2/promise';
+import pg from 'pg';
+import { config as cfg } from '../src/config.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const env = (k, d) => process.env[k] ?? d;
@@ -30,14 +30,29 @@ const CONC = Number(env('WE_CONC', 10));             // matches the pool size
 const MYSQL_LAYERS = env('WE_MYSQL', 'mysql2,knex,mikroorm').split(',');
 const PG_LAYERS = env('WE_PG', 'pg,mikroorm').split(',');
 const PS = 1e9;                                       // picoseconds -> milliseconds
+const RESET_FLOOR = Number(env('RESET_FLOOR', 300000));
 
-const mroot = () => mysql.createConnection({ host: '127.0.0.1', port: 3306, user: 'root', password: '', connectTimeout: 4000 });
+async function resetDb(engine) {
+  if (engine === 'postgres') {
+    const c = new pg.Client(cfg.postgres); await c.connect();
+    await c.query('DELETE FROM posts WHERE id > $1', [RESET_FLOOR]);
+    await c.query("SELECT setval(pg_get_serial_sequence('posts', 'id'), $1, true)", [RESET_FLOOR]);
+    await c.end();
+  } else {
+    const c = await mysql.createConnection(cfg.mysql);
+    await c.query('DELETE FROM posts WHERE id > ?', [RESET_FLOOR]);
+    await c.query('ALTER TABLE posts AUTO_INCREMENT = ' + Number(RESET_FLOOR + 1));
+    await c.end();
+  }
+}
+
+const mroot = () => mysql.createConnection({ socketPath: "/tmp/mysql-bench.sock", user: "root", connectTimeout: 4000 });
 function health(base, tries = 120) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
 
 // fire `count` POST /posts inserts through a bounded pool; returns wall seconds
 async function insertBurst(base, count) {
   const pool = new Pool(base, { connections: CONC, pipelining: 1 });
-  const body = '{}';
+  const body = JSON.stringify({ authorId: 1, title: "bench", body: "x" });
   const headers = { 'content-type': 'application/json' };
   let done = 0, err = 0;
   const t0 = performance.now();
@@ -56,6 +71,7 @@ async function insertBurst(base, count) {
   });
   const secs = (performance.now() - t0) / 1000;
   await pool.close();
+  if (err !== 0) throw new Error(`insert burst rejected: ${err}/${done} requests failed`);
   return { secs, done, err };
 }
 
@@ -76,20 +92,33 @@ async function runServer(adapter, engine, port, fn) {
     stdio: ['ignore', 'ignore', 'inherit'],
   });
   try { await health(base); return await fn(base); }
-  finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); }
+  finally {
+    if (child.exitCode === null) child.kill('SIGTERM');
+    await new Promise((resolve) => {
+      if (child.exitCode !== null) return resolve();
+      const timeout = setTimeout(resolve, 5000);
+      child.once('exit', () => { clearTimeout(timeout); resolve(); });
+    });
+    await resetDb(engine);
+  }
 }
 
 const out = { mysql: [], mysql_relaxed: [], postgres: [] };
 let port = 4300;
 
-// --- MySQL: default durability, per-layer commit-flush share --------------
+// --- MySQL: default durability, per-layer aggregate commit-path wait/wall ratio --------------
 const admin = await mroot();
 try {
   const [[dur]] = await admin.query('SELECT @@innodb_flush_log_at_trx_commit trx, @@sync_binlog sb');
   console.log(`[waitevents] MySQL durability at start: trx_commit=${dur.trx} sync_binlog=${dur.sb}`);
+  if (Number(dur.trx) !== 1 || Number(dur.sb) !== 1) {
+    throw new Error(`default MySQL durability required, observed ${dur.trx}/${dur.sb}`);
+  }
   for (const adapter of MYSQL_LAYERS) {
     const r = await runServer(adapter, 'mysql', port++, async (base) => {
+      await resetDb('mysql');
       await insertBurst(base, WARM);
+      await resetDb('mysql');
       const before = await mysqlWaitSnapshot(admin);
       const burst = await insertBurst(base, N);
       const after = await mysqlWaitSnapshot(admin);
@@ -103,18 +132,20 @@ try {
         redo_ms: +redoMs.toFixed(0), binlog_ms: +binMs.toFixed(0), flush_ms: +flushMs.toFixed(0),
         per_insert_wall_ms: +((burst.secs * 1000) / burst.done).toFixed(3),
         per_insert_flush_ms: +(flushMs / burst.done).toFixed(3),
-        flush_share: +(flushMs / (burst.secs * 1000)).toFixed(3),
+        wait_wall_ratio: +(flushMs / (burst.secs * 1000)).toFixed(3),
       };
     });
     out.mysql.push(r);
-    console.log(`  MySQL ${adapter}: rps=${r.rps} per-insert wall=${r.per_insert_wall_ms}ms flush=${r.per_insert_flush_ms}ms (share ${(r.flush_share * 100).toFixed(0)}% redo=${r.redo_ms} binlog=${r.binlog_ms})`);
+    console.log(`  MySQL ${adapter}: rps=${r.rps} per-insert wall=${r.per_insert_wall_ms}ms aggregate wait=${r.per_insert_flush_ms}ms (wait/wall ${(r.wait_wall_ratio * 100).toFixed(0)}% redo=${r.redo_ms} binlog=${r.binlog_ms})`);
   }
 
   // --- MySQL relaxed-durability contrast (mysql2 only) --------------------
   await admin.query('SET GLOBAL innodb_flush_log_at_trx_commit=0'); await admin.query('SET GLOBAL sync_binlog=0');
   try {
     const r = await runServer('mysql2', 'mysql', port++, async (base) => {
+      await resetDb('mysql');
       await insertBurst(base, WARM);
+      await resetDb('mysql');
       const before = await mysqlWaitSnapshot(admin);
       const burst = await insertBurst(base, N);
       const after = await mysqlWaitSnapshot(admin);
@@ -122,10 +153,10 @@ try {
         + after['wait/io/file/sql/binlog'].w - before['wait/io/file/sql/binlog'].w) / PS;
       return { adapter: 'mysql2', durability: 'relaxed', inserts: burst.done, rps: Math.round(burst.done / burst.secs),
         per_insert_wall_ms: +((burst.secs * 1000) / burst.done).toFixed(3), per_insert_flush_ms: +(flushMs / burst.done).toFixed(3),
-        flush_share: +(flushMs / (burst.secs * 1000)).toFixed(3) };
+        wait_wall_ratio: +(flushMs / (burst.secs * 1000)).toFixed(3) };
     });
     out.mysql_relaxed.push(r);
-    console.log(`  MySQL mysql2 [RELAXED]: rps=${r.rps} per-insert wall=${r.per_insert_wall_ms}ms flush=${r.per_insert_flush_ms}ms (share ${(r.flush_share * 100).toFixed(0)}%)`);
+    console.log(`  MySQL mysql2 [RELAXED]: rps=${r.rps} per-insert wall=${r.per_insert_wall_ms}ms aggregate wait=${r.per_insert_flush_ms}ms (wait/wall ${(r.wait_wall_ratio * 100).toFixed(0)}%)`);
   } finally {
     await admin.query('SET GLOBAL innodb_flush_log_at_trx_commit=1'); await admin.query('SET GLOBAL sync_binlog=1');
     const [[d2]] = await admin.query('SELECT @@innodb_flush_log_at_trx_commit trx, @@sync_binlog sb');
@@ -136,7 +167,9 @@ try {
 // --- PostgreSQL foil (fsync=on): throughput is layer-dependent ------------
 for (const adapter of PG_LAYERS) {
   const r = await runServer(adapter, 'postgres', port++, async (base) => {
+    await resetDb('postgres');
     await insertBurst(base, WARM);
+    await resetDb('postgres');
     const burst = await insertBurst(base, N);
     return { adapter, inserts: burst.done, rps: Math.round(burst.done / burst.secs),
       per_insert_wall_ms: +((burst.secs * 1000) / burst.done).toFixed(3) };
@@ -148,31 +181,34 @@ for (const adapter of PG_LAYERS) {
 await writeFile(join(here, '..', 'results', 'waitevents.json'), JSON.stringify(out, null, 2));
 
 // --- supplement table -----------------------------------------------------
-const row = (r) => `    \\texttt{${r.adapter}} & ${r.rps} & ${r.per_insert_wall_ms} & ${r.per_insert_flush_ms} & ${(r.flush_share * 100).toFixed(0)}\\% \\\\`;
+const row = (r) => `    \\texttt{${r.adapter}} & ${r.rps} & ${r.per_insert_wall_ms} & ${r.per_insert_flush_ms} & ${(r.wait_wall_ratio * 100).toFixed(0)}\\% \\\\`;
 const relaxed = out.mysql_relaxed[0];
 const tex = `% auto-generated by scripts/waitevents.mjs
 \\begin{table}[htbp]
   \\centering
-  \\caption{MySQL insert commit-flush mechanism (\\texttt{performance\\_schema} wait
+  \\caption{MySQL insert commit-path wait-event sensitivity (\\texttt{performance\\_schema} wait
     instruments, default durability \\texttt{innodb\\_flush\\_log\\_at\\_trx\\_commit=1},
-    \\texttt{sync\\_binlog=1}): per-insert wall time, the redo-log$+$binlog flush wait
-    per insert, and the flush share of wall time, over ${N} inserts per layer. The
-    flush wait is a shared engine floor -- similar across layers despite their very
-    different read performance -- so it caps insert throughput regardless of the
-    access layer. Relaxing durability (\\texttt{mysql2}, \\texttt{trx\\_commit=0},
-    \\texttt{sync\\_binlog=0}) removes the flush and lifts throughput to
-    ${relaxed ? relaxed.rps : '--'}~req/s, confirming the floor.}
+    \\texttt{sync\\_binlog=1}): per-insert wall time, the aggregate redo-log$+$binlog
+    wait per insert, and aggregate wait divided by wall time, over ${N} inserts per
+    layer. Timers sum waits across ${CONC} concurrent requests, so the ratio may exceed
+    100\\% and is not a causal time fraction. Similar wait totals across the displayed
+    layers, together with the relaxed-durability contrast (\\texttt{mysql2},
+    \\texttt{trx\\_commit=0}, \\texttt{sync\\_binlog=0},
+    ${relaxed ? relaxed.rps : "--"}~req/s), are consistent with a shared commit-path
+    contribution; they do not decompose engine, driver, and adapter costs.}
   \\label{tab:waitevents}
+  \\begin{adjustbox}{max width=\\textwidth}
   \\begin{tabular}{l r r r r}
     \\toprule
-    Layer (MySQL) & req/s & per-insert (ms) & flush/insert (ms) & flush share \\\\
+    Layer (MySQL) & req/s & per-insert (ms) & aggregate wait/insert (ms) & wait/wall \\\\
     \\midrule
 ${out.mysql.map(row).join('\n')}
     \\midrule
     \\multicolumn{5}{l}{\\emph{Relaxed durability (control):}} \\\\
-${relaxed ? `    \\texttt{mysql2}$^\\ast$ & ${relaxed.rps} & ${relaxed.per_insert_wall_ms} & ${relaxed.per_insert_flush_ms} & ${(relaxed.flush_share * 100).toFixed(0)}\\% \\\\` : ''}
+${relaxed ? `    \\texttt{mysql2}$^\\ast$ & ${relaxed.rps} & ${relaxed.per_insert_wall_ms} & ${relaxed.per_insert_flush_ms} & ${(relaxed.wait_wall_ratio * 100).toFixed(0)}\\% \\\\` : ''}
     \\bottomrule
   \\end{tabular}
+  \\end{adjustbox}
 \\end{table}
 `;
 await writeFile(join(here, '..', 'results', 'tables', 'waitevents.tex'), tex);

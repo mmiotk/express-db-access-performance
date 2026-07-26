@@ -1,0 +1,6 @@
+{
+  "scope": "fan-out posts/comments; database-generated timestamps excluded",
+  "rows": 662,
+  "sha256": "402e0aebbbc99f6ca32f6e176182fbb4fe753fe273f2e79fb00d5b73a99fe5ca",
+  "status": "IDENTICAL ACROSS ENGINES"
+}

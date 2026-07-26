@@ -5,11 +5,9 @@
     (PostgreSQL \texttt{fsync=on}, \texttt{synchronous\_commit=on}; MySQL
     \texttt{innodb\_flush\_log\_at\_trx\_commit=1}, \texttt{sync\_binlog=1};
     median of 25 replicates) and under the relaxed regime (all of the above off;
-    median of 10), with the relaxed$\div$default ratio. At 50 concurrent
-    connections, group commit amortizes the per-commit flushes: relaxing
-    durability buys at most 14\% on PostgreSQL and $1.1$--$2.4\times$ on MySQL,
-    largest for the flush-bound \texttt{mysql2} and Knex and smallest for the
-    overhead-bound ORMs.}
+    median of 5), with the relaxed$\div$default ratio. Ratios are reported
+    per layer and backend stack; this sensitivity changes durability settings and
+    therefore does not estimate library-intrinsic overhead.}
   \label{tab:durability}
   \begin{adjustbox}{max width=\textwidth}
   \begin{tabular}{l r r r r r r}
@@ -18,17 +16,17 @@
     \cmidrule(lr){2-4}\cmidrule(lr){5-7}
     Layer & default & relaxed & ratio & default & relaxed & ratio \\
     \midrule
-    \texttt{pg} & 6402 & 7092 & 1.11 & -- & -- & -- \\
-    \texttt{mysql2} & -- & -- & -- & 1753 & 4130 & 2.36 \\
-    \texttt{pg-tuned} & 6413 & 7340 & 1.14 & -- & -- & -- \\
-    \texttt{mysql2-tuned} & -- & -- & -- & 1750 & 4039 & 2.31 \\
-    \texttt{knex} & 4841 & 5380 & 1.11 & 1670 & 3505 & 2.10 \\
-    \texttt{drizzle} & 4085 & 4554 & 1.11 & 1730 & 3280 & 1.90 \\
-    \texttt{prisma} & 2774 & 2741 & 0.99 & 886 & 988 & 1.12 \\
-    \texttt{sequelize} & 2732 & 2714 & 0.99 & 1478 & 2267 & 1.53 \\
-    \texttt{typeorm} & 2648 & 2764 & 1.04 & 1345 & 1647 & 1.22 \\
-    \texttt{objection} & 3907 & 4329 & 1.11 & 1728 & 3233 & 1.87 \\
-    \texttt{mikroorm} & 1979 & 2040 & 1.03 & 1257 & 1458 & 1.16 \\
+    \texttt{pg} & 6018 & 6883 & 1.14 & -- & -- & -- \\
+    \texttt{mysql2} & -- & -- & -- & 1766 & 4278 & 2.42 \\
+    \texttt{pg-tuned} & 6125 & 6937 & 1.13 & -- & -- & -- \\
+    \texttt{mysql2-tuned} & -- & -- & -- & 1683 & 4113 & 2.44 \\
+    \texttt{knex} & 4581 & 5196 & 1.13 & 1779 & 3676 & 2.07 \\
+    \texttt{drizzle} & 4091 & 4331 & 1.06 & 1816 & 3310 & 1.82 \\
+    \texttt{prisma} & 2695 & 2637 & 0.98 & 894 & 911 & 1.02 \\
+    \texttt{sequelize} & 2616 & 2541 & 0.97 & 1503 & 2222 & 1.48 \\
+    \texttt{typeorm} & 2567 & 2579 & 1.00 & 1355 & 1608 & 1.19 \\
+    \texttt{objection} & 3780 & 4038 & 1.07 & 1807 & 3139 & 1.74 \\
+    \texttt{mikroorm} & 1894 & 1837 & 0.97 & 1237 & 1325 & 1.07 \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

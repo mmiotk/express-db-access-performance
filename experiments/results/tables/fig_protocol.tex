@@ -1,7 +1,7 @@
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 \begin{figure}[htbp]
 \centering
-\begin{adjustbox}{max width=\linewidth,max totalheight=0.58\textheight,keepaspectratio}
+\begin{adjustbox}{max width=\linewidth,max totalheight=0.64\textheight,keepaspectratio}
 \begin{tikzpicture}[
   font=\footnotesize,
   node distance=5mm and 7mm,
@@ -24,31 +24,35 @@
   output-equivalence semantics $\cdot$ operating-point definition
   (capacity $\mid$ demand $\mid$ utilization)};
 % --- MANDATORY stages (solid) ---
-\node[mand, below=of in] (m1) {\textbf{(1)~Correctness oracle}\\[1pt]
-  outputs equivalent under the semantics; mutations reach intended state};
+\node[mand, below=of in] (m1) {\textbf{(1)~Semantic admission}\\[1pt]
+  expected result and mutual equivalence; mutations reach intended state};
 \node[mand, below=of m1] (m2) {\textbf{(2)~Treatment-definition rule}\\[1pt]
   implementation \& strategy fixed by a rule declared in advance
-  (here: documentation-first)};
+  (here: frozen-page policy)};
 % --- CELL-ADMISSION gate (decision) ---
 \node[gate, below=of m2] (g) {\textbf{Cell}\\\textbf{admission?}};
 % --- RECOMMENDED stages (dashed) ---
-\node[rec, below=16mm of g] (r3) {\textbf{(3)~Strategy standardization}\\[1pt]
-  standardized same-SQL contrast vs.\ common-strategy baseline};
+\node[rec, below=16mm of g] (r3) {\textbf{(3)~Common-SQL raw-path sensitivity}\\[1pt]
+  common SQL through raw facilities; compound sensitivity};
 \node[rec, below=of r3] (r4) {\textbf{(4)~Capacity identification}\\[1pt]
   locate saturating throughput via concurrency sweep};
 \node[rec, below=of r4] (r5) {\textbf{(5)~Demand \& utilization}\\[1pt]
   tail at equal demand and at matched fractions of own capacity};
+\node[rec, below=of r5] (r6) {\textbf{(6)~Resource normalization}\\[1pt]
+  expose compute use or compare under an equal budget};
+\node[rec, below=of r6] (r7) {\textbf{(7)~Implementation-review provenance}\\[1pt]
+  record independent review, findings, and affected reruns};
 % --- OUTPUTS ---
-\node[io, below=of r5] (out) {\textbf{Outputs.} throughput $+$ tail per operating point;
+\node[io, below=of r7] (out) {\textbf{Outputs.} throughput $+$ tail per operating point;
   \emph{descriptive} of the treatment; rankings configuration- \& version-specific;
-  only \emph{relative} within-condition differences travel};
+  relative comparisons remain within the declared condition; no automatic external transfer};
 % --- disqualification branch ---
 \node[reject, right=of g] (rej)
-  {\textbf{Cell disqualified}\\[1pt] non-equivalent output
+  {\textbf{Cell disqualified}\\[1pt] specification/equivalence failure
    or invalid write};
 % --- group brackets + side labels ---
 \node[grp, fit=(m1)(m2)] (mg) {};
-\node[grp, dashed, fit=(r3)(r4)(r5)] (rg) {};
+\node[grp, dashed, fit=(r3)(r4)(r5)(r6)(r7)] (rg) {};
 \node[glab, left=of mg] {Mandatory stages};
 \node[glab, left=of rg] {Recommended stages};
 % --- flow ---
@@ -56,17 +60,15 @@
 \draw[arr] (m1) -- (m2);
 \draw[arr] (m2) -- (g);
 \draw[arr] (g) -- node[right=1pt, text width=2.5cm, font=\scriptsize, align=left]
-  {\textbf{pass:} equivalent non-mutating output \& correct post-write state} (r3);
+  {\textbf{pass:} specification-conformant, equivalent output \& correct write state} (r3);
 \draw[arr] (r3) -- (r4);
 \draw[arr] (r4) -- (r5);
-\draw[arr] (r5) -- (out);
+\draw[arr] (r5) -- (r6);
+\draw[arr] (r6) -- (r7);
+\draw[arr] (r7) -- (out);
 \draw[arr] (g) -- node[above, font=\scriptsize\bfseries]{fail} (rej);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{The comparability protocol. Mandatory correctness and treatment-definition
-stages feed a per-cell admission gate; non-equivalent outputs or invalid writes are
-rejected, while query strategy is descriptive unless the workload explicitly forbids it.
-Recommended stages add same-SQL, capacity, and demand/utilization analyses. Outputs remain
-treatment-, configuration-, and version-specific.}
+\caption{The comparability protocol. Semantic admission and treatment definition form the mandatory core. Recommended stages license common-SQL, capacity, utilization, resource, and implementation-provenance interpretations. A finite gate supplies task-conformance evidence; it does not prove arbitrary-input correctness.}
 \label{fig:protocol}
 \end{figure}

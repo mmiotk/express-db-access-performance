@@ -1,10 +1,10 @@
 // Native driver, TUNED variant — node-postgres with NAMED prepared statements.
-// The idiomatic `pg` baseline issues parameterized simple queries; this variant is
-// a tuned practitioner reference point using statement reuse (the
+// The policy-selected `pg` baseline issues parameterized simple queries; this variant is
+// a tuned reference point using statement reuse (the
 // driver prepares once per connection and executes by name thereafter). Same SQL,
 // same canonical output as every other adapter.
 import pg from 'pg';
-import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
+import { THREAD_Q1, THREAD_Q2 } from './_threadraw.mjs';
 import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ config }) {
@@ -46,7 +46,7 @@ export default async function createAdapter({ config }) {
       return canonThreadRows(postRes.rows[0], commentsRes.rows);
     },
 
-    // Same-SQL control coincides with the idiomatic path for this adapter.
+    // Same-SQL control coincides with the policy-selected path for this adapter.
     async getThreadRaw(id) {
       return this.getThread(id);
     },

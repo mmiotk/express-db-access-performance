@@ -4,12 +4,10 @@
   \caption{Transactional write throughput (req/s) and tail latency (p99, ms) for
     \texttt{POST /threads}, which inserts a post and five comments in a single
     transaction, on PostgreSQL under default durability (50 connections, median of
-    five runs). A representative layer of each tier is shown; the full matrix is left
-    to future work. Between-layer spread is $3.7\times$ (\texttt{pg} 2718 down to
-    Prisma 733, now the slowest), well below the $7.15\times$ read spread, and the
-    ordering does not reproduce the single-row-insert ordering because Prisma moves
-    from mid-pack to last. This exploratory five-layer PostgreSQL subset does not
-    support a general claim about writes.}
+    5 runs). A representative layer of each tier is shown; the full matrix is
+    outside this sensitivity check. Across the declared subset, the observed throughput
+    spread is $3.71\times$. This exploratory PostgreSQL subset does not support
+    a general claim about writes.}
   \label{tab:txn_write}
   \begin{tabular}{l r r}
     \toprule

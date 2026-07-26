@@ -1,0 +1,4 @@
+review_id,role,reviewer,independent,blind_to_results,commit,date,status,agreement_or_findings,artifact
+TS-01,treatment-selection,,,,"",,pending,,"notes/reviewer-packets/treatment-selection-blind.md"
+TS-02,treatment-selection,,,,"",,pending,,"notes/reviewer-packets/treatment-selection-blind.md"
+AD-01,adapter-audit,,,,"",,pending,,"notes/reviewer-packets/adapter-audit-blind.md"

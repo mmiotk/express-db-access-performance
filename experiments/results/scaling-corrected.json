@@ -1,0 +1,1922 @@
+[
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 727,
+    "rps_samples": [
+      706.6,
+      727,
+      701,
+      732.2,
+      734.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 3542,
+    "rps_samples": [
+      3499,
+      3503,
+      3541.8,
+      3646.2,
+      3594.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 3654,
+    "rps_samples": [
+      3716.6,
+      3653.8,
+      3551,
+      3587,
+      3751
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 3755,
+    "rps_samples": [
+      3754.6,
+      3761.8,
+      3767.4,
+      3699.4,
+      3703
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 3621,
+    "rps_samples": [
+      3520.6,
+      3621.4,
+      3658.6,
+      3667,
+      3595.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "pg",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 3554,
+    "rps_samples": [
+      3583,
+      3553.8,
+      3607,
+      3182.2,
+      3204.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 654,
+    "rps_samples": [
+      629.6,
+      650.6,
+      653.8,
+      667.8,
+      668.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 2332,
+    "rps_samples": [
+      2332.2,
+      2344.2,
+      2343.4,
+      2295,
+      2328.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 2465,
+    "rps_samples": [
+      2460.2,
+      2378.2,
+      2465,
+      2566.2,
+      2565.81
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 2533,
+    "rps_samples": [
+      2539,
+      2464.2,
+      2486.6,
+      2539.81,
+      2533.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 2429,
+    "rps_samples": [
+      2330.6,
+      2430.2,
+      2432.2,
+      2423.4,
+      2429
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 2443,
+    "rps_samples": [
+      2443,
+      2407,
+      2397.4,
+      2451,
+      2455.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 581,
+    "rps_samples": [
+      565.6,
+      577,
+      583.6,
+      581,
+      598.21
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1774,
+    "rps_samples": [
+      1779.8,
+      1774.4,
+      1774.4,
+      1705,
+      1646
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1886,
+    "rps_samples": [
+      1897.8,
+      1862,
+      1846.2,
+      1915.6,
+      1885.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1865,
+    "rps_samples": [
+      1887.8,
+      1886.4,
+      1843.8,
+      1858.8,
+      1864.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1821,
+    "rps_samples": [
+      1761.6,
+      1772.2,
+      1820.8,
+      1840,
+      1874.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 1750,
+    "rps_samples": [
+      1848,
+      1750.4,
+      1691.4,
+      1699.4,
+      1792.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 700,
+    "rps_samples": [
+      672.2,
+      698.6,
+      699.6,
+      720.8,
+      739.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1095,
+    "rps_samples": [
+      1120.41,
+      1095.41,
+      1121.2,
+      1066.8,
+      1026.41
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1180,
+    "rps_samples": [
+      1164.41,
+      1180.2,
+      1144.41,
+      1184.41,
+      1190.41
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1132,
+    "rps_samples": [
+      1120.8,
+      1139.8,
+      1141,
+      1132.2,
+      1092.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1151,
+    "rps_samples": [
+      1091.41,
+      1116.41,
+      1150.8,
+      1161.6,
+      1152
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 1165,
+    "rps_samples": [
+      1163.41,
+      1142.2,
+      1165.2,
+      1169.41,
+      1177.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 609,
+    "rps_samples": [
+      605.8,
+      613.8,
+      608.4,
+      614.6,
+      608.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1000,
+    "rps_samples": [
+      999.6,
+      999.8,
+      987,
+      1005.4,
+      947.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1024,
+    "rps_samples": [
+      1035.41,
+      1042,
+      1006.6,
+      1018.2,
+      1023.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1014,
+    "rps_samples": [
+      1027.6,
+      1013.6,
+      989.6,
+      1003.4,
+      1017.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1013,
+    "rps_samples": [
+      962.2,
+      1015,
+      1015.8,
+      981.2,
+      1012.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 989,
+    "rps_samples": [
+      1000.6,
+      988.6,
+      990.4,
+      984,
+      979.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 524,
+    "rps_samples": [
+      506.6,
+      520,
+      524.4,
+      533.8,
+      543.21
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1227,
+    "rps_samples": [
+      1195.2,
+      1208.2,
+      1237,
+      1242.6,
+      1227
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1281,
+    "rps_samples": [
+      1284.8,
+      1310.41,
+      1276.8,
+      1250.6,
+      1280.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1239,
+    "rps_samples": [
+      1239.41,
+      1254,
+      1249.41,
+      1212.8,
+      1235.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1272,
+    "rps_samples": [
+      1243.41,
+      1279.2,
+      1282.41,
+      1271.6,
+      1263
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 1221,
+    "rps_samples": [
+      1221,
+      1170.6,
+      1149,
+      1233.2,
+      1236.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 706,
+    "rps_samples": [
+      635.21,
+      686.2,
+      707,
+      718.2,
+      706
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 1004,
+    "rps_samples": [
+      1007.4,
+      1004.4,
+      998.6,
+      1003.8,
+      1016
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 1035,
+    "rps_samples": [
+      1035.8,
+      1030,
+      1031.8,
+      1034.8,
+      1050
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 1036,
+    "rps_samples": [
+      1035.6,
+      1053.2,
+      1018.8,
+      1036.6,
+      1015.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 1005,
+    "rps_samples": [
+      1005.4,
+      995.2,
+      995.2,
+      1024,
+      1024
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 1030,
+    "rps_samples": [
+      1024,
+      1031.2,
+      1030.8,
+      1030.41,
+      1019.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 1,
+    "rps": 323,
+    "rps_samples": [
+      293.2,
+      322,
+      322.61,
+      333,
+      344
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 8,
+    "rps": 533,
+    "rps_samples": [
+      516.6,
+      526.21,
+      538,
+      533.21,
+      537.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 32,
+    "rps": 526,
+    "rps_samples": [
+      525.6,
+      526.8,
+      501.8,
+      516,
+      535.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 64,
+    "rps": 514,
+    "rps_samples": [
+      519.21,
+      468.2,
+      512.21,
+      526.21,
+      514.21
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 128,
+    "rps": 518,
+    "rps_samples": [
+      481.8,
+      520.6,
+      518.21,
+      517.8,
+      517.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "postgres",
+    "connections": 256,
+    "rps": 494,
+    "rps_samples": [
+      488,
+      494.6,
+      493.2,
+      494.2,
+      508.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 1072,
+    "rps_samples": [
+      993.6,
+      1048.8,
+      1101.8,
+      1091.8,
+      1071.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 2307,
+    "rps_samples": [
+      2302.2,
+      2305.81,
+      2306.6,
+      2309.81,
+      2313
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 2449,
+    "rps_samples": [
+      2457.81,
+      2459.4,
+      2449.4,
+      2441.4,
+      2443.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 2396,
+    "rps_samples": [
+      2416.2,
+      2375.81,
+      2391.81,
+      2396.2,
+      2426.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 2329,
+    "rps_samples": [
+      2353.4,
+      2104,
+      2321,
+      2336.2,
+      2328.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mysql2",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 2377,
+    "rps_samples": [
+      2395,
+      2377,
+      2371.4,
+      2308.6,
+      2411.81
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 968,
+    "rps_samples": [
+      918.6,
+      947,
+      972,
+      968.2,
+      982
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 1921,
+    "rps_samples": [
+      1921.4,
+      1869.8,
+      1908.2,
+      1937.2,
+      1939
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 2057,
+    "rps_samples": [
+      2006.8,
+      2062.6,
+      2057.6,
+      2056.81,
+      2025
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 2071,
+    "rps_samples": [
+      1985.6,
+      2023.4,
+      2070.6,
+      2076.2,
+      2071.81
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 2006,
+    "rps_samples": [
+      2032.4,
+      2030.8,
+      2005.8,
+      1986.8,
+      1950.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "knex",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 2002,
+    "rps_samples": [
+      1892.4,
+      2010.4,
+      2005.2,
+      2001.8,
+      1852.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 780,
+    "rps_samples": [
+      743.2,
+      765.4,
+      789,
+      780,
+      789.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 1225,
+    "rps_samples": [
+      1200.2,
+      1226.2,
+      1208.6,
+      1225.8,
+      1225
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 1301,
+    "rps_samples": [
+      1300.8,
+      1292.41,
+      1328.4,
+      1336,
+      1287
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 1257,
+    "rps_samples": [
+      1249.2,
+      1228,
+      1257,
+      1288,
+      1295.41
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 1306,
+    "rps_samples": [
+      1296.41,
+      1289.8,
+      1310.6,
+      1306,
+      1310.41
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "drizzle",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 1287,
+    "rps_samples": [
+      1285.41,
+      1295.6,
+      1284,
+      1286.8,
+      1286.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 416,
+    "rps_samples": [
+      412,
+      401.8,
+      416.2,
+      430.2,
+      426.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 676,
+    "rps_samples": [
+      676.2,
+      682.2,
+      681.4,
+      662.4,
+      668.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 622,
+    "rps_samples": [
+      622.21,
+      608.6,
+      611.8,
+      630.6,
+      633.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 631,
+    "rps_samples": [
+      627.6,
+      631,
+      631,
+      631.4,
+      640.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 640,
+    "rps_samples": [
+      640,
+      646.8,
+      641.21,
+      622.8,
+      620
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "prisma",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 624,
+    "rps_samples": [
+      613.4,
+      624,
+      621.4,
+      628.21,
+      626.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 624,
+    "rps_samples": [
+      604.4,
+      622.6,
+      624.4,
+      644,
+      651.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 879,
+    "rps_samples": [
+      879.4,
+      882,
+      876.2,
+      878.6,
+      896.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 918,
+    "rps_samples": [
+      896,
+      937.8,
+      917.8,
+      898.8,
+      929.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 890,
+    "rps_samples": [
+      889.8,
+      899,
+      899.8,
+      874.2,
+      869.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 888,
+    "rps_samples": [
+      866,
+      869.8,
+      888.4,
+      902.2,
+      889.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "sequelize",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 890,
+    "rps_samples": [
+      880.8,
+      889.8,
+      891.8,
+      890.4,
+      877.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 532,
+    "rps_samples": [
+      507.6,
+      528.6,
+      531.6,
+      542.6,
+      563.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 976,
+    "rps_samples": [
+      950.6,
+      973.4,
+      979.4,
+      976.4,
+      992.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 1038,
+    "rps_samples": [
+      1047.41,
+      1037,
+      1038.2,
+      1015,
+      1045.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 1012,
+    "rps_samples": [
+      1012.2,
+      1002.4,
+      1026.6,
+      1038.8,
+      1010.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 986,
+    "rps_samples": [
+      1023.2,
+      985.6,
+      983.8,
+      965,
+      1028.41
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "typeorm",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 994,
+    "rps_samples": [
+      990.6,
+      993.8,
+      943.8,
+      1005.8,
+      1011.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 536,
+    "rps_samples": [
+      522,
+      530.21,
+      536,
+      543.8,
+      563.21
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 799,
+    "rps_samples": [
+      823.8,
+      798.6,
+      795,
+      817.2,
+      772.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 819,
+    "rps_samples": [
+      813.4,
+      822,
+      822,
+      819.4,
+      798
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 780,
+    "rps_samples": [
+      807.2,
+      780,
+      779,
+      771.4,
+      794.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 807,
+    "rps_samples": [
+      807.4,
+      821.8,
+      815.2,
+      787,
+      801.4
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "objection",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 764,
+    "rps_samples": [
+      771,
+      764.2,
+      736.2,
+      768,
+      723.2
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 1,
+    "rps": 351,
+    "rps_samples": [
+      331.8,
+      351,
+      352.6,
+      359.2,
+      347.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 8,
+    "rps": 474,
+    "rps_samples": [
+      470.6,
+      458.2,
+      473.8,
+      485.2,
+      490.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 32,
+    "rps": 428,
+    "rps_samples": [
+      487,
+      486.6,
+      418.6,
+      428.2,
+      425.8
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 64,
+    "rps": 468,
+    "rps_samples": [
+      426.2,
+      451.6,
+      468.2,
+      482.6,
+      478.6
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 128,
+    "rps": 461,
+    "rps_samples": [
+      475.2,
+      465,
+      460.8,
+      444,
+      456
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  },
+  {
+    "adapter": "mikroorm",
+    "engine": "mysql",
+    "connections": 256,
+    "rps": 440,
+    "rps_samples": [
+      453.4,
+      447,
+      410.4,
+      435.2,
+      440
+    ],
+    "repeats": 5,
+    "duration_s": 5,
+    "warmup_s": 1,
+    "input_seed": 20260725,
+    "errors": 0,
+    "timeouts": 0,
+    "non2xx": 0
+  }
+]

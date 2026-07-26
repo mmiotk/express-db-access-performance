@@ -1,0 +1,105 @@
+{
+  "note": "Idempotent state preflight for the base seed, fan-out fixture, and exact next write id; MySQL restores the allocator after its rolled-back probe.",
+  "engines": {
+    "postgres": {
+      "expected": {
+        "authors": 2000,
+        "posts": 100006,
+        "comments": 1000661,
+        "nextPostId": 300001
+      },
+      "actual": {
+        "authors": 2000,
+        "posts": 100006,
+        "comments": 1000661,
+        "strayPosts": 0,
+        "nextPostId": 300001,
+        "fanout": [
+          {
+            "id": 250001,
+            "comments": 0
+          },
+          {
+            "id": 250002,
+            "comments": 1
+          },
+          {
+            "id": 250003,
+            "comments": 10
+          },
+          {
+            "id": 250004,
+            "comments": 50
+          },
+          {
+            "id": 250005,
+            "comments": 100
+          },
+          {
+            "id": 250006,
+            "comments": 500
+          }
+        ]
+      },
+      "checks": {
+        "authors": true,
+        "posts": true,
+        "comments": true,
+        "noStrayPosts": true,
+        "writeSequence": true,
+        "fanout": true
+      },
+      "status": "PASS"
+    },
+    "mysql": {
+      "expected": {
+        "authors": 2000,
+        "posts": 100006,
+        "comments": 1000661,
+        "nextPostId": 300001
+      },
+      "actual": {
+        "authors": 2000,
+        "posts": 100006,
+        "comments": 1000661,
+        "strayPosts": 0,
+        "nextPostId": 300001,
+        "fanout": [
+          {
+            "id": 250001,
+            "comments": 0
+          },
+          {
+            "id": 250002,
+            "comments": 1
+          },
+          {
+            "id": 250003,
+            "comments": 10
+          },
+          {
+            "id": 250004,
+            "comments": 50
+          },
+          {
+            "id": 250005,
+            "comments": 100
+          },
+          {
+            "id": 250006,
+            "comments": 500
+          }
+        ]
+      },
+      "checks": {
+        "authors": true,
+        "posts": true,
+        "comments": true,
+        "noStrayPosts": true,
+        "writeSequence": true,
+        "fanout": true
+      },
+      "status": "PASS"
+    }
+  }
+}

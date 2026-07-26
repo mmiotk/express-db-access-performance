@@ -20,6 +20,7 @@ const MINUTES = 10, CONNECTIONS = 50, WARMUP = 2;
 const median = (a) => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
 
 function health(base, tries = 100) { return new Promise((res, rej) => { const t = async () => { try { const r = await fetch(`${base}/health`); if (r.ok) return res(); } catch {} if (--tries <= 0) return rej(new Error('health timeout')); setTimeout(t, 100); }; t(); }); }
+async function waitIdle(base, timeoutMs = 30000) { const deadline = Date.now() + timeoutMs; for (;;) { const s = await (await fetch(`${base}/stats`)).json(); if (s.active_handlers === 0) return; if (Date.now() > deadline) throw new Error('handler-drain timeout'); await new Promise((r) => setTimeout(r, 25)); } }
 function run(base, dur) { return new Promise((res, rej) => autocannon({ url: base, connections: CONNECTIONS, duration: dur, requests: [{ setupRequest: (r) => ({ ...r, method: 'GET', path: `/posts/${rnd(SEED_POSTS)}/thread` }) }] }, (e, r) => e ? rej(e) : res(r))); }
 
 const out = [];
@@ -32,10 +33,10 @@ for (const adapter of LAYERS) {
   });
   try {
     await health(base);
-    await run(base, WARMUP);
+    await run(base, WARMUP); await waitIdle(base);
     const perMin = [];
     for (let m = 0; m < MINUTES; m++) {
-      const r = await run(base, 60);
+      const r = await run(base, 60); await waitIdle(base);
       perMin.push(Math.round(r.requests.average));
       console.log(`  ${adapter} minute ${m + 1}/${MINUTES}: ${Math.round(r.requests.average)} req/s (p99 ${r.latency.p99}ms)`);
     }
@@ -44,7 +45,7 @@ for (const adapter of LAYERS) {
     out.push({ adapter, perMin, first3, last3, driftPct: Number(driftPct.toFixed(1)) });
     console.log(`  ${adapter}: first3 ${first3}, last3 ${last3}, drift ${driftPct.toFixed(1)}%`);
   } catch (e) { console.error(`  FAILED ${adapter}: ${e.message}`); }
-  finally { child.kill('SIGTERM'); await new Promise((r) => setTimeout(r, 400)); }
+  finally { if (child.exitCode === null) child.kill('SIGTERM'); await new Promise((resolve) => { if (child.exitCode !== null) return resolve(); const timeout = setTimeout(resolve, 5000); child.once('exit', () => { clearTimeout(timeout); resolve(); }); }); }
 }
 // band ordering preserved every minute? (pg and prisma are statistically tied at the
 // top, so the invariant is: each light layer exceeds mikroorm in every single minute)

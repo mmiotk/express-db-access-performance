@@ -13,25 +13,7 @@ following patterns such as Data Mapper and Active Record~\cite{fowler2002pattern
 empirical topic~\cite{chaniotis2015nodejs,kuffel2025nodejs,carmo2024backend},
 but that literature varies the runtime and framework, not the access layer.
 
-The most visible comparisons are \emph{vendor benchmarks}: plentiful but narrow, published
-by the maintainers of the compared products; in the sources searched,
-none reports the p99 tail that governs user-perceived latency under
-load~\cite{dean2013tail,fruth2022tail}. The peer-reviewed literature is sparser still: at
-most three ORMs, confined to PostgreSQL, and, where it compares the two engines directly,
-holding the access layer fixed rather than varying
-it~\cite{colley2018orm,prisma_rawsql_2025,orm_compare_jcct_2025,zhadko2025orm,salunke2024pgmysql}
-(Section~\ref{sec:related} surveys each).
-
-This leaves a gap along the four coverage axes of Table~\ref{tab:prior_art} ---
-access-layer taxonomy, engine, joint throughput/tail metrics, and vendor involvement: no
-access-layer comparison includes MySQL; no PostgreSQL/MySQL benchmark varies the access
-layer; the only broad-taxonomy comparisons are vendor-authored, academic work covering at
-most three libraries~\cite{orm_compare_jcct_2025,zhadko2025orm}; and the sole vendor suite
-reporting a tail stops at one P95 at one load point~\cite{drizzle_benchmarks}. None
-measures client-observed performance through an HTTP framework; academic studies instrument
-query execution inside the process~\cite{zhadko2025orm,imamsakti2025async}.
-
-These are gaps in \emph{coverage}. A more basic gap is methodological: the reported
+The most visible comparisons are vendor-authored. Peer-reviewed studies in the sources searched cover up to three ORMs in a controlled layer comparison; a broader Node-Bench study includes five access products but also changes frameworks and environments, while the dual-engine precedent holds the access layer fixed~\cite{colley2018orm,prisma_rawsql_2025,orm_compare_jcct_2025,pratama2023nodebench,zhadko2025orm,salunke2024pgmysql}. Table~\ref{tab:prior_art} records these coverage limits. The sole broad suite reporting a tail gives one P95 at one load point~\cite{drizzle_benchmarks}, and the academic studies time inside the process rather than through an HTTP framework~\cite{zhadko2025orm,imamsakti2025async}. These gaps motivate the case-study coverage, not a priority claim. A more basic gap is methodological: the reported
 numbers are not established to be \emph{comparable} --- a layer returning fewer fields or
 erroring faster than it works can look faster, a library's chosen query strategy is
 conflated with its own cost, and a single, arbitrary load point conflates capacity,
@@ -45,22 +27,22 @@ native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM, Objecti
 MikroORM) over five representative access patterns --- point read, keyset range scan,
 deep fetch, per-author aggregation, and insert --- rather than a production workload.
 Seven layers run against \emph{both} engines under an identical schema, dataset, and pool
-size; two tuned native-driver baselines mark what hand-tuned driver use reaches.
+size; two tuned native-driver baselines provide disclosed named-preparation and
+binary-protocol reference points rather than an optimization ceiling.
 Every (layer, engine, pattern) reports throughput (req/s) and the \emph{high-load
 response-time p99 under equal closed-loop demand} at the fixed 50-connection operating
 point, over 25 repeated runs. At this near-saturation point the p99 largely tracks capacity
 and queueing, so a lower-capacity layer looks worse on the tail even when its
 sub-saturation latency is not; we therefore also report the tail at \emph{matched
 utilization}. The study separates two estimands: the
-\emph{documentation-selected implementation-and-strategy} effect of each layer (RQ1--RQ3),
-and a \emph{same-SQL} standardized contrast reporting the residual under
+\emph{policy-selected documented configuration} performance of each layer (RQ1--RQ3),
+and a \emph{common-SQL raw-path sensitivity} contrast reporting the residual under
 identical SQL --- changing query formulation, protocol, preparation, round-trips, and
 mapping together rather than isolating any one. The full harness --- adapters, seed data,
-an autocannon-driven~\cite{autocannon} load runner, and an automated \emph{byte-identical}
-cross-check on the four non-mutating patterns --- is released as an open replication
+an autocannon-driven~\cite{autocannon} load runner, and a specification-derived expected-result oracle, differential-equivalence checks, and write-state validation --- is released as an open replication
 package.\footnote{Harness, deterministic seed, all adapters,
 raw per-cell measurements, and the table/figure-generating scripts:
-\texttt{https://github.com/mmiotk/express-db-access-performance}; the complete revision is archived as release v1.12.13 under the Zenodo concept DOI, \texttt{https://doi.org/10.5281/zenodo.21313858}; its primary measurements are unchanged from v1.12.12 (version DOI \texttt{10.5281/zenodo.21498786}).}
+\texttt{https://github.com/mmiotk/express-db-access-performance}; the archived baseline is release v1.12.13 under the Zenodo concept DOI, \texttt{https://doi.org/10.5281/zenodo.21313858}; this revision candidate adds the new validation artifacts and corrected-state campaign and will receive a new immutable version DOI before submission.}
 
 The case study answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -81,38 +63,19 @@ implementations under the specified operating point:
 
 This paper's primary contribution is a \textbf{comparability protocol for access-layer
 benchmarking}, specified normatively in Section~\ref{sec:protocol} (inputs, stages,
-cell-admission criteria, interpretation, and limits): a set of controls
-that turn the vendor-benchmark genre into a controlled experiment by establishing three
-preconditions it otherwise leaves unmet.
+cell-admission criteria, interpretation, and limits): a concrete discipline for establishing and reporting comparability.
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Semantic equivalence.} Every layer must return \emph{byte-identical}
-        results on the conformance suite (fixed probes plus a seeded property-based sweep),
-        and every write must produce the intended database state --- field values, generated
-        identifiers, exact row-count changes, and transactional rollback, not merely a 2xx
-        --- before its timing is admitted; a layer that returns less, writes wrong, or errors
+  \item \textbf{Semantic admission.} A seed-specification oracle checks expected read results without using native-driver responses; fixed and randomized differential checks then establish mutual equivalence, and every timed insert must produce the intended database state --- field values, generated
+        identifiers, and exact row-count changes, not merely a 2xx. Where the secondary transactional method is implemented, commit atomicity and rollback are checked as well.
+        These checks precede admission of the corresponding timing; a layer that returns less, writes wrong, or errors
         faster than it works thus cannot appear faster (Section~\ref{sec:methodology}).
-  \item \textbf{Strategy standardization.} The treatment is fixed by a predeclared,
-        reproducible selection rule (\emph{documentation-selected} here; the protocol
-        privileges none), and a \emph{same-SQL standardized contrast} reports how much
+  \item \textbf{Common-SQL raw-path sensitivity.} The treatment is fixed by a predeclared,
+        reproducible selection rule (\emph{policy-selected documented} here; the protocol
+        privileges none), and a \emph{common-SQL raw-path sensitivity contrast} reports how much
         difference remains once SQL is held fixed --- a diagnostic contrast, not a causal
         attribution.
   \item \textbf{Operating-point separation.} Capacity, high-load tail under equal demand,
         and tail at matched utilization are reported as \emph{distinct} quantities, not
         conflated at one load point.
 \end{itemize}
-These preconditions are not new: correctness, workload equivalence, warm-up,
-coordinated-omission correction, and reproducibility are long established in performance
-evaluation~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}, and CYNTHIA already applies differential equivalence across ORM
-implementations~\cite{sotiropoulos2021cynthia} (Section~\ref{sec:related});
-the contribution is their \emph{domain-specific synthesis and operationalization} for the
-access-layer genre --- which assumes comparability rather than establishing it --- not their
-invention. The \textbf{artifact} --- an open, reusable harness --- \emph{operationalizes}
-the protocol; the \textbf{empirical case study} --- eleven implementations across
-PostgreSQL and MySQL (Section~\ref{sec:results}) --- \emph{demonstrates} it and shows how each
-precondition affected interpretation here: a broken MikroORM cell briefly \emph{led} the MySQL write
-ranking until the
-equivalence gate excluded it; the sevenfold documentation-selected deep-fetch spread was
-only $1.7\times$ among raw paths running common SQL; and a large high-load tail gap
-dissolved at matched utilization. The resulting rankings are configuration-specific and
-version-sensitive; the case study also yields a checklist of genre-specific benchmarking
-pitfalls (Section~\ref{sec:discussion}).
+These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The claim is their access-layer-specific operational discipline, evaluated by the case-study ablation and a single-rater audit of nine external benchmarks, not invention of the principles or independent inter-rater validation. In this study the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss; common SQL and matched utilization changed two further interpretations. The machine-readable checklist, source-located audit, and result-blind review packets make that discipline available for independent reassessment.

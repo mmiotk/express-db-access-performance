@@ -1,0 +1,13 @@
+[
+  {
+    "adapter": "knex",
+    "engine": "postgres",
+    "replicate": 20,
+    "endpoints": [
+      "write"
+    ],
+    "attempt": 1,
+    "startupFailure": true,
+    "message": "server health timeout"
+  }
+]

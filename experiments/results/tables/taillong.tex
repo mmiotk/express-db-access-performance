@@ -4,11 +4,14 @@
   \caption{Longer-window tail sensitivity on the deep fetch. Each cell's primary p99 is
     measured over a 12~s window ($\approx$60 tail observations per run in the slowest
     cells); the re-measurement uses a 60~s window ($\approx$300 tail observations) at the
-    same 50-connection operating point, 10 repeated runs. The p99 ranking is preserved
-    exactly (Spearman $\rho=1.00$ on both engines), the per-cell p99 barely moves, the
-    p97.5 ordering matches the p99 ordering ($\rho=1.00$), and the run-to-run p99 CV stays
-    small (max 6.0\% PostgreSQL, 3.8\% MySQL),
-    so the 12~s window is adequate for the tail ranking despite the modest per-run tail count.}
+    same 50-connection operating point, 10 repeated runs. The 12-vs-60~s p99 rank correlation is $\rho=1.00$
+    on PostgreSQL and $\rho=1.00$ on MySQL; the corresponding
+    p97.5-vs-p99 correlations are 0.98 and
+    1.00. The largest relative median shift is
+    5.6\% and 3.8\%,
+    and the maximum run-level p99 CV is 7.3\% and
+    3.2\%, respectively. These quantities characterize
+    within-campaign tail-window sensitivity rather than deployment-general uncertainty.}
   \label{tab:taillong}
   \begin{tabular}{l ccccc}
     \toprule
@@ -16,25 +19,25 @@
      & (ms) & (ms) & (ms) & (\%) & \\
     \midrule
     \multicolumn{6}{l}{\emph{PostgreSQL}} \\
-    \quad\texttt{pg-tuned} & 18 & 18 & 17 & 2.3 & 3785.5 \\
-    \quad\texttt{pg} & 20 & 20.5 & 18.5 & 6.0 & 3687.5 \\
-    \quad\texttt{knex} & 27 & 28 & 26 & 2.9 & 2460 \\
-    \quad\texttt{drizzle} & 35 & 35 & 33 & 2.3 & 1855.5 \\
-    \quad\texttt{typeorm} & 50 & 51 & 49 & 3.7 & 1222 \\
-    \quad\texttt{prisma} & 51 & 52.5 & 50 & 3.1 & 1176.5 \\
-    \quad\texttt{objection} & 57 & 59 & 56.5 & 2.9 & 1026 \\
-    \quad\texttt{sequelize} & 60 & 60 & 57 & 1.5 & 994 \\
-    \quad\texttt{mikroorm} & 116 & 112.5 & 109 & 2.8 & 519.5 \\
+    \quad\texttt{pg-tuned} & 18 & 18 & 17 & 3.2 & 3757.5 \\
+    \quad\texttt{pg} & 18 & 19 & 16 & 7.3 & 3685.5 \\
+    \quad\texttt{knex} & 27 & 26.5 & 24.5 & 5.7 & 2437.5 \\
+    \quad\texttt{drizzle} & 34 & 34 & 32 & 3.7 & 1853 \\
+    \quad\texttt{typeorm} & 49 & 48.5 & 46 & 1.8 & 1246 \\
+    \quad\texttt{prisma} & 52 & 53.5 & 51.5 & 3.0 & 1161.5 \\
+    \quad\texttt{objection} & 56 & 58 & 54.5 & 2.4 & 1029.5 \\
+    \quad\texttt{sequelize} & 60 & 60.5 & 57.5 & 1.8 & 992.5 \\
+    \quad\texttt{mikroorm} & 108 & 111.5 & 107 & 3.7 & 525 \\
     \multicolumn{6}{l}{\emph{MySQL}} \\
-    \quad\texttt{mysql2-tuned} & 25 & 25.5 & 24 & 3.3 & 2409.5 \\
-    \quad\texttt{mysql2} & 28 & 28 & 25.5 & 2.6 & 2443.5 \\
-    \quad\texttt{knex} & 30 & 29.5 & 28 & 3.3 & 2048 \\
-    \quad\texttt{drizzle} & 47 & 48 & 45 & 3.2 & 1297 \\
-    \quad\texttt{typeorm} & 57 & 58.5 & 56 & 1.8 & 1015.5 \\
-    \quad\texttt{sequelize} & 67 & 66 & 63 & 2.2 & 889 \\
-    \quad\texttt{objection} & 69 & 70 & 67.5 & 2.1 & 845.5 \\
-    \quad\texttt{prisma} & 93 & 95 & 92 & 3.2 & 630 \\
-    \quad\texttt{mikroorm} & 120 & 123.5 & 119 & 3.8 & 478.5 \\
+    \quad\texttt{mysql2-tuned} & 25 & 25 & 24 & 2.9 & 2414 \\
+    \quad\texttt{mysql2} & 28 & 28 & 26 & 2.6 & 2423 \\
+    \quad\texttt{knex} & 30 & 30 & 28 & 2.3 & 2010.5 \\
+    \quad\texttt{drizzle} & 48 & 48 & 45.5 & 2.3 & 1293.5 \\
+    \quad\texttt{typeorm} & 57 & 56.5 & 55 & 3.2 & 1031 \\
+    \quad\texttt{sequelize} & 68 & 67 & 63 & 1.8 & 892.5 \\
+    \quad\texttt{objection} & 70 & 69 & 66 & 2.9 & 839.5 \\
+    \quad\texttt{prisma} & 91 & 94.5 & 91 & 3.2 & 624.5 \\
+    \quad\texttt{mikroorm} & 121 & 121 & 117 & 2.4 & 480.5 \\
     \bottomrule
   \end{tabular}
 \end{table}

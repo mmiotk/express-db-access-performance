@@ -5,39 +5,39 @@
       "inserts": 4000,
       "errors": 0,
       "rps": 1576,
-      "wall_ms": 2538,
-      "redo_ms": 1488,
-      "binlog_ms": 2517,
-      "flush_ms": 4005,
-      "per_insert_wall_ms": 0.634,
-      "per_insert_flush_ms": 1.001,
-      "flush_share": 1.578
+      "wall_ms": 2539,
+      "redo_ms": 1650,
+      "binlog_ms": 2747,
+      "flush_ms": 4398,
+      "per_insert_wall_ms": 0.635,
+      "per_insert_flush_ms": 1.099,
+      "wait_wall_ratio": 1.732
     },
     {
       "adapter": "knex",
       "inserts": 4000,
       "errors": 0,
-      "rps": 1722,
-      "wall_ms": 2322,
-      "redo_ms": 1497,
-      "binlog_ms": 2540,
-      "flush_ms": 4037,
-      "per_insert_wall_ms": 0.581,
-      "per_insert_flush_ms": 1.009,
-      "flush_share": 1.738
+      "rps": 1561,
+      "wall_ms": 2562,
+      "redo_ms": 1732,
+      "binlog_ms": 2742,
+      "flush_ms": 4474,
+      "per_insert_wall_ms": 0.641,
+      "per_insert_flush_ms": 1.118,
+      "wait_wall_ratio": 1.746
     },
     {
       "adapter": "mikroorm",
       "inserts": 4000,
-      "errors": 4000,
-      "rps": 2584,
-      "wall_ms": 1548,
-      "redo_ms": 0,
-      "binlog_ms": 0,
-      "flush_ms": 0,
-      "per_insert_wall_ms": 0.387,
-      "per_insert_flush_ms": 0,
-      "flush_share": 0
+      "errors": 0,
+      "rps": 1041,
+      "wall_ms": 3842,
+      "redo_ms": 2126,
+      "binlog_ms": 3945,
+      "flush_ms": 6071,
+      "per_insert_wall_ms": 0.96,
+      "per_insert_flush_ms": 1.518,
+      "wait_wall_ratio": 1.58
     }
   ],
   "mysql_relaxed": [
@@ -45,24 +45,24 @@
       "adapter": "mysql2",
       "durability": "relaxed",
       "inserts": 4000,
-      "rps": 3238,
-      "per_insert_wall_ms": 0.309,
-      "per_insert_flush_ms": 0.01,
-      "flush_share": 0.032
+      "rps": 3182,
+      "per_insert_wall_ms": 0.314,
+      "per_insert_flush_ms": 0.011,
+      "wait_wall_ratio": 0.036
     }
   ],
   "postgres": [
     {
       "adapter": "pg",
       "inserts": 4000,
-      "rps": 5009,
-      "per_insert_wall_ms": 0.2
+      "rps": 4386,
+      "per_insert_wall_ms": 0.228
     },
     {
       "adapter": "mikroorm",
       "inserts": 4000,
-      "rps": 2582,
-      "per_insert_wall_ms": 0.387
+      "rps": 1463,
+      "per_insert_wall_ms": 0.684
     }
   ]
 }

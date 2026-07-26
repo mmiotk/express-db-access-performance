@@ -1,0 +1,167 @@
+{
+  "note": "State-level admission scope per adapter. createPost is the primary single-row insert; createThread/atomicity is checked only where that secondary method is implemented.",
+  "engines": {
+    "postgres": {
+      "adapters": 9,
+      "createPostChecked": 9,
+      "createThreadAndAtomicityChecked": 5,
+      "failedAdapters": 0,
+      "perAdapter": [
+        {
+          "name": "pg",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "pg-tuned",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "knex",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "drizzle",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "prisma",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "sequelize",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "typeorm",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "objection",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "mikroorm",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        }
+      ],
+      "status": "ALL DECLARED WRITE METHODS MATCH INTENDED STATE"
+    },
+    "mysql": {
+      "adapters": 9,
+      "createPostChecked": 9,
+      "createThreadAndAtomicityChecked": 4,
+      "failedAdapters": 0,
+      "perAdapter": [
+        {
+          "name": "mysql2",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "mysql2-tuned",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "knex",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "drizzle",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "prisma",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "sequelize",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "typeorm",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "objection",
+          "createPostChecked": true,
+          "createThreadChecked": false,
+          "atomicityChecked": false,
+          "ok": true,
+          "fails": []
+        },
+        {
+          "name": "mikroorm",
+          "createPostChecked": true,
+          "createThreadChecked": true,
+          "atomicityChecked": true,
+          "ok": true,
+          "fails": []
+        }
+      ],
+      "status": "ALL DECLARED WRITE METHODS MATCH INTENDED STATE"
+    }
+  }
+}

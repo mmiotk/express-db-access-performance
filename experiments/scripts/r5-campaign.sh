@@ -42,7 +42,7 @@ stage durability-default node scripts/set-durability.mjs default || exit 1
 stage warmupcurve node scripts/warmupcurve.mjs
 
 # S3 PRIMARY: 25 repeated runs x 18 cells, shuffled, 12 s runs, 15 s warm-up,
-# write in a dedicated boot after a physical rebuild, DEFAULT durability. THE dataset.
+# write in a dedicated boot after the declared state rebuild, DEFAULT durability. THE dataset.
 stage primary env INDEP=1 REPLICATES=25 DURATION=12 WARMUP=15 \
   RESET_FLOOR=300000 REBUILD_WRITES=1 node bench/runner.mjs || exit 1
 

@@ -1,0 +1,286 @@
+
+> express-db-access-performance-experiments@0.1.0 verify:campaign-state
+> ENGINE=postgres node bench/verify-campaign-state.mjs && ENGINE=mysql node bench/verify-campaign-state.mjs
+
+postgres campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+mysql campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+date_utc: 2026-07-23T15:56:50.370Z
+node: v24.18.0
+platform: linux 6.17.0-29-generic (x64)
+cpu: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz x16
+mem_total_gb: 125.8
+loadavg: 0.68 2.35 2.84
+cpu_governor: unavailable
+turbo_no_turbo: unavailable
+numa_nodes: 1
+virtualization: vmware
+process_affinity: pid 3647244's current affinity list: 0-15
+git_commit: 61aa2b57168f53f02ec968189851374a4be8a002 (dirty)
+package_lock_sha256: b4449306ba3784814488c4633a04ebb74f9c867366efadc1b793d7f5e88f1510
+postgres campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+mysql campaign-state preflight: PASS
+{
+  "expected": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "nextPostId": 300001
+  },
+  "actual": {
+    "authors": 2000,
+    "posts": 100006,
+    "comments": 1000661,
+    "strayPosts": 0,
+    "nextPostId": 300001,
+    "fanout": [
+      {
+        "id": 250001,
+        "comments": 0
+      },
+      {
+        "id": 250002,
+        "comments": 1
+      },
+      {
+        "id": 250003,
+        "comments": 10
+      },
+      {
+        "id": 250004,
+        "comments": 50
+      },
+      {
+        "id": 250005,
+        "comments": 100
+      },
+      {
+        "id": 250006,
+        "comments": 500
+      }
+    ]
+  },
+  "checks": {
+    "authors": true,
+    "posts": true,
+    "comments": true,
+    "noStrayPosts": true,
+    "writeSequence": true,
+    "fanout": true
+  },
+  "status": "PASS"
+}
+
+===== replicate 1/25 (order=shuffle: mysql2-tuned,sequelize,prisma,sequelize,typeorm,knex,prisma,mikroorm,mysql2,pg-tuned,typeorm,objection,objection,drizzle,pg,mikroorm,drizzle,knex) =====
+
+== rep 1: mysql2-tuned on mysql ==
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3101
+  mysql2-tuned/mysql/range_scan: 3160 req/s  p99=20ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=256MB
+  mysql2-tuned/mysql/deep_fetch: 2308 req/s  p99=25ms  cpu=100% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=256MB
+  mysql2-tuned/mysql/aggregation: 4497 req/s  p99=14ms  cpu=100% (kids 0%, db 315%)  err/to/n2=0/0/0  rss=256MB
+[server] adapter=mysql2-tuned engine=mysql pool=10 :3102
+  mysql2-tuned/mysql/write: 1836 req/s  p99=120ms  cpu=50% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=145MB
+
+== rep 1: sequelize on postgres ==
+[server] adapter=sequelize engine=postgres pool=10 :3103
+  sequelize/postgres/range_scan: 2382 req/s  p99=25ms  cpu=100% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=207MB
+  sequelize/postgres/deep_fetch: 972 req/s  p99=62ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=234MB
+  sequelize/postgres/aggregation: 4634 req/s  p99=14ms  cpu=100% (kids 0%, db 290%)  err/to/n2=0/0/0  rss=232MB
+[server] adapter=sequelize engine=postgres pool=10 :3104
+  sequelize/postgres/write: 2661 req/s  p99=22ms  cpu=100% (kids 0%, db 55%)  err/to/n2=0/0/0  rss=212MB
+
+== rep 1: prisma on mysql ==
+[server] adapter=prisma engine=mysql pool=10 :3105
+  prisma/mysql/range_scan: 1501 req/s  p99=39ms  cpu=105% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=322MB
+  prisma/mysql/deep_fetch: 630 req/s  p99=89ms  cpu=105% (kids 0%, db 65%)  err/to/n2=0/0/0  rss=329MB
+  prisma/mysql/aggregation: 2400 req/s  p99=26ms  cpu=102% (kids 0%, db 230%)  err/to/n2=0/0/0  rss=338MB
+[server] adapter=prisma engine=mysql pool=10 :3106
+  prisma/mysql/write: 906 req/s  p99=115ms  cpu=100% (kids 0%, db 70%)  err/to/n2=0/0/0  rss=316MB
+
+== rep 1: sequelize on mysql ==
+[server] adapter=sequelize engine=mysql pool=10 :3107
+  sequelize/mysql/range_scan: 1981 req/s  p99=29ms  cpu=100% (kids 0%, db 35%)  err/to/n2=0/0/0  rss=225MB
+  sequelize/mysql/deep_fetch: 837 req/s  p99=71ms  cpu=102% (kids 0%, db 30%)  err/to/n2=0/0/0  rss=255MB
+  sequelize/mysql/aggregation: 3248 req/s  p99=20ms  cpu=100% (kids 0%, db 245%)  err/to/n2=0/0/0  rss=255MB
+[server] adapter=sequelize engine=mysql pool=10 :3108
+  sequelize/mysql/write: 1720 req/s  p99=113ms  cpu=85% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=213MB
+
+== rep 1: typeorm on postgres ==
+[server] adapter=typeorm engine=postgres pool=10 :3109
+  typeorm/postgres/range_scan: 2482 req/s  p99=26ms  cpu=105% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=266MB
+  typeorm/postgres/deep_fetch: 1228 req/s  p99=48ms  cpu=105% (kids 0%, db 120%)  err/to/n2=0/0/0  rss=272MB
+  typeorm/postgres/aggregation: 5404 req/s  p99=12ms  cpu=100% (kids 0%, db 330%)  err/to/n2=0/0/0  rss=269MB
+[server] adapter=typeorm engine=postgres pool=10 :3110
+  typeorm/postgres/write: 2679 req/s  p99=22ms  cpu=100% (kids 0%, db 67%)  err/to/n2=0/0/0  rss=234MB
+
+== rep 1: knex on postgres ==
+[server] adapter=knex engine=postgres pool=10 :3111
+  knex/postgres/range_scan: 3127 req/s  p99=20ms  cpu=100% (kids 0%, db 45%)  err/to/n2=0/0/0  rss=210MB
+  knex/postgres/deep_fetch: 2528 req/s  p99=24ms  cpu=100% (kids 0%, db 245%)  err/to/n2=0/0/0  rss=211MB
+  knex/postgres/aggregation: 5652 req/s  p99=11ms  cpu=100% (kids 0%, db 370%)  err/to/n2=0/0/0  rss=211MB
+[server] adapter=knex engine=postgres pool=10 :3112
+  knex/postgres/write: 4807 req/s  p99=13ms  cpu=100% (kids 0%, db 85%)  err/to/n2=0/0/0  rss=201MB
+
+== rep 1: prisma on postgres ==
+[server] adapter=prisma engine=postgres pool=10 :3113
+  prisma/postgres/range_scan: 2417 req/s  p99=27ms  cpu=110% (kids 0%, db 40%)  err/to/n2=0/0/0  rss=302MB
+  prisma/postgres/deep_fetch: 1173 req/s  p99=51ms  cpu=105% (kids 0%, db 60%)  err/to/n2=0/0/0  rss=306MB
+  prisma/postgres/aggregation: 4393 req/s  p99=14ms  cpu=100% (kids 0%, db 285%)  err/to/n2=0/0/0  rss=307MB
+[server] adapter=prisma engine=postgres pool=10 :3114
+  prisma/postgres/write: 2844 req/s  p99=23ms  cpu=105% (kids 0%, db 60%)  err/to/n2=0/0/0  rss=304MB
+
+== rep 1: mikroorm on postgres ==
+[server] adapter=mikroorm engine=postgres pool=10 :3115
+  mikroorm/postgres/range_scan: 906 req/s  p99=62ms  cpu=105% (kids 0%, db 10%)  err/to/n2=0/0/0  rss=310MB
+  mikroorm/postgres/deep_fetch: 529 req/s  p99=106ms  cpu=110% (kids 0%, db 50%)  err/to/n2=0/0/0  rss=320MB
+  mikroorm/postgres/aggregation: 5714 req/s  p99=11ms  cpu=100% (kids 0%, db 355%)  err/to/n2=0/0/0  rss=315MB
+[server] adapter=mikroorm engine=postgres pool=10 :3116

@@ -4,12 +4,9 @@
   \caption{Exploratory equal-CPU sensitivity check (deep-fetch throughput, req/s,
     PostgreSQL, median of 3 runs, three representative layers) with the
     server process confined by \texttt{taskset} to 1, 2, or 4 cores (database
-    and load generator pinned to disjoint cores). \texttt{pg} holds full
-    throughput on a single core and gains nothing from more; Prisma and MikroORM
-    stay far below it and do not rise monotonically with extra cores (their per-core
-    values wobble by 10--17\% run-to-run at this replicate count), so the deep-fetch
-    ranking does not appear to be an artifact of unequal core budgets --- a layer's low per-process
-    throughput is recovered by more processes over the tested range (Table~\ref{tab:cluster}), not more cores.}
+    and load generator pinned to disjoint cores). This bounded sensitivity exposes whether the displayed deep-fetch ordering changes when
+    the application process receives the same 1-, 2-, or 4-core budget. Database and
+    generator resources remain shared-host controls, not a cross-machine comparison.}
   \label{tab:equalcpu}
   \begin{tabular}{l r r r}
     \toprule

@@ -3,7 +3,7 @@
 // estimate is visible directly. Each run's p99 is itself estimated from ~1% of that
 // run's requests, so it is noisy; the paper reports the median of these 25 run-level
 // p99 values with a bootstrap interval, and this plot shows the underlying dispersion.
-// Regenerates from results/raw.json (p99_samples). Writes ONLY fig_p99_spread.tex.
+// Regenerates from the current primary dataset (p99_samples). Writes ONLY fig_p99_spread.tex.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -11,7 +11,8 @@ import { median } from '../bench/stats.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, '..', 'results');
-const rows = JSON.parse(readFileSync(join(resultsDir, 'raw.json'), 'utf8'));
+const rawFile = process.env.RAW_FILE ?? 'current-primary.json';
+const rows = JSON.parse(readFileSync(join(resultsDir, rawFile), 'utf8'));
 
 const LAYERS = ['pg', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
 const p99s = (a) => { const r = rows.find((x) => x.adapter === a && x.engine === 'postgres' && x.endpoint === 'deep_fetch'); return r ? r.p99_samples : []; };

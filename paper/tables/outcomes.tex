@@ -13,7 +13,7 @@
     Role & Outcome & Analysis \\
     \midrule
     Primary   & Throughput (req/s), 5 patterns $\times$ 2 engines,      & Paired permutation, Wilcoxon,      \\
-              & documentation-selected layers, 50-connection operating point         & bootstrap median CI; spread \& rank \\
+              & policy-selected documented layers, 50-connection operating point         & bootstrap median CI; spread \& rank \\
     Primary   & Closed-loop p99 tail latency, same cells                & Paired permutation, Wilcoxon,      \\
               &                                                         & per-cell bootstrap CI on p99       \\
     \midrule
@@ -21,7 +21,7 @@
               &                                                         & same-SQL difference                \\
     Secondary & Sub-saturation open-loop tail (coordinated-omission     & Lower-load latency companion       \\
               & corrected)                                              & to the high-load primary p99       \\
-    Secondary & Layer$\times$engine interaction (per pattern)           & PG$\div$MySQL effect ratios (S28),  \\
+    Secondary & Layer$\times$backend-stack interaction (per pattern)           & PG$\div$MySQL stack ratios (S28),  \\
               &                                                         & blocked permutation ($F$ on $D$)   \\
     Secondary & Combined app$+$db CPU efficiency, equal-CPU control     & End-to-end compute view; operational \\
               &                                                         & confirmation of the CPU trade      \\

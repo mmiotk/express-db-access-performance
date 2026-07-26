@@ -3,7 +3,7 @@
 import knexFactory from 'knex';
 import { Model } from 'objection';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThread, canonSummary } from './_canon.mjs';
 
 class Author extends Model {
   static get tableName() { return 'authors'; }

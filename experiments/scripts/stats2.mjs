@@ -1,5 +1,5 @@
-// Inferential analysis on the primary dataset (results/raw.json, 25 independent
-// replicates), RESPECTING THE PAIRED/BLOCKED DESIGN (revision round 2, review
+// Inferential analysis on the selected primary dataset (RAW_FILE, default
+// results/current-primary.json; 25 independent replicates), RESPECTING THE PAIRED/BLOCKED DESIGN (revision round 2, review
 // 6.1/6.2/6.4/6.9/8). Within each replicate every layer runs the identical request
 // stream, so layers are compared on per-replicate ratios, not as independent
 // groups. Everything is seeded and deterministic.
@@ -22,7 +22,9 @@ import {
 } from '../bench/stats.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const rows = JSON.parse(await readFile(join(here, '..', 'results', 'raw.json'), 'utf8'));
+const rawFile = process.env.RAW_FILE || 'current-primary.json';
+const analysisOut = process.env.ANALYSIS_OUT || 'analysis2.json';
+const rows = JSON.parse(await readFile(join(here, '..', 'results', rawFile), 'utf8'));
 const g = (a, ep, e) => rows.find((r) => r.adapter === a && r.endpoint === ep && r.engine === e);
 const ORD = ['pg', 'mysql2', 'knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
 const PORTABLE = ['knex', 'drizzle', 'prisma', 'sequelize', 'typeorm', 'objection', 'mikroorm'];
@@ -51,7 +53,13 @@ function ciSeeded(samples, key) {
   return [Math.round(s[Math.floor(0.025 * B)]), Math.round(s[Math.floor(0.975 * B)])];
 }
 
-const out = { seed: '0x57a75', bootstrap_B: B, permutation_B: 20000, paired: true, generated: '2026-07-13' };
+const out = {
+  source_file: rawFile,
+  seed: '0x57a75',
+  bootstrap_B: B,
+  permutation_B: 20000,
+  paired: true,
+};
 
 // ---------- (1) Paired TOST + paired difference, pg vs prisma, deep fetch PG ----
 {
@@ -185,5 +193,5 @@ console.log('(5) req/app-CPU-s vs req/combined-CPU-s deep/PG: ' + out.efficiency
   console.log(`(6) max relative MAD: ${(maxRelMAD * 100).toFixed(1)}% (${at})`);
 }
 
-await writeFile(join(here, '..', 'results', 'analysis2.json'), JSON.stringify(out, null, 2));
-console.log('\nwrote results/analysis2.json');
+await writeFile(join(here, '..', 'results', analysisOut), JSON.stringify(out, null, 2));
+console.log(`\nwrote results/${analysisOut} from ${rawFile}`);

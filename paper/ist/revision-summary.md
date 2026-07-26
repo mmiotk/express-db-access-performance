@@ -1,42 +1,65 @@
 # Summary of Revisions
 
 **Manuscript:** A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js
-**Author:** Mateusz Miotk
 **Journal:** Information and Software Technology
+**Revision date:** 26 July 2026
 
-This revision keeps the primary benchmark matrix unchanged and addresses the remaining conceptual, construct-validity, and artifact-auditability concerns.
+## Semantic admission
 
-## Conceptual framing
+- Added an expected-result oracle derived from the deterministic seed and fan-out specification, independent of all adapters and both DBMSs.
+- Kept differential comparison as a separate equivalence layer and renamed the protocol stage accordingly.
+- Added exact campaign-state and allocator preflight checks.
+- Added a 662-row cross-engine seed-parity gate; it caught differing fan-out comment-author assignments hidden by equal counts, and the affected pilot was rejected before the campaign restarted from repetition 1.
+- Corrected a MySQL reset defect discovered by the new oracle and remeasured all affected patterns.
 
-- Added and distinguished CYNTHIA (ICSE 2021) as prior cross-ORM differential-equivalence work.
-- Narrowed novelty to the integrated benchmark-admission protocol rather than correctness checking or differential testing themselves.
-- Removed global "complete" and universal "necessary" claims; compliance levels now state the claims they license.
-- Renamed RQ2 to backend-stack transfer and removed causal attribution to the DBMS alone.
-- Audited same-SQL prose so the result remains a compound standardized contrast that isolates no mechanism.
+## Treatment and implementation validity
 
-## Construct validity and experiments
+- Renamed the case-study estimand “policy-selected documented configuration” and removed the behavioral developer persona.
+- Made the selection policy substitutable at the protocol level.
+- Preserved exact documentation responses, timestamps, hashes, conflict resolution, and alternatives.
+- Added implementation-review provenance as recommended stage R7 and result-blind review packets.
+- Marked independent human selection and adapter review as pending rather than claiming agreement.
+- Recorded a result-blind author self-audit covering every adapter. It caught and removed per-insert Knex/MySQL warning I/O and an unused per-request MikroORM aggregation accessor; every affected pilot was preserved and rejected, the full admission chain was rerun, and measurement restarted from repetition 1. This is not counted as independent R7 evidence.
 
-- Archived the recorded pre-freeze Wayback responses for all nine selected treatments with capture timestamps, source URLs, SHA-256 hashes, evidence terms, a reproducible conflict rule, and an explicit capture-time limitation.
-- Documented each canonical constructor operation.
-- Added a standalone 30-block canonicalization benchmark and generated Supplement Table S44. Deep-fetch construction costs 9.32--9.40 microseconds, 0.078% of the fastest corresponding HTTP p50.
-- Quantified two saturation-target sensitivities: bootstrap confidence bounds yield 48.6--51.7% and 68.0--72.4%; replacing the target with the full-sweep maximum yields 46.8--51.2% and 65.5--71.6% (Supplement Table S45).
-- Restricted the matched-utilization headline to stable 50% and most 70% cells; 85--95% results are sensitivity trends.
+## RQ2 and new measurements
 
-## Artifact auditability
+- Ran one coherent corrected-state primary campaign covering all 18 compatible treatment--backend pairs for all five access patterns: 90 complete cells x 25 runs, zero timed request failures, and pre/post state checks.
+- Ran a second independently ordered same-host campaign on 7 portable layers x 2 stacks x 3 prioritized patterns: 42 complete cells x 25 runs, zero timed failures. Deep-fetch ranks reproduce exactly; MySQL insert reproduces only 3/7 ranks and is reported as unstable.
+- Predeclared persistence criteria retain four material cross-stack reversals and classify all close/nonrecurring changes as exploratory.
+- Defined RQ2 as backend-stack transfer within the tested same-host campaigns.
+- Removed causal DBMS attribution and made close rank reversals exploratory.
+- Retained the explicit limitation that the second campaign is same-host, not cross-host replication.
 
-- Added `documentation-snapshots/manifest.json` plus nine preserved pages and an archival/validation script.
-- Added machine-readable `environment.json` and a complete, corrected provenance map for every table and figure.
-- Expanded the verified checksum manifest from 35 to 37 result files.
-- Ran the complete standalone-renderer chain in a fresh copy without dependencies or build outputs; both table directories reproduced byte-for-byte. This was an author-run offline reconstruction, not a measurement rerun or independent-machine reproduction.
-- Archived the complete revision as Zenodo-linked release v1.12.13 under concept DOI 10.5281/zenodo.21313858; the primary matrix remains unchanged from v1.12.12.
+## Protocol contribution
 
-## Editorial consistency
+- Narrowed novelty to a concrete domain-specific operational discipline built from established controls.
+- Cited and distinguished CYNTHIA and retained the direct prior-art boundary.
+- Added the 2023 Node-Bench comparison as a direct coverage precedent and a ninth source in the protocol audit.
+- Added a seven-stage, nine-source retrospective protocol audit with 63 source-located judgments and a machine validator.
+- Described that audit as a one-rater bounded applicability demonstration, not independent validation.
+- Removed universal completeness and necessity language; each level now states the interpretation it licenses.
 
-- Standardized "deep fetch," "single-row insert," and "latest compatible stable versions as of the 15 July 2026 freeze."
-- Kept the MySQL insert raw-distribution warning and the one-millisecond p99 resolution qualification prominent.
-- Removed the remaining positive same-SQL "bound" claims and restricted the transactional-write discussion to its exploratory five-layer PostgreSQL subset.
-- Replaced stale submission documents with the current point-by-point response and exact word-count declaration.
+## Fresh secondary analyses
 
-## Submission length
+- Reran common-SQL (16 cells x 10), all-pattern capacity (720 points), matched-utilization (64 cells x 5), longer-tail (18 cells x 10 x 60 s), relaxed durability (18 cells x 5), wait-event, and canonical-constructor analyses with zero accepted request failures.
+- Updated all numerical claims: selected deep-fetch spread 7.01x/5.12x; common-SQL 1.71x/2.03x; stable 50% p99 bands 2.3--4.9/1.9--5.5 ms.
+- Reframed concurrent wait sums and durability changes as compound sensitivity evidence, not a DBMS floor or causal share.
 
-The conservative IST word-equivalent count is **13,929**: 9,962 body words, 298 abstract words, 2,069 reference-list words, and 1,600 words for eight main-text floats. This leaves 1,071 words below the 15,000-word limit.
+## Reproducibility
+
+- Reconciled the main paper with Supplement S31.
+- Completed an isolated current-candidate reconstruction: 60/60 JSON hashes verified, and 35 table outputs plus four derived analysis JSON files regenerated byte-for-byte without starting either DBMS.
+- Preserved and verified exact 42-file source archives for each accepted campaign, so later harness maintenance cannot overwrite the code provenance of completed measurements.
+- Fixed the standalone write-admission cleanup to restore post and comment allocators even after failure; the corrected verifier passes all 18 adapter--engine admissions and leaves both campaign states exact.
+- Named the five presentation-only differences in the historical 45/50 reconstruction.
+- Separated author-run offline reconstruction, historical archive-isolated reconstruction, current measurement re-execution, and independent reproduction.
+- Marked the Docker path as workflow reproduction because its durability and topology differ from the reference numerical path.
+- Updated the manifest so every revised output maps to its exact data and generator.
+
+## Presentation
+
+- Replaced “strategy standardization” with “common-SQL raw-path sensitivity contrast.”
+- Restricted matched-utilization conclusions to stable 50% and most 70% cells.
+- Regenerated the MySQL insert distribution from corrected state.
+- Standardized “deep fetch” and “single-row insert.”
+- Consolidated repeated qualifications and moved exploratory interpretation out of the main argument.

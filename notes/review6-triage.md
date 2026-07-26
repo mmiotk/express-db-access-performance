@@ -36,7 +36,7 @@ establishes. This maps every concern to its change.
 
 - **Q1** (documentation-first = idiomatic?): It is a *reproducible selection heuristic*, not a claim of production-representative use; we renamed the estimand accordingly (P2) and rely on byte-equivalence + the archived per-adapter protocol for validity.
 - **Q2** (evidence identifying eager-loading as dominant?): None — retracted (P1). The same-SQL contrast is a compound bound.
-- **Q3** (maintainers asked?): No; disclosed. Independence and external correctness review are compatible but the latter was out of scope this cycle; byte-equivalence is the correctness guarantee.
+- **Q3** (maintainers asked?): No; disclosed. Independence and external correctness review are compatible but the latter was out of scope this cycle; byte equivalence was the then-used comparability check; the July 23 revision supersedes this note with an independent seed-specification oracle.
 - **Q4** (p99 sensitivity to run length): *[TAIL RESULTS PENDING]* — the 60 s re-measurement shows the p99 ranking is [stable/…] vs the 12 s primary (Supplement Table Sxx).
 - **Q5** (why saturated p99 primary vs matched-utilization): reframed (P4) — saturated p99 is overload behaviour; matched-utilization latency is co-primary.
 - **Q6** (conclusions surviving ex-MikroORM): **Survive.** Reads still similar (deep-fetch ρ=0.77, τ=0.60; range ρ=0.83, τ=0.73), deep-fetch native-relative spread still 3.7× on both engines. Supplement note added.

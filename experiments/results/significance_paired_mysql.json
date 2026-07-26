@@ -3,10 +3,10 @@
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "mysql2>knex",
-    "ratio": 1.19,
+    "ratio": 1.223,
     "ratioCI": [
-      1.176,
-      1.204
+      1.211,
+      1.236
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -17,10 +17,10 @@
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "knex>drizzle",
-    "ratio": 1.527,
+    "ratio": 1.532,
     "ratioCI": [
-      1.506,
-      1.547
+      1.512,
+      1.552
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -31,10 +31,10 @@
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "drizzle>typeorm",
-    "ratio": 1.302,
+    "ratio": 1.27,
     "ratioCI": [
-      1.282,
-      1.323
+      1.251,
+      1.285
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -45,10 +45,10 @@
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "typeorm>sequelize",
-    "ratio": 1.147,
+    "ratio": 1.16,
     "ratioCI": [
-      1.129,
-      1.164
+      1.149,
+      1.171
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -59,24 +59,24 @@
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "sequelize>objection",
-    "ratio": 1.051,
+    "ratio": 1.057,
     "ratioCI": [
-      1.032,
-      1.069
+      1.043,
+      1.072
     ],
-    "winFraction": 0.88,
-    "perm_p": 0.0000999950002499875,
-    "wilcoxon_p": 0.0002,
-    "cliffs_delta_unpaired": 0.73
+    "winFraction": 0.98,
+    "perm_p": 0.00004999750012499375,
+    "wilcoxon_p": 0,
+    "cliffs_delta_unpaired": 0.95
   },
   {
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "objection>prisma",
-    "ratio": 1.334,
+    "ratio": 1.316,
     "ratioCI": [
-      1.309,
-      1.361
+      1.301,
+      1.331
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,
@@ -87,10 +87,10 @@
     "engine": "mysql",
     "endpoint": "deep_fetch",
     "pair": "prisma>mikroorm",
-    "ratio": 1.307,
+    "ratio": 1.351,
     "ratioCI": [
-      1.286,
-      1.327
+      1.329,
+      1.376
     ],
     "winFraction": 1,
     "perm_p": 0.00004999750012499375,

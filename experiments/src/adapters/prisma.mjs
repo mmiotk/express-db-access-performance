@@ -6,7 +6,7 @@
 // BigInt ids are serialized to Number for JSON parity with the other adapters.
 
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThread, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   const c = engine === 'postgres' ? config.postgres : config.mysql;
@@ -29,7 +29,6 @@ export default async function createAdapter({ engine, config }) {
   const prisma = new PrismaClient({ adapter });
 
   const n = (v) => (typeof v === 'bigint' ? Number(v) : v);
-  const post = (p) => (p ? { ...p, id: n(p.id), author_id: n(p.author_id) } : p);
 
   return {
     name: 'prisma',

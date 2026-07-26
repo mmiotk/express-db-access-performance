@@ -44,7 +44,7 @@ export default async function createAdapter({ config }) {
     },
 
     // Same-plan control: identical SQL + identical mapping via the raw facility
-    // (for the native driver this coincides with the idiomatic getThread).
+    // (for the native driver this coincides with the policy-selected getThread).
     async getThreadRaw(id) {
       const postRes = await pool.query(THREAD_Q1('$1'), [id]);
       if (!postRes.rows[0]) return null;

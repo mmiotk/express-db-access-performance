@@ -8,7 +8,8 @@ import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } fro
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, '..', 'results');
 const tablesDir = join(resultsDir, 'tables');
-const raw = JSON.parse(await readFile(join(resultsDir, 'raw.json'), 'utf8'));
+const rawFile = process.env.RAW_FILE || 'raw.json';
+const raw = JSON.parse(await readFile(join(resultsDir, rawFile), 'utf8'));
 const date = new Date('2026-07-01T12:00:00.000Z');
 const post = { id: 50000n, author_id: 1000n, title: 'Post 50000',
   body: 'Body of post 50000. '.repeat(4).trim(), views: 2500n,

@@ -2,7 +2,7 @@
 // IDENTICAL two-statement plan below through its own documented raw-SQL facility and
 // maps rows with the IDENTICAL mapThread(). The endpoint standardizes SQL and mapping,
 // while pool acquisition, raw-query API, wire protocol, and driver row decoding can
-// still differ; comparison with the documentation-selected endpoint changes several
+// still differ; comparison with the policy-selected documented endpoint changes several
 // mechanisms together and therefore isolates no single cause. This mirrors the aggregation control, applied to the deep fetch.
 //
 // `ph` is the engine's placeholder token ('$1' for postgres wire protocol, '?' for

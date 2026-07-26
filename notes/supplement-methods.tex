@@ -37,7 +37,7 @@ claims can be scoped and reproduced. It is a reporting aid, not a standard.
   \item \textbf{Same-host repetition is not environmental replication.} Report how
         many runs, on how many hosts, over what period; do not call same-host
         repeats ``independent.''
-  \item \textbf{Documentation-selected treatment.} State the exact API, its documentation page and
+  \item \textbf{Policy-selected documented treatment.} State the exact API, its documentation page and
         version, the declined alternative, and whether logging, hooks, validation,
         and identity maps are on.
   \item \textbf{Latency construct.} Distinguish high-load closed-loop response time
@@ -92,7 +92,7 @@ bootstraps resampling replicate indices (preserving the pairing) from a fixed se
 (\texttt{mulberry32(0x57a75)}), so every resample is reproducible.
 
 To test whether adjacently ranked layers are distinguishable, we compare each adjacent pair
-on the deep/nested fetch on their per-replicate throughput ratios with a two-sided paired
+on the deep fetch on their per-replicate throughput ratios with a two-sided paired
 sign-flip permutation test ($20{,}000$ permutations, so the smallest attainable $p$ is
 $1/(20{,}001)$), cross-checked with the Wilcoxon signed-rank test, and report the
 geometric-mean paired ratio with a paired bootstrap 95\% CI and the paired dominance (the
@@ -119,7 +119,7 @@ engineering threshold: at modest deployment scale a sub-$5\%$ throughput differe
 not change a capacity-planning decision (for example, how many application instances to
 provision for a target load). We set it from that engineering consequence rather than from
 measurement noise; it happens also to sit within the run-to-run and day-to-day variation
-typical of a virtualized host (this study's own run-to-run CV reaches $15.9\%$ on the
+typical of a virtualized host (this study's own run-to-run CV reaches $13.6\%$ on the
 noisiest MySQL-insert cell, within $4.2\%$ on the reads), but that coincidence is not the
 justification. At very large scale even $5\%$ can correspond to many machines, so the margin
 should be reset per deployment. We chose it before the analysis but did not preregister it,

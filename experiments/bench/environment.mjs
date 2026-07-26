@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import os from 'node:os';
 
 const here = dirname(fileURLToPath(import.meta.url));
+const outBase = process.env.ENV_OUT || 'environment';
 const cpus = os.cpus();
 const tryExec = (cmd) => { try { return execSync(cmd, { cwd: here, encoding: 'utf8' }).trim(); } catch { return 'unavailable'; } };
 const lockHash = createHash('sha256')
@@ -34,10 +35,10 @@ const lines = [
   `package_lock_sha256: ${lockHash}`,
 ].join('\n');
 
-await writeFile(join(here, '..', 'results', 'environment.txt'), `${lines}\n`);
+await writeFile(join(here, '..', 'results', outBase + '.txt'), lines + '\n');
 const environment = Object.fromEntries(lines.split("\n").map((line) => {
   const colon = line.indexOf(":");
   return [line.slice(0, colon), line.slice(colon + 1).trim()];
 }));
-await writeFile(join(here, "..", "results", "environment.json"), JSON.stringify(environment, null, 2) + "\n");
+await writeFile(join(here, '..', 'results', outBase + '.json'), JSON.stringify(environment, null, 2) + '\n');
 console.log(lines);

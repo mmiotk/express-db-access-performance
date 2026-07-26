@@ -1,9 +1,10 @@
 // ORM (lightweight) — Drizzle. Schema is defined per-dialect; queries use the
 // typed query builder with explicit joins (2-query deep fetch, no N+1). This is
-// Drizzle's idiomatic style and mirrors the native-driver query plan closely.
+// the policy-selected documented core-builder path and mirrors the native-driver
+// query plan closely.
 import { eq, lt, desc, sql } from 'drizzle-orm';
 import { THREAD_Q1, THREAD_Q2, mapThread } from './_threadraw.mjs';
-import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } from './_canon.mjs';
+import { canonPost, canonPosts, canonThreadRows, canonSummary } from './_canon.mjs';
 
 export default async function createAdapter({ engine, config }) {
   let db, tables, close, rawPool;
