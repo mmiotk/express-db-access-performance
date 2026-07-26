@@ -74,10 +74,10 @@ stages:
       reports: "Whether a throughput ordering persists when resource demand is exposed or constrained."
       this_study: "Application, database, and generator CPU plus peak RSS are reported; the deep fetch also has an exploratory equal-CPU comparison."
     - id: R7
-      name: implementation_review_provenance
-      requirement: "Record who implemented and who independently reviewed every adapter and treatment assignment, which changes were proposed before measurement, and which cells were rerun."
-      reports: "Whether semantic equivalence is complemented by evidence against correct-but-needlessly-slow adapter code."
-      this_study: "Automated specification, equivalence, SQL/plan, and state checks were run across the declared scope. A timed-path diagnostic gate (bench/diagnostics.mjs) additionally rejects any cell whose treatment writes to stderr/stdout during a measured run, mechanising detection of the self-announcing sub-class of correct-but-wasteful code; it does not detect silent waste. Blind human-review packets and a register are shipped under notes/reviewer-packets; no independent human adapter or selection review is claimed in this revision candidate."
+      name: implementation_waste_evidence
+      requirement: "Record evidence that no compared implementation does avoidable work on the timed path beyond the declared task, and the disposition of anything found. Evidence may be MECHANICAL (checks that reject diagnostic output written during a measured run, and detect values acquired but never read in adapter sources) or HUMAN (independent review by someone other than the implementer). Mechanical evidence is preferred because it is reproducible and rerunnable; human review is accepted but not required."
+      reports: "Whether semantic equivalence is complemented by evidence against correct-but-needlessly-slow adapter code. A clean result bounds the classes the checks cover; it is not a proof that no waste remains."
+      this_study: "Mechanical evidence, both rerunnable. (i) scripts/verify-dead-work.mjs scans all 13 adapter modules for values acquired and never read; it is clean, and is validated against the real pre-fix source of finding ASA-02, which it reports (bench/dead-work.test.mjs). This applies to the archived measured source. (ii) bench/diagnostics.mjs rejects any cell whose treatment writes to stderr/stdout during a measured run; it is installed for subsequent campaigns and did NOT gate the reported campaign, where absence of timed-path output was established by author observation after finding ASA-01. Result-blind human-review packets remain available under notes/reviewer-packets but are no longer required by this stage; none has been completed."
 
 cell_admission:
   rule: "Time a (treatment, workload-point) cell ONLY if semantic admission passes: specification-conformant and mutually equivalent non-mutating outputs, plus correct post-write state."

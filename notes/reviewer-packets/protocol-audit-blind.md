@@ -33,7 +33,7 @@ Assign exactly one code per (source, stage) cell:
 Stage definitions are in `notes/protocol-audit-codebook.md`, section "Stages":
 **M1** semantic admission; **M2** treatment definition; **R3** common-SQL raw-path
 sensitivity; **R4** capacity characterization; **R5** operating-point separation;
-**R6** resource accounting; **R7** implementation-review provenance.
+**R6** resource accounting; **R7** implementation-waste evidence.
 
 ## Sources to code
 

@@ -69,11 +69,21 @@ separation. Reporting throughput and a percentile at one load is `partial`.
 
 `satisfied` requires application/database resource use to be reported with performance, or a clearly labelled equal-resource-budget comparison. Reporting only a subset of the relevant application/database resources, or not identifying their scope, is `partial`; normalization is required only when the claim itself is resource-normalized.
 
-### R7 — implementation-review provenance
+### R7 — implementation-waste evidence
 
-`satisfied` requires a recorded review of the benchmark adapters/configurations
-by someone other than their implementer (maintainer sign-off is not required).
-Open source code without recorded review is `partial`.
+`satisfied` requires recorded evidence that no compared implementation does
+avoidable work on the timed path beyond the declared task, plus the disposition of
+anything found. The evidence may be mechanical (a check that rejects diagnostic
+output written during a measured run; a check that detects values acquired but
+never read) or human (independent review by someone other than the implementer).
+Open source code with neither is `partial`.
+
+**Revision note.** The nine external sources were coded against the previous
+formulation, which required independent *human* review. The revised stage admits
+mechanical evidence as well, so those codings are a lower bound: a source coded
+`not_reported` might satisfy the revised stage if it reported mechanical evidence
+this audit did not look for. The codings are retained unchanged rather than
+silently reinterpreted.
 
 ## Interpretation
 

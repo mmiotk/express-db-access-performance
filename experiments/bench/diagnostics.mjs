@@ -1,6 +1,6 @@
 // Timed-path diagnostic gate for the benchmark runner.
 //
-// R7 (implementation-review provenance) asks for human review against
+// R7 (implementation-waste evidence) asks for evidence against
 // correct-but-needlessly-slow adapter code. One sub-class needs no human: work
 // that is wasteful *and* announces itself on stderr/stdout — driver warnings,
 // deprecation notices, ignored-option messages.

@@ -134,7 +134,15 @@ if [[ "${1:-}" == "--check" ]]; then
   # tables:primary` silently reverted eight tables — including two retracted
   # claims. This re-runs the documented chain and fails if it changes anything.
   if [[ "${SKIP_REGEN:-}" != "1" ]]; then
-    if ( cd experiments && RAW_FILE=current-primary.json npm run tables:primary --silent >/dev/null 2>&1 ); then
+    # Every generator, not just the primary chain: a table:* script outside it can
+    # also drift from its committed output (gen-protocol-retro-table.mjs did).
+    regen_ok=1
+    ( cd experiments && RAW_FILE=current-primary.json npm run tables:primary --silent >/dev/null 2>&1 ) || regen_ok=0
+    for t in $(node -e "const s=require('./experiments/package.json').scripts;console.log(Object.keys(s).filter(k=>k.startsWith('table:')).join(' '))" 2>/dev/null); do
+      ( cd experiments && npm run "$t" --silent >/dev/null 2>&1 ) || regen_ok=0
+    done
+    ( cd experiments && npm run sync:tables --silent >/dev/null 2>&1 ) || regen_ok=0
+    if [[ "$regen_ok" == "1" ]]; then
       changed=$(git diff --name-only paper/tables/ experiments/results/tables/ | wc -l)
       if [[ "$changed" != "0" ]]; then
         echo "REPRODUCIBILITY: regenerating tables from archived data changed $changed file(s);"

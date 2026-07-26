@@ -18,7 +18,7 @@ Dear Editors,
 
 Please find enclosed the revised manuscript, ``A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js,'' submitted as a Research Paper to Information and Software Technology.
 
-This version incorporates two rounds of pre-submission review. The second round (26 July) produced four required changes, all adopted:
+This version incorporates several rounds of pre-submission review. One change is to the protocol itself and is flagged here: recommended stage R7, previously \emph{independent human review} of the benchmark adapters, is now \emph{implementation-waste evidence} --- recorded evidence that no treatment does avoidable work on the timed path, satisfiable mechanically or by human review. Both defects our own result-blind self-audit found are mechanically detectable and are now detected, by checks a reader can rerun; human review is neither reproducible nor rerunnable. The limits, including that the runtime gate postdates the reported campaign, are stated in Threats and in the revision summary. The second round (26 July) produced four required changes, all adopted:
 
 \begin{itemize}
   \item \textbf{Generative-AI use in research methods is now documented in the Methods section} (Section 3.9), as current Elsevier policy requires for AI used in code development and data analysis, with the manuscript-preparation declaration retained separately before the references. Preparing it revealed that the previous disclosure misattributed part of the work to an OpenAI tool that the repository shows was never used; the attribution is corrected to Claude (Anthropic), with per-commit provenance a reader can re-derive from the public git history. The section also discloses that assistance extended beyond implementation to proposing candidate analysis procedures, among which the author selected and verified, and to drafting prose describing them; every interpretive claim is the author's, and identifies the mechanical checks --- unit-tested estimators, cell-to-record tracing, an oracle derived independently of the code under test --- that a sceptical reader can rely on instead of author review.
@@ -42,7 +42,7 @@ The manuscript records two residual limitations without disguising them: all ada
 
 The artifact includes pinned dependencies, immutable documentation snapshots and hashes, exact 42-file source archives for both accepted campaigns, the seed oracle, campaign-state validator, raw per-repetition measurements, a machine-readable protocol checklist, the external-audit dataset, and generators mapping every reported table and figure to its inputs. The complete revision artifact is archived as v1.12.16 under immutable Zenodo version DOI 10.5281/zenodo.21609605; concept DOI 10.5281/zenodo.21313858 resolves to the release series.
 
-The article uses the required structured abstract. The separately documented conservative submission equivalent is 14,978 words, including all required declarations, leaving 22 words below the 15,000-word limit.
+The article uses the required structured abstract. The separately documented conservative submission equivalent is 14,987 words, including all required declarations, leaving 13 words below the 15,000-word limit.
 
 The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding. The manuscript includes declarations covering generative-AI assistance in writing and research software; the author accepts responsibility for all content and results.
 

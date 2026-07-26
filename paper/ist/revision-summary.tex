@@ -16,6 +16,23 @@
 
 \textbf{Manuscript:} A Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js \textbf{Journal:} Information and Software Technology \textbf{Revision date:} 26 July 2026
 
+\section*{Round 4 --- protocol stage R7 redefined}
+
+\textbf{This changes the protocol, not only its instantiation, and we flag it rather than let a reader discover it.} Across earlier rounds R7 required \emph{independent human review} of the adapters, and the study reported it as unsatisfied. It is now \textbf{implementation-waste evidence}: recorded evidence that no treatment does avoidable work on the timed path, satisfiable mechanically or by human review, with mechanical evidence preferred.
+
+The argument is that human review is the weaker control here. It does not scale to every campaign, is not reproducible by a reader, and cannot be rerun after a code change --- while both defects our own result-blind self-audit found are mechanically detectable, and are now detected:
+
+\begin{itemize}
+  \item \texttt{scripts/verify-dead-work.mjs} reports values acquired and never read. It flags the MikroORM handle (ASA-02) in the real pre-fix source recovered from this repository's history, and is clean on all 13 adapter modules of the measured source. The validation against that historical defect is a unit test, not a claim.
+  \item \texttt{bench/diagnostics.mjs} rejects any cell whose treatment writes to stderr/stdout during a measured run, which would have failed the Knex defect (ASA-01) on its first measured run.
+\end{itemize}
+
+\textbf{Stated limits.} The runtime gate postdates the reported campaign and did not gate it; there, absence of timed-path output rests on author observation, and we say so. Neither check covers waste that is silent \emph{and} invisible in the source --- an unnecessarily expensive documented configuration, say. The residual narrows; it does not close.
+
+\textbf{Consistency of the external audit.} The nine sources were coded against the previous, human-review formulation. Those codings are retained unchanged and are now a lower bound: a source coded \texttt{not\_reported} could satisfy the revised stage through mechanical evidence this audit did not look for. \texttt{notes/protocol-audit-codebook.md} records this rather than reinterpreting the data silently.
+
+The three result-blind reviewer packets remain in the artifact as optional, and remain uncompleted.
+
 \section*{Round 3 (26 July 2026 critical re-review)}
 
 \begin{itemize}

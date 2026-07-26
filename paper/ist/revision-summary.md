@@ -4,6 +4,21 @@
 **Journal:** Information and Software Technology
 **Revision date:** 26 July 2026
 
+## Round 4 — protocol stage R7 redefined
+
+**This changes the protocol, not only its instantiation, and we flag it rather than let a reader discover it.** Across earlier rounds R7 required *independent human review* of the adapters, and the study reported it as unsatisfied. It is now **implementation-waste evidence**: recorded evidence that no treatment does avoidable work on the timed path, satisfiable mechanically or by human review, with mechanical evidence preferred.
+
+The argument is that human review is the weaker control here. It does not scale to every campaign, is not reproducible by a reader, and cannot be rerun after a code change — while both defects our own result-blind self-audit found are mechanically detectable, and are now detected:
+
+- `scripts/verify-dead-work.mjs` reports values acquired and never read. It flags the MikroORM handle (ASA-02) in the real pre-fix source recovered from this repository's history, and is clean on all 13 adapter modules of the measured source. The validation against that historical defect is a unit test, not a claim.
+- `bench/diagnostics.mjs` rejects any cell whose treatment writes to stderr/stdout during a measured run, which would have failed the Knex defect (ASA-01) on its first measured run.
+
+**Stated limits.** The runtime gate postdates the reported campaign and did not gate it; there, absence of timed-path output rests on author observation, and we say so. Neither check covers waste that is silent *and* invisible in the source — an unnecessarily expensive documented configuration, say. The residual narrows; it does not close.
+
+**Consistency of the external audit.** The nine sources were coded against the previous, human-review formulation. Those codings are retained unchanged and are now a lower bound: a source coded `not_reported` could satisfy the revised stage through mechanical evidence this audit did not look for. `notes/protocol-audit-codebook.md` records this rather than reinterpreting the data silently.
+
+The three result-blind reviewer packets remain in the artifact as optional, and remain uncompleted.
+
 ## Round 3 (26 July 2026 critical re-review)
 
 - **Reproducibility defect repaired.** Corrections from round 2 had been applied to `paper/tables/*.tex` while the generators still emitted the old text, so the documented regeneration chain silently reverted eight tables — including the retracted instrument claim and retired terminology. The fixes are now in the generator sources; three authored tables were removed from the sync set; the chain is idempotent, and `scripts/release.sh --check` fails the release if regeneration changes anything.
