@@ -21,6 +21,13 @@ ist: ## Build the IST/Elsevier submission PDF (paper/ist/ist_main.pdf)
 	$(MAKE) -C paper/ist
 
 ist-package: ## Assemble the self-contained IST submission folder + zip
+	@./scripts/release.sh --check || { \
+	  echo ""; \
+	  echo "REFUSING to build a submission package: the manuscript's Data Availability"; \
+	  echo "statement would be false. Cut and push a release first (scripts/release.sh),"; \
+	  echo "or re-run with FORCE=1 for a non-submission build."; \
+	  [ -n "$(FORCE)" ] || exit 1; \
+	  echo "FORCE=1 set — continuing anyway. Do NOT submit this package."; }
 	$(MAKE) -C paper/ist package
 
 release-check: ## Verify the release version and DOI agree across every declaration site

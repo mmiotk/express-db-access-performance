@@ -12,7 +12,7 @@ import {
   mannWhitneyU, cliffsDelta, cliffsMagnitude,
   pairedPermutation, wilcoxonSignedRank, pairedBootstrapRatioCI,
   pairedTOST, blockedInteraction,
-  percentAgreement, cohensKappa,
+  percentAgreement, cohensKappa, chanceAgreement, pabak, kappaBootstrapCI,
 } from './stats.mjs';
 
 // --- seeded PRNG (mulberry32): deterministic [0,1) generator for the MC tests --
@@ -253,4 +253,41 @@ test('cohensKappa: undefined cases return null, not a number', () => {
   assert.equal(cohensKappa(['y', 'y', 'y'], ['y', 'y', 'y']), null);
   assert.equal(cohensKappa([], []), null);
   assert.equal(cohensKappa(['y'], ['y', 'n']), null);
+});
+
+test('chanceAgreement: hand-computed, and 1 for a single shared category', () => {
+  // marginals 6/4 and 6/4 => pe = 0.36 + 0.16 = 0.52
+  const a = ['y', 'y', 'y', 'y', 'y', 'y', 'n', 'n', 'n', 'n'];
+  const b = ['y', 'y', 'y', 'y', 'y', 'n', 'y', 'n', 'n', 'n'];
+  assert.ok(approx(chanceAgreement(a, b), 0.52, 1e-12));
+  assert.equal(chanceAgreement(['y', 'y'], ['y', 'y']), 1);
+  assert.equal(chanceAgreement([], []), null);
+});
+
+test('pabak: 2*po-1, and stable where kappa collapses', () => {
+  assert.equal(pabak(['a', 'b'], ['a', 'b']), 1);
+  assert.equal(pabak(['a', 'b'], ['b', 'a']), -1);
+  // Skewed marginals (the kappa paradox): 8/9 agreement, but one category dominates.
+  const a = ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'n'];
+  const b = ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'n', 'p'];
+  assert.ok(approx(pabak(a, b), 2 * (7 / 9) - 1, 1e-12));
+  // kappa on the same data is far lower than the observed agreement suggests
+  assert.ok(cohensKappa(a, b) < pabak(a, b));
+});
+
+test('kappaBootstrapCI: brackets the point estimate and is seed-reproducible', () => {
+  const a = ['y', 'y', 'y', 'y', 'n', 'n', 'n', 'n', 'p', 'p', 'p', 'p'];
+  const b = ['y', 'y', 'y', 'n', 'n', 'n', 'n', 'p', 'p', 'p', 'p', 'y'];
+  const k = cohensKappa(a, b);
+  const ci1 = kappaBootstrapCI(a, b, { B: 400, rand: mulberry32(11) });
+  const ci2 = kappaBootstrapCI(a, b, { B: 400, rand: mulberry32(11) });
+  assert.deepEqual(ci1, ci2);
+  assert.ok(ci1[0] <= ci1[1]);
+  assert.ok(ci1[0] <= k && k <= ci1[1]);
+});
+
+test('kappaBootstrapCI: degenerate input returns null rather than a spurious interval', () => {
+  // Every item shares one label, so almost every resample has pe === 1.
+  assert.equal(kappaBootstrapCI(['y', 'y', 'y'], ['y', 'y', 'y'], { B: 200, rand: mulberry32(3) }), null);
+  assert.equal(kappaBootstrapCI([], [], { B: 100 }), null);
 });

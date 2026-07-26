@@ -10,8 +10,10 @@ Section~\ref{sec:methodology}. Each native driver has an untuned policy-selected
 (\texttt{pg}, \texttt{mysql2}) and tuned (\texttt{pg-tuned},
 \texttt{mysql2-tuned}), the tuned rows marking a hand-tuned reference point, not one
 attained without code changes. We compare \emph{relative}
-differences within an engine, where two estimands recur: the
-\emph{performance of the selected configured treatment} (RQ1--RQ3), rather than library-only overhead; and the \emph{common-SQL raw-path sensitivity contrast} (Supplement Table~S14), which reports the residual spread when every layer runs common SQL through its raw facility (construct validity: Section~\ref{sec:threats}).
+differences within an engine. Two estimands recur: the \emph{performance of the selected
+configured treatment} (RQ1--RQ3), which is not library-only overhead, and the
+\emph{common-SQL raw-path sensitivity contrast} (Supplement Table~S14), the residual spread
+when every layer runs common SQL through its raw facility (Section~\ref{sec:threats}).
 
 % One combined table per access pattern (throughput + p99), per layer and engine.
 % \tabledir is set by each main file so this shared section resolves without TEXINPUTS.
@@ -24,11 +26,13 @@ The native implementation leads each of the ten engine--pattern comparisons:
 \texttt{mysql2} or \texttt{mysql2-tuned} on all five MySQL patterns. Among the
 selected treatments, the corresponding untuned native driver leads each comparison. The current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier version's headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
 
-\texttt{pg-tuned} and \texttt{mysql2-tuned} correspond closely to their untuned
-counterparts within a few percent except on the deep fetch, where a second round
-trip lets prepared statements pay off (\texttt{pg-tuned} 3{,}746 vs.\ \texttt{pg}
-3{,}638; \texttt{mysql2-tuned} 2{,}415 vs.\ \texttt{mysql2} 2{,}416);
-on PostgreSQL aggregation \texttt{pg-tuned} adds about $8\%$ (7{,}538 vs.\ 6{,}978).
+\texttt{pg-tuned} and \texttt{mysql2-tuned} track their untuned counterparts within about
+$2\%$ on the deep fetch (\texttt{pg-tuned} 3{,}700 vs.\ \texttt{pg} 3{,}638;
+\texttt{mysql2-tuned} 2{,}398 vs.\ \texttt{mysql2} 2{,}416). The one material gain is
+PostgreSQL aggregation, where named prepared statements add $11\%$ (7{,}583 vs.\ 6{,}807).
+On MySQL the binary-protocol baseline is \emph{slower} than \texttt{mysql2} on every pattern
+(by $0.4$--$4.7\%$), so \texttt{execute()} buys nothing at this operating point; both tuned
+baselines are therefore disclosed reference points, not optimization ceilings.
 
 On the \textbf{point read} the native-relative spread is $2.83\times$ (PostgreSQL)
 and $2.14\times$ (MySQL) (Supplement Table~S12). On the \textbf{deep fetch}
@@ -58,11 +62,14 @@ Switching the backend changes a bundle that can include the DBMS, supported adap
 lower-level driver, wire protocol, and defaults. RQ2 therefore concerns
 \emph{backend-stack transfer}, not a causal DBMS effect. In the primary campaign,
 the seven portable layers have stack-ratio heterogeneity on every pattern (blocked
-interaction $F=127.1$--$458.5$, permutation $p=0.00005$; Supplement Table~S28),
+interaction $F=127.1$--$458.5$, permutation $p<5{\times}10^{-5}$, the $1/(B{+}1)$ resolution floor at $B=20{,}000$; Supplement Table~S28),
 but this within-campaign test does not establish durable rank reversals.
 
-A second same-host campaign independently randomizes 25 repetitions of the seven
-portable layers for deep fetch, aggregation, and insert (Supplement Table~S46).
+A second same-host campaign re-runs 25 repetitions of the seven portable layers for deep
+fetch, aggregation, and insert under an independently drawn block order (Supplement
+Table~S46). It re-randomizes execution order only: the identifier generator is seeded on
+endpoint and replicate, so the campaign replays the same draws and cannot detect
+sensitivity to the workload sample.
 Deep-fetch ranks reproduce exactly on both stacks (Spearman $\rho=1.00$, maximum
 median drift $2.3\%$); aggregation reproduces 5/7 PostgreSQL and 7/7 MySQL positions
 ($\rho=0.96$ and $1.00$). MySQL insert is less stable: only 3/7 positions reproduce,
@@ -73,8 +80,13 @@ bootstrap intervals exclude equality in opposite directions in both campaigns.
 Four pairs meet all criteria: on deep fetch, Prisma exceeds Objection and Sequelize
 on PostgreSQL but trails both on MySQL; on aggregation, Prisma exceeds Objection on
 PostgreSQL but trails it on MySQL; on insert, Prisma exceeds MikroORM on PostgreSQL
-but trails it on MySQL. Other changes in close ranks, including the identity of the
-MySQL insert leader, remain exploratory.
+but trails it on MySQL. All four therefore involve one treatment, and that treatment is
+the one whose lower-level driver differs between the stacks: Prisma runs the MariaDB
+adapter on MySQL because it ships no \texttt{mysql2} adapter, while every other layer
+uses \texttt{mysql2} (Section~\ref{sec:threats}). The recurrence is consistent with
+backend-stack sensitivity as RQ2 defines it, but it cannot be separated from that driver
+substitution, and it is not evidence about ORMs as a group. Other changes in close ranks,
+including the identity of the MySQL insert leader, remain exploratory.
 
 The magnitude of stack transfer is also treatment-specific. Primary-campaign
 PostgreSQL$\div$MySQL ratios range from $1.10$ to $1.84\times$ on deep fetch,
@@ -87,7 +99,7 @@ or defaults.
 The primary MySQL insert medians illustrate why fine ordering is not a headline:
 Drizzle, Objection, Knex, and the native driver lie between 1{,}766 and
 1{,}816~req/s, while several replicate distributions are visibly multimodal or
-heavy-tailed and reach $13.6\%$ CV (Figure~\ref{fig:insert_dispersion}). Prisma is
+heavy-tailed and reach $13.6\%$ CV (Supplement Figure~S1). Prisma is
 the slowest policy-selected treatment at 894~req/s, giving a $1.98\times$
 native-relative spread, but the broad interval on that spread is
 [1.65--2.09]. Under relaxed durability the native MySQL and Knex paths gain
@@ -133,6 +145,20 @@ The stable 50\% result shows that the large equal-demand p99 spread contains a
 material capacity-and-queueing component; it does not identify its share or imply
 a deployment-general sub-saturation bound.
 
+The two operating points also \emph{order the layers differently}, which is the
+sharpest consequence of separating them. Between the equal-demand and 50\%-utilization
+p99 orderings, Spearman $\rho$ is $0.64$ on PostgreSQL and $0.29$ on MySQL
+(Supplement Table~S43). The native driver moves furthest: fastest on the tail at equal
+demand on both engines, it falls to third of eight on PostgreSQL and seventh of eight on
+MySQL once each layer is held at half its own capacity. On MySQL the reversal is
+unambiguous --- \texttt{knex} 1.9~ms [1.8--2.2] against \texttt{mysql2} 4.7~ms [4.0--5.6],
+non-overlapping over five runs --- while on PostgreSQL the native and leading portable
+ranges overlap (\texttt{pg} 2.6~[2.2--3.0], \texttt{knex} 2.3~[2.3--2.7]), so only the
+MySQL inversion is claimed. Reporting a tail at one arbitrary load point would have
+recorded the native driver as the tail leader on both engines. This is direct evidence
+that the operating-point separation stage changes a conclusion rather than only its
+caveats, and it is why capacity and tail are reported as distinct quantities.
+
 \subsection{Measurement stability and effect sizes}
 Deep-fetch throughput CV reaches $4.5\%$, much smaller than its multi-fold spreads.
 The largest primary throughput CV is $13.6\%$ on MySQL insert, whose raw replicates
@@ -147,4 +173,3 @@ comparisons remain descriptive. Paired bootstrap intervals characterize only
 within-campaign variation, while the same-host validation campaign is reported
 separately. Differences of about 1~ms in p99 and throughput ratios inside the
 predeclared $\pm5\%$ practical margin are not promoted as substantive ordering.
-\input{\tabledir fig_insert_dispersion}

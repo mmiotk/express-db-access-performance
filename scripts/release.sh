@@ -11,10 +11,20 @@
 #   scripts/release.sh <new-version> <new-version-doi>
 #   scripts/release.sh 1.12.16 10.5281/zenodo.21601234
 #
-#   scripts/release.sh --check          verify current state is self-consistent
+#   scripts/release.sh --check           verify the declared version/DOI are consistent
+#                                        AND that HEAD is the tagged, pushed release
+#   scripts/release.sh --refresh-counts   regenerate the AI-provenance commit counts
 #
-# Run it AFTER the Zenodo deposit exists, so no build ever carries a
-# placeholder DOI. Then: make pdf supplement ist ist-package.
+# Run it AFTER the Zenodo deposit exists, so no build ever carries a placeholder DOI.
+#
+# Full release sequence:
+#   1. scripts/release.sh <version> <doi>      version, DOI and AI counts
+#   2. make pdf supplement ist                 rebuild
+#   3. git commit -am "Prepare vX.Y.Z release"
+#   4. scripts/release.sh --refresh-counts     counts now include the release commit
+#   5. make pdf supplement ist && git commit --amend --no-edit
+#   6. git tag vX.Y.Z && git push origin HEAD --tags
+#   7. make ist-package                        gate passes only after step 6
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -42,10 +52,62 @@ FILES=(
 OLD_V=$(current_version)
 OLD_D=$(current_doi)
 
+# Section 3.9 quotes per-model AI-assistance commit counts. Every commit changes
+# them, including the release commit itself, so they are regenerated rather than
+# maintained by hand: a disclosure that is stale on arrival is worse than none.
+# Counts come from the trailers, not message text, because commit messages that
+# merely discuss the trailers would otherwise inflate them.
+refresh_counts() {
+  local M=paper/sections/methodology.tex o48 f5 o5 total trailed untrailed
+  o48=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 4.8' || true)
+  f5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Fable 5' || true)
+  o5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 5' || true)
+  total=$(git log --oneline | wc -l | tr -d ' ')
+  trailed=$((o48 + f5 + o5)); untrailed=$((total - trailed))
+  perl -0pi -e "s/\\d+ of \\d+ commits\\ncarry a \\\\texttt\\{Co-Authored-By\\} trailer naming the model \\(\\d+ Opus 4\\.8, \\d+ Fable 5, \\d+ Opus 5\\)/${trailed} of ${total} commits\\ncarry a \\\\texttt{Co-Authored-By} trailer naming the model (${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5)/" "$M"
+  perl -0pi -e "s/The other \\S+ predate the convention/The other ${untrailed} predate the convention/" "$M"
+  echo "  AI-provenance counts: ${trailed}/${total} trailed (${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5), ${untrailed} untrailed"
+}
+
+if [[ "${1:-}" == "--refresh-counts" ]]; then
+  refresh_counts
+  echo "Rebuild the manuscript, then amend: git commit --amend --no-edit"
+  exit 0
+fi
+
 if [[ "${1:-}" == "--check" ]]; then
   echo "Declared version: v$OLD_V"
   echo "Declared DOI:     $OLD_D"
   fail=0
+
+  # The manuscript's Data Availability statement says the DOI'd release contains
+  # this revision and that the GitHub tag identifies the release commit. Both were
+  # false at submission time once revision commits landed after the tag, which is
+  # how a previous package shipped a manuscript the archive did not contain.
+  # These checks make that failure loud instead of silent.
+  head_sha=$(git rev-parse HEAD)
+  tag_sha=$(git rev-list -n1 "v$OLD_V" 2>/dev/null || true)
+  if [[ -z "$tag_sha" ]]; then
+    echo "ARTIFACT: tag v$OLD_V does not exist locally."; fail=1
+  elif [[ "$tag_sha" != "$head_sha" ]]; then
+    echo "ARTIFACT: HEAD ($(git rev-parse --short HEAD)) is not the tagged release commit"
+    echo "          (v$OLD_V = ${tag_sha:0:7}). The archived artifact does not contain"
+    echo "          $(git rev-list --count "v$OLD_V"..HEAD) later commit(s), so Data Availability is false."
+    fail=1
+  fi
+  if git remote get-url origin >/dev/null 2>&1; then
+    if ! git ls-remote --tags origin 2>/dev/null | grep -q "refs/tags/v$OLD_V\$"; then
+      echo "ARTIFACT: tag v$OLD_V is not pushed to origin; the GitHub tag cannot identify the release commit."
+      fail=1
+    fi
+    remote_head=$(git ls-remote --heads origin 2>/dev/null | awk '/refs\/heads\/(master|main)$/{print $1; exit}')
+    if [[ -n "$remote_head" && "$remote_head" != "$head_sha" ]]; then
+      echo "ARTIFACT: origin's default branch (${remote_head:0:7}) differs from HEAD; this revision is not public."
+      fail=1
+    fi
+  else
+    echo "ARTIFACT: no 'origin' remote configured; cannot verify the revision is public."; fail=1
+  fi
   # Any v1.x.y other than the declared one, excluding the deliberate historical
   # v1.12.9 clean-room references.
   stray=$(grep -rhoP 'v[0-9]+\.[0-9]+\.[0-9]+' "${FILES[@]}" 2>/dev/null \
@@ -89,7 +151,8 @@ for f in "${FILES[@]}"; do
 done
 
 sed -i "s|^date-released:.*|date-released: \"${TODAY}\"|" "$CFF"
-sed -i "s|Zenodo version DOI for release v${NEW_V}|Zenodo version DOI for release v${NEW_V}|" "$CFF"
+
+refresh_counts
 
 echo
 "$0" --check

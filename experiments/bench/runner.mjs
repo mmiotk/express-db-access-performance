@@ -53,10 +53,20 @@ const RESERVED_PORTS = new Set([3306, 5432, 33060]);
 let portCursor = BASE_PORT;
 function nextPort() { do { portCursor++; } while (RESERVED_PORTS.has(portCursor)); return portCursor; }
 
-// Paired request streams: target ids come from a PRNG seeded by (endpoint,
-// replicate) ONLY, so every adapter is driven by the identical id sequence in the
-// same replicate — a variance-reduction and task-equivalence control. The first ids
-// of each stream are dumped to results/traces-sample.json as artifact evidence.
+// Shared request streams: target ids come from a PRNG seeded by (endpoint,
+// replicate) ONLY, so every adapter in a replicate draws from the same identifier
+// distribution — a task-equivalence control.
+//
+// NOT an identical served sequence. The generator is consumed one draw per request
+// and is shared by the warm-up and the measured runs, so adapters of unequal
+// throughput consume different numbers of draws before measurement begins and enter
+// the measured window at different stream offsets. The intended common-random-numbers
+// variance reduction is therefore largely forfeited; the paired analysis is licensed
+// by the randomized-block design, not by sequence identity.
+//
+// results/traces-sample.json records the FIRST 50 ids each stream would yield, by
+// re-instantiating streamFor() at write time. It documents the seeding, and is not a
+// log of the ids actually served.
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function fnv1a(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
 const streamFor = (epKey, rep) => { const g = mulberry32(fnv1a(`${epKey}:${rep}:v2`)); return (n) => 1 + Math.floor(g() * n); };
@@ -521,6 +531,10 @@ async function mainIndep() {
     errors: a.errors, timeouts: a.timeouts, non2xx: a.non2xx,
     connections: CONNECTIONS, duration: DURATION, warmup: WARMUP, repeats: a.rps.length, independent: true,
     campaign_id: CAMPAIGN_ID, order_mode: ORDER, order_seed: ORDER_SEED,
+    // paired_streams asserts only that target ids were seeded per (endpoint, replicate)
+    // and shared across adapters — NOT that adapters saw an identical served sequence
+    // (see the streamFor note above). The key name is retained because three table
+    // generators gate on it against already-archived campaign files.
     rebuild_writes: REBUILD_WRITES, preflight: PREFLIGHT, paired_streams: true,
     startup_retries: Math.max(0, ...a.startupRetries),
     rps_samples: a.rps.map((x) => Math.round(x)), p99_samples: a.p99, p975_samples: a.p975,

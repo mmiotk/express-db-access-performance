@@ -15,7 +15,15 @@ for (const engine of ['postgres', 'mysql']) {
   const layers = [...new Set(d.map((x) => x.adapter))];
   const fr = [...new Set(d.map((x) => x.fraction))].sort((a, b) => a - b);
   const rows = layers.map((a) => {
-    const cells = fr.map((f) => { const r = d.find((x) => x.adapter === a && x.fraction === f); return r ? String(r.p99_med) : '--'; });
+    // Median over 5 runs with the observed min--max, so a 5-replicate cell is not
+    // read as a point estimate (these values are quoted in the abstract).
+    const cells = fr.map((f) => {
+      const r = d.find((x) => x.adapter === a && x.fraction === f);
+      if (!r) return '--';
+      const s = r.p99_samples;
+      if (!Array.isArray(s) || s.length === 0) return String(r.p99_med);
+      return `${r.p99_med}~[${Math.min(...s)}--${Math.max(...s)}]`;
+    });
     return `    \\texttt{${a}} & ${cells.join(' & ')} \\\\`;
   }).join('\n');
   const eng = engine === 'mysql' ? 'MySQL' : 'PostgreSQL';
@@ -24,9 +32,11 @@ for (const engine of ['postgres', 'mysql']) {
 \\begin{table}[htbp]
   \\centering
   \\caption{Utilization-controlled open-loop tail on the deep fetch (${eng}):
-    coordinated-omission-corrected p99 (ms, median of five runs) when each layer is
+    coordinated-omission-corrected p99 (ms) when each layer is
     offered a fixed fraction of its $\\widehat C_{50}$ capacity proxy (the 25-run
-    median throughput at 50 connections). The 50\\% and 70\\% columns carry the sub-saturation comparison and are interpreted with the denominator sensitivity in Supplement Table~S45. The 85\\% and 95\\% columns are near-saturation sensitivity evidence, not a precise convergence claim.}
+    median throughput at 50 connections). Cells give the median of five runs with the
+    observed minimum--maximum in brackets; with only five replicates the bracket is the
+    raw spread, not an interval estimate. The 50\\% and 70\\% columns carry the sub-saturation comparison and are interpreted with the denominator sensitivity in Supplement Table~S45. The 85\\% and 95\\% columns are near-saturation sensitivity evidence, not a precise convergence claim --- as their spreads show directly.}
   \\label{tab:${label}}
   \\begin{tabular}{l ${fr.map(() => 'r').join(' ')}}
     \\toprule

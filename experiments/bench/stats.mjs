@@ -96,6 +96,56 @@ export function cohensKappa(a, b) {
   return (po - pe) / (1 - pe);
 }
 
+// Chance-corrected agreement p_e for the same inputs. Exposed because kappa is
+// uninterpretable when p_e is high: with skewed marginals a single disagreement can
+// move kappa by a large amount even though observed agreement barely changes (the
+// "kappa paradox"). Callers should report p_e alongside kappa and suppress kappa
+// where p_e is extreme.
+export function chanceAgreement(a, b) {
+  const n = a.length;
+  if (n === 0 || a.length !== b.length) return null;
+  const mA = new Map(); const mB = new Map();
+  for (let i = 0; i < n; i++) {
+    mA.set(a[i], (mA.get(a[i]) ?? 0) + 1);
+    mB.set(b[i], (mB.get(b[i]) ?? 0) + 1);
+  }
+  let pe = 0;
+  for (const [label, cA] of mA) pe += (cA / n) * ((mB.get(label) ?? 0) / n);
+  return pe;
+}
+
+// Prevalence-adjusted bias-adjusted kappa: 2*p_o - 1. Unlike kappa it does not
+// collapse under skewed marginals, so it is the stable companion statistic to
+// report when p_e is high. Always defined for non-empty input.
+export function pabak(a, b) {
+  const po = percentAgreement(a, b);
+  return po === null ? null : 2 * po - 1;
+}
+
+// Percentile bootstrap CI for Cohen's kappa, resampling items with replacement.
+// Seeded via `rand` so the interval is reproducible. Resamples that leave kappa
+// undefined (p_e === 1, i.e. every drawn item shares one label) are skipped;
+// if too few remain the CI is reported as null rather than from a thin sample.
+export function kappaBootstrapCI(a, b, { B = 5000, level = 0.95, rand = Math.random } = {}) {
+  const n = a.length;
+  if (n === 0 || a.length !== b.length) return null;
+  const ks = [];
+  for (let r = 0; r < B; r++) {
+    const ra = []; const rb = [];
+    for (let i = 0; i < n; i++) {
+      const j = Math.floor(rand() * n);
+      ra.push(a[j]); rb.push(b[j]);
+    }
+    const k = cohensKappa(ra, rb);
+    if (k !== null && Number.isFinite(k)) ks.push(k);
+  }
+  if (ks.length < B * 0.5) return null;
+  ks.sort((x, y) => x - y);
+  const lo = ks[Math.floor(((1 - level) / 2) * ks.length)];
+  const hi = ks[Math.min(ks.length - 1, Math.ceil((1 - (1 - level) / 2) * ks.length) - 1)];
+  return [lo, hi];
+}
+
 // --- Paired / blocked comparisons -------------------------------------------
 // The primary campaign is a randomized-block design: within each replicate every
 // layer is driven by the identical request stream (seeded on endpoint+replicate,

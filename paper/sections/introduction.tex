@@ -67,10 +67,13 @@ This paper's primary contribution is a \textbf{comparability protocol for access
 benchmarking}, specified normatively in Section~\ref{sec:protocol} (inputs, stages,
 cell-admission criteria, interpretation, and limits): a concrete discipline for establishing and reporting comparability.
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Semantic admission.} A seed-specification oracle checks expected read results without using native-driver responses; fixed and randomized differential checks then establish mutual equivalence, and every timed insert must produce the intended database state --- field values, generated
-        identifiers, and exact row-count changes, not merely a 2xx. Where the secondary transactional method is implemented, commit atomicity and rollback are checked as well.
-        These checks precede admission of the corresponding timing; a layer that returns less, writes wrong, or errors
-        faster than it works thus cannot appear faster (Section~\ref{sec:methodology}).
+  \item \textbf{Semantic admission.} A seed-specification oracle checks expected read results
+        without native-driver responses; differential checks then establish mutual equivalence; and
+        every timed insert must reach the intended database state --- field values, generated
+        identifiers, exact row-count changes, and, where the transactional method exists, commit
+        atomicity and rollback. All precede admission of the corresponding timing, so a layer that
+        returns less, writes wrong, or errors faster than it works cannot appear faster
+        (Section~\ref{sec:methodology}).
   \item \textbf{Common-SQL raw-path sensitivity.} The treatment is fixed by a predeclared,
         reproducible selection rule (\emph{policy-selected documented} here; the protocol
         privileges none), and a \emph{common-SQL raw-path sensitivity contrast} reports how much
@@ -80,4 +83,4 @@ cell-admission criteria, interpretation, and limits): a concrete discipline for 
         and tail at matched utilization are reported as \emph{distinct} quantities, not
         conflated at one load point.
 \end{itemize}
-These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The claim is their access-layer-specific operational discipline, evaluated by the in-experiment ablation and a single-rater audit of nine external benchmarks, not invention of the principles or independent inter-rater validation. In this study the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss; common SQL and matched utilization changed two further interpretations. The machine-readable checklist, source-located audit, and result-blind review packets make that discipline available for independent reassessment.
+These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The claim is their access-layer-specific operational discipline, evaluated by the in-experiment ablation and a single-rater audit of nine external benchmarks, not invention of the principles or independent inter-rater validation. In this study the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss, and treatment provenance, capacity characterization, and the common-SQL path each changed a further interpretation (Table~\ref{tab:protocol_mapping}). The machine-readable checklist, source-located audit, and result-blind review packets make that discipline available for independent reassessment.

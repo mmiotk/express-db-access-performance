@@ -3,25 +3,26 @@
 
 In Goal--Question--Metric terms, the study analyzes configured relational-access-layer implementations for the purpose of comparing throughput and response-time p99 under PostgreSQL and MySQL back ends~\cite{basili1988tame}. The viewpoint is the benchmark analyst evaluating policy-defined treatments; it is not a model of observed developer behavior. This is a \emph{controlled benchmarking experiment} on one synthetic service, dataset, and environment, not inference about ORMs as a population. We use \emph{experiment} in the sense of controlled software-engineering guidance~\cite{wohlin2012experimentation,kitchenham2002guidelines}: the treatments are assigned and executed automatically rather than observed in situ, the factors are fixed by design, the run order is randomized in blocks, and each cell is measured repeatedly. That design is what licenses the paired within-campaign analysis; it also bounds external validity to the single instantiation measured here. The experiment instantiates the protocol with three decisions: semantic admission before timing, a predeclared treatment-selection policy, and explicit operating points.
 
-The primary RQ1--RQ3 treatment is the \emph{policy-selected documented configuration}: the path selected mechanically from frozen official documentation under the rule below. The protocol itself does not privilege documentation; another study may preregister an expert-tuned, usage-frequency, or vendor-recommended policy. A \emph{common-SQL raw-path sensitivity contrast} then has every portable layer execute the same SQL through its raw facility. SQL, API level, protocol, preparation, round trips, and mapping can still change together, so this contrast is compound evidence of sensitivity to standardization, not causal decomposition or a bound on library-intrinsic overhead (Supplement Table~S42).
+The primary RQ1--RQ3 treatment is the \emph{policy-selected documented configuration}: the path selected mechanically from frozen official documentation under the rule below. The protocol itself does not privilege documentation; another study may preregister an expert-tuned, usage-frequency, or vendor-recommended policy. A \emph{common-SQL raw-path sensitivity contrast} then has every portable layer execute the same SQL through its raw facility. SQL, API level, protocol, preparation, round trips, and mapping still change together, so the contrast measures sensitivity to standardizing the whole bundle; it decomposes nothing and bounds nothing (Supplement Table~S42).
 
 A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput and so drives them to
-unequal \emph{utilization}, so RQ1 is characterized under three operating conditions rather than one
+unequal \emph{utilization}, so RQ1 is characterized under three operating conditions, not one
 privileged point --- the protocol's \emph{operating-point separation}. \emph{Equal external demand} is
 the fixed 50-connection \emph{high-load} point (the full five-pattern, two-engine matrix); a
 per-pattern concurrency sweep (ladder 1--200, both engines; Supplement Table~S35) puts each pattern's
 throughput knee at or below 50 connections, so this point places every pattern at high utilization of
-its own capacity (median 97--100\%) --- a capacity-and-queueing regime rather than a
+its own capacity (median 98--100\%) --- a capacity-and-queueing regime rather than a
 sub-saturation latency comparison --- while 50 connections against a ten-connection pool keep about forty requests queued
-(Controls, below). Capacity is thus \emph{measured} for all five patterns (deep-fetch curve, Supplement
-Figure~S2). The two utilization-dependent conditions need
+(Controls, below). A throughput knee is thus \emph{located by sweep} for all five patterns (deep-fetch curve,
+Supplement Figure~S2); the per-layer capacity used as a denominator below remains an
+estimate, evaluated in Supplement Table~S45. The two utilization-dependent conditions need
 a per-layer capacity target and are shown on the deep fetch: \emph{equal
 utilization} is the coordinated-omission-corrected open-loop sweep offering each layer a fixed
 fraction (50/70/85/95\%) of its \emph{own} estimated capacity, and an \emph{equal compute budget}
 is the exploratory equal-CPU check --- different questions that need not agree, so all three are
 reported. For the deep fetch, the experiment defines the capacity proxy $\widehat C_{50}$ as the
 median throughput of the 25-run, 50-connection primary cell; the full sweep subsequently places 50
-connections at or above every layer's measured knee. Capacity is estimated rather than known, so Supplement Table~S45 evaluates the target against both the within-campaign bootstrap interval and the separately measured sweep maximum. The 50\% and most 70\% cells remain below saturation; 85\% and 95\% are interpreted only as near-saturation trends (Supplement Tables~S21--S22).
+connections at or above every layer's measured knee. Supplement Table~S45 evaluates that estimated target against both the within-campaign bootstrap interval and the separately measured sweep maximum. The 50\% and most 70\% cells remain below saturation; 85\% and 95\% are interpreted only as near-saturation trends (Supplement Tables~S21--S22).
 
 \subsection{The comparability protocol}
 \label{sec:protocol}
@@ -52,14 +53,13 @@ otherwise (unordered collections, floats, timestamps, nondeterministic identifie
 comparator (set equality, tolerance, canonicalization). The experiment's outputs are deterministic and
 canonically constructed, so byte-equality is valid here.
 
-\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages do not decide whether a fixed-load result exists; they license additional interpretations. Capacity characterization locates that result relative to a throughput knee. The common-SQL raw-path extension licenses only a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-review provenance records evidence against correct-but-needlessly-slow adapter code. In this experiment M1--M2 cover the full matrix; R4 covers every pattern; R3, R5, and R6 are scoped to the deep fetch; and R7 remains unsatisfied because no independent human adapter review is claimed. Omission of a recommended stage therefore narrows the supported claim rather than automatically invalidating every reported number. R7's absence here withholds the level-6 label and leaves the residual of Section~\ref{sec:threats} open; it does not withdraw the admission evidence licensing the reported comparisons.
+\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages license additional interpretations without deciding whether a fixed-load result exists. Capacity characterization locates that result against a throughput knee. The common-SQL raw-path extension licenses only a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-review provenance records evidence against correct-but-needlessly-slow adapter code. In this experiment M1--M2 cover the full matrix; R4 covers every pattern; R3, R5, and R6 are scoped to the deep fetch; and R7 remains unsatisfied because no independent human adapter review is claimed. Omitting a recommended stage narrows the supported claim without invalidating the reported numbers: R7's absence withholds the level-6 label and leaves the residual of Section~\ref{sec:threats} open, but does not withdraw the admission evidence licensing the comparisons.
 
 \smallskip
-Table~\ref{tab:protocol_mapping} records how each control changed this experiment; that establishes consequence here, not universal necessity. Supplement Table~S37 separately applies the codebook to nine external benchmark sources. The machine-readable audit preserves 63 source-located judgements, but one author performed the coding, so it demonstrates bounded protocol application rather than inter-rater reproducibility. The audit record is structured for a second rater rather than merely open to one: additional codings attach alongside the author's without editing them, and a committed scorer (\texttt{npm run audit:agreement}) reports percent agreement and Cohen's kappa per stage together with every disagreeing cell. Result-blind forms for three independent exercises --- treatment selection, adapter implementation, and a re-coding of the same 63 judgements --- are shipped under \texttt{notes/reviewer-packets}, each completable on its own. All four register rows are reported as pending, and the scorer reports agreement as not computable rather than defaulting to a number, so an unperformed exercise cannot be silently counted as validation.
+Table~\ref{tab:protocol_mapping} records how each control changed this experiment; that establishes consequence here, not universal necessity. Supplement Table~S47 consolidates, per research question, the quantity estimated and the quantity not identified. Supplement Table~S37 separately applies the codebook to nine external benchmark sources. The machine-readable audit preserves 63 source-located judgements, but one author performed the coding, so it demonstrates bounded protocol application, not inter-rater reproducibility. The record is structured for a second rater: additional codings attach alongside the author's without editing them, and a committed scorer (\texttt{npm run audit:agreement}) reports pooled percent agreement, Cohen's kappa with a bootstrap interval, and every disagreeing cell. Because the per-stage slices are $n{=}9$ and one stage has chance agreement $0.80$, per-stage kappa is flagged unreliable and the pooled figure is the headline. Result-blind forms for three independent exercises --- treatment selection, adapter implementation, and a re-coding of the 63 judgements --- ship under \texttt{notes/reviewer-packets}, each completable alone. All four register rows are pending, and the scorer reports agreement as not computable while one rater is recorded, so an unperformed exercise cannot be silently counted as validation.
 
 \input{\tabledir protocol_mapping}
 
-\input{\tabledir estimands}
 
 \subsection{Factors and treatments}
 We vary three factors. The \emph{access layer} has eleven levels across three tiers
@@ -88,7 +88,7 @@ maintained, used, and (portable tiers) running on both engines --- excluding non
 PostgreSQL-only Slonik and pg-promise and query-builder Kysely (covered by Knex; \texttt{METHODOLOGY.md}
 gives the criteria). \emph{Non-vendor authorship} means only that no evaluated library's maintainers
 were involved; the consequential author choices (selection, schema, pool size, tuning) remain and are
-disclosed. All adapter code and all treatment assignments were produced by the single author. Semantic admission cannot detect a semantically correct but inefficient implementation. The artifact therefore records this as an internal-validity limitation, adds implementation-review provenance as a recommended protocol stage, and ships result-blind review packets; no maintainer or independent human sign-off is claimed. The \emph{backend-stack} factor has two nominal DBMS levels (PostgreSQL~18.4 and MySQL~9.7.1), but switching it can also switch the supported adapter, lower-level driver, wire protocol, and defaults; RQ2 therefore estimates transfer between these stacks rather than a pure DBMS effect. The \emph{access pattern} has five levels, realized as HTTP endpoints (Supplement Table~S39). Supplement Table~S29 records which
+disclosed. All adapter code and treatment assignments were produced by the single author, a limitation analysed in Section~\ref{sec:threats}. The \emph{backend-stack} factor has two nominal DBMS levels (PostgreSQL~18.4 and MySQL~9.7.1), but switching it can also switch the supported adapter, driver, wire protocol, and defaults, so RQ2 estimates transfer between stacks, not a pure DBMS effect. The \emph{access pattern} has five levels, realized as HTTP endpoints (Supplement Table~S39). Supplement Table~S29 records which
 factors are held constant, vary, or are uncontrolled on this single virtualized host --- the reason we
 report this configuration rather than general library performance.
 
@@ -149,7 +149,7 @@ statements are byte-identical across every layer on both engines; only the wire 
 byte-identical deep-fetch alternatives; it does not redefine the primary policy-selected
 treatment or estimate a library-intrinsic effect (Supplement Table~S18).
 
-Read admission has an expected-result layer independent of any timed reference. \texttt{bench/verify-spec.mjs} replays the documented seed PRNG and campaign fan-out fixture in memory, without querying a database or importing an access layer, and derives exact fields, values, ordering, graph membership, and aggregates. Database-generated timestamps are checked for presence and canonical ISO-8601 representation rather than a predicted instant. Across 1,000 random inputs per identifier type, boundary and list cases, and all six fan-out fixtures, all nine adapters on each engine pass 73,080 expected-result checks (Supplement Table~S38).
+Read admission has an expected-result layer independent of any timed reference. \texttt{bench/verify-spec.mjs} replays the documented seed PRNG and campaign fan-out fixture in memory, without querying a database or importing an access layer, and derives exact fields, values, ordering, graph membership, and aggregates. Database-generated timestamps are checked for presence and canonical ISO-8601 representation rather than a predicted instant. Across 1,000 random inputs per identifier type, boundary and list cases, and all six fan-out fixtures, all nine engine-compatible adapters (a different set of nine from the nine policy-selected layers: here the tuned baselines are included and the other engine's native driver excluded) pass 73,080 expected-result checks (Supplement Table~S38).
 
 A separate differential layer asks whether implementations agree. Shared canonical constructors fix fields, key order, and scalar types; they copy already materialized rows and do no joining, regrouping, sorting, or caching. A 30-block standalone measurement places the ten-comment deep-fetch constructor at 9.35--9.36~\(\mu\)s, or 0.072\% of the smallest corresponding HTTP p50. The fixed probes in \texttt{verify.mjs} and randomized edge/input sweep in \texttt{verify-property.mjs} then compare serialized outputs across implementations, with no divergence (Supplement Table~S38). The specification and differential layers provide finite evidence for the declared task and tested inputs; neither is presented as proof for arbitrary inputs. A companion check
 (\texttt{bench/verify-writes.mjs}) validates database \emph{state}, not HTTP status: a separate out-of-band
@@ -165,23 +165,23 @@ Section~\ref{sec:discussion}).
 \subsection{Controls}
 Four controls hold the shared conditions fixed --- connection pool, logical task, physical dataset
 state, and observer --- so the \emph{configured access-layer implementation bundle} is the only
-\emph{deliberately varied} factor; they do not isolate the library alone: the bundled differences in
-SQL, query count, protocol, loading strategy, and hydration are the treatment (Supplement Table~S42),
-not confounds to remove. \emph{(i)~Pool size} is fixed at ten connections for every adapter, so the
+\emph{deliberately varied} factor. They do not isolate the library alone: the bundled differences in
+SQL, query count, protocol, loading strategy, and hydration are the treatment, not confounds to
+remove (Supplement Table~S42). \emph{(i)~Pool size} is fixed at ten connections for every adapter, so the
 comparison reflects the access-layer choice, not pool
 tuning~\cite{gupta2017pooling,laigner2021microservices} (Prisma's core-count-derived default is pinned
-via \texttt{connection\_limit}). Because the load generator opens 50 concurrent connections against
+via \texttt{connection\_limit}). Because the generator opens 50 concurrent connections against
 this ten-connection pool, roughly forty in-flight requests always wait in each library's acquisition
-queue; this queueing is deliberately measured and held identical across layers (a 200~ms sampler
-confirmed the native PostgreSQL pool fully occupied, about 32 requests pending).
-\emph{(ii)~Common task semantics}: each endpoint implements the same declared input--output task, while SQL text, query count, plan, protocol, loading strategy, and hydration remain measured properties of the configured treatment. Aggregation is the exception with a common correlated-subquery formulation; the separate common-SQL raw-path contrast standardizes SQL only for the deep fetch and is interpreted as compound. \emph{(iii)~Write isolation}: the declared reset rebuilds PostgreSQL from its seed template and uses a disclosed in-place delete/\texttt{OPTIMIZE TABLE}/allocator reset on MySQL; generated rows are removed before warm-up, measurement, and the next cell. A post-review state oracle found that the historical MySQL rebuild ran \texttt{OPTIMIZE TABLE} and then restored \texttt{AUTO\_INCREMENT} to \texttt{MAX(id)+1}; because the fan-out fixture ended at 250006, generated rows fell below the 300000 cleanup floor and could persist. The corrected harness inserts and deletes a 300000 sentinel after seeding/rebuild, and every logical reset---including between warm-up and measurement---deletes generated rows and restores the next identifier to exactly 300001. An idempotent preflight verifies exact base/fan-out counts and the allocator before and after a campaign. Historical MySQL range-scan outputs near the base-key boundary, aggregation results, and insert state may therefore include undeclared rows and are not used as clean evidence. A further cross-engine gate compares every declared fan-out value and generated identifier after excluding only DBMS-generated timestamps. It exposed a second shared-fixture defect: an advancing PRNG had produced different comment-author assignments across engines despite identical comment counts. The seeder now materializes the fixture once and the 662-row joined representation is byte-identical across engines (SHA-256 \texttt{402e0aebbbc99f6ca32f6e176182fbb4fe753fe273f2e79fb00d5b73a99fe5ca}). The affected pilot was rejected. A corrected-state replacement campaign remeasures all five patterns for all 18 compatible treatment--stack pairs under one version of the instrument. \emph{(iv)~Observer separation}: the HTTP load generator runs in a process
+queue; that queueing is deliberately measured and held identical across layers (a 200~ms sampler
+confirmed the native PostgreSQL pool fully occupied, about 32 pending).
+\emph{(ii)~Common task semantics}: each endpoint implements the same declared input--output task, while SQL text, query count, plan, protocol, loading strategy, and hydration remain measured properties of the treatment. Aggregation is the exception, with a common correlated-subquery formulation; the separate common-SQL contrast standardizes SQL only for the deep fetch. \emph{(iii)~Write isolation}: the declared reset rebuilds PostgreSQL from its seed template and uses a disclosed in-place delete/\texttt{OPTIMIZE TABLE}/allocator reset on MySQL; generated rows are removed before warm-up, measurement, and the next cell. A post-review state oracle found that the historical MySQL rebuild ran \texttt{OPTIMIZE TABLE} and then restored \texttt{AUTO\_INCREMENT} to \texttt{MAX(id)+1}; because the fan-out fixture ended at 250006, generated rows fell below the 300000 cleanup floor and could persist. The corrected harness inserts and deletes a 300000 sentinel after seeding/rebuild, and every logical reset---including between warm-up and measurement---deletes generated rows and restores the next identifier to exactly 300001. An idempotent preflight verifies exact base/fan-out counts and the allocator before and after a campaign. Historical MySQL range-scan outputs near the base-key boundary, aggregation results, and insert state may therefore include undeclared rows and are not used as clean evidence. A further cross-engine gate compares every declared fan-out value and generated identifier after excluding only DBMS-generated timestamps. It exposed a second shared-fixture defect: an advancing PRNG had produced different comment-author assignments across engines despite identical comment counts. The seeder now materializes the fixture once and the 662-row joined representation is byte-identical across engines (SHA-256 \texttt{402e0aebbbc99f6ca32f6e176182fbb4fe753fe273f2e79fb00d5b73a99fe5ca}). The affected pilot was rejected. A corrected-state replacement campaign remeasures all five patterns for all 18 compatible treatment--stack pairs under one version of the instrument. \emph{(iv)~Observer separation}: the HTTP load generator runs in a process
 separate from the server.
 
 \subsection{Measurement procedure}
 Load was generated with \texttt{autocannon}~\cite{autocannon}, a closed-loop (constant-concurrency)
 HTTP/1.1 generator~\cite{schroeder2006open} recording a latency histogram. The accepted corrected-state primary matrix contains 90 configurations with 25 repeated runs each; the superseded campaign remains provenance only. With \texttt{INDEP=1}, each replicate randomizes adapter--engine blocks and boots one fresh server process for the selected read endpoints, which run sequentially in that process; the write endpoint uses another fresh process after the declared state rebuild (a PostgreSQL template restore or the disclosed MySQL in-place rebuild). Thus no application process crosses an adapter, engine, or replicate boundary, but read endpoints within one block share that process, and database buffers plus host/hypervisor state are not reset. At teardown, the server stops accepting requests, awaits every tracked handler promise, closes the adapter pool, and the runner awaits process exit. Each endpoint receives a discarded 15-second warm-up followed by one 12-second measurement at 50 connections. A forward/reverse-order write-cell check found no detectable order effect. The campaign records its ID, deterministic order seed, environment fingerprint, and exact source manifest.
 
-Within a replicate, every layer and engine receives the same request-ID sequence from a PRNG seeded on the endpoint and replicate. The inferential unit is the endpoint-level run; individual requests are subsamples. We
+Within a replicate, every layer and engine draws target identifiers from one generator seeded on the endpoint and replicate, so all layers face the same identifier distribution. They do not receive an identical served sequence: the generator is consumed per request and shared with the warm-up, so layers of unequal throughput enter the measured window at different stream offsets. The pairing that licenses the paired analysis is the block design, not sequence identity. The inferential unit is the endpoint-level run; individual requests are subsamples. We
 report the median of the 25 replicate values of throughput and of the run-level percentiles p50, p90,
 p97.5, and p99.
 Throughout, \emph{p99} denotes this \emph{median run-level p99} --- the
@@ -242,53 +242,54 @@ version-sensitive, this pins a dated snapshot rather than a permanent ranking (S
 
 \subsection{AI-assisted research tooling}
 \label{sec:ai-tooling}
-AI assistance extended to research software and data analysis, not language editing alone, so it is
-documented here as part of the method; the separately required manuscript-preparation declaration
+AI assistance covered research software and data analysis, not language editing alone, so it is
+documented here as part of the method; the publisher's separate manuscript-preparation declaration
 appears before the references.
 
-\paragraph{Tools, models, and provenance} The sole assistant was Claude (Anthropic), operated through
-the Claude Code command-line interface. Three model versions were involved: Claude Opus 4.8 (1M-token
-context), Claude Fable 5, and Claude Opus 5 (1M-token context) for the final revision. No other
-vendor's assistant contributed to the software, analysis, or text. Assistance is recorded per commit
-rather than asserted in aggregate: every AI-assisted commit carries a \texttt{Co-Authored-By} trailer
-naming the model, so its distribution is recoverable from the public history rather than taken on
-trust. Counting the trailers themselves
-(\texttt{git log -{}-format='\%(trailers:key=Co-Authored-By,valueonly)'}) rather than matching message
-text avoids miscounting commits whose messages merely discuss the trailers.
+\paragraph{Tools, models, and provenance} The sole assistant was Claude (Anthropic), via the Claude
+Code command-line interface, in three model versions: Claude Opus 4.8 (1M-token context), Claude
+Fable 5, and Claude Opus 5 (1M-token context) for the final revision. No other vendor's assistant
+contributed to the software, analysis, or text. Assistance is recorded per commit: 189 of 197 commits
+carry a \texttt{Co-Authored-By} trailer naming the model (159 Opus 4.8, 27 Fable 5, 3 Opus 5),
+counted from the trailers themselves
+(\texttt{git log -{}-format='\%(trailers:key=Co-Authored-By,valueonly)'}), not by matching message
+text. The other 8 predate the convention and are unattributed; they include two squash-merges of
+assistant-authored branches and the largest revision commit, so the count understates assistance.
 
 \paragraph{Affected components} Assistance covered the eleven adapters and harness scaffolding, the
-table- and figure-generating scripts (\texttt{scripts/gen-*.mjs}), the statistical estimators
-(\texttt{bench/stats.mjs}), and manuscript prose. The estimators are the one component in which
-generated code carries analytical rather than scaffolding logic: the generators are deterministic
-transformations from archived records to table cells, and the adapters are constrained by a fixed
-contract (Section~\ref{sec:adapter}).
+table and figure generators (\texttt{scripts/gen-*.mjs}), the statistical estimators
+(\texttt{bench/stats.mjs}), and manuscript prose. Only the estimators carry analytical rather than
+scaffolding logic: the generators deterministically transform archived records into table cells, and
+the adapters satisfy a fixed contract (Section~\ref{sec:adapter}).
 
-\paragraph{Review and independent validation} Author review is not offered as the safeguard; each
-category carries a check that does not depend on the generated code being correct. The estimators are
-unit-tested against hand-computed values and closed-form properties --- Wilcoxon signed-rank against a
-hand-computed $z$, bootstrap ratio intervals on inputs with known answers, permutation $p$-values
-verified for symmetry and for the $1/(B+1)$ floor (\texttt{bench/stats.test.mjs}). Every table cell
-traces to a raw per-cell record through a committed generator (\texttt{MANIFEST.md}), so no cell
-exists without a matching archived measurement. The adapters are gated by the specification-derived
+\paragraph{Review and independent validation} Author review is not the safeguard; each category
+carries a check independent of the generated code. The estimators are unit-tested against
+hand-computed values and closed-form properties --- Wilcoxon signed-rank against a hand-computed $z$,
+bootstrap ratio intervals on inputs with known answers, permutation $p$-values verified for symmetry
+and for the $1/(B+1)$ floor (\texttt{bench/stats.test.mjs}). Every \emph{measured} table cell traces
+through a committed generator to an archived per-cell record; \texttt{MANIFEST.md} marks the authored
+analytical tables --- the protocol mapping, estimand summary, and compliance table --- which report
+no measurement and lie outside that guarantee. The adapters are gated by the specification-derived
 oracle (\texttt{bench/verify-spec.mjs}), which replays the deterministic seed in memory without
-importing an adapter or reading timed native-driver output, and by differential and write-state checks
+importing an adapter or reading timed native output, and by differential and write-state checks
 (Supplement Table~S38).
 
-\paragraph{Extent of assistance in analysis and interpretation} The assistance was not confined to
-implementation. The assistant contributed substantively to selecting the statistical procedures ---
-the paired sign-flip permutation test and its Wilcoxon cross-check, the geometric-mean paired ratio
-and its bootstrap interval, Cliff's delta, the equivalence test and its $\pm5\%$ margin, and the
-blocked interaction test --- and to drafting the interpretation of the resulting numbers. Every such
-procedure is nonetheless a named, published method whose applicability the author verified against
-performance-evaluation guidance~\cite{georges2007rigorous,arcuri2014hitchhiker,cliff1993dominance};
-none is generated or bespoke. The author reviewed, revised where necessary, and takes full
-responsibility for every choice, interpretive claim, and cited reference.
+\paragraph{Extent of assistance in analysis} Assistance was not confined to typing code. Candidate
+procedures --- the paired sign-flip permutation test and its Wilcoxon cross-check, the geometric-mean
+paired ratio and its bootstrap interval, Cliff's delta, the equivalence test and its $\pm5\%$ margin,
+and the blocked interaction test --- were proposed with assistant support, as was prose describing
+what they compute. Each is a named, published method, none generated or bespoke. The author chose
+among the candidates against performance-evaluation
+guidance~\cite{georges2007rigorous,arcuri2014hitchhiker,cliff1993dominance}, verified each against
+the blocked design, wrote every interpretive claim here, and checked every reference against its
+source, taking full responsibility for all of them.
 
-Author independence is therefore not the control on this assistance; the mechanical checks above are,
-and a reader who discounts our review entirely can still run each of them. What they cannot establish
-is that the chosen analyses were the \emph{best} available rather than merely defensible. That
-judgement is disclosed as jointly reached and author-approved, and is a further reason the protocol
-asks for independent implementation review (R7, Section~\ref{sec:threats}).
+Author independence therefore does not secure this analysis; the mechanical checks do, and a reader
+who discounts our review can still run them. Their limit is exact: they establish that the estimators
+compute what they claim and that each measured number came from an archived measurement. \emph{No}
+check bears on whether the chosen procedures suit the question or whether the claims drawn from them
+are sound. Those rest on author judgement alone --- a further reason the protocol asks for
+independent implementation review (R7, Section~\ref{sec:threats}).
 
 \subsection{Replication package}
 The harness --- the Express application, the adapter contract, all eleven adapters, the deterministic

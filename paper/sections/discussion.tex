@@ -37,7 +37,10 @@ positions; its MySQL leader changes from Drizzle to Knex. We therefore do not cl
 a durable fine ordering for MySQL insert. The recurring, material insert reversal
 is narrower: Prisma exceeds MikroORM on PostgreSQL and trails it on MySQL in both
 campaigns, with paired intervals excluding equality in opposite directions
-(Supplement Table~S46). This supports backend-stack sensitivity in the tested
+(Supplement Table~S46). Every promoted reversal involves Prisma, whose MySQL path uses
+the MariaDB adapter rather than \texttt{mysql2}, so backend-stack sensitivity here is
+inseparable from that driver substitution and describes one treatment, not ORMs as a
+class. This supports backend-stack sensitivity in the tested
 implementations while leaving cross-host transfer unresolved. A five-replicate,
 one-layer-per-tier six-statement transaction remains exploratory and does not
 extend the single-row-insert finding to writes as a class (Supplement Table~S8).
@@ -68,21 +71,27 @@ external benchmark sources retained by the scoping search. Its 63 source-located
 judgements yield explicit claim licenses rather than a binary quality score
 (Supplement Table~S37). This demonstrates that the protocol can structure an
 external evidence audit; because the manuscript author was the sole rater, it does
-not establish inter-rater agreement or independent general applicability. The
+not establish inter-rater agreement or independent general applicability. Two limits
+of that exercise deserve statement. No source was coded \emph{satisfied} on any stage:
+all 63 judgements fall in \emph{partial}, \emph{not reported}, or \emph{not applicable},
+so the codebook's upper range is untested and it presently discriminates less finely than
+its five codes suggest. And agreement computed against this rater would estimate
+agreement with the protocol's own designer, who was neither blind nor independent ---
+informative about whether the codebook can be applied consistently, but not a
+reliability estimate for it. Two blind raters would be the stronger design. The
 methodological claim is consequently an access-layer-specific operational
 discipline and reusable artifact, not invention of the constituent controls or a
 complete theory of benchmarking validity.
 
 What is demonstrated is that the protocol is \emph{executable}: it admits and
-rejects concrete cells, it changed five interpretations here
-(Table~\ref{tab:protocol_mapping}), and it codes an external corpus to a
+rejects concrete cells, it changed the reported interpretation at each stage recorded
+in Table~\ref{tab:protocol_mapping}, and it codes an external corpus to a
 reproducible per-stage result. What is not demonstrated is \emph{reusability by
-another person} --- that a second analyst applying the codebook reaches the same
-judgements, or that another team can instantiate the protocol without its author.
-That is an empirical question, left open rather than argued around: the codebook,
-audit record, agreement scorer, and result-blind forms are released so it can be
-settled against this study. The contribution should be read as a structured,
-testable proposal with one worked instantiation, not a validated methodology.
+another person}: that a second analyst reaches the same judgements, or that another
+team can instantiate the protocol without its author. The codebook, audit record,
+agreement scorer, and result-blind forms are released so that question can be settled
+against this study. The contribution is a structured, testable proposal with one worked
+instantiation, not a validated methodology.
 
 \paragraph{Practical guidance}
 The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in this
