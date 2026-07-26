@@ -252,7 +252,9 @@ context), Claude Fable 5, and Claude Opus 5 (1M-token context) for the final rev
 vendor's assistant contributed to the software, analysis, or text. Assistance is recorded per commit
 rather than asserted in aggregate: every AI-assisted commit carries a \texttt{Co-Authored-By} trailer
 naming the model, so its distribution is recoverable from the public history rather than taken on
-trust (\texttt{git log -{}-grep="Co-Authored-By: Claude"}).
+trust. Counting the trailers themselves
+(\texttt{git log -{}-format='\%(trailers:key=Co-Authored-By,valueonly)'}) rather than matching message
+text avoids miscounting commits whose messages merely discuss the trailers.
 
 \paragraph{Affected components} Assistance covered the eleven adapters and harness scaffolding, the
 table- and figure-generating scripts (\texttt{scripts/gen-*.mjs}), the statistical estimators

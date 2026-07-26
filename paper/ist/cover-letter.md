@@ -24,7 +24,7 @@ The manuscript records two residual limitations without disguising them: all ada
 
 The artifact includes pinned dependencies, immutable documentation snapshots and hashes, exact 42-file source archives for both accepted campaigns, the seed oracle, campaign-state validator, raw per-repetition measurements, a machine-readable protocol checklist, the external-audit dataset, and generators mapping every reported table and figure to its inputs. The complete revision artifact is archived as v1.12.15 under immutable Zenodo version DOI 10.5281/zenodo.21599104; concept DOI 10.5281/zenodo.21313858 resolves to the release series.
 
-The article uses the required structured abstract. The separately documented conservative submission equivalent is 14,783 words, including all required declarations, leaving 217 words below the 15,000-word limit.
+The article uses the required structured abstract. The separately documented conservative submission equivalent is 14,803 words, including all required declarations, leaving 197 words below the 15,000-word limit.
 
 The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding. The manuscript includes declarations covering generative-AI assistance in writing and research software; the author accepts responsibility for all content and results.
 
