@@ -82,7 +82,7 @@
 
 ## 5. Open before submission
 
-- [ ] **Deposit v1.12.16 on Zenodo**, then `scripts/release.sh 1.12.16 <doi> --publish`.
+- [ ] **Deposit the next version on Zenodo**, then `scripts/release.sh <version> <doi> --publish`.
       Until this is done the manuscript's Data Availability statement points at a
       release that does not contain the revision; `scripts/release.sh --check` fails
       and `make ist-package` refuses to build. This is the only item blocking submission.
