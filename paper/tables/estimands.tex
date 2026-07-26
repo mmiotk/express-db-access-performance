@@ -2,7 +2,7 @@
   \centering
   \small
   \caption{Estimands defined in this study, consolidating the identification qualifications
-    stated across Sections~\ref{sec:methodology} and~\ref{sec:results}. Each quantity is
+    stated across the main text's Study Design and Results. Each quantity is
     \emph{descriptive} of the treatment as defined; only relative within-condition differences are
     meant to travel, and rankings are configuration- and version-specific.}
   \label{tab:estimands}
@@ -14,7 +14,7 @@
     Policy-selected documented configuration performance (RQ1, primary) &
     Performance of the configuration selected by the frozen-page policy (throughput, p99) &
     Library-only overhead; the most common or most performant usage &
-    Tables~\ref{tab:deep_fetch},~\ref{tab:write} \\
+    Main text, deep-fetch and insert tables \\
     \addlinespace
     Common-SQL raw-path sensitivity contrast (diagnostic) &
     Residual spread once every layer runs common SQL through its raw facility &
@@ -34,7 +34,7 @@
     High-load p99 under equal closed-loop demand (primary tail) &
     The tail a deployment sees at fixed 50-connection demand, including acquisition queueing &
     The tail at comparable utilization; the pooled cross-run p99 &
-    Table~\ref{tab:deep_fetch} \\
+    Main text, deep-fetch table \\
     \addlinespace
     Matched-utilization tail (p99 at matched fractions of own capacity) &
     p99 when each layer is offered 50\% and most 70\% of its estimated capacity; 85--95\% cells are secondary near-saturation trends &
@@ -44,7 +44,7 @@
     Layer$\times$engine interaction magnitude (RQ2) &
     The spread of each layer's PostgreSQL$\div$MySQL stack ratio and the concrete rank reversals &
     A pure DBMS effect; stability across hosts or deployments. Recurrence across the two same-host campaigns is used only as a within-host stability screen &
-    Supplement Table~S28; \S\ref{sec:results} (RQ2) \\
+    Supplement Table~S28; main text, Results (RQ2) \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

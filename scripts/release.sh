@@ -171,12 +171,23 @@ refresh_counts
 
 echo
 echo "Rebuilding documents..."
-make pdf >/dev/null && make supplement >/dev/null && make ist >/dev/null
+# Built twice: on a cold tree the first pass has no .aux/.bbl, so cross-references
+# and citations are legitimately unresolved until a second pass. Checking after
+# one pass would abort on a healthy build.
+build_all() {
+  make pdf >/dev/null 2>&1 && make supplement >/dev/null 2>&1 && make ist >/dev/null 2>&1
+}
+build_all || true
+build_all || { echo "ABORT: build failed."; exit 1; }
 make -C paper/ist docs >/dev/null 2>&1 || true
 
 for log in paper/_build/express_db_access.log paper/_build/supplement.log paper/ist/ist_main.log; do
+  [[ -f "$log" ]] || { echo "ABORT: $log not produced."; exit 1; }
   n=$(grep -c undefined "$log" || true)
-  [[ "$n" == "0" ]] || { echo "ABORT: $log has $n undefined references."; exit 1; }
+  [[ "$n" == "0" ]] || {
+    echo "ABORT: $log has $n undefined reference(s) after two passes:"
+    grep -m5 undefined "$log" | sed 's/^/    /'
+    exit 1; }
 done
 echo "  builds clean (0 undefined references)"
 
