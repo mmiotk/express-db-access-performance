@@ -56,4 +56,4 @@ Ordered roughly by priority. `[ ]` open, `[x]` done.
 ## 4. Packaging
 
 - [ ] `git remote add origin …`, first push.
-- [ ] Zenodo deposit (adapt scripts from react-rendering-performance if reused).
+- [x] Zenodo v1.12.14 deposit prepared under version DOI 10.5281/zenodo.21597642.

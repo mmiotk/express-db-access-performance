@@ -15,9 +15,9 @@ This revision addresses the scientific-status concerns raised in the July 23 rev
 
 The manuscript also records two residual limitations without disguising them: all adapters and treatment assignments remain single-author, and both measurement campaigns use the same virtualized host. The protocol now includes independent implementation-review provenance as a recommended stage; result-blind review packets are supplied, but no unperformed human audit is counted as evidence.
 
-The artifact includes pinned dependencies, immutable documentation snapshots and hashes, exact 42-file source archives for both accepted campaigns, the seed oracle, campaign-state validator, raw per-repetition measurements, a machine-readable protocol checklist, the external-audit dataset, and generators mapping every reported table and figure to its inputs. The published baseline remains available under Zenodo concept DOI 10.5281/zenodo.21313858. The present revision candidate will receive a new immutable version DOI before submission and is not described as archived prematurely.
+The artifact includes pinned dependencies, immutable documentation snapshots and hashes, exact 42-file source archives for both accepted campaigns, the seed oracle, campaign-state validator, raw per-repetition measurements, a machine-readable protocol checklist, the external-audit dataset, and generators mapping every reported table and figure to its inputs. The complete revision artifact is archived as v1.12.14 under immutable Zenodo version DOI 10.5281/zenodo.21597642; concept DOI 10.5281/zenodo.21313858 resolves to the release series.
 
-The article uses the required structured abstract. The separately documented conservative submission equivalent is 13,879 words, including all required declarations, leaving 1,121 words below the 15,000-word limit.
+The article uses the required structured abstract. The separately documented conservative submission equivalent is 13,859 words, including all required declarations, leaving 1,141 words below the 15,000-word limit.
 
 The work is original, has not been published previously, and is not under consideration elsewhere. I declare no competing interests and received no funding. The manuscript includes declarations covering generative-AI assistance in writing and research software; the author accepts responsibility for all content and results.
 

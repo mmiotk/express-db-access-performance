@@ -7,14 +7,14 @@ The official IST journal policy confirms a **15,000-word maximum for research pa
 
 | Component | Count |
 |---|---:|
-| Seven body sections (`texcount` sum, including section headings and caption text encountered in those files) | 9,657 |
+| Seven body sections (`texcount` sum, including section headings and caption text encountered in those files) | 9,644 |
 | Structured abstract (`texcount` sum) | 227 |
-| Remaining front matter and required declarations (title/keywords, CRediT, competing interest, data availability, funding, and AI-use disclosures) | 595 |
+| Remaining front matter and required declarations (title/keywords, CRediT, competing interest, data availability, funding, and AI-use disclosures) | 588 |
 | Main-text tables and figures (7 × 200) | 1,400 |
 | Rendered reference list (65 entries; conservative `pdftotext` count including the heading and page folios) | 2,000 |
-| **Conservative IST submission equivalent** | **13,879** |
+| **Conservative IST submission equivalent** | **13,859** |
 
-The controlling total is therefore **13,879 words**, leaving **1,121 words of headroom** under the 15,000-word limit. The structured abstract contains 222 prose words (227 under the `texcount` sum convention), below 300 words.
+The controlling total is therefore **13,859 words**, leaving **1,141 words of headroom** under the 15,000-word limit. The structured abstract contains 222 prose words (227 under the `texcount` sum convention), below 300 words.
 
 This total is intentionally stricter than a research-content-only count. It includes all required declaration text even though such text is commonly treated as submission metadata. It also retains caption words already encountered by `texcount` and then assigns the full 200-word allowance to every rendered float, so it does not undercount captions. The paper has no manuscript appendices. The separately submitted `supplement.pdf` is online supplementary material, not an appendix embedded in the research paper.
 
