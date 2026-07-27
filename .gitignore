@@ -85,3 +85,6 @@ Thumbs.db
 raw-indep.partial.json
 experiments/results/*.log
 experiments/results/*.bak
+
+# Claude Code personal overrides (may contain machine-specific paths)
+.claude/settings.local.json

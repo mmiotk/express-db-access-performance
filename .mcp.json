@@ -1,0 +1,20 @@
+{
+  "_comment": "Project-scoped MCP servers. Claude Code expands ${VAR} here, so no secrets are stored in this file. Servers must be approved on first use.",
+  "mcpServers": {
+    "arxiv": {
+      "_comment": "blazickjp/arxiv-mcp-server (Apache-2.0). Search arXiv, read author-submitted LaTeX, traverse citation graph. No API key. Cache is outside the repo so PDFs are never committed.",
+      "command": "uvx",
+      "args": ["arxiv-mcp-server", "--storage-path", "/home/mmiotk/repositories/.literature-cache/arxiv"]
+    },
+    "papers": {
+      "_comment": "openags/paper-search-mcp (MIT). Unified search over Crossref, OpenAlex, DBLP, Semantic Scholar, arXiv, PMC, Zenodo, Unpaywall. Only the Unpaywall e-mail is required; the API keys are optional rate-limit boosters. Do NOT use its Sci-Hub fallback.",
+      "command": "uvx",
+      "args": ["paper-search-mcp"],
+      "env": {
+        "PAPER_SEARCH_MCP_UNPAYWALL_EMAIL": "${UNPAYWALL_EMAIL}",
+        "PAPER_SEARCH_MCP_SEMANTIC_SCHOLAR_API_KEY": "${SEMANTIC_SCHOLAR_API_KEY:-}",
+        "PAPER_SEARCH_MCP_CORE_API_KEY": "${CORE_API_KEY:-}"
+      }
+    }
+  }
+}
