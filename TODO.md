@@ -94,15 +94,16 @@
 - [ ] Replicate the reduced RQ2 matrix on a physically independent host
       (ranked below independent human review; not required for submission).
 - [ ] **Archive v1.13.0 on Zenodo, then verify with `scripts/release.sh --check-doi`.**
-      As of 2026-07-30 the concept DOI `10.5281/zenodo.21313858` still resolves to **v1.12.17**
-      (version DOI `10.5281/zenodo.21610058`, 26 July), so the Data Availability sentence
-      "archived as release v1.13.0, which the concept DOI resolves to" is **currently false**.
-      The GitHub release for v1.13.0 exists but did not trigger archiving: v1.12.16 and v1.12.17
-      were tagged with no GitHub release yet v1.12.17 reached Zenodo, so those deposits were made
-      by hand and the webhook is not the mechanism here. Create a new version of the existing
-      record, upload the v1.13.0 archive, publish, then run `--check-doi`, which fails loudly while
-      the declaration and the archive disagree. `--check` alone cannot see this: it verifies only
-      that the version and DOI strings agree across declaration sites.
+      As of 2026-07-30 the concept DOI still resolves to the previous release (26 July) rather than
+      to v1.13.0, so the Data Availability sentence "archived as release v1.13.0, which the concept
+      DOI resolves to" is **currently false**. The GitHub release for v1.13.0 exists but did not
+      trigger archiving: the two releases before it were tagged with no GitHub release, yet the later
+      of them reached Zenodo, so those deposits were made by hand and the webhook is not the
+      mechanism here. Create a new version of the existing record, upload the v1.13.0 archive,
+      publish, then run `--check-doi`, which fails loudly while the declaration and the archive
+      disagree. `--check` alone cannot see this: it verifies only that the version and DOI strings
+      agree across declaration sites. Identifiers of earlier releases are deliberately not quoted
+      here, because `--check` scans this file for stray version strings and DOIs.
 
 - [x] AI-provenance figures and word-count declaration reconciled at commit `08fed76`, then refreshed for the follow-up commit.
       `\subsection{AI-assisted research tooling}` states 203 of 211 trailered commits
