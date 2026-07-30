@@ -78,14 +78,13 @@ path narrowed, but did not decompose, the selected-treatment spread (Supplement 
 to the nine external sources, the codebook yields claim licenses rather than a binary quality score
 (Supplement Table~S37).
 
-What this demonstrates is that the protocol is \emph{executable}: it admits and rejects concrete
-cells, it changed the reported interpretation at every stage exercised here (R7 excepted, being
-unsatisfied), and it codes an external corpus to a reproducible per-stage result. What it does not
-demonstrate is \emph{reusability by another person} --- that a second analyst reaches the same
-judgements, or that another team can instantiate the protocol without its author. Two limits sharpen
-this. No source was coded \emph{satisfied} on any stage, so the codebook's upper range is untested;
-and agreement against this rater would measure agreement with the protocol's own designer, who was
-neither blind nor independent, where two blind raters would be the stronger design. The codebook,
+This demonstrates that the protocol is \emph{executable}: it admits and rejects concrete cells, it
+changed the reported interpretation at every stage exercised here (R7 excepted, being unsatisfied),
+and it codes an external corpus to a reproducible per-stage result. It does not demonstrate
+\emph{reusability by another person}. Two limits sharpen this: no source was coded \emph{satisfied}
+on any stage, so the codebook's upper range is untested, and agreement against this rater would
+measure agreement with the protocol's own designer, where two blind raters would be the stronger
+design. The codebook,
 audit record, agreement scorer, and result-blind forms are released so the question can be settled
 against this study. The claim is therefore a \emph{candidate} access-layer-specific discipline and reusable artifact,
 demonstrated once: not invention of the constituent controls, not a complete theory of benchmarking
@@ -94,9 +93,8 @@ Section~\ref{sec:methodology}: until an analyst outside this study applies the p
 checklist worth testing rather than one already tested.
 
 \paragraph{Practical guidance}
-The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in this
-configuration and workload --- single host, default durability, one pool size, pinned versions
-(Section~\ref{sec:threats}) --- not access-layer categories in general. Because the fan-out sweep varies breadth (0--500 children) but not depth,
+The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in the tested
+configuration (Section~\ref{sec:threats}), not access-layer categories in general. Because the fan-out sweep varies breadth (0--500 children) but not depth,
 schema, or query mix, the deep-fetch peak locates a difference among five probes on one synthetic
 schema: an observation to re-measure on the target workload, not a law. Where a hot path resembles the tested deep fetch the access layer is
 consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for

@@ -48,11 +48,15 @@ a distinct threat to interpretability, and a study may satisfy some and not othe
 admissible claims rather than invalidating the reported numbers. The full normative specification ---
 stage definitions, the cell-admission rule, applicability limits of the output comparator, the
 six-level compliance scheme, and the level each workload cell attains here --- is in the online
-supplement, with the diagram in Supplement Figure~S5 and a machine-readable encoding in
-\texttt{protocol-checklist.yaml}. The stages cover the admission-through-interpretation dimensions
+supplement, with a machine-readable encoding in \texttt{protocol-checklist.yaml};
+Figure~\ref{fig:protocol} states the inputs, stages, cell-admission rule, and output
+interpretation. The stages cover the admission-through-interpretation dimensions
 addressed here; they are not asserted to be a complete taxonomy of every threat to access-layer
 benchmarking. Here M1--M2 cover the full matrix, R4 every pattern, R3/R5/R6 the deep fetch, and R7
 the measured source.
+
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
+\input{\tabledir fig_protocol}
 
 \paragraph{Protocol development versus protocol validation} The protocol was not specified in full
 before the measurements it governs. We separate \emph{development evidence} (the protocol finding
@@ -300,8 +304,8 @@ Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fa
 Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI Codex was used
 once, after the manuscript was otherwise complete, for an independent critical pre-submission
 review; the author evaluated its comments and is responsible for which were acted on. Assistance is
-recorded per commit: 210 of 218 commits carry a \texttt{Co-Authored-By} trailer naming the model
-(159 Opus 4.8, 27 Fable 5, 24 Opus 5), counted from the trailers themselves rather than message
+recorded per commit: 211 of 219 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 25 Opus 5), counted from the trailers themselves rather than message
 text. The other 8 predate the convention and include two squash-merges of assistant-authored
 branches and the largest revision commit, so the count understates assistance.
 

@@ -28,14 +28,12 @@ of it (Section~\ref{sec:protocol} defines the term): an \emph{identical} Express
 through all nine access layers (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize,
 TypeORM, Objection, MikroORM) over five selected access patterns --- point read, keyset range scan,
 deep fetch, per-author aggregation, and insert. The five stress distinct aspects of the access layer
-and are not a representative sample of Express/database workloads. Seven layers run against
-\emph{both} engines under an identical schema, dataset, and pool size; two tuned native-driver
-baselines provide disclosed reference points rather than an optimization ceiling. Every (layer,
-engine, pattern) reports throughput and the \emph{high-load response-time p99 under equal
-closed-loop demand} at a fixed 50-connection operating point over 25 runs. At that near-saturation
-point the p99 largely tracks capacity and queueing, so a lower-capacity layer looks worse on the tail
-even where its sub-saturation latency does not; we therefore also report the tail at \emph{matched
-utilization}. Two estimands are kept apart: the \emph{policy-selected documented configuration}
+and are not a representative sample of Express/database workloads. Seven layers run against \emph{both} engines under an identical schema,
+dataset, and pool size; two tuned native-driver baselines are disclosed reference points, not an
+optimization ceiling. Every (layer, engine, pattern) reports throughput and the high-load p99 under
+equal closed-loop demand at a fixed 50-connection point over 25 runs. That point sits near
+saturation, where the p99 largely tracks capacity and queueing, so we also report the tail at
+\emph{matched utilization}.
 performance of each layer (RQ1--RQ3), and a \emph{common-SQL raw-path sensitivity} contrast reporting
 the residual under identical SQL, which changes query formulation, protocol, preparation, round trips,
 and mapping together rather than isolating any one. The full harness --- adapters, seed data, an
@@ -90,13 +88,16 @@ cell-admission criteria, interpretation, and limits): a concrete discipline for 
         matched utilization are reported as \emph{distinct} quantities, not conflated at one load
         point.
 \end{itemize}
-These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The contribution is therefore not any individual control but their integration and operationalization for relational access-layer comparison: a protocol linking semantic admission, treatment-definition discipline, sensitivity contrasts, capacity characterization, operating-point separation, resource accounting, and implementation checks to the claims an access-layer benchmark is entitled to make. We \emph{exercise} that discipline through an in-experiment ablation and a single-rater audit of nine external benchmarks; neither is independent inter-rater validation. The supporting evidence is also developmental rather than external: the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss, and treatment provenance, capacity characterization, and the common-SQL path each changed a further interpretation (Supplement Table~S50). That the protocol caught real defects during development shows that it does work, but those defects were found by the same author who designed the checks, so they demonstrate utility and do not validate the mature protocol. The machine-readable checklist, source-located audit, and result-blind review packets make the discipline available for the independent reassessment that remains future work.
+These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies
+differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The
+contribution is not any individual control but their integration and operationalization for
+relational access-layer comparison. We \emph{exercise} that discipline through an in-experiment
+ablation and a single-rater audit of nine external benchmarks; neither is independent validation,
+and Section~\ref{sec:discussion} sets out what the exercise does and does not establish.
 
 Two contributions should be kept apart. The \emph{methodological} contribution is the protocol
 and its checklist: proposals for how access-layer comparisons should be conducted, reported,
-and audited. The \emph{empirical} contribution is one instantiation of them --- nine
-configurations, two engines, five patterns, one schema and data scale, one pool size, one
-virtualized host, and two same-host campaigns. Every performance result below is scoped to
-those conditions and to the tested software versions; none is offered as a property of a
-library, and the study measures no non-performance quality such as maintainability, type
-safety, migration tooling, or ecosystem maturity.
+and audited. The \emph{empirical} contribution is one instantiation of them, scoped to the
+conditions and software versions of Section~\ref{sec:methodology}. No result is offered as a
+property of a library, and the study measures no non-performance quality such as maintainability,
+type safety, migration tooling, or ecosystem maturity.

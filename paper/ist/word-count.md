@@ -7,11 +7,11 @@ The official IST journal policy confirms a **15,000-word maximum for research pa
 
 | Component | Count |
 |---|---:|
-| Seven body sections (`texcount` sum, including section headings and caption text encountered in those files) | 12,054 |
+| Seven body sections (`texcount` sum, including section headings and caption text encountered in those files) | 11,853 |
 | Structured abstract (`texcount` sum) | 295 |
 | Remaining front matter and required declarations (title/keywords, CRediT, competing interest, data availability, funding, and AI-use disclosures) | 443 |
-| Main-text tables and figures (1 × 200) | 200 |
-| Rendered reference list (65 entries after removing 12 uncited ones; `pdftotext` count from the first entry to the end, form feeds stripped) | 1,995 |
+| Main-text tables and figures (2 × 200) | 400 |
+| Rendered reference list (65 entries after removing 12 uncited ones; `pdftotext` count from the first entry to the end, form feeds stripped) | 1,996 |
 | **Conservative IST submission equivalent** | **14,987** |
 
 The controlling total is therefore **14,987 words**, leaving **13 words of headroom** under the 15,000-word limit. The structured abstract contains 295 words under the `texcount` sum convention, below the 300-word limit.
