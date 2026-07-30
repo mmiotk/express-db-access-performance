@@ -6,8 +6,8 @@ categories~\cite{cook1979quasi,wohlin2012experimentation}.
 
 \paragraph{Construct validity of the measures}
 Our dependent variables are HTTP-level throughput (req/s) and tail latency (p99) at the Express
-endpoint, not query-execution time at the driver boundary. This is deliberate --- it captures the
-full request round trip --- though overhead attributed to the \emph{access layer} may partly
+endpoint, not query-execution time at the driver boundary. This is deliberate (it captures the
+full request round trip) though overhead attributed to the \emph{access layer} may partly
 reflect Express routing and serialization. We hold those
 near-constant: every adapter satisfies a documented \emph{adapter contract} and
 funnels rows through shared canonical constructors (fixed field set, key order,
@@ -29,8 +29,8 @@ stack-specific relaxed-durability sensitivity quantifies how each configured tre
 
 \paragraph{Construct validity of the treatment}
 RQ1's treatment is each layer's \emph{policy-selected documented} implementation and
-eager-loading strategy: an operational rule --- the API the official
-documentation presents first --- not validated against surveyed, typical, or
+eager-loading strategy: an operational rule (the API the official
+documentation presents first) not validated against surveyed, typical, or
 performance-tuned usage. It is an intentionally artificial, predeclared selection
 policy, not a behavioral practitioner model. The frozen pages, conflict rule, and assignments make the decision auditable, but the single author both defined and applied it; two blind selection reviews are prepared and still pending. Where the policy differs from a
 performance-tuned configuration, RQ1's spread mixes the library's
@@ -38,7 +38,7 @@ execution machinery with that strategy choice, made material by the one-to-four
 statement range on the deep fetch (Supplement Table~S2). Three sensitivity checks qualify it. First, every selected path and alternative is preserved with the source-page hash (Supplement Table~S33 and \texttt{METHODOLOGY.md}); this is provenance, not evidence of frequency or idiomaticity. Second, the \emph{common-SQL raw-path sensitivity contrast} runs
 common SQL through every layer's raw facility, so the raw-path spread (deep fetch
 $1.71\times$, against $7.01\times$ for the selected configuration;
-Section~\ref{sec:results}) is far smaller --- a compound sensitivity
+Section~\ref{sec:results}) is far smaller, a compound sensitivity
 contrast, not a decomposition or bound on how much comes from the loading
 strategy versus the library machinery. Third, where the documented alternative is
 a byte-identical drop-in, a loading-strategy check (Supplement Table~S18) shows
@@ -63,11 +63,11 @@ a static check reports values acquired and never read, clean on all 13 modules o
 source, and a runtime gate rejects any cell writing to \texttt{stderr} or \texttt{stdout} during a
 measured run. The runtime gate postdates the reported campaign and did not gate it, so absence of
 output there rests on author observation. Neither covers waste that is silent \emph{and} invisible in
-the source --- an unnecessarily expensive documented configuration, say --- so the residual narrows
+the source (an unnecessarily expensive documented configuration, say) so the residual narrows
 without closing: a correct, policy-conformant adapter uniformly slower than a differently written one
 would pass every check. We report it as open, not discharged. The same caution applies more widely: four admission
-elements --- the specification-derived oracle, seed-parity and campaign-state verification, and
-the dead-work check --- postdate the accepted campaigns
+elements (the specification-derived oracle, seed-parity and campaign-state verification, and
+the dead-work check) postdate the accepted campaigns
 (Supplement Table~S48). Because they replay a deterministic seed and inspect
 archived state, they can invalidate archived results, and did so for the superseded pilot; but
 they did not gate the timed runs as those runs executed, so a defect observable only while a run
@@ -89,7 +89,7 @@ Table~S11). The fixed pool does not drive the ranking: the pool-size frontier
 mixed read/write workload (S26) preserves the read ordering. Two choices are
 disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is
 prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no
-\texttt{mysql2} adapter --- an implementation$\times$engine asymmetry. The
+\texttt{mysql2} adapter, an implementation$\times$engine asymmetry. The
 memory-resident working set is a hot-cache regime that makes access-layer overhead
 more visible; as a workload becomes I/O-bound the spreads may compress toward
 $1\times$. Same-host checks do not bound an independent substrate: a post-restart rerun of six representative cells moved absolute throughput by up to 16\% against the campaign prevailing when it ran, which is the superseded pilot rather than the accepted campaign, since the restart check preceded the latter. The corrected-state 25-run campaign repeats all five patterns with a new randomized order and environment fingerprint on the same host. Cross-campaign agreement or disagreement is reported directly; it reduces dependence on one overnight ordering but does not address host, hypervisor-neighbor, CPU-steal, or frequency transfer. No empirical ordering is intended to travel beyond the tested campaigns, and close cross-backend rank reversals are exploratory unless their direction repeats. Every promoted RQ2 reversal involves the single treatment whose MySQL driver differs, and a leave-one-out repetition of the promotion procedure without it promotes none (Supplement Table~S49); the promoted-reversal evidence is therefore conditional on that driver substitution, which the design cannot separate from the treatment or from the DBMS. The protocol evidence is also bounded: its external audit has one rater, so general independent applicability remains to be tested.
@@ -105,7 +105,7 @@ spreads dwarf the deep-fetch run-to-run CV ($\leq4.5\%$); insert CV reaches $6.4
 holds across the concurrency sweep at $\geq32$ connections (Supplement
 Figure~S2). Rather than assert a specific statistical power (absent a prespecified
 effect-size model), we rest the conclusions on effect sizes and interval
-estimates --- foremost the \emph{predefined} native-driver contrasts (Supplement
+estimates, foremost the \emph{predefined} native-driver contrasts (Supplement
 Table~S41), keeping the ranking-selected adjacent-pair permutation tests only as a
 descriptive post-hoc check. Application processes do not cross adapter, engine, or replicate blocks, although read endpoints within a block share one process~\cite{kalibera2013rigorous}. All blocks share one host; primary intervals remain within-campaign, while the corrected RQ2 subset has a second same-host campaign. The secondary experiments covering only a layer subset or few replicates
 (Supplement Table~S32) are read as \emph{sensitivity evidence} on the tested subset, not as claims

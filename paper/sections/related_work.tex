@@ -1,8 +1,8 @@
 \section{Related Work}
 \label{sec:related}
 
-We survey prior work along four \emph{coverage} axes --- taxonomy, engine, joint throughput/tail
-reporting, and vendor involvement --- spanned by this experiment (Supplement Table~S51). We separately audit which comparability controls each source reports. A structured
+We survey prior work along four \emph{coverage} axes (taxonomy, engine, joint throughput/tail
+reporting, and vendor involvement) spanned by this experiment (Supplement Table~S51). We separately audit which comparability controls each source reports. A structured
 scoping search (not a systematic review) of the ACM Digital Library, IEEE Xplore, Scopus, and Google
 Scholar (2006--July~2026) retained empirical comparisons of relational access layers or engines, with
 search details archived in the replication package (\texttt{notes/related-work-search.md}); being
@@ -13,7 +13,7 @@ Access layers bridge the object-relational impedance mismatch between the relati
 application's object graphs~\cite{ireland2009impedance}, spanning native drivers, query builders, and
 ORMs following Data Mapper / Active Record patterns~\cite{fowler2002patterns}
 (Section~\ref{sec:introduction}). Torres et al.~\cite{torres2017orm} survey two decades of ORM
-patterns; their trade-off --- productivity against a hard-to-predict runtime cost --- motivates what
+patterns; their trade-off (productivity against a hard-to-predict runtime cost) motivates what
 we measure while holding the store family (relational rather than
 non-relational~\cite{sadalage2012nosql}) fixed. The treatment is the configured
 access-layer implementation bundle, including its selected API, SQL, protocol, and mapping path;
@@ -29,8 +29,8 @@ synthesis, batching, or caching~\cite{cheung2013querysynthesis,cheung2014sloth,c
 (with a JavaScript \texttt{async}/\texttt{await} analogue~\cite{turcotte2022asyncjs}). Closest to our
 design, Lorenz et al.~\cite{lorenz2017orm} show the best mapping strategy depends on database
 technology, van Zyl et al.~\cite{vanzyl2009optimisations} that it is tuning-sensitive, and a recent
-study adds an energy dimension~\cite{bonvoisin2024orm}. Overhead is thus configurable, not fixed ---
-as our per-pattern results confirm --- but this line never compares drivers, query builders, and ORMs
+study adds an energy dimension~\cite{bonvoisin2024orm}. Overhead is thus configurable, not fixed, 
+as our per-pattern results confirm, but this line never compares drivers, query builders, and ORMs
 head-to-head under load, our aim.
 
 Cross-implementation ORM equivalence checking has a direct precedent. CYNTHIA generates an abstract
@@ -98,8 +98,8 @@ scoped to it: we do not claim that no other benchmark implements these controls.
 codebook, screening record, and per-judgement evidence are in the online supplement and the
 replication package.
 
-In the sources searched, no access-layer benchmark reports all seven protocol dimensions --- unsurprisingly, since the seven are this paper's own construction: the audit measures distance from a new standard, not failure to meet a known one. The source-located audit in Supplement Table~S37 records partial controls rather than treating non-reporting as proof of absence, and we found no study combining broad product coverage, both engines, joint throughput/tail
-reporting, and non-vendor authorship --- each covers at most two or three
+In the sources searched, no access-layer benchmark reports all seven protocol dimensions, unsurprisingly, since the seven are this paper's own construction: the audit measures distance from a new standard, not failure to meet a known one. The source-located audit in Supplement Table~S37 records partial controls rather than treating non-reporting as proof of absence, and we found no study combining broad product coverage, both engines, joint throughput/tail
+reporting, and non-vendor authorship, each covers at most two or three
 (Supplement Table~S51), the strongest claim the scoping search supports, not one of priority. But
 coverage is not the contribution: the protocol operationalizes established experimental principles for
 this genre, not a new one. Kounev et al.'s systems-benchmarking

@@ -33,7 +33,7 @@ On MySQL the binary-protocol baseline is \emph{slower} than \texttt{mysql2} on e
 baselines are therefore disclosed reference points, not optimization ceilings.
 
 On the \textbf{deep fetch} (a post, its author, and all comments with their authors) the
-native-relative spread is the widest measured --- $7.01\times$ on PostgreSQL (\texttt{pg} 3{,}638,
+native-relative spread is the widest measured, $7.01\times$ on PostgreSQL (\texttt{pg} 3{,}638,
 95\% CI [3{,}602--3{,}662], down to MikroORM's 519~[512--528]) and $5.12\times$ on MySQL
 (\texttt{mysql2} 2{,}416~[2{,}413--2{,}425] down to MikroORM's 472~[464--475]). The native driver
 leads on both engines, the data-mapper ORMs (especially MikroORM) trailing furthest
@@ -46,7 +46,7 @@ The remaining per-pattern spreads are collected under RQ3 below.
 \subsection{Common-SQL raw-path sensitivity contrast}
 Server-side capture confirms common statement text and database plans across raw paths on both
 engines; API level, wire protocol, preparation, round trips, and mapping can still differ (Supplement
-Table~S42). The deep-fetch native-relative spread is then far smaller --- $1.71\times$ (PostgreSQL)
+Table~S42). The deep-fetch native-relative spread is then far smaller, $1.71\times$ (PostgreSQL)
 and $2.03\times$ (MySQL) against the selected-configuration $7.01\times$ and $5.12\times$ (Supplement
 Table~S14). The selected paths therefore differ more than these common-SQL raw paths, but the
 compound contrast assigns no share to any mechanism. A loading-strategy sensitivity check (Supplement
@@ -144,7 +144,7 @@ run-level p99 values and show their raw spread. Ten 60-second repetitions preser
 Table~S23), which is endpoint-specific evidence, not a general sufficiency claim.
 
 At the stable nominal 50\% capacity target, coordinated-omission-corrected p99 is 2.3--4.9~ms on
-PostgreSQL and 1.9--5.5~ms on MySQL --- a different operating point and estimand, not an optimization
+PostgreSQL and 1.9--5.5~ms on MySQL, a different operating point and estimand, not an optimization
 applied to the systems; most 70\% cells remain similarly small (Supplement Tables~S21--S22 and S43).
 Re-expressed against the full-sweep maximum, nominal 50\% falls at
 46.6--51.0\% and nominal 70\% at 65.2--71.5\% (S45). The 85\% and 95\% results are unstable near-saturation observations and do not support a
@@ -158,8 +158,8 @@ p99 orderings, Spearman $\rho$ is $0.64$ on PostgreSQL and $0.29$ on MySQL
 (Supplement Table~S43). The native driver moves furthest: fastest on the tail at equal
 demand on both engines, it falls to third of eight on PostgreSQL and seventh of eight on
 MySQL once each layer is held at half its own capacity. On MySQL the reversal is
-unambiguous --- \texttt{knex} 1.9~ms [1.8--2.2] against \texttt{mysql2} 4.7~ms [4.0--5.6],
-non-overlapping over five runs --- while on PostgreSQL the native and leading portable
+unambiguous, \texttt{knex} 1.9~ms [1.8--2.2] against \texttt{mysql2} 4.7~ms [4.0--5.6],
+non-overlapping over five runs, while on PostgreSQL the native and leading portable
 ranges overlap (\texttt{pg} 2.6~[2.2--3.0], \texttt{knex} 2.3~[2.3--2.7]), so only the
 MySQL inversion is claimed. Reporting a tail at one arbitrary load point would have
 recorded the native driver as the tail leader on both engines. This is direct evidence

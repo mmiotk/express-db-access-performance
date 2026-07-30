@@ -15,7 +15,7 @@ Status: `[verified]` | `[inferred]` | `[assumption]` | `[unverified]`.
 Locations are section-level rather than line-level because the revision moved text; each row names the
 artifact that settles it. `[verified]` means the stated evidence was re-derived or re-read on that date.
 
-**Status:** 22 consequential claims registered, 19 verified, 3 open (listed below).
+**Status:** 22 consequential claims registered, 20 verified, 2 open (listed below).
 
 | ID | Location | Claim (as written) | Support type | Evidence | Status |
 |---|---|---|---|---|---|
@@ -38,7 +38,7 @@ artifact that settles it. `[verified]` means the stated evidence was re-derived 
 | C17 | `introduction.tex, related_work.tex` | CYNTHIA is the direct precedent for cross-ORM differential equivalence | citation | `sotiropoulos2021cynthia`, DOI confirmed 2026-07-30 | [verified] |
 | C18 | `methodology.tex` | 201 of 209 commits carry a model trailer (159 / 27 / 15) | experiment | `git log --format='%(trailers:key=Co-Authored-By,valueonly)'` at HEAD `fd32276` | [verified] |
 | C19 | `Data availability, Supplement S31` | author-run reconstruction verified archived hashes and regenerated tables byte-for-byte | experiment | `notes/current-candidate-reconstruction.md` (60/60); `notes/clean-room-reproduction.md` (35/35, 45/50) | [verified] |
-| C20 | `introduction.tex` | access-layer benchmarks are read as decision support for technology selection | none | framing assertion; no source retrieved | [assumption] |
+| C20 | `introduction.tex` | *where* such benchmarks inform a technology choice, an unestablished comparison can misdirect it | definition | stated conditionally, so it asserts no practice; reworded 2026-07-30 | [verified] |
 | C21 | `discussion.tex` | Prisma's Rust-free rewrite is the likeliest cause of the non-reproduction | citation | stated in the text as a hypothesis, not a measurement; toolchain moved as a whole | [inferred] |
 | C22 | `threats.tex` | the residual is a correct, policy-conformant adapter uniformly slower than a differently written one | none | reported as open, not discharged; no check bounds it | [unverified] |
 
@@ -48,7 +48,6 @@ Claims that are not `[verified]`. This section must be empty before submission.
 
 | ID | Why it is not verified | What would settle it |
 |---|---|---|
-| C20 | Framing claim about how practitioners read benchmarks; no source was retrieved. | Cite a practitioner survey or study of technology-selection practice, or narrow to what this paper's audit shows. |
 | C21 | Cause of the Prisma non-reproduction is a hypothesis; the re-freeze moved the whole toolchain. | A controlled single-variable downgrade of Prisma alone, which this study did not run. |
 | C22 | Implementation-waste residual (R7) cannot be excluded by any released check. | A completed independent adapter review (packet AD-01, still pending). |
 
