@@ -17,9 +17,9 @@ the fastest reported HTTP p50, too small to explain the multi-fold gap though ne
 practically unresolved. The specification-derived oracle passes 73{,}080 expected-result checks
 independently of all adapters (Section~\ref{sec:methodology}), and differential checks then
 establish finite mutual equivalence; these found, among other defects, a Drizzle timestamp conversion
-that shifted PostgreSQL instants by the host UTC offset, fixed before measurement. The fixed-payload baseline
-ceiling sits above the fastest cell (Section~\ref{sec:methodology}), so the framework
-compresses rather than manufactures between-layer differences, attributable to how
+that shifted PostgreSQL instants by the host UTC offset, fixed before measurement. A fixed-payload endpoint measures the shared Express-and-serialization floor at 11{,}238 and
+10{,}893~req/s (\texttt{results/sameplan-corrected.json}), at least three times the fastest deep-fetch
+cell, so the framework compresses rather than manufactures between-layer differences, attributable to how
 each layer reaches an identical response, not to what is returned. The reported
 single-row-insert finding uses each engine's \emph{default} vendor-standard durability
 (Section~\ref{sec:methodology}), not one we relaxed, so those insert spreads

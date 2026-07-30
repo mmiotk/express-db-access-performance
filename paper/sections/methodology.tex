@@ -166,8 +166,8 @@ adapter on both engines, that the primary single-row insert wrote exactly the re
 identifier, and for the adapters implementing the exploratory transactional method (five on
 PostgreSQL, four on MySQL) that the post and five comments commit atomically while an invalid final
 comment rolls back to no partial state; all declared methods pass. Per-adapter scope, the fan-out
-and timestamp conventions, and the fixture details are in the online supplement and
-\texttt{write-admission.json}. The read cross-check caught two defects during development (a
+and timestamp conventions, and the fixture details are in \texttt{experiments/METHODOLOGY.md}
+and \texttt{write-admission.json}. The read cross-check caught two defects during development (a
 fan-out aggregation bug and a driver result-shape mismatch; Section~\ref{sec:discussion}).
 
 \subsection{Controls}
@@ -195,7 +195,7 @@ preflight, and materializes the fixture once so the joined representation is byt
 engines. The affected pilot was rejected and a corrected-state campaign remeasured all five patterns
 for all 18 compatible treatment--stack pairs under one version of the instrument; the historical
 MySQL range-scan, aggregation, and insert cells are not used as clean evidence. Reset mechanics,
-sentinel values, and fixture hashes are in the online supplement.
+sentinel values, and fixture hashes are in \texttt{experiments/METHODOLOGY.md}.
 \emph{(iv)~Observer separation}: the HTTP load generator runs in a process separate from the server.
 
 \subsection{Measurement procedure}
@@ -209,7 +209,7 @@ and database buffers plus host state are not reset. Each endpoint receives a dis
 warm-up followed by one 12-second measurement at 50 connections. A forward/reverse-order write-cell
 check found no detectable order effect. The campaign records its ID, deterministic order seed,
 environment fingerprint, and exact source manifest; process, teardown, and rebuild mechanics are in
-the online supplement.
+\texttt{experiments/METHODOLOGY.md}.
 
 Within a replicate, every layer and engine draws target identifiers from one generator seeded on endpoint and replicate, so all face the same identifier distribution --- though not an identical served sequence, since the generator is shared with the warm-up and layers of unequal throughput enter the measured window at different offsets. The paired analysis is licensed by the block design, not by sequence identity. The inferential unit is the endpoint-level run; individual requests are subsamples. We
 report the median of the 25 replicate values of throughput and of the run-level percentiles p50, p90,
@@ -300,8 +300,8 @@ Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fa
 Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI Codex was used
 once, after the manuscript was otherwise complete, for an independent critical pre-submission
 review; the author evaluated its comments and is responsible for which were acted on. Assistance is
-recorded per commit: 208 of 216 commits carry a \texttt{Co-Authored-By} trailer naming the model
-(159 Opus 4.8, 27 Fable 5, 22 Opus 5), counted from the trailers themselves rather than message
+recorded per commit: 209 of 217 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 23 Opus 5), counted from the trailers themselves rather than message
 text. The other 8 predate the convention and include two squash-merges of assistant-authored
 branches and the largest revision commit, so the count understates assistance.
 
