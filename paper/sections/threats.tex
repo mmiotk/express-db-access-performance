@@ -14,7 +14,9 @@ funnels rows through shared canonical constructors (fixed field set, key order,
 typing, under \texttt{TZ=UTC}). These constructors copy and type-normalize already-grouped rows or entity graphs without querying,
 joining, regrouping, sorting, or caching. Their standalone median peaks at 17.6~\(\mu\)s, 0.146\% of
 the fastest reported HTTP p50, too small to explain the multi-fold gap though near-ties stay
-practically unresolved. The specification-derived oracle passes 73{,}080 expected-result checks
+practically unresolved. 
+
+The specification-derived oracle passes 73{,}080 expected-result checks
 independently of all adapters (Section~\ref{sec:methodology}), and differential checks then
 establish finite mutual equivalence; these found, among other defects, a Drizzle timestamp conversion
 that shifted PostgreSQL instants by the host UTC offset, fixed before measurement. A fixed-payload endpoint measures the shared Express-and-serialization floor at 11{,}238 and
@@ -35,7 +37,9 @@ performance-tuned usage. It is an intentionally artificial, predeclared selectio
 policy, not a behavioral practitioner model. The frozen pages, conflict rule, and assignments make the decision auditable, but the single author both defined and applied it; two blind selection reviews are prepared and still pending. Where the policy differs from a
 performance-tuned configuration, RQ1's spread mixes the library's
 execution machinery with that strategy choice, made material by the one-to-four
-statement range on the deep fetch (Supplement Table~S2). Three sensitivity checks qualify it. First, every selected path and alternative is preserved with the source-page hash (Supplement Table~S33 and \texttt{METHODOLOGY.md}); this is provenance, not evidence of frequency or idiomaticity. Second, the \emph{common-SQL raw-path sensitivity contrast} runs
+statement range on the deep fetch (Supplement Table~S2). 
+
+Three sensitivity checks qualify it. First, every selected path and alternative is preserved with the source-page hash (Supplement Table~S33 and \texttt{METHODOLOGY.md}); this is provenance, not evidence of frequency or idiomaticity. Second, the \emph{common-SQL raw-path sensitivity contrast} runs
 common SQL through every layer's raw facility, so the raw-path spread (deep fetch
 $1.71\times$, against $7.01\times$ for the selected configuration;
 Section~\ref{sec:results}) is far smaller, a compound sensitivity
@@ -58,6 +62,8 @@ warnings within two pilot repetitions), and MikroORM's aggregation obtained and 
 Knex handle per request. Both were removed without changing the declared treatment or SQL, the
 admission chain passed again, and measurement restarted from repetition~1
 (\texttt{notes/adapter-self-audit.md}); because the implementer performed it, this is author review.
+
+
 Both are now detected mechanically instead, which is why R7 requires evidence rather than a reviewer:
 a static check reports values acquired and never read, clean on all 13 modules of the measured
 source, and a runtime gate rejects any cell writing to \texttt{stderr} or \texttt{stdout} during a
@@ -71,7 +77,9 @@ the dead-work check) postdate the accepted campaigns
 (Supplement Table~S48). Because they replay a deterministic seed and inspect
 archived state, they can invalidate archived results, and did so for the superseded pilot; but
 they did not gate the timed runs as those runs executed, so a defect observable only while a run
-was in progress would have escaped them. Per-cell warm-up phases
+was in progress would have escaped them. 
+
+Per-cell warm-up phases
 exceeding the slowest layer's cold-start stabilization absorb JIT, pool-fill, and
 plan-cache effects~\cite{mytkowicz2009producing}; two further controls address non-layer confounds: one correlated-subquery aggregation plan, and the corrected-state campaign's verified reset before each write cell. The historical MySQL allocator defect and the corrected reset are described in Section~\ref{sec:methodology}; its consequence here is that the affected historical cells are not used as clean evidence, and all five patterns were remeasured in one campaign. The seeded identifier design, and why served sequences are not identical, are set out in
 Section~\ref{sec:methodology}; a forward-versus-reversed write-cell-order check found no detectable
@@ -92,7 +100,9 @@ prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no
 \texttt{mysql2} adapter, an implementation$\times$engine asymmetry. The
 memory-resident working set is a hot-cache regime that makes access-layer overhead
 more visible; as a workload becomes I/O-bound the spreads may compress toward
-$1\times$. Same-host checks do not bound an independent substrate: a post-restart rerun of six representative cells moved absolute throughput by up to 16\% against the campaign prevailing when it ran, which is the superseded pilot rather than the accepted campaign, since the restart check preceded the latter. The corrected-state 25-run campaign repeats all five patterns with a new randomized order and environment fingerprint on the same host. Cross-campaign agreement or disagreement is reported directly; it reduces dependence on one overnight ordering but does not address host, hypervisor-neighbor, CPU-steal, or frequency transfer. No empirical ordering is intended to travel beyond the tested campaigns, and close cross-backend rank reversals are exploratory unless their direction repeats. Every promoted RQ2 reversal involves the single treatment whose MySQL driver differs, and a leave-one-out repetition of the promotion procedure without it promotes none (Supplement Table~S49); the promoted-reversal evidence is therefore conditional on that driver substitution, which the design cannot separate from the treatment or from the DBMS. The protocol evidence is also bounded: its external audit has one rater, so general independent applicability remains to be tested.
+$1\times$. 
+
+Same-host checks do not bound an independent substrate: a post-restart rerun of six representative cells moved absolute throughput by up to 16\% against the campaign prevailing when it ran, which is the superseded pilot rather than the accepted campaign, since the restart check preceded the latter. The corrected-state 25-run campaign repeats all five patterns with a new randomized order and environment fingerprint on the same host. Cross-campaign agreement or disagreement is reported directly; it reduces dependence on one overnight ordering but does not address host, hypervisor-neighbor, CPU-steal, or frequency transfer. No empirical ordering is intended to travel beyond the tested campaigns, and close cross-backend rank reversals are exploratory unless their direction repeats. Every promoted RQ2 reversal involves the single treatment whose MySQL driver differs, and a leave-one-out repetition of the promotion procedure without it promotes none (Supplement Table~S49); the promoted-reversal evidence is therefore conditional on that driver substitution, which the design cannot separate from the treatment or from the DBMS. The protocol evidence is also bounded: its external audit has one rater, so general independent applicability remains to be tested.
 
 \paragraph{Conclusion validity}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient
@@ -107,7 +117,9 @@ Figure~S2). Rather than assert a specific statistical power (absent a prespecifi
 effect-size model), we rest the conclusions on effect sizes and interval
 estimates, foremost the \emph{predefined} native-driver contrasts (Supplement
 Table~S41), keeping the ranking-selected adjacent-pair permutation tests only as a
-descriptive post-hoc check. Application processes do not cross adapter, engine, or replicate blocks, although read endpoints within a block share one process~\cite{kalibera2013rigorous}. All blocks share one host; primary intervals remain within-campaign, while the corrected RQ2 subset has a second same-host campaign. The secondary experiments covering only a layer subset or few replicates
+descriptive post-hoc check. Application processes do not cross adapter, engine, or replicate blocks, although read endpoints within a block share one process~\cite{kalibera2013rigorous}. All blocks share one host; primary intervals remain within-campaign, while the corrected RQ2 subset has a second same-host campaign. 
+
+The secondary experiments covering only a layer subset or few replicates
 (Supplement Table~S32) are read as \emph{sensitivity evidence} on the tested subset, not as claims
 about all eleven implementations.
 The common-SQL contrast rests on ten replicates and the matched-utilization tails on five, so both

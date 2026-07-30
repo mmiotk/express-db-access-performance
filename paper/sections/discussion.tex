@@ -34,7 +34,9 @@ The second same-host campaign preserves PostgreSQL insert ranks but few MySQL po
 (Section~\ref{sec:results}), so we claim no durable fine ordering for MySQL insert. The recurring, material insert reversal
 is narrower: Prisma exceeds MikroORM on PostgreSQL and trails it on MySQL in both
 campaigns, with paired intervals excluding equality in opposite directions
-(Supplement Table~S46). Every promoted reversal involves Prisma, whose MySQL path uses
+(Supplement Table~S46). 
+
+Every promoted reversal involves Prisma, whose MySQL path uses
 the MariaDB adapter rather than \texttt{mysql2}, so backend-stack sensitivity here is
 inseparable from that driver substitution and describes one treatment, not ORMs as a
 class. Repeating the promotion procedure without that treatment promotes no pair at all

@@ -84,7 +84,9 @@ and, for the portable tiers, runs on both engines. It excludes non-portable
 PostgreSQL-only Slonik and pg-promise and query-builder Kysely (covered by Knex; \texttt{METHODOLOGY.md}
 gives the criteria). \emph{Non-vendor authorship} means only that no evaluated library's maintainers
 were involved; the consequential author choices (selection, schema, pool size, tuning) remain and are
-disclosed. All adapter code and treatment assignments were produced by the single author, a limitation analysed in Section~\ref{sec:threats}. The \emph{backend-stack} factor has two nominal DBMS levels (PostgreSQL~18.4 and MySQL~9.7.1), but switching it can also switch the supported adapter, driver, wire protocol, and defaults, so RQ2 estimates transfer between stacks, not a pure DBMS effect. The \emph{access pattern} has five levels, realized as HTTP endpoints (Supplement Table~S39). Supplement Table~S29 records which
+disclosed. All adapter code and treatment assignments were produced by the single author, a limitation analysed in Section~\ref{sec:threats}. 
+
+The \emph{backend-stack} factor has two nominal DBMS levels (PostgreSQL~18.4 and MySQL~9.7.1), but switching it can also switch the supported adapter, driver, wire protocol, and defaults, so RQ2 estimates transfer between stacks, not a pure DBMS effect. The \emph{access pattern} has five levels, realized as HTTP endpoints (Supplement Table~S39). Supplement Table~S29 records which
 factors are held constant, vary, or are uncontrolled on this single virtualized host, the reason we
 report this configuration rather than general library performance.
 
@@ -134,7 +136,9 @@ treatment-selection packets are prepared but unreturned: all four review slots, 
 selection, the adapter audit, and the external protocol audit, stand pending
 (\texttt{notes/reviewer-packets/review-register.csv}). Whether a second analyst applying this rule
 to the same frozen pages would select the same APIs is therefore untested, and establishing it is
-future work. Supplement Table~S16, \texttt{METHODOLOGY.md}, and the rubric
+future work. 
+
+Supplement Table~S16, \texttt{METHODOLOGY.md}, and the rubric
 (\texttt{notes/documentation-selection.md}) record, per layer, the selected API with its
 documentation page, version, and URL, its round-trip count, the documented alternative not used,
 that logging, hooks, and validation are off, and the freeze date. The artifact ships the exact
@@ -188,6 +192,8 @@ acquisition queue; that queueing is deliberately measured and held identical acr
 while SQL text, query count, plan, protocol, loading strategy, and hydration remain measured
 properties of the treatment. Aggregation is the exception, with a common correlated-subquery
 formulation; the separate common-SQL contrast standardizes SQL only for the deep fetch.
+
+
 \emph{(iii)~Write isolation}: the declared reset rebuilds PostgreSQL from its seed template and uses
 a disclosed in-place delete/\texttt{OPTIMIZE TABLE}/allocator reset on MySQL, removing generated rows
 before warm-up, measurement, and the next cell. A post-review state oracle found that the historical
@@ -215,9 +221,13 @@ check found no detectable order effect. The campaign records its ID, determinist
 environment fingerprint, and exact source manifest; process, teardown, and rebuild mechanics are in
 \texttt{experiments/METHODOLOGY.md}.
 
+
+
 Within a replicate, every layer and engine draws target identifiers from one generator seeded on endpoint and replicate, so all face the same identifier distribution, though not an identical served sequence, since the generator is shared with the warm-up and layers of unequal throughput enter the measured window at different offsets. The paired analysis is licensed by the block design, not by sequence identity. The inferential unit is the endpoint-level run; individual requests are subsamples. We
 report the median of the 25 replicate values of throughput and of the run-level percentiles p50, p90,
 p97.5, and p99.
+
+
 Throughout, \emph{p99} denotes this \emph{median run-level p99}, not the p99 of the pooled request
 distribution, which the design does not estimate. Each run-level p99 is the generator's histogram
 percentile over one 12-second window, supported by between about 5{,}700 and 91{,}000 requests
@@ -256,6 +266,8 @@ for the closest pair; we foreground these effect sizes and interval estimates ov
 $p$-values~\cite{arcuri2014hitchhiker,cliff1993dominance}. Because the seven adjacent pairs follow the
 \emph{observed} ranking, their significances are a post-hoc, descriptive robustness check, not a
 confirmatory family.
+
+
 All tests operate on the 25 paired run-level values; no interval is computed over pooled requests.
 The sign-flip test is valid under the assumption that, when the null of no paired difference
 holds, the per-replicate log ratios are symmetric about zero and their signs exchangeable
@@ -268,6 +280,8 @@ library on throughput. Pairing by replicate therefore controls the temporal and 
 block and the seeded workload design, not the individual request stream.
 The Wilcoxon signed-rank result is reported as a robustness check on the same 25 paired values,
 not as independent confirmation, since it reuses the data and design of the sign-flip test.
+
+
 Rank correlations are descriptive: the seven layers are the benchmarked population of
 configurations, not a random sample from a population of software systems, so a coefficient
 summarizes agreement in this set and supports no inference to layers outside it. Adjacent-layer p99 gaps of one or two milliseconds sit at the millisecond
@@ -304,8 +318,8 @@ Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fa
 Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI Codex was used
 once, after the manuscript was otherwise complete, for an independent critical pre-submission
 review; the author evaluated its comments and is responsible for which were acted on. Assistance is
-recorded per commit: 212 of 220 commits carry a \texttt{Co-Authored-By} trailer naming the model
-(159 Opus 4.8, 27 Fable 5, 26 Opus 5), counted from the trailers themselves rather than message
+recorded per commit: 213 of 221 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 27 Opus 5), counted from the trailers themselves rather than message
 text. The other 8 predate the convention and include two squash-merges of assistant-authored
 branches and the largest revision commit, so the count understates assistance.
 
