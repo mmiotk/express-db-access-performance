@@ -78,7 +78,9 @@
 ## 4. Packaging
 
 - [x] `git remote add origin …`, first push. (`origin/master` tracks GitHub.)
-- [x] Zenodo v1.12.17 deposit prepared under version DOI 10.5281/zenodo.21610058.
+- [x] Zenodo v1.13.0 deposit prepared; its per-version DOI is recorded in the Zenodo record.
+      From v1.13.0 the papers cite the concept DOI, so an archive can identify itself without
+      knowing a DOI minted after it was archived.
 
 ## 5. Open before submission
 

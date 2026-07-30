@@ -63,7 +63,11 @@ refresh_counts() {
   o5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 5' || true)
   total=$(git log --oneline | wc -l | tr -d ' ')
   trailed=$((o48 + f5 + o5)); untrailed=$((total - trailed))
-  perl -0pi -e "s/\\d+ of \\d+ commits\\ncarry a \\\\texttt\\{Co-Authored-By\\} trailer naming the model \\(\\d+ Opus 4\\.8, \\d+ Fable 5, \\d+ Opus 5\\)/${trailed} of ${total} commits\\ncarry a \\\\texttt{Co-Authored-By} trailer naming the model (${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5)/" "$M"
+  # Whitespace-tolerant. The previous pattern required the line break to fall
+  # exactly after "commits", so any reflow of that sentence made this a silent
+  # no-op that still printed git-derived numbers. It bit v1.12.17, which shipped
+  # a count one commit stale.
+  perl -0pi -e "s/\d+ of \d+ commits\s+carry a \\\\texttt\{Co-Authored-By\} trailer naming the model\s*\(\d+ Opus 4\.8, \d+ Fable 5, \d+ Opus 5\)/${trailed} of ${total} commits carry a \\\\texttt{Co-Authored-By} trailer naming the model\n(${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5)/s" "$M"
   perl -0pi -e "s/The other \\S+ predate the convention/The other ${untrailed} predate the convention/" "$M"
   echo "  AI-provenance counts: ${trailed}/${total} trailed (${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5), ${untrailed} untrailed"
 }

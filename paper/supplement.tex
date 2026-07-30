@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.12.17 under the immutable version DOI \url{https://doi.org/10.5281/zenodo.21610058}; the concept DOI is \url{https://doi.org/10.5281/zenodo.21313858}. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.0, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -403,9 +403,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.12.17: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.12.17} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Immutable Zenodo version DOI \texttt{10.5281/zenodo.21610058}; concept DOI \texttt{10.5281/zenodo.21313858}. \\
+    Artifact \& version & Complete revision artifact v1.13.0: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.13.0} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.0; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -747,7 +747,7 @@ independence. Each source covers at most two or three.
   \small
   \caption{Prior work on relational-database access-layer performance,
     positioned along four \emph{coverage} axes this experiment spans; the paper's contribution
-    is the comparability protocol of Section~\ref{sec:introduction}, not this coverage.
+    is the comparability protocol of the main text, not this coverage. The main text cites each source by number.
     ``Products covered'' aggregates native drivers, query builders, and ORMs
     into one count; ``none'' marks studies that vary the engine or
     framework but not the access layer. \emph{Vendor involvement} marks maintainer-authored
@@ -759,15 +759,15 @@ independence. Each source covers at most two or three.
     \toprule
     Study & Products covered & Engines & Metrics & Vendor involvement \\
     \midrule
-    Colley et al.~\cite{colley2018orm} & one ORM vs. hand-written SQL example & SQL Server & query latency & None \\
-    Procedia CS~\cite{prisma_rawsql_2025}$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & None \\
-    JCCT~\cite{orm_compare_jcct_2025} & 3 ORMs & PostgreSQL & latency, memory, CPU & None \\
-    JCSI~\cite{zhadko2025orm} & 3 ORMs & PostgreSQL & per-stage latency & None \\
-    Node-Bench~\cite{pratama2023nodebench} & 5 access products (+11 frameworks) & MySQL & throughput, latency & None \\
-    Salunke and Ouda~\cite{salunke2024pgmysql} & none (engine only) & PostgreSQL + MySQL & throughput, latency & None \\
-    Drizzle~\cite{drizzle_benchmarks} & 9 products & PostgreSQL & throughput, latency, P95 & Vendor \\
-    Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & Vendor \\
-    IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & Vendor \\
+    Colley et al.\ (2018) & one ORM vs. hand-written SQL example & SQL Server & query latency & None \\
+    Procedia CS (2025)$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & None \\
+    JCCT (2025) & 3 ORMs & PostgreSQL & latency, memory, CPU & None \\
+    JCSI (2025) & 3 ORMs & PostgreSQL & per-stage latency & None \\
+    Node-Bench (2023) & 5 access products (+11 frameworks) & MySQL & throughput, latency & None \\
+    Salunke and Ouda (2024) & none (engine only) & PostgreSQL + MySQL & throughput, latency & None \\
+    Drizzle suite & 9 products & PostgreSQL & throughput, latency, P95 & Vendor \\
+    Prisma suite & 3 ORMs & PostgreSQL & median latency only & Vendor \\
+    IMDBench & 4 ORMs + driver & PostgreSQL & throughput, latency & Vendor \\
     \midrule
     \textbf{This study} & \textbf{9 policy-selected documented (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + response-time p99} & \textbf{None} \\
     \bottomrule
