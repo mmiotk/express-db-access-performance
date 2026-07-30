@@ -72,13 +72,12 @@ sub-genre, and at least one plausibly explains part of the gap between some vend
 controlled benchmark results.
 
 \paragraph{Evidence for the protocol contribution}
-The experimental record shows concrete consequences of the protocol stages: an independent seed
-specification caught shared state and fixture defects that mutual equality would miss; treatment
-provenance made the loading-policy sensitivity auditable; capacity characterization changed the tail
-interpretation; and the common-SQL path narrowed, but did not decompose, the selected-treatment
-spread (Supplement Table~S50). A codebook applied to the nine external sources retained by the
-scoping search yields 63 source-located judgements and explicit claim licenses rather than a binary
-quality score (Supplement Table~S37).
+Each stage had a concrete consequence: an independent seed specification caught shared state and
+fixture defects that mutual equality would miss; treatment provenance made the loading-policy
+sensitivity auditable; capacity characterization changed the tail interpretation; and the common-SQL
+path narrowed, but did not decompose, the selected-treatment spread (Supplement Table~S50). Applied
+to the nine external sources, the codebook yields claim licenses rather than a binary quality score
+(Supplement Table~S37).
 
 What this demonstrates is that the protocol is \emph{executable}: it admits and rejects concrete
 cells, it changed the reported interpretation at every stage exercised here (R7 excepted, being
@@ -89,18 +88,18 @@ this. No source was coded \emph{satisfied} on any stage, so the codebook's upper
 and agreement against this rater would measure agreement with the protocol's own designer, who was
 neither blind nor independent, where two blind raters would be the stronger design. The codebook,
 audit record, agreement scorer, and result-blind forms are released so the question can be settled
-against this study. The claim is therefore an access-layer-specific operational discipline and
-reusable artifact --- a structured, testable proposal with one worked instantiation --- not invention
-of the constituent controls, a complete theory of benchmarking validity, or a validated methodology.
+against this study. The claim is therefore a \emph{candidate} access-layer-specific discipline and reusable artifact,
+demonstrated once: not invention of the constituent controls, not a complete theory of benchmarking
+validity, and not a validated methodology. The demotion follows from the circularity stated in
+Section~\ref{sec:methodology}: until an analyst outside this study applies the protocol, it is a
+checklist worth testing rather than one already tested.
 
 \paragraph{Practical guidance}
 The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in this
 configuration and workload --- single host, default durability, one pool size, pinned versions
-(Section~\ref{sec:threats}) --- not access-layer categories in general. Because the fan-out sweep
-(Section~\ref{sec:results}) varies breadth (0--500 children) but not depth, schema, or query mix,
-the selected spread's peak on the deep fetch locates a difference among five
-probes on one synthetic schema --- a benchmark observation to re-measure on the target workload,
-not an established law. Where a hot path resembles the tested deep fetch the access layer is
+(Section~\ref{sec:threats}) --- not access-layer categories in general. Because the fan-out sweep varies breadth (0--500 children) but not depth,
+schema, or query mix, the deep-fetch peak locates a difference among five probes on one synthetic
+schema: an observation to re-measure on the target workload, not a law. Where a hot path resembles the tested deep fetch the access layer is
 consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for
 throughput and response-time p99}. Where the tested workload is read-simple, or for the tested MySQL single-row insert where
 shared commit behavior contributes materially under default durability, the observed layer spread is smaller and may be met by

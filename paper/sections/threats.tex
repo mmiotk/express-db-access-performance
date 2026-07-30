@@ -75,9 +75,9 @@ was in progress would have escaped them. Per-cell warm-up phases
 exceeding the slowest layer's cold-start stabilization absorb JIT, pool-fill, and
 plan-cache effects~\cite{mytkowicz2009producing}; two further controls address non-layer confounds: one correlated-subquery aggregation plan, and the corrected-state campaign's verified reset before each write cell. The historical MySQL allocator defect and the corrected reset are described in Section~\ref{sec:methodology}; its consequence here is that the affected historical cells are not used as clean evidence, and all five patterns were remeasured in one campaign. The seeded identifier design, and why served sequences are not identical, are set out in
 Section~\ref{sec:methodology}; a forward-versus-reversed write-cell-order check found no detectable
-order effect, so order does not confound layer identity with run position. A residual risk is coordinated omission in the load generator, which
-can under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency};
-coordinated-omission-corrected constant-arrival sweeps on selected deep-fetch layers show small tails below measured capacity and sharp growth near saturation (Section~\ref{sec:results}; Supplement Tables~S6 and S17).
+order effect, so order does not confound layer identity with run position. A residual risk is coordinated omission, which can under-report the tail at
+saturation~\cite{fruth2022tail,tene2015latency}; the corrected constant-arrival sweeps show small
+tails below measured capacity and sharp growth near it (Supplement Tables~S6 and S17).
 
 \paragraph{External validity}
 All measurements come from a single schema, dataset size, and 16-vCPU virtualized
@@ -107,11 +107,12 @@ Figure~S2). Rather than assert a specific statistical power (absent a prespecifi
 effect-size model), we rest the conclusions on effect sizes and interval
 estimates --- foremost the \emph{predefined} native-driver contrasts (Supplement
 Table~S41), keeping the ranking-selected adjacent-pair permutation tests only as a
-descriptive post-hoc check. Application processes do not cross adapter, engine, or replicate blocks, although read endpoints within a block share one process~\cite{kalibera2013rigorous}. All blocks share one host; primary intervals remain within-campaign, while the corrected RQ2 subset has a second same-host campaign. The secondary experiments
-covering only a layer
-subset or few replicates (open-loop tail, equal-CPU, pool-size, transactional
-write, cluster, and the common-SQL raw-path contrast; Supplement Table~S32) are read as \emph{sensitivity
-evidence} on the tested subset, not as claims about all eleven implementations.
-This includes two quantities quoted in the abstract: the common-SQL contrast rests on ten
-replicates and the matched-utilization tails on five, so both are reported with their
-observed spread (Supplement Tables~S14, S21--S22) and neither carries an interval estimate.
+descriptive post-hoc check. Application processes do not cross adapter, engine, or replicate blocks, although read endpoints within a block share one process~\cite{kalibera2013rigorous}. All blocks share one host; primary intervals remain within-campaign, while the corrected RQ2 subset has a second same-host campaign. The secondary experiments covering only a layer subset or few replicates
+(Supplement Table~S32) are read as \emph{sensitivity evidence} on the tested subset, not as claims
+about all eleven implementations.
+The common-SQL contrast rests on ten replicates and the matched-utilization tails on five, so both
+are reported with their observed spread (Supplement Tables~S14, S21--S22) and neither carries an
+interval estimate. The matched-utilization tails carry a second, unpropagated
+uncertainty: each offered rate is a fraction of an \emph{estimated} capacity, whose spread is
+evaluated separately (Supplement Table~S45) rather than carried into the reported p99. They are
+secondary evidence for the operating-point distinction, not a precise tail estimate.

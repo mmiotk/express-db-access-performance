@@ -140,17 +140,15 @@ that grows with breadth; it does not vary graph depth, schema, or query mix.
 At equal closed-loop demand, deep-fetch p99 spans 18--108~ms on PostgreSQL and 28--121~ms among the
 policy-selected layers on MySQL (Table~\ref{tab:deep_fetch}). The run is the analysis unit; a 12~s
 slow-layer run supplies only about 60 observations to its top percentile, so we use the median of 25
-run-level p99 values and show their raw spread. Ten 60-second repetitions preserve the practical
-ordering (12-versus-60-second rank correlation $1.00$ on both engines; largest median shift $5.6\%$
-and $3.8\%$; Supplement Table~S23) --- endpoint-specific sensitivity evidence, not a general
-sufficiency claim for a 12-second p99 window.
+run-level p99 values and show their raw spread. Ten 60-second repetitions preserve the ordering
+(rank correlation $1.00$ on both engines; largest median shift $5.6\%$ and $3.8\%$; Supplement
+Table~S23), which is endpoint-specific evidence, not a general sufficiency claim.
 
 At the stable nominal 50\% capacity target, coordinated-omission-corrected p99 is 2.3--4.9~ms on
 PostgreSQL and 1.9--5.5~ms on MySQL --- a different operating point and estimand, not an optimization
 applied to the systems; most 70\% cells remain similarly small (Supplement Tables~S21--S22 and S43).
-Re-expressing the targets against the full-sweep maximum places nominal 50\% at 46.6--51.0\% and
-nominal 70\% at 65.2--71.5\%, widening only to 46.2--52.2\% and 64.6--73.0\% across repeated sweeps
-(S45). The 85\% and 95\% results are unstable near-saturation observations and do not support a
+Re-expressed against the full-sweep maximum, nominal 50\% falls at
+46.6--51.0\% and nominal 70\% at 65.2--71.5\% (S45). The 85\% and 95\% results are unstable near-saturation observations and do not support a
 convergence claim. The stable 50\% result shows the large equal-demand p99 spread contains a material
 capacity-and-queueing component; it does not identify its share or imply a deployment-general
 sub-saturation bound.
