@@ -678,4 +678,111 @@ main text's claim limits in one place.
 
 \input{\tabledir estimands}
 
+\section{Protocol-development chronology}
+\label{sup:protocol-chronology}
+Table~\ref{tab:protocol_chronology} dates each protocol element against the measurement
+campaigns, separating elements specified before any campaign from those added between campaigns
+and those introduced after the accepted campaigns. The last group was applied retrospectively, to
+archived state and the same deterministic seeded dataset, rather than gating the timed runs.
+It supports the development-versus-validation distinction drawn in Section~4.
+
+\input{\tabledir protocol_chronology}
+
+\section{RQ2 leave-Prisma-out sensitivity}
+\label{sup:rq2-leave-prisma-out}
+Table~\ref{tab:rq2_leave_prisma_out} repeats the RQ2 reversal-promotion procedure on the six
+portable layers other than Prisma, the one treatment whose lower-level MySQL driver differs. The
+promotion rule is unchanged. No pair is promoted, while cross-stack rank agreement does not
+improve and on aggregation falls. Holding out Prisma removes the driver substitution and the
+treatment together and therefore identifies neither as the cause.
+
+\input{\tabledir rq2_leave_prisma_out}
+
+\section{Protocol normative detail}
+\label{sup:protocol-normative}
+This section carries the stage definitions, applicability limits, and compliance scheme
+referenced from Section~4.
+
+\paragraph{Admission versus diagnosis} Semantic admission asks two distinct questions. First, does an implementation satisfy expected results derived from the declared task and deterministic seed rather than from the timed native path? Second, are competing implementations mutually equivalent under the declared comparator? Failure of either read check, or a mutation reaching the wrong database state, excludes the cell. These are finite conformance tests, not proof of correctness for arbitrary inputs. Workload constraints disqualify only when preregistered; query count, joins, and loading strategy are otherwise measured properties of the treatment.
+
+\paragraph{Applicability limits} the output comparator must match the output semantics: byte-identical comparison,
+used here, is valid only when equivalent outputs are deterministic and canonically serializable, and
+otherwise (unordered collections, floats, timestamps, nondeterministic identifiers) needs a semantic
+comparator (set equality, tolerance, canonicalization). The experiment's outputs are deterministic and
+canonically constructed, so byte-equality is valid here.
+
+\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages license additional interpretations without deciding whether a fixed-load result exists. Capacity characterization locates that result against a throughput knee. The common-SQL extension licenses a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-waste evidence records that no treatment does avoidable work on the timed path. Here M1--M2 cover the full matrix, R4 every pattern, R3/R5/R6 the deep fetch; R7 is met for the measured source by the static dead-work check, its runtime companion covering later campaigns only. Omitting a recommended stage narrows the supported claim without invalidating the reported numbers: Partial coverage of a recommended stage narrows what it licenses without withdrawing the admission evidence that licenses the comparisons.
+
+\smallskip
+Supplement Table~S50 records how each control changed this experiment; that establishes consequence here, not universal necessity. Supplement Table~S47 consolidates, per research question, the quantity estimated and the quantity not identified. Supplement Table~S37 separately applies the codebook to nine external benchmark sources. The machine-readable audit preserves 63 source-located judgements, but one author performed the coding, so it demonstrates bounded protocol application, not inter-rater reproducibility. The record is structured for a second rater: additional codings attach alongside the author's, and a committed scorer (\texttt{npm run audit:agreement}) reports pooled percent agreement, Cohen's kappa with a bootstrap interval, and every disagreeing cell. Per-stage slices are $n{=}9$ with chance agreement up to $0.80$, so per-stage kappa is flagged unreliable and the pooled figure is the headline. Result-blind forms for three optional independent exercises ship under \texttt{notes/reviewer-packets}; all remain pending, and the scorer reports agreement as not computable while one rater is recorded, so an unperformed exercise cannot be counted as validation.
+
+
+
+
+\section{Protocol-to-interpretation mapping}
+\label{sup:protocol-mapping}
+Table~\ref{tab:protocol_mapping} records, per protocol stage, the concrete consequence it had
+for this study's reported interpretation. It is authored analytical reference material rather
+than a measurement table.
+
+\input{\tabledir protocol_mapping}
+
+\section{The comparability protocol at a glance}
+\label{sup:protocol-figure}
+Figure~\ref{fig:protocol} states the protocol's inputs, its mandatory and recommended stages, the
+cell-admission rule, and how each stage's output should be interpreted. It is the diagrammatic form of
+the protocol specified in Section~4 and encoded in \texttt{protocol-checklist.yaml}.
+
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
+\input{\tabledir fig_protocol}
+
+\section{Prior-work coverage}
+\label{sup:prior-art}
+Table~\ref{tab:prior_art} positions prior work along the four coverage axes this experiment
+spans: taxonomy breadth, engine coverage, joint throughput/tail reporting, and vendor
+independence. Each source covers at most two or three.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Prior work on relational-database access-layer performance,
+    positioned along four \emph{coverage} axes this experiment spans; the paper's contribution
+    is the comparability protocol of Section~\ref{sec:introduction}, not this coverage.
+    ``Products covered'' aggregates native drivers, query builders, and ORMs
+    into one count; ``none'' marks studies that vary the engine or
+    framework but not the access layer. \emph{Vendor involvement} marks maintainer-authored
+    studies --- a conflict-of-interest property of the source, not a methodological guarantee that
+    a non-vendor-authored benchmark is unbiased.}
+  \label{tab:prior_art}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{@{}llllc@{}}
+    \toprule
+    Study & Products covered & Engines & Metrics & Vendor involvement \\
+    \midrule
+    Colley et al.~\cite{colley2018orm} & one ORM vs. hand-written SQL example & SQL Server & query latency & None \\
+    Procedia CS~\cite{prisma_rawsql_2025}$^\dagger$ & Prisma vs.\ raw SQL & PostgreSQL & latency, CPU & None \\
+    JCCT~\cite{orm_compare_jcct_2025} & 3 ORMs & PostgreSQL & latency, memory, CPU & None \\
+    JCSI~\cite{zhadko2025orm} & 3 ORMs & PostgreSQL & per-stage latency & None \\
+    Node-Bench~\cite{pratama2023nodebench} & 5 access products (+11 frameworks) & MySQL & throughput, latency & None \\
+    Salunke and Ouda~\cite{salunke2024pgmysql} & none (engine only) & PostgreSQL + MySQL & throughput, latency & None \\
+    Drizzle~\cite{drizzle_benchmarks} & 9 products & PostgreSQL & throughput, latency, P95 & Vendor \\
+    Prisma~\cite{prisma_benchmarks} & 3 ORMs & PostgreSQL & median latency only & Vendor \\
+    IMDBench~\cite{imdbench} & 4 ORMs + driver & PostgreSQL & throughput, latency & Vendor \\
+    \midrule
+    \textbf{This study} & \textbf{9 policy-selected documented (+2 tuned)} & \textbf{PostgreSQL + MySQL} & \textbf{throughput + response-time p99} & \textbf{None} \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+  \vspace{4pt}
+  {\raggedright\footnotesize $^\dagger$Cited for its methodology only; its absolute speedup figures are not comparable to ours given the differing versions, hardware, workload, and harness.\par}
+\end{table}
+
+\section{Insert throughput and tail}
+\label{sup:insert}
+Table~\ref{tab:write} reports single-row insert throughput and response-time p99 per layer and
+engine under each engine's default durability, with within-campaign bootstrap intervals. The
+MySQL insert cells are the noisiest in the study, which is why no fine insert ordering is claimed.
+
+\input{\tabledir write}
+
 \end{document}

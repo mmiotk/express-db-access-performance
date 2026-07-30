@@ -153,6 +153,15 @@ if [[ "${1:-}" == "--check" ]]; then
     else
       echo "REPRODUCIBILITY: table regeneration chain failed to run."; fail=1
     fi
+
+    # Two scripts writing one table is a silent-corruption hazard: whichever
+    # runs last wins, so a generator reading a superseded campaign can replace a
+    # table built from the accepted one without any build error.
+    if ! owners=$( cd experiments && node scripts/check-table-owners.mjs 2>&1 ); then
+      echo "OWNERSHIP: contested table generators."
+      echo "$owners" | sed 's/^/           /'
+      fail=1
+    fi
   fi
 
   # Any v1.x.y other than the declared one, excluding the deliberate historical

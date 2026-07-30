@@ -1,0 +1,108 @@
+{
+  "note": "Dates are the first commit adding each artifact and the archived environment captures for campaigns. A first-commit date bounds when an element entered the recorded instrument; it does not prove the idea was absent earlier. Elements dated after the accepted campaigns were applied to archived state and to the same seeded dataset, not as prospective gates on the timed runs.",
+  "campaigns": {
+    "superseded": "2026-07-13",
+    "primary": "2026-07-24",
+    "validation": "2026-07-25"
+  },
+  "elements": [
+    {
+      "stage": "M1",
+      "what": "Cross-implementation differential equivalence",
+      "file": "experiments/bench/verify.mjs",
+      "date": "2026-07-06",
+      "phase": "before both"
+    },
+    {
+      "stage": "R6",
+      "what": "Resource accounting (CPU, RSS, GC)",
+      "file": "experiments/bench/analyze.mjs",
+      "date": "2026-07-06",
+      "phase": "before both"
+    },
+    {
+      "stage": "R3",
+      "what": "Common-SQL raw-path contrast",
+      "file": "experiments/scripts/sameplan.mjs",
+      "date": "2026-07-11",
+      "phase": "before both"
+    },
+    {
+      "stage": "R4",
+      "what": "Capacity characterization (warm-up/knee sweep)",
+      "file": "experiments/scripts/warmupcurve.mjs",
+      "date": "2026-07-12",
+      "phase": "before both"
+    },
+    {
+      "stage": "R5",
+      "what": "Operating-point separation (matched utilization)",
+      "file": "experiments/scripts/utilization.mjs",
+      "date": "2026-07-14",
+      "phase": "between"
+    },
+    {
+      "stage": "M1",
+      "what": "Post-write state validation",
+      "file": "experiments/bench/verify-writes.mjs",
+      "date": "2026-07-20",
+      "phase": "between"
+    },
+    {
+      "stage": "M1",
+      "what": "Property-based read checks",
+      "file": "experiments/bench/verify-property.mjs",
+      "date": "2026-07-21",
+      "phase": "between"
+    },
+    {
+      "stage": "--",
+      "what": "Protocol formalized as machine-readable checklist",
+      "file": "experiments/protocol-checklist.yaml",
+      "date": "2026-07-22",
+      "phase": "between"
+    },
+    {
+      "stage": "M2",
+      "what": "Treatment-selection policy recorded",
+      "file": "notes/documentation-selection.md",
+      "date": "2026-07-22",
+      "phase": "between"
+    },
+    {
+      "stage": "M2",
+      "what": "Frozen documentation snapshots",
+      "file": "experiments/documentation-snapshots",
+      "date": "2026-07-23",
+      "phase": "between"
+    },
+    {
+      "stage": "M1",
+      "what": "Specification-derived expected-result oracle",
+      "file": "experiments/bench/verify-spec.mjs",
+      "date": "2026-07-26",
+      "phase": "after"
+    },
+    {
+      "stage": "M1",
+      "what": "Seed-parity verification",
+      "file": "experiments/bench/verify-seed-parity.mjs",
+      "date": "2026-07-26",
+      "phase": "after"
+    },
+    {
+      "stage": "M1",
+      "what": "Campaign-state verification",
+      "file": "experiments/bench/verify-campaign-state.mjs",
+      "date": "2026-07-26",
+      "phase": "after"
+    },
+    {
+      "stage": "R7",
+      "what": "Dead-work / implementation-waste check",
+      "file": "experiments/bench/dead-work.mjs",
+      "date": "2026-07-26",
+      "phase": "after"
+    }
+  ]
+}

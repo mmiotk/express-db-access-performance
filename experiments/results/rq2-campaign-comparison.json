@@ -1,5 +1,5 @@
 {
-  "scope": "Descriptive comparison of two corrected-state campaigns on one host. Campaign dates are not paired. Headline reversals must recur, exceed the predeclared plus or minus 5 percent margin on both stacks, and have paired-bootstrap intervals excluding equality in opposite directions in both campaigns. No cross-host transfer is inferred.",
+  "scope": "Descriptive comparison of two corrected-state campaigns on one host. Campaign dates are not paired. Headline reversals must recur, exceed the plus or minus 5 percent margin on both stacks, and have paired-bootstrap intervals excluding equality in opposite directions in both campaigns. No cross-host transfer is inferred.",
   "primaryFile": "current-primary.json",
   "validationFile": "rq2-validation-campaign.json",
   "validationCells": 42,

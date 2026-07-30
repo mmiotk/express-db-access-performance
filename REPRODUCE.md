@@ -178,7 +178,7 @@ hand-refined captions the generators do not emit; and `tail_regimes.tex` differs
   audit and writes `results/protocol-audit-agreement.json`. With only the author's
   codings recorded it reports `not_computable` and no statistic — this is the expected
   output for the submitted artifact, not a failure.
-- `npm test`: 28/28 unit tests pass.
+- `npm test`: 48/48 unit tests pass.
 - The rebuilt `paper/ist/ist_main.pdf` and `paper/_build/supplement.pdf`.
 
 ## 6. Independent-review packets (pending)

@@ -1,0 +1,313 @@
+{
+  "note": "Derived provenance for secondary-experiment records. Archived results are append-only and were not modified; this manifest is regenerated from repository history and from the presence of .pre-r5.bak and -corrected sibling files. 'r5-refreeze-pre-state-fix' means the record comes from the r5 re-freeze campaign and predates the MySQL AUTO_INCREMENT reset fix; 'remeasured-after-state-fix' means a corrected remeasurement exists. A pre-fix record is not thereby invalid: the defect affected MySQL write, range-scan, and aggregation state, so read-only PostgreSQL sensitivities are unaffected by it. Which records the manuscript uses as clean evidence is stated in the manuscript, not here.",
+  "generatedFrom": "git history + results/ directory listing",
+  "headCommit": "fd32276",
+  "experiments": [
+    {
+      "experiment": "order-invariance",
+      "records": [
+        {
+          "file": "order-fwd.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-13",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        },
+        {
+          "file": "order-rev.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-13",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "durability",
+      "records": [
+        {
+          "file": "durability.json",
+          "addedOn": "2026-07-17",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        },
+        {
+          "file": "raw-writes-relaxed.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-19",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [
+            "raw-writes-relaxed-corrected-traces-sample.json",
+            "raw-writes-relaxed-corrected.json",
+            "raw-writes-relaxed-corrected.partial.json",
+            "raw-writes-relaxed-corrected.startup-events.json"
+          ],
+          "campaign": "remeasured-after-state-fix"
+        }
+      ],
+      "campaign": "mixed-see-records"
+    },
+    {
+      "experiment": "same-SQL",
+      "records": [
+        {
+          "file": "sameplan.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [
+            "sameplan-corrected.json"
+          ],
+          "campaign": "remeasured-after-state-fix"
+        }
+      ],
+      "campaign": "remeasured-after-state-fix"
+    },
+    {
+      "experiment": "open-loop",
+      "records": [
+        {
+          "file": "openloop.json",
+          "addedOn": null,
+          "lastTouched": null,
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        },
+        {
+          "file": "openloop2.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "fan-out",
+      "records": [
+        {
+          "file": "fanout.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "equal-CPU",
+      "records": [
+        {
+          "file": "equalcpu.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "concurrency",
+      "records": [
+        {
+          "file": "scaling.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [
+            "scaling-corrected.json"
+          ],
+          "campaign": "remeasured-after-state-fix"
+        }
+      ],
+      "campaign": "remeasured-after-state-fix"
+    },
+    {
+      "experiment": "utilization",
+      "records": [
+        {
+          "file": "utilization.postgres.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [
+            "utilization-corrected.mysql.json",
+            "utilization-corrected.postgres.json"
+          ],
+          "campaign": "remeasured-after-state-fix"
+        },
+        {
+          "file": "utilization.mysql.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [
+            "utilization-corrected.mysql.json",
+            "utilization-corrected.postgres.json"
+          ],
+          "campaign": "remeasured-after-state-fix"
+        }
+      ],
+      "campaign": "remeasured-after-state-fix"
+    },
+    {
+      "experiment": "pool-size",
+      "records": [
+        {
+          "file": "poolsize.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        },
+        {
+          "file": "poolsize.mysql.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "cluster",
+      "records": [
+        {
+          "file": "cluster.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "mixed-workload",
+      "records": [
+        {
+          "file": "mixed.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "wait-event",
+      "records": [
+        {
+          "file": "waitevents.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-26",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "post-restart",
+      "records": [
+        {
+          "file": "postreboot.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "longer-window-tail",
+      "records": [
+        {
+          "file": "taillong.json",
+          "addedOn": "2026-07-18",
+          "lastTouched": "2026-07-18",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [
+            "taillong-corrected-traces-sample.json",
+            "taillong-corrected.json",
+            "taillong-corrected.partial.json",
+            "taillong-corrected.startup-events.json"
+          ],
+          "campaign": "remeasured-after-state-fix"
+        },
+        {
+          "file": "longrun.json",
+          "addedOn": "2026-07-13",
+          "lastTouched": "2026-07-13",
+          "regeneratedByR5": false,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        },
+        {
+          "file": "longrun90.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-14",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "mixed-see-records"
+    },
+    {
+      "experiment": "alternative-loading",
+      "records": [
+        {
+          "file": "altloading.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    },
+    {
+      "experiment": "transactional-write",
+      "records": [
+        {
+          "file": "txn-write.json",
+          "addedOn": "2026-07-14",
+          "lastTouched": "2026-07-17",
+          "regeneratedByR5": true,
+          "correctedRemeasurements": [],
+          "campaign": "r5-refreeze-pre-state-fix"
+        }
+      ],
+      "campaign": "r5-refreeze-pre-state-fix"
+    }
+  ],
+  "missingRecords": [],
+  "counts": {
+    "remeasuredAfterStateFix": 3,
+    "mixed": 2,
+    "r5PreStateFix": 11
+  }
+}

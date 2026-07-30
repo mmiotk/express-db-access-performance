@@ -3,11 +3,10 @@
 
 \paragraph{Version-sensitivity}
 An earlier campaign found Prisma (then 5.22, on an in-process Rust query engine) tying the native
-driver on the deep fetch while drawing about five application cores; the \emph{identical} harness on the re-frozen toolchain
-(Section~\ref{sec:threats}) did not reproduce it --- application CPU now stays near one core rather than the earlier multi-core path, and
-Prisma sits at mid-to-low throughput (Section~\ref{sec:results}). The non-reproduction is a fact,
-its cause a hypothesis (Prisma's Rust-free rewrite is likeliest, though the re-freeze moved the
-whole toolchain at once), so the headline is
+driver on the deep fetch while drawing about five application cores. The \emph{identical} harness on
+the re-frozen toolchain did not reproduce it: application CPU now stays near one core and Prisma sits
+at mid-to-low throughput (Section~\ref{sec:results}). The non-reproduction is a fact, its cause a
+hypothesis, since the re-freeze moved the whole toolchain at once, so the headline is
 version-sensitive~\cite{vanzyl2009optimisations,papadopoulos2021reproducible}.
 
 \paragraph{Implications for practice}
@@ -19,7 +18,6 @@ on aggregation. Round-trip count alone does not explain throughput: on the Postg
 single-query MikroORM is slowest while two-query Drizzle outruns four-query Prisma
 (Supplement Table~S2; Table~\ref{tab:deep_fetch}). Result-graph materialization and the other
 bundled implementation differences are plausible contributors, but the study does not isolate them.
-
 
 \paragraph{Single-row inserts and backend-stack transfer}
 Single-row insert behavior is both stack- and treatment-specific. In the primary
@@ -40,59 +38,64 @@ campaigns, with paired intervals excluding equality in opposite directions
 (Supplement Table~S46). Every promoted reversal involves Prisma, whose MySQL path uses
 the MariaDB adapter rather than \texttt{mysql2}, so backend-stack sensitivity here is
 inseparable from that driver substitution and describes one treatment, not ORMs as a
-class. This supports backend-stack sensitivity in the tested
+class. Repeating the promotion procedure without that treatment promotes no pair at all
+(Supplement Table~S49). \emph{Observed:} every reversal clearing the promotion bar involves the one
+layer whose MySQL driver differs, and whole-ordering agreement without it improves on deep fetch but
+falls on aggregation, to $\rho=0.54$ and $0.49$. \emph{Interpretation:} at the stated bar only the
+asymmetric treatment reverses durably; agreement of the whole ordering is imperfect on both stacks
+and no better without that treatment, which we report descriptively rather than as a further reversal
+claim. \emph{Not identified:} the design cannot attribute the promoted reversals to the DBMS rather
+than to the adapter, the driver, or Prisma's own implementation, because holding out the treatment
+holds out the substitution with it. The hold-out followed observing that all four promoted reversals
+involved one treatment; its criterion is nevertheless a design fact, the sole asymmetric driver,
+fixed independently of the outcomes.
+This supports backend-stack sensitivity in the tested
 implementations while leaving cross-host transfer unresolved. A five-replicate,
 one-layer-per-tier six-statement transaction remains exploratory and does not
 extend the single-row-insert finding to writes as a class (Supplement Table~S8).
 
 \paragraph{Methodological lessons: a checklist for access-layer benchmarking}
-Several failures changed or could have changed the comparison; we distil them into a
-reusable checklist (\texttt{notes/supplement-methods}): an \textbf{aggregation fan-out} (a join
-before \texttt{SUM} inflating the aggregate) and a driver result-shape mismatch, both semantic defects caught by specification/differential admission; \textbf{OFFSET pagination}
-collapsing on MySQL, easily misread as an access-layer weakness; \textbf{write-state contamination}: the post-review state oracle found that MySQL allocated inserts below the cleanup floor after the fan-out fixture; and a \textbf{query-formulation confound} where a
-mis-scoped pre-aggregation re-scanned the whole table, a query-plan artifact masquerading as an
-access-layer effect~\cite{leis2015optimizers}. The write path needs its own gate: MikroORM~7's
-dropped \texttt{persistAndFlush} made every insert throw a 500 faster than a real one, briefly
-\emph{leading} MySQL until the non-2xx counter flagged it. Because a 2xx alone would miss a
-\emph{silently} incorrect write, the gate also validates post-write database state --- field
-values, identifiers, row-count changes, and rollback (Section~\ref{sec:methodology}) --- the write-state check complements the specification-derived and differential read checks. None is schema-specific; each extends the
-database-benchmarking pitfalls of Fruth et al.~\cite{fruth2022tail} and Raasveldt et
-al.~\cite{raasveldt2018fair} to the access-layer sub-genre, and at least one plausibly explains
-part of the gap between some vendor-reported and controlled benchmark results.
+Several failures changed or could have changed the comparison; we distil them into a reusable
+checklist (\texttt{notes/supplement-methods}): an \textbf{aggregation fan-out} (a join before
+\texttt{SUM} inflating the aggregate) and a driver result-shape mismatch, both caught by
+specification/differential admission; \textbf{OFFSET pagination} collapsing on MySQL, easily misread
+as an access-layer weakness; \textbf{write-state contamination}, where MySQL allocated inserts below
+the cleanup floor; and a \textbf{query-formulation confound} where a mis-scoped pre-aggregation
+re-scanned the whole table, a query-plan artifact masquerading as an access-layer
+effect~\cite{leis2015optimizers}. The write path needs its own gate: MikroORM~7's dropped
+\texttt{persistAndFlush} made every insert throw a 500 faster than a real one, briefly \emph{leading}
+MySQL until the non-2xx counter flagged it. Because a 2xx alone would miss a \emph{silently}
+incorrect write, the gate also validates post-write state --- field values, identifiers, row-count
+changes, and rollback. None is schema-specific; each extends the database-benchmarking pitfalls of
+Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair} to the access-layer
+sub-genre, and at least one plausibly explains part of the gap between some vendor-reported and
+controlled benchmark results.
 
 \paragraph{Evidence for the protocol contribution}
-The experimental record shows concrete consequences of the protocol stages: an
-independent seed specification caught shared state/fixture defects that mutual
-equality would miss; treatment provenance made the loading-policy sensitivity
-auditable; capacity characterization changed the tail interpretation; and the
-common-SQL path narrowed, but did not decompose, the selected-treatment spread
-(Table~\ref{tab:protocol_mapping}). A codebook was also applied to the nine
-external benchmark sources retained by the scoping search. Its 63 source-located
-judgements yield explicit claim licenses rather than a binary quality score
-(Supplement Table~S37). This demonstrates that the protocol can structure an
-external evidence audit; because the manuscript author was the sole rater, it does
-not establish inter-rater agreement or independent general applicability. Two limits deserve statement. No source was coded \emph{satisfied} on any stage --- all 63
-judgements are \emph{partial}, \emph{not reported}, or \emph{not applicable} --- so the
-codebook's upper range is untested. And agreement against this rater would estimate
-agreement with the protocol's own designer, who was neither blind nor independent: two
-blind raters would be the stronger design. The
-methodological claim is consequently an access-layer-specific operational
-discipline and reusable artifact, not invention of the constituent controls or a
-complete theory of benchmarking validity.
+The experimental record shows concrete consequences of the protocol stages: an independent seed
+specification caught shared state and fixture defects that mutual equality would miss; treatment
+provenance made the loading-policy sensitivity auditable; capacity characterization changed the tail
+interpretation; and the common-SQL path narrowed, but did not decompose, the selected-treatment
+spread (Supplement Table~S50). A codebook applied to the nine external sources retained by the
+scoping search yields 63 source-located judgements and explicit claim licenses rather than a binary
+quality score (Supplement Table~S37).
 
-What is demonstrated is that the protocol is \emph{executable}: it admits and
-rejects concrete cells, it changed the reported interpretation at each stage exercised here
-(Table~\ref{tab:protocol_mapping}; R7 excepted, being unsatisfied), and it codes an external corpus to a
-reproducible per-stage result. What is not demonstrated is \emph{reusability by
-another person}: that a second analyst reaches the same judgements, or that another
-team can instantiate the protocol without its author. The codebook, audit record,
-agreement scorer, and result-blind forms are released so that question can be settled
-against this study. The contribution is a structured, testable proposal with one worked
-instantiation, not a validated methodology.
+What this demonstrates is that the protocol is \emph{executable}: it admits and rejects concrete
+cells, it changed the reported interpretation at every stage exercised here (R7 excepted, being
+unsatisfied), and it codes an external corpus to a reproducible per-stage result. What it does not
+demonstrate is \emph{reusability by another person} --- that a second analyst reaches the same
+judgements, or that another team can instantiate the protocol without its author. Two limits sharpen
+this. No source was coded \emph{satisfied} on any stage, so the codebook's upper range is untested;
+and agreement against this rater would measure agreement with the protocol's own designer, who was
+neither blind nor independent, where two blind raters would be the stronger design. The codebook,
+audit record, agreement scorer, and result-blind forms are released so the question can be settled
+against this study. The claim is therefore an access-layer-specific operational discipline and
+reusable artifact --- a structured, testable proposal with one worked instantiation --- not invention
+of the constituent controls, a complete theory of benchmarking validity, or a validated methodology.
 
 \paragraph{Practical guidance}
 The synthesis follows from RQ1--RQ3 and describes the benchmarked implementations in this
-configuration and workload --- single host, default durability, pinned versions
+configuration and workload --- single host, default durability, one pool size, pinned versions
 (Section~\ref{sec:threats}) --- not access-layer categories in general. Because the fan-out sweep
 (Section~\ref{sec:results}) varies breadth (0--500 children) but not depth, schema, or query mix,
 the selected spread's peak on the deep fetch locates a difference among five

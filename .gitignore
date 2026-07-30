@@ -49,6 +49,9 @@ experiments/results/*.json
 !experiments/results/rq2-validation-campaign.json
 !experiments/results/rq2-validation-campaign.startup-events.json
 !experiments/results/rq2-campaign-comparison.json
+!experiments/results/secondary-provenance.json
+!experiments/results/rq2-leave-prisma-out.json
+!experiments/results/protocol-chronology.json
 !experiments/results/rq2-corrected-full.json
 !experiments/results/rq2-corrected-interaction-tests.json
 !experiments/results/rq2-historical-provenance-comparison.json

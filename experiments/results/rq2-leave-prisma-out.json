@@ -1,0 +1,234 @@
+{
+  "scope": "Leave-one-treatment-out sensitivity for RQ2. Prisma is held out because it is the only treatment whose lower-level MySQL driver differs from the rest (MariaDB adapter rather than mysql2). Promotion criteria are identical to the main RQ2 analysis. This isolates no causal mechanism: holding out Prisma removes the driver substitution together with the treatment itself, so the two cannot be separated by this design.",
+  "heldOut": "prisma",
+  "layersFull": [
+    "knex",
+    "drizzle",
+    "prisma",
+    "sequelize",
+    "typeorm",
+    "objection",
+    "mikroorm"
+  ],
+  "layersReduced": [
+    "knex",
+    "drizzle",
+    "sequelize",
+    "typeorm",
+    "objection",
+    "mikroorm"
+  ],
+  "promotionCriteria": "recurs in both corrected-state campaigns; both stack-specific pair gaps exceed 5 percent; paired-bootstrap ratio intervals exclude equality in opposite directions in both campaigns",
+  "full": [
+    {
+      "endpoint": "deep_fetch",
+      "label": "Deep fetch",
+      "crossStackSpearman": {
+        "primary": 0.8571428571428572,
+        "validation": 0.8571428571428572
+      },
+      "rawReversalPairs": {
+        "primary": [
+          "prisma|objection",
+          "prisma|sequelize",
+          "sequelize|objection"
+        ],
+        "validation": [
+          "prisma|objection",
+          "prisma|sequelize",
+          "sequelize|objection"
+        ]
+      },
+      "promotedPairs": [
+        "prisma|objection",
+        "prisma|sequelize"
+      ],
+      "promotedDetail": [
+        {
+          "pair": "prisma|objection",
+          "pgRatio": 1.1553588987217305,
+          "mysqlRatio": 0.7535885167464115,
+          "material": true,
+          "pgRatioCI": [
+            1.13671875,
+            1.1640316205533596
+          ],
+          "mysqlRatioCI": [
+            0.7432273262661955,
+            0.7645631067961165
+          ],
+          "intervalResolved": true
+        },
+        {
+          "pair": "prisma|sequelize",
+          "pgRatio": 1.2014314928425358,
+          "mysqlRatio": 0.7159090909090909,
+          "material": true,
+          "pgRatioCI": [
+            1.18488253319714,
+            1.2077789150460594
+          ],
+          "mysqlRatioCI": [
+            0.7099322799097065,
+            0.725
+          ],
+          "intervalResolved": true
+        }
+      ]
+    },
+    {
+      "endpoint": "aggregation",
+      "label": "Aggregation",
+      "crossStackSpearman": {
+        "primary": 0.6785714285714286,
+        "validation": 0.6428571428571428
+      },
+      "rawReversalPairs": {
+        "primary": [
+          "drizzle|mikroorm",
+          "knex|drizzle",
+          "knex|typeorm",
+          "prisma|objection",
+          "typeorm|mikroorm"
+        ],
+        "validation": [
+          "drizzle|mikroorm",
+          "knex|drizzle",
+          "knex|mikroorm",
+          "knex|typeorm",
+          "prisma|objection",
+          "typeorm|mikroorm"
+        ]
+      },
+      "promotedPairs": [
+        "prisma|objection"
+      ],
+      "promotedDetail": [
+        {
+          "pair": "prisma|objection",
+          "pgRatio": 1.1630085653104925,
+          "mysqlRatio": 0.8064406779661017,
+          "material": true,
+          "pgRatioCI": [
+            1.1400747065101386,
+            1.1764705882352942
+          ],
+          "mysqlRatioCI": [
+            0.7983924983255191,
+            0.8184955141476881
+          ],
+          "intervalResolved": true
+        }
+      ]
+    },
+    {
+      "endpoint": "write",
+      "label": "Insert",
+      "crossStackSpearman": {
+        "primary": 0.6785714285714286,
+        "validation": 0.7142857142857143
+      },
+      "rawReversalPairs": {
+        "primary": [
+          "knex|drizzle",
+          "knex|objection",
+          "prisma|mikroorm",
+          "prisma|sequelize",
+          "prisma|typeorm"
+        ],
+        "validation": [
+          "prisma|mikroorm",
+          "prisma|sequelize",
+          "prisma|typeorm",
+          "sequelize|objection"
+        ]
+      },
+      "promotedPairs": [
+        "prisma|mikroorm"
+      ],
+      "promotedDetail": [
+        {
+          "pair": "prisma|mikroorm",
+          "pgRatio": 1.4229144667370643,
+          "mysqlRatio": 0.7227162489894907,
+          "material": true,
+          "pgRatioCI": [
+            1.4046997389033942,
+            1.4662379421221865
+          ],
+          "mysqlRatioCI": [
+            0.6824534161490683,
+            0.8035555555555556
+          ],
+          "intervalResolved": true
+        }
+      ]
+    }
+  ],
+  "reduced": [
+    {
+      "endpoint": "deep_fetch",
+      "label": "Deep fetch",
+      "crossStackSpearman": {
+        "primary": 0.9428571428571428,
+        "validation": 0.9428571428571428
+      },
+      "rawReversalPairs": {
+        "primary": [
+          "sequelize|objection"
+        ],
+        "validation": [
+          "sequelize|objection"
+        ]
+      },
+      "promotedPairs": [],
+      "promotedDetail": []
+    },
+    {
+      "endpoint": "aggregation",
+      "label": "Aggregation",
+      "crossStackSpearman": {
+        "primary": 0.5428571428571429,
+        "validation": 0.48571428571428577
+      },
+      "rawReversalPairs": {
+        "primary": [
+          "drizzle|mikroorm",
+          "knex|drizzle",
+          "knex|typeorm",
+          "typeorm|mikroorm"
+        ],
+        "validation": [
+          "drizzle|mikroorm",
+          "knex|drizzle",
+          "knex|mikroorm",
+          "knex|typeorm",
+          "typeorm|mikroorm"
+        ]
+      },
+      "promotedPairs": [],
+      "promotedDetail": []
+    },
+    {
+      "endpoint": "write",
+      "label": "Insert",
+      "crossStackSpearman": {
+        "primary": 0.8285714285714285,
+        "validation": 0.9428571428571428
+      },
+      "rawReversalPairs": {
+        "primary": [
+          "knex|drizzle",
+          "knex|objection"
+        ],
+        "validation": [
+          "sequelize|objection"
+        ]
+      },
+      "promotedPairs": [],
+      "promotedDetail": []
+    }
+  ],
+  "promotedCountFull": 4,
+  "promotedCountReduced": 0
+}

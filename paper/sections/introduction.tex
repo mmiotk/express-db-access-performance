@@ -1,50 +1,49 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Express.js is among the most widely used web frameworks for Node.js, and almost every
-non-trivial service built on it reaches a relational database through some \emph{access
-layer}. Access layers trade raw performance for ergonomics, compile-time type safety, and
-protection from pitfalls such as the N+1 query problem, where fetching a result graph issues one
-query per parent row instead of one for the result graph~\cite{chen2014orm} --- a pervasive
-anti-pattern (Section~\ref{sec:related}). Native drivers expose the wire
-protocol directly (\texttt{pg}, \texttt{mysql2}); query builders assemble SQL
-programmatically (Knex); and object-relational mappers (ORMs) map rows to objects,
-following patterns such as Data Mapper and Active Record~\cite{fowler2002patterns}. Node.js back-end performance under load is a recognized
-empirical topic~\cite{chaniotis2015nodejs,kuffel2025nodejs,carmo2024backend},
-but that literature varies the runtime and framework, not the access layer.
+Express.js is among the most widely used web frameworks for Node.js, and almost every non-trivial
+service built on it reaches a relational database through some \emph{access layer}. Access layers
+trade raw performance for ergonomics, type safety, and protection from pitfalls such as the N+1 query
+problem, where fetching a result graph issues one query per parent row instead of one for the
+graph~\cite{chen2014orm} --- a pervasive anti-pattern (Section~\ref{sec:related}). Native drivers
+expose the wire protocol directly (\texttt{pg}, \texttt{mysql2}); query builders assemble SQL
+programmatically (Knex); and object-relational mappers (ORMs) map rows to objects, following patterns
+such as Data Mapper and Active Record~\cite{fowler2002patterns}. Node.js back-end performance under
+load is a recognized empirical
+topic~\cite{chaniotis2015nodejs,kuffel2025nodejs,carmo2024backend}, but that literature varies the
+runtime and framework, not the access layer.
 
-The most visible comparisons are vendor-authored. Peer-reviewed studies in the sources searched cover up to three ORMs in a controlled layer comparison; a broader Node-Bench study includes five access products but also changes frameworks and environments, while the dual-engine precedent holds the access layer fixed~\cite{colley2018orm,prisma_rawsql_2025,orm_compare_jcct_2025,pratama2023nodebench,zhadko2025orm,salunke2024pgmysql}. Table~\ref{tab:prior_art} records these coverage limits. The sole broad suite reporting a tail gives one P95 at one load point~\cite{drizzle_benchmarks}, and the academic studies time inside the process rather than through an HTTP framework~\cite{zhadko2025orm,imamsakti2025async}. These gaps motivate the coverage of this experiment, not a priority claim. A more basic gap is methodological: the reported
+The most visible comparisons are vendor-authored. Peer-reviewed studies in the sources searched cover up to three ORMs in a controlled layer comparison; a broader Node-Bench study includes five access products but also changes frameworks and environments, while the dual-engine precedent holds the access layer fixed~\cite{colley2018orm,prisma_rawsql_2025,orm_compare_jcct_2025,pratama2023nodebench,zhadko2025orm,salunke2024pgmysql}. Supplement Table~S51 records these coverage limits. The sole broad suite reporting a tail gives one P95 at one load point~\cite{drizzle_benchmarks}, and the academic studies time inside the process rather than through an HTTP framework~\cite{zhadko2025orm,imamsakti2025async}. These gaps motivate the coverage of this experiment, not a priority claim. A more basic gap is methodological: the reported
 numbers are not established to be \emph{comparable} --- a layer returning fewer fields or
 erroring faster than it works can look faster, a library's chosen query strategy is
 conflated with its own cost, and a single, arbitrary load point conflates capacity,
 tail latency under demand, and per-request latency. Establishing that comparability is the
-problem this paper takes up.
+problem this paper takes up. The problem is a software-engineering one: such benchmarks are
+read as decision support for technology selection, so a comparison not established to be
+comparable can misdirect an engineering choice rather than merely misreport a number.
 
-This paper addresses these gaps with a \emph{comparability protocol} and a
-non-vendor-authored benchmarking experiment that applies it (Section~\ref{sec:methodology} defines the
-term): an \emph{identical} Express application served through all nine access layers (two
-native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize, TypeORM, Objection,
-MikroORM) over five selected access patterns --- point read, keyset range scan,
-deep fetch, per-author aggregation, and insert --- rather than a production workload.
-The five are chosen to stress distinct aspects of the access layer, not as a
-representative sample of Express/database workloads.
-Seven layers run against \emph{both} engines under an identical schema, dataset, and pool
-size; two tuned native-driver baselines provide disclosed named-preparation and
-binary-protocol reference points rather than an optimization ceiling.
-Every (layer, engine, pattern) reports throughput (req/s) and the \emph{high-load
-response-time p99 under equal closed-loop demand} at the fixed 50-connection operating
-point, over 25 repeated runs. At this near-saturation point the p99 largely tracks capacity
-and queueing, so a lower-capacity layer looks worse on the tail even when its
-sub-saturation latency is not; we therefore also report the tail at \emph{matched
-utilization}. The study separates two estimands: the
-\emph{policy-selected documented configuration} performance of each layer (RQ1--RQ3),
-and a \emph{common-SQL raw-path sensitivity} contrast reporting the residual under
-identical SQL --- changing query formulation, protocol, preparation, round-trips, and
-mapping together rather than isolating any one. The full harness --- adapters, seed data,
-an autocannon-driven~\cite{autocannon} load runner, and a specification-derived expected-result oracle, differential-equivalence checks, and write-state validation --- is released as an open replication
-package.\footnote{Harness, deterministic seed, all adapters,
-raw per-cell measurements, and the table/figure-generating scripts:
-\texttt{https://github.com/mmiotk/express-db-access-performance}; the complete revision artifact is release v1.12.17 under the immutable version DOI \texttt{https://doi.org/10.5281/zenodo.21610058}, with concept DOI \texttt{https://doi.org/10.5281/zenodo.21313858}.}
+This paper addresses these gaps with a \emph{comparability protocol} --- a structured, executable
+proposal rather than a validated methodology --- and one non-vendor-authored empirical instantiation
+of it (Section~\ref{sec:protocol} defines the term): an \emph{identical} Express application served
+through all nine access layers (two native drivers, Knex, and six ORMs: Drizzle, Prisma, Sequelize,
+TypeORM, Objection, MikroORM) over five selected access patterns --- point read, keyset range scan,
+deep fetch, per-author aggregation, and insert. The five stress distinct aspects of the access layer
+and are not a representative sample of Express/database workloads. Seven layers run against
+\emph{both} engines under an identical schema, dataset, and pool size; two tuned native-driver
+baselines provide disclosed reference points rather than an optimization ceiling. Every (layer,
+engine, pattern) reports throughput and the \emph{high-load response-time p99 under equal
+closed-loop demand} at a fixed 50-connection operating point over 25 runs. At that near-saturation
+point the p99 largely tracks capacity and queueing, so a lower-capacity layer looks worse on the tail
+even where its sub-saturation latency does not; we therefore also report the tail at \emph{matched
+utilization}. Two estimands are kept apart: the \emph{policy-selected documented configuration}
+performance of each layer (RQ1--RQ3), and a \emph{common-SQL raw-path sensitivity} contrast reporting
+the residual under identical SQL, which changes query formulation, protocol, preparation, round trips,
+and mapping together rather than isolating any one. The full harness --- adapters, seed data, an
+autocannon-driven~\cite{autocannon} load runner, a specification-derived expected-result oracle,
+differential-equivalence checks, and write-state validation --- is released as an open replication
+package.\footnote{Harness, deterministic seed, all adapters, raw per-cell measurements, and the
+table/figure-generating scripts: \texttt{https://github.com/mmiotk/express-db-access-performance}.
+The archived release and its DOIs are given in the Data availability statement.}
 
 The experiment answers three research questions, each scoped to the benchmarked
 implementations under the specified operating point:
@@ -58,7 +57,12 @@ implementations under the specified operating point:
         matched utilization} (equal fractions of each layer's own capacity).
   \item \emph{(backend-stack transfer):} Does the observed layer ordering transfer
         between the tested PostgreSQL and MySQL backend stacks, where changing the
-        DBMS can also change its supported adapter and lower-level driver?
+        DBMS can also change its supported adapter and lower-level driver? The
+        question concerns transfer, not causation: the design cannot attribute a
+        failure to transfer to the DBMS rather than to the adapter or driver that
+        the backend brings with it. We answer it at two levels: whether a
+        specific pair reverses durably under a stated rule, and whether the whole ordering
+        agrees, reported descriptively.
   \item \emph{(pattern spread):} Which of the five tested patterns shows the
         largest native-relative spread in this configuration?
 \end{enumerate}
@@ -67,20 +71,30 @@ This paper's primary contribution is a \textbf{comparability protocol for access
 benchmarking}, specified normatively in Section~\ref{sec:protocol} (inputs, stages,
 cell-admission criteria, interpretation, and limits): a concrete discipline for establishing and reporting comparability.
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Semantic admission.} A seed-specification oracle checks expected read results
-        without native-driver responses; differential checks then establish mutual equivalence; and
-        every timed insert must reach the intended database state --- field values, generated
-        identifiers, exact row-count changes, and, where the transactional method exists, commit
-        atomicity and rollback. All precede admission of the corresponding timing, so a layer that
-        returns less, writes wrong, or errors faster than it works cannot appear faster
-        (Section~\ref{sec:methodology}).
-  \item \textbf{Common-SQL raw-path sensitivity.} The treatment is fixed by a predeclared,
-        reproducible selection rule (\emph{policy-selected documented} here; the protocol
-        privileges none), and a \emph{common-SQL raw-path sensitivity contrast} reports how much
-        difference remains once SQL is held fixed --- a diagnostic contrast, not a causal
-        attribution.
-  \item \textbf{Operating-point separation.} Capacity, high-load tail under equal demand,
-        and tail at matched utilization are reported as \emph{distinct} quantities, not
-        conflated at one load point.
+  \item \textbf{Semantic admission.} A seed-specification oracle checks expected read results without
+        native-driver responses, differential checks establish mutual equivalence, and every timed
+        insert must reach the intended database state. All precede admission of the corresponding
+        timing, so a layer that returns less, writes wrong, or errors faster than it works cannot
+        appear faster (Section~\ref{sec:methodology}).
+  \item \textbf{Treatment definition and common-SQL sensitivity.} The treatment is fixed by a
+        predeclared, reproducible selection rule (\emph{policy-selected documented} here; the protocol
+        privileges none, admitting expert-tuned, usage-frequency, or vendor-recommended policies
+        provided the rule is fixed independently of the outcome). Reproducible selection is not
+        representativeness: it prevents result-dependent tuning but establishes nothing about whether
+        the configuration is optimal, common, or preferred in production. A \emph{common-SQL raw-path
+        sensitivity contrast} then reports what remains once SQL is held fixed --- a diagnostic
+        contrast, not a causal attribution.
+  \item \textbf{Operating-point separation.} Capacity, high-load tail under equal demand, and tail at
+        matched utilization are reported as \emph{distinct} quantities, not conflated at one load
+        point.
 \end{itemize}
-These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The claim is their access-layer-specific operational discipline, evaluated by the in-experiment ablation and a single-rater audit of nine external benchmarks, not invention of the principles or independent inter-rater validation. In this study the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss, and treatment provenance, capacity characterization, and the common-SQL path each changed a further interpretation (Table~\ref{tab:protocol_mapping}). The machine-readable checklist, source-located audit, and result-blind review packets make that discipline available for independent reassessment.
+These constituent controls are established performance-evaluation and testing ideas~\cite{raasveldt2018fair,fruth2022tail,georges2007rigorous}; CYNTHIA already applies differential equivalence across ORM implementations~\cite{sotiropoulos2021cynthia}. The contribution is therefore not any individual control but their integration and operationalization for relational access-layer comparison: a protocol linking semantic admission, treatment-definition discipline, sensitivity contrasts, capacity characterization, operating-point separation, resource accounting, and implementation checks to the claims an access-layer benchmark is entitled to make. We \emph{exercise} that discipline through an in-experiment ablation and a single-rater audit of nine external benchmarks; neither is independent inter-rater validation. The supporting evidence is also developmental rather than external: the specification/state layer exposed shared MySQL state contamination that mutual equality alone would miss, and treatment provenance, capacity characterization, and the common-SQL path each changed a further interpretation (Supplement Table~S50). That the protocol caught real defects during development shows that it does work, but those defects were found by the same author who designed the checks, so they demonstrate utility and do not validate the mature protocol. The machine-readable checklist, source-located audit, and result-blind review packets make the discipline available for the independent reassessment that remains future work.
+
+Two contributions should be kept apart. The \emph{methodological} contribution is the protocol
+and its checklist: proposals for how access-layer comparisons should be conducted, reported,
+and audited. The \emph{empirical} contribution is one instantiation of them --- nine
+configurations, two engines, five patterns, one schema and data scale, one pool size, one
+virtualized host, and two same-host campaigns. Every performance result below is scoped to
+those conditions and to the tested software versions; none is offered as a property of a
+library, and the study measures no non-performance quality such as maintainability, type
+safety, migration tooling, or ecosystem maturity.

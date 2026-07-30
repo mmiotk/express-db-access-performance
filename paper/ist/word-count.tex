@@ -22,29 +22,50 @@ The official IST journal policy confirms a \textbf{15,000-word maximum for resea
 \hline
 Component & Count \\
 \hline
-Seven body sections (\texttt{texcount} sum, including section headings and caption text encountered in those files) & 11,213 \\
-Structured abstract (\texttt{texcount} sum) & 236 \\
-Remaining front matter and required declarations (title/keywords, CRediT, competing interest, data availability, funding, and AI-use disclosures) & 538 \\
-Main-text tables and figures (5 $\times$ 200) & 1,000 \\
-Rendered reference list (65 entries; conservative \texttt{pdftotext} count from the first entry to the end) & 2,000 \\
-\textbf{Conservative IST submission equivalent} & \textbf{14,987} \\
+Seven body sections (\texttt{texcount} sum, including headings and caption text in those files) & 12,060 \\
+Structured abstract (\texttt{texcount} sum) & 294 \\
+Remaining front matter and required declarations & 438 \\
+Main-text tables and figures (1 $\times$ 200) & 200 \\
+Rendered reference list (65 entries after removing 12 uncited ones; \texttt{pdftotext} count from the first entry to the end) & 1,996 \\
+\textbf{Conservative IST submission equivalent} & \textbf{14,988} \\
 \hline
 \end{tabular}\end{center}
 
-The controlling total is therefore \textbf{14,987 words}, leaving \textbf{13 words of headroom} under the 15,000-word limit. The structured abstract contains 222 prose words (227 under the \texttt{texcount} sum convention), below 300 words.
+The controlling total is therefore \textbf{14,988 words}, leaving \textbf{12 words of headroom} under the 15,000-word limit. The structured abstract contains 294 words under the \texttt{texcount} sum convention, below 300 words.
 
-The body grew by 521 words against the previous declaration. The additions are the new Study Design subsection documenting AI-assisted research tooling, which current publisher policy requires in the Methods section; a stated matched-utilization rank-inversion result; the driver-substitution caveat on the RQ2 reversals; and explicit limits on the external-audit codebook. Two offsetting reductions were made. First, prose was condensed and one redundancy removed: the residual left open by the unsatisfied implementation-review stage is now argued once, in Threats, with cross-references elsewhere. Second, two main-text floats moved to the online supplement --- the estimand table, which the body had never cited and now cites as S47, and the insert-dispersion figure, which the supplement already carried --- reducing the float allowance from seven to five and removing a duplicated figure.
+Against the previous declaration of 26 July 2026 (14,987 words, 13 words of headroom), the body rose
+from 11,213 to 12,060 words while the float allowance fell from 1,000 to 200. The revision added
+material on request --- an operational definition of comparability, a protocol-development chronology,
+an RQ2 leave-one-out sensitivity analysis, statistical-assumption statements, and treatment-selection
+and audit-corpus scoping --- and paid for it structurally rather than by deletion. The full normative
+protocol specification, the protocol figure, the chronology, the RQ2 sensitivity table, the
+protocol-to-interpretation mapping, the prior-work coverage table, and the insert results moved to the
+online supplement (Sections and Tables S48--S52, Figure S5); implementation mechanics for admission,
+reset, generator, and documentation capture moved with them. No caveat, limitation, or
+threat-to-validity statement was removed; two that appeared in both Methods and Threats were
+consolidated to a single statement with a cross-reference. One main-text float remains, the deep-fetch
+results table.
 
 Every \texttt{tabular} in the body now sits inside a numbered, captioned float, so the float allowance cannot be disputed: an earlier unnumbered tier schematic was folded into prose for exactly that reason.
 
-\textbf{The remaining headroom is 13 words.} Any further addition requires an offsetting cut, and this declaration must be regenerated with it.
+\textbf{The remaining headroom is 12 words.} Any further addition requires an offsetting cut, and this declaration must be regenerated with it.
 
 This total is intentionally stricter than a research-content-only count. It includes all required declaration text even though such text is commonly treated as submission metadata. It also retains caption words already encountered by \texttt{texcount} and then assigns the full 200-word allowance to every rendered float, so it does not undercount captions. The paper has no manuscript appendices. The separately submitted \texttt{supplement.pdf} is online supplementary material, not an appendix embedded in the research paper.
 
-Reproduction commands:
+Reproduction commands (run from \texttt{paper/ist}):
 
-\texttt{}\texttt{sh cd paper/ist texcount -sum -brief ../sections/introduction.tex ../sections/related\_work.tex ../sections/methodology.tex ../sections/results.tex ../sections/discussion.tex ../sections/threats.tex ../sections/conclusion.tex sed -n "43,68p" ist\_main.tex | texcount -sum -brief - texcount -inc -sum ist\_main.tex rg -c "\textasciicircum{}\textbackslash\{\}\textbackslash\{\}bibitem" ist\_main.bbl rg -F "\textbackslash\{\}\textbackslash\{\}@writefile\{lot\}" ist\_main.aux rg -F "\textbackslash\{\}\textbackslash\{\}@writefile\{lof\}" ist\_main.aux pdftotext ist\_main.pdf - | sed -n "/\textasciicircum{}References\$/,\$p" | wc -w }\texttt{}
+\begin{verbatim}
+texcount -sum -brief ../sections/*.tex                  # body sections
+sed -n "43,68p" ist_main.tex | texcount -sum -brief -   # structured abstract
+texcount -sum -brief ist_main.tex                       # abstract + front matter
+grep -cF '@writefile{lot}' ist_main.aux                 # numbered tables
+grep -cF '@writefile{lof}' ist_main.aux                 # numbered figures
+grep -c '^.bibitem' ist_main.bbl                        # reference entries
+pdftotext ist_main.pdf - | tr -d '\f' | sed -n '/^References$/,$p' | wc -w
+\end{verbatim}
 
-Count date: 26 July 2026. Any later prose or float change requires this declaration to be regenerated.
+Front matter and declarations are the third command minus the second.
+
+Count date: 30 July 2026. Any later prose or float change requires this declaration to be regenerated.
 
 \end{document}

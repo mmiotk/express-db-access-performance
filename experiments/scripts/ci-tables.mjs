@@ -1,5 +1,6 @@
 // Per-cell uncertainty for the primary tables (review 4, §6.8/E7). Regenerates the
-// five per-pattern throughput/p99 tables from results/raw.json with a 95% bootstrap
+// five per-pattern throughput/p99 tables from the accepted corrected-state campaign
+// (results/current-primary.json; override with RAW_FILE) with a 95% bootstrap
 // confidence interval on the throughput of EVERY layer x engine cell, so the primary
 // outcomes are no longer point estimates. Percentile bootstrap resampling replicate
 // indices, seeded (matches the paired analysis). Overwrites tables/<pattern>.tex.
@@ -10,7 +11,11 @@ import { median } from '../bench/stats.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, "..", "results");
-const rawFile = process.env.RAW_FILE || "raw.json";
+// These are the headline tables (tab:deep_fetch, tab:write, ...), so the default
+// must be the accepted campaign. It previously defaulted to the superseded
+// raw.json and was safe only because every caller overrode it; a bare run would
+// have rebuilt the headline tables from the superseded pilot with no error.
+const rawFile = process.env.RAW_FILE || "current-primary.json";
 const outputDir = process.env.TABLE_DIR || join(resultsDir, "tables");
 const patternFilter = process.env.PATTERNS
   ? new Set(process.env.PATTERNS.split(",").map((x) => x.trim()).filter(Boolean))

@@ -8,7 +8,11 @@ import { canonPost, canonPosts, canonThread, canonThreadRows, canonSummary } fro
 const here = dirname(fileURLToPath(import.meta.url));
 const resultsDir = join(here, '..', 'results');
 const tablesDir = join(resultsDir, 'tables');
-const rawFile = process.env.RAW_FILE || 'raw.json';
+// Default to the accepted corrected-state campaign. The archived
+// canonicalization-cost.json demonstrably used it (its fastest-HTTP-p50 column
+// matches current-primary.json, not the superseded raw.json), so defaulting to
+// raw.json would silently regenerate the table against a superseded campaign.
+const rawFile = process.env.RAW_FILE || 'current-primary.json';
 const raw = JSON.parse(await readFile(join(resultsDir, rawFile), 'utf8'));
 const date = new Date('2026-07-01T12:00:00.000Z');
 const post = { id: 50000n, author_id: 1000n, title: 'Post 50000',
@@ -86,6 +90,9 @@ const result = {
   runtime: { node: process.version, platform: process.platform, arch: process.arch },
   design: { blocks: BLOCKS, iterations_per_block: ITERATIONS,
     warmup_iterations_per_case: WARMUP,
+    // Which campaign supplied the fastest-HTTP-p50 comparison column. Recorded
+    // so the table's provenance is readable from the archive, not inferred.
+    primary_source: rawFile,
     estimator: 'median net ns/call after subtracting median identity-loop cost; p95 across blocks',
     fixture: 'seed-realistic; range=20 rows; deep fetch=10 comments; Date and BigInt conversion',
     limitation: 'single-process development-host microbenchmark; HTTP p50 is a scale reference, not causal decomposition' },

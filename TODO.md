@@ -91,3 +91,12 @@
       Protocol stage R7 is reported as **unsatisfied** until one is returned.
 - [ ] Replicate the reduced RQ2 matrix on a physically independent host
       (ranked below independent human review; not required for submission).
+- [ ] **After the next commit: refresh the two AI-provenance figures, then re-verify the word count.**
+      `\subsection{AI-assisted research tooling}` states **201 of 209** trailered commits
+      (159 Opus 4.8, 27 Fable 5, 15 Opus 5), correct as of HEAD `fd32276`; both totals move with each
+      commit and must be re-derived, not carried forward:
+      `git rev-list --count HEAD` and
+      `git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c .`.
+      `paper/ist/word-count.tex` is current at **14,934 / 66 headroom** (30 July); regenerate it with
+      the verbatim command block inside that file if the provenance edit changes the body count.
+      IST limit is 15,000 including references and 200 words per float, so headroom is thin.

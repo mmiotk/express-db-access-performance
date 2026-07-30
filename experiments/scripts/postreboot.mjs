@@ -1,8 +1,17 @@
 // Environmental-robustness check (review 6.7): after a full database restart
 // (cold buffer pools, fresh connections), re-measure a representative subset and
 // confirm the deep-fetch ranking and values reproduce the primary campaign, which
-// ran within one host session. Compares medians to results/raw.json. Single host,
-// so this checks temporal robustness, not cross-machine generalization.
+// ran within one host session. Single host, so this checks temporal robustness,
+// not cross-machine generalization.
+//
+// The baseline is frozen INTO the output: each row stores primary_deep_rps and
+// ratio, and gen-postreboot.mjs renders those stored fields without re-reading a
+// primary file. The archived results/postreboot.json (measured 2026-07-17) is
+// therefore paired with raw.json, the campaign prevailing at that time -- a
+// correct historical pairing that must not be "corrected" to a later campaign,
+// or the restart effect would be confounded with cross-campaign drift.
+// RAW_FILE below affects only a NEW run, which should be compared against the
+// primary campaign prevailing when it is taken.
 // Run db-local.sh stop && db-local.sh start (and re-warm) BEFORE this script.
 import { spawn, execSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -19,7 +28,7 @@ const CELLS = [
   { engine: 'postgres', adapter: 'pg' }, { engine: 'postgres', adapter: 'prisma' }, { engine: 'postgres', adapter: 'mikroorm' },
   { engine: 'mysql', adapter: 'mysql2' }, { engine: 'mysql', adapter: 'prisma' }, { engine: 'mysql', adapter: 'mikroorm' },
 ];
-const rawFile = process.env.RAW_FILE || 'raw.json';
+const rawFile = process.env.RAW_FILE || 'current-primary.json';
 const raw = JSON.parse(await readFile(join(here, '..', 'results', rawFile), 'utf8'));
 const primary = (adapter, engine, endpoint) => { const r = raw.find((x) => x.adapter === adapter && x.engine === engine && x.endpoint === endpoint); return r ? r.rps : null; };
 

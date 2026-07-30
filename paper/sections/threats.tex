@@ -11,13 +11,19 @@ full request round trip --- though overhead attributed to the \emph{access layer
 reflect Express routing and serialization. We hold those
 near-constant: every adapter satisfies a documented \emph{adapter contract} and
 funnels rows through shared canonical constructors (fixed field set, key order,
-typing, under \texttt{TZ=UTC}). These constructors copy and type-normalize already-grouped rows or entity graphs without querying, joining, regrouping, sorting, or caching. Their standalone median peaks at 17.6~\(\mu\)s (0.146\% of the fastest reported HTTP p50, on the range scan; 9.35~\(\mu\)s and 0.072\% on the deep fetch), too small to explain the multi-fold gap though near-ties stay practically unresolved. The specification-derived oracle replays the deterministic seed independently of all adapters and passes 73,080 expected-result checks. Differential checks then establish finite mutual equivalence. These checks found, among other defects, a Drizzle timestamp conversion that shifted PostgreSQL instants by the host UTC offset; it was fixed before measurement. The fixed-payload baseline
+typing, under \texttt{TZ=UTC}). These constructors copy and type-normalize already-grouped rows or entity graphs without querying,
+joining, regrouping, sorting, or caching. Their standalone median peaks at 17.6~\(\mu\)s, 0.146\% of
+the fastest reported HTTP p50, too small to explain the multi-fold gap though near-ties stay
+practically unresolved. The specification-derived oracle passes 73{,}080 expected-result checks
+independently of all adapters (Section~\ref{sec:methodology}), and differential checks then
+establish finite mutual equivalence; these found, among other defects, a Drizzle timestamp conversion
+that shifted PostgreSQL instants by the host UTC offset, fixed before measurement. The fixed-payload baseline
 ceiling sits above the fastest cell (Section~\ref{sec:methodology}), so the framework
 compresses rather than manufactures between-layer differences, attributable to how
 each layer reaches an identical response, not to what is returned. The reported
 single-row-insert finding uses each engine's \emph{default} vendor-standard durability
 (Section~\ref{sec:methodology}), not one we relaxed, so those insert spreads
-(Table~\ref{tab:write}) describe the tested default deployment, not a tuning choice; a
+(Supplement Table~S52) describe the tested default deployment, not a tuning choice; a
 stack-specific relaxed-durability sensitivity quantifies how each configured treatment changes under that compound intervention without decomposing its cause
 (Section~\ref{sec:discussion}, Supplement Table~S3).
 
@@ -43,13 +49,33 @@ corrected. RQ1 therefore answers what this policy yields,
 not a library-only overhead.
 
 \paragraph{Internal validity}
-Each adapter follows the registered policy and passes specification-derived and differential checks, but all were implemented by one author. A semantically correct yet needlessly allocating, converting, or serializing adapter would pass; no independent human implementation review is claimed. A result-blind author self-audit found two avoidable timed-path operations before campaign acceptance: Knex passed its PostgreSQL-style \texttt{returning} option on MySQL (44{,}907 console warnings within two pilot repetitions), and MikroORM's aggregation obtained and discarded an unused Knex handle per request. Both were removed without changing the declared treatment or SQL; the affected pilots and their provenance were preserved, the admission chain passed again, and measurement restarted from repetition~1 (\texttt{notes/adapter-self-audit.md}). Because the implementer performed it, this is author review. Both are now detected mechanically instead, which is why R7 requires evidence rather than a reviewer: a static check reports values acquired and never read, flagging the MikroORM handle in the pre-fix source and clean on all 13 modules of the measured source (\texttt{results/dead-work.json}); a runtime gate rejects any cell writing to \texttt{stderr} or \texttt{stdout} during a measured run, which would have failed the Knex defect immediately. The runtime gate postdates the reported campaign and did not gate it, where absence of output rests on author observation. Both are rerunnable by a reader; author review is not. Neither covers waste that is silent \emph{and} invisible in the source --- an unnecessarily expensive documented configuration, say --- so the residual narrows without closing. The residual is a correct, policy-conformant adapter uniformly slower than a differently written one: R7 would narrow it, not establish the validity of the admitted measurements, which rests on the checks above. We report it as open, not discharged. Per-cell warm-up phases
+Each adapter follows the registered policy and passes specification-derived and differential checks,
+but all were implemented by one author. A semantically correct yet needlessly allocating,
+converting, or serializing adapter would pass; no independent human implementation review is claimed.
+A result-blind author self-audit found two avoidable timed-path operations before campaign
+acceptance: Knex passed its PostgreSQL-style \texttt{returning} option on MySQL (44{,}907 console
+warnings within two pilot repetitions), and MikroORM's aggregation obtained and discarded an unused
+Knex handle per request. Both were removed without changing the declared treatment or SQL, the
+admission chain passed again, and measurement restarted from repetition~1
+(\texttt{notes/adapter-self-audit.md}); because the implementer performed it, this is author review.
+Both are now detected mechanically instead, which is why R7 requires evidence rather than a reviewer:
+a static check reports values acquired and never read, clean on all 13 modules of the measured
+source, and a runtime gate rejects any cell writing to \texttt{stderr} or \texttt{stdout} during a
+measured run. The runtime gate postdates the reported campaign and did not gate it, so absence of
+output there rests on author observation. Neither covers waste that is silent \emph{and} invisible in
+the source --- an unnecessarily expensive documented configuration, say --- so the residual narrows
+without closing: a correct, policy-conformant adapter uniformly slower than a differently written one
+would pass every check. We report it as open, not discharged. The same caution applies more widely: four admission
+elements --- the specification-derived oracle, seed-parity and campaign-state verification, and
+the dead-work check --- postdate the accepted campaigns
+(Supplement Table~S48). Because they replay a deterministic seed and inspect
+archived state, they can invalidate archived results, and did so for the superseded pilot; but
+they did not gate the timed runs as those runs executed, so a defect observable only while a run
+was in progress would have escaped them. Per-cell warm-up phases
 exceeding the slowest layer's cold-start stabilization absorb JIT, pool-fill, and
-plan-cache effects~\cite{mytkowicz2009producing}; two further controls address non-layer confounds: one correlated-subquery aggregation plan, and the corrected-state campaign's verified reset before each write cell. The state oracle found that the historical MySQL \texttt{AUTO\_INCREMENT} reset could allocate below the cleanup floor, letting old inserts persist; historical MySQL range-scan, aggregation, and insert cells are therefore not used as clean evidence and all five patterns were remeasured in one campaign. Within a
-replicate every layer and engine draws from the same PRNG-seeded id distribution --- though not an
-identical served sequence, since run lengths differ (Section~\ref{sec:methodology}) --- and a
-forward-versus-reversed write-cell-order check found no detectable order effect, so
-order does not confound layer identity with run position. A residual risk is coordinated omission in the load generator, which
+plan-cache effects~\cite{mytkowicz2009producing}; two further controls address non-layer confounds: one correlated-subquery aggregation plan, and the corrected-state campaign's verified reset before each write cell. The historical MySQL allocator defect and the corrected reset are described in Section~\ref{sec:methodology}; its consequence here is that the affected historical cells are not used as clean evidence, and all five patterns were remeasured in one campaign. The seeded identifier design, and why served sequences are not identical, are set out in
+Section~\ref{sec:methodology}; a forward-versus-reversed write-cell-order check found no detectable
+order effect, so order does not confound layer identity with run position. A residual risk is coordinated omission in the load generator, which
 can under-report tail latency at saturation~\cite{fruth2022tail,tene2015latency};
 coordinated-omission-corrected constant-arrival sweeps on selected deep-fetch layers show small tails below measured capacity and sharp growth near saturation (Section~\ref{sec:results}; Supplement Tables~S6 and S17).
 
@@ -66,7 +92,7 @@ prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no
 \texttt{mysql2} adapter --- an implementation$\times$engine asymmetry. The
 memory-resident working set is a hot-cache regime that makes access-layer overhead
 more visible; as a workload becomes I/O-bound the spreads may compress toward
-$1\times$. Same-host checks do not bound an independent substrate: a post-restart rerun moved absolute throughput by up to 16\%. The corrected-state 25-run campaign repeats all five patterns with a new randomized order and environment fingerprint on the same host. Cross-campaign agreement or disagreement is reported directly; it reduces dependence on one overnight ordering but does not address host, hypervisor-neighbor, CPU-steal, or frequency transfer. No empirical ordering is intended to travel beyond the tested campaigns, and close cross-backend rank reversals are exploratory unless their direction repeats. The protocol evidence is also bounded: its external audit has one rater, so general independent applicability remains to be tested.
+$1\times$. Same-host checks do not bound an independent substrate: a post-restart rerun of six representative cells moved absolute throughput by up to 16\% against the campaign prevailing when it ran, which is the superseded pilot rather than the accepted campaign, since the restart check preceded the latter. The corrected-state 25-run campaign repeats all five patterns with a new randomized order and environment fingerprint on the same host. Cross-campaign agreement or disagreement is reported directly; it reduces dependence on one overnight ordering but does not address host, hypervisor-neighbor, CPU-steal, or frequency transfer. No empirical ordering is intended to travel beyond the tested campaigns, and close cross-backend rank reversals are exploratory unless their direction repeats. Every promoted RQ2 reversal involves the single treatment whose MySQL driver differs, and a leave-one-out repetition of the promotion procedure without it promotes none (Supplement Table~S49); the promoted-reversal evidence is therefore conditional on that driver substitution, which the design cannot separate from the treatment or from the DBMS. The protocol evidence is also bounded: its external audit has one rater, so general independent applicability remains to be tested.
 
 \paragraph{Conclusion validity}
 Our analysis (Section~\ref{sec:methodology}) reports medians with the coefficient

@@ -42,6 +42,18 @@ UA = "verify_refs/1.0 (academic reference checker; mailto:{mailto})"
 # ---------------------------------------------------------------- helpers
 
 
+def _api_id(raw: str) -> str:
+    r"""Strip LaTeX escaping from a DOI or arXiv id before querying an API.
+
+    A DOI is typeset like any other text, so an underscore must be written
+    ``\_`` in the .bib or the document will not compile.  The API wants the
+    bare identifier.  Normalising here keeps the bibliography correct for
+    LaTeX and the query correct for Crossref, instead of forcing one to break
+    for the other.
+    """
+    return raw.replace("\\_", "_").replace("\\&", "&").replace("\\%", "%").replace("{", "").replace("}", "").strip()
+
+
 def normalise(s: str) -> str:
     """Casefold, strip accents, LaTeX markup and punctuation for comparison."""
     s = re.sub(r"\\[a-zA-Z]+\s*", " ", s)
@@ -90,7 +102,7 @@ def parse_bib(text: str) -> list[dict]:
                 "title": fields.get("title", ""),
                 "year": fields.get("year", ""),
                 "author": fields.get("author", ""),
-                "doi": fields.get("doi", ""),
+                "doi": _api_id(fields.get("doi", "")),
                 "raw": body,
             }
         )

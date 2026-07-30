@@ -7,7 +7,8 @@
 // (not equal concurrency) decouples latency from capacity — the reviewer's ask.
 // Writes results/utilization.<engine>.json.
 import { spawn, execSync } from 'node:child_process';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import { writeResult } from '../bench/provenance.mjs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Pool } from 'undici';
@@ -25,7 +26,12 @@ const REPS = Number(env('UL_REPS', 5));
 const DURATION_MS = Number(env('UL_DURATION_MS', 8000));
 const WARMUP_MS = 3000, TIMEOUT_MS = 10000, CONNECTIONS = 256;
 
-const rawFile = env('RAW_FILE', 'raw.json');
+// RAW_FILE supplies the CAPACITY DENOMINATOR, not a table: every offered rate is a
+// fraction of each layer's deep-fetch throughput taken from this file. A superseded
+// denominator therefore shifts the operating point itself, not just a reported
+// number, so the default is the accepted corrected-state campaign. The archived
+// corrected runs used it: all 16 recorded capacities match current-primary.json.
+const rawFile = env('RAW_FILE', 'current-primary.json');
 const outFile = env('UL_OUT', 'utilization.' + UL_ENGINE + '.json');
 const raw = JSON.parse(await readFile(join(here, '..', 'results', rawFile), 'utf8'));
 const capacity = (adapter) => {
@@ -125,5 +131,5 @@ for (const adapter of LAYERS) {
 if (failures.length || out.length !== LAYERS.length * FRACTIONS.length) {
   throw new Error('utilization campaign rejected:\n- ' + failures.join('\n- '));
 }
-await writeFile(join(here, '..', 'results', outFile), JSON.stringify(out, null, 2));
+await writeResult(join(here, '..', 'results', outFile), out, { primary_source: rawFile, engine: UL_ENGINE, fractions: FRACTIONS, reps: REPS });
 console.log('\nwrote results/' + outFile + ' (' + out.length + ' cells)');
