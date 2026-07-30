@@ -17,6 +17,8 @@
 #   scripts/release.sh --check           verify the declared version/DOI are consistent
 #                                        AND that HEAD is the tagged, pushed release
 #   scripts/release.sh --refresh-counts   regenerate the AI-provenance commit counts
+#   scripts/release.sh --check-doi        verify the declared DOI resolves to the
+#                                        declared version (needs network; advisory)
 #
 # Run it AFTER the Zenodo deposit exists, so no build ever carries a placeholder DOI.
 #
@@ -76,6 +78,61 @@ if [[ "${1:-}" == "--refresh-counts" ]]; then
   refresh_counts
   echo "Rebuild the manuscript, then amend: git commit --amend --no-edit"
   exit 0
+fi
+
+# --- optional: does the declared DOI actually resolve to the declared version? ---
+#
+# --check verifies only that the version and DOI strings agree across the
+# declaration sites. It cannot tell whether the archive exists: a release can be
+# tagged, pushed, and self-consistent while Zenodo still resolves the concept DOI
+# to an older version, which makes the Data Availability statement false. That
+# happened with v1.13.0. This check closes that gap. It needs network, so it is
+# opt-in and never runs as part of the offline gate.
+check_doi() {
+  local declared_v declared_d recid body resolved http
+  declared_v=$(grep -oP '^version:\s*\K.+' CITATION.cff | tr -d '"')
+  declared_d=$(grep -oP '^doi:\s*\K10\.5281/zenodo\.[0-9]+' CITATION.cff)
+  if [[ -z "$declared_v" || -z "$declared_d" ]]; then
+    echo "DOI-CHECK: cannot read the declared version or DOI from CITATION.cff" >&2
+    return 1
+  fi
+  recid="${declared_d##*.}"
+  echo "Declared version: v${declared_v}"
+  echo "Declared DOI:     ${declared_d}"
+
+  body=$(mktemp)
+  http=$(curl -sS -o "$body" -w '%{http_code}' --max-time 25 \
+         "https://zenodo.org/api/records/${recid}" 2>/dev/null || echo 000)
+  if [[ "$http" != "200" ]]; then
+    echo "DOI-CHECK: SKIPPED - could not reach Zenodo (HTTP ${http}). Re-run when online;"
+    echo "           this check is advisory and does not gate an offline build."
+    rm -f "$body"; return 0
+  fi
+
+  resolved=$(python3 -c "
+import json,sys
+d=json.load(open(sys.argv[1]))
+print((d.get('metadata') or {}).get('version') or '')
+" "$body" 2>/dev/null || true)
+  rm -f "$body"
+
+  if [[ -z "$resolved" ]]; then
+    echo "DOI-CHECK: SKIPPED - Zenodo returned no version field for ${declared_d}."
+    return 0
+  fi
+  if [[ "$resolved" == "$declared_v" ]]; then
+    echo "OK: ${declared_d} resolves to v${resolved}, matching the declaration."
+    return 0
+  fi
+  echo "DOI-CHECK FAILED: ${declared_d} resolves to v${resolved}, but the papers declare"
+  echo "                  v${declared_v}. The Data Availability statement is false until the"
+  echo "                  v${declared_v} archive is published on Zenodo."
+  return 1
+}
+
+if [[ "${1:-}" == "--check-doi" ]]; then
+  check_doi
+  exit $?
 fi
 
 if [[ "${1:-}" == "--check" ]]; then
@@ -182,6 +239,7 @@ if [[ "${1:-}" == "--check" ]]; then
     echo "$stray_doi" | sed 's/^/  /'; fail=1
   fi
   [[ $fail -eq 0 ]] && echo "OK: version and DOI are self-consistent across all declaration sites."
+  [[ $fail -eq 0 ]] && echo "     This does not prove the archive exists; run --check-doi online for that."
   exit $fail
 fi
 

@@ -93,6 +93,17 @@
       Protocol stage R7 is reported as **unsatisfied** until one is returned.
 - [ ] Replicate the reduced RQ2 matrix on a physically independent host
       (ranked below independent human review; not required for submission).
+- [ ] **Archive v1.13.0 on Zenodo, then verify with `scripts/release.sh --check-doi`.**
+      As of 2026-07-30 the concept DOI `10.5281/zenodo.21313858` still resolves to **v1.12.17**
+      (version DOI `10.5281/zenodo.21610058`, 26 July), so the Data Availability sentence
+      "archived as release v1.13.0, which the concept DOI resolves to" is **currently false**.
+      The GitHub release for v1.13.0 exists but did not trigger archiving: v1.12.16 and v1.12.17
+      were tagged with no GitHub release yet v1.12.17 reached Zenodo, so those deposits were made
+      by hand and the webhook is not the mechanism here. Create a new version of the existing
+      record, upload the v1.13.0 archive, publish, then run `--check-doi`, which fails loudly while
+      the declaration and the archive disagree. `--check` alone cannot see this: it verifies only
+      that the version and DOI strings agree across declaration sites.
+
 - [x] AI-provenance figures and word-count declaration reconciled at commit `08fed76`, then refreshed for the follow-up commit.
       `\subsection{AI-assisted research tooling}` states 203 of 211 trailered commits
       (159 Opus 4.8, 27 Fable 5, 17 Opus 5), which matches `git rev-list --count HEAD` and the
