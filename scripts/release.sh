@@ -101,12 +101,21 @@ check_doi() {
   echo "Declared DOI:     ${declared_d}"
 
   body=$(mktemp)
-  http=$(curl -sS -o "$body" -w '%{http_code}' --max-time 25 \
+  # -L is required: Zenodo redirects a concept record id to the latest version,
+  # so without it every run returns 302 and the check silently skips.
+  http=$(curl -sSL -o "$body" -w '%{http_code}' --max-time 25 \
          "https://zenodo.org/api/records/${recid}" 2>/dev/null || echo 000)
-  if [[ "$http" != "200" ]]; then
+  # Only a genuine transport failure or a server-side error is a skip. Any other
+  # unexpected status is reported, because a silent skip would hide a bad URL.
+  if [[ "$http" == "000" || "$http" =~ ^5[0-9][0-9]$ ]]; then
     echo "DOI-CHECK: SKIPPED - could not reach Zenodo (HTTP ${http}). Re-run when online;"
     echo "           this check is advisory and does not gate an offline build."
     rm -f "$body"; return 0
+  fi
+  if [[ "$http" != "200" ]]; then
+    echo "DOI-CHECK: unexpected HTTP ${http} from the Zenodo API for record ${recid}." >&2
+    echo "           Not skipping silently: check the URL and the record id." >&2
+    rm -f "$body"; return 1
   fi
 
   resolved=$(python3 -c "
