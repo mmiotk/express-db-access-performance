@@ -64,7 +64,7 @@ removed from `references.bib`, so CLAUDE.md section 10 is satisfied.
 | `li2013sqlnosql` | 10.1109/PACRIM.2013.6625441 | crossref | 2026-07-30 | |  |  |
 | `li2014tales` | 10.1145/2670979.2670988 | crossref | 2026-07-30 | |  |  |
 | `lorenz2017orm` | 10.24251/HICSS.2017.592 | crossref | 2026-07-30 | |  |  |
-| `miotk2026artifact` | 10.5281/zenodo.21599104 | crossref | 2026-07-30 | | n/a |  |
+| `miotk2026artifact` | 10.5281/zenodo.21313858 | crossref | 2026-07-30 | | n/a |  |
 | `mytkowicz2009producing` | 10.1145/1508244.1508275 | crossref | 2026-07-30 | |  |  |
 | `orm_compare_jcct_2025` | 10.14456/jcct.2025.16 | publisher | 2026-07-30 | |  |  |
 | `papadopoulos2021reproducible` | 10.1109/TSE.2019.2927908 | crossref | 2026-07-30 | |  |  |

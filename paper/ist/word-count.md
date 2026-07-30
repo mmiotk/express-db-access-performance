@@ -7,20 +7,20 @@ The official IST journal policy confirms a **15,000-word maximum for research pa
 
 | Component | Count |
 |---|---:|
-| Seven body sections (`texcount` sum, including section headings and caption text encountered in those files) | 12,062 |
-| Structured abstract (`texcount` sum) | 291 |
+| Seven body sections (`texcount` sum, including section headings and caption text encountered in those files) | 12,054 |
+| Structured abstract (`texcount` sum) | 295 |
 | Remaining front matter and required declarations (title/keywords, CRediT, competing interest, data availability, funding, and AI-use disclosures) | 443 |
 | Main-text tables and figures (1 × 200) | 200 |
-| Rendered reference list (65 entries after removing 12 uncited ones; `pdftotext` count from the first entry to the end, form feeds stripped) | 1,996 |
-| **Conservative IST submission equivalent** | **14,992** |
+| Rendered reference list (65 entries after removing 12 uncited ones; `pdftotext` count from the first entry to the end, form feeds stripped) | 1,995 |
+| **Conservative IST submission equivalent** | **14,987** |
 
-The controlling total is therefore **14,992 words**, leaving **8 words of headroom** under the 15,000-word limit. The structured abstract contains 291 words under the `texcount` sum convention, below the 300-word limit.
+The controlling total is therefore **14,987 words**, leaving **13 words of headroom** under the 15,000-word limit. The structured abstract contains 295 words under the `texcount` sum convention, below the 300-word limit.
 
 The body grew by 521 words against the previous declaration. The additions are the new Study Design subsection documenting AI-assisted research tooling, which current publisher policy requires in the Methods section; a stated matched-utilization rank-inversion result; the driver-substitution caveat on the RQ2 reversals; and explicit limits on the external-audit codebook. Two offsetting reductions were made. First, prose was condensed and one redundancy removed: the residual left open by the unsatisfied implementation-review stage is now argued once, in Threats, with cross-references elsewhere. Second, two main-text floats moved to the online supplement --- the estimand table, which the body had never cited and now cites as S47, and the insert-dispersion figure, which the supplement already carried --- reducing the float allowance from seven to five and removing a duplicated figure.
 
 Every `tabular` in the body now sits inside a numbered, captioned float, so the float allowance cannot be disputed: an earlier unnumbered tier schematic was folded into prose for exactly that reason.
 
-**The remaining headroom is 8 words.** Any further addition requires an offsetting cut, and this declaration must be regenerated with it.
+**The remaining headroom is 13 words.** Any further addition requires an offsetting cut, and this declaration must be regenerated with it.
 
 This total is intentionally stricter than a research-content-only count. It includes all required declaration text even though such text is commonly treated as submission metadata. It also retains caption words already encountered by `texcount` and then assigns the full 200-word allowance to every rendered float, so it does not undercount captions. The paper has no manuscript appendices. The separately submitted `supplement.pdf` is online supplementary material, not an appendix embedded in the research paper.
 

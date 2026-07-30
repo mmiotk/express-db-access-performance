@@ -66,16 +66,16 @@ but this within-campaign test does not establish durable rank reversals.
 A second same-host campaign re-runs 25 repetitions of the seven portable layers for deep fetch,
 aggregation, and insert under an independently drawn block order (Supplement Table~S46). It
 re-randomizes execution order only: the identifier generator is seeded on endpoint and replicate, so
-the campaign replays the same draws and cannot detect sensitivity to the workload sample. Deep-fetch
-ranks reproduce exactly on both stacks ($\rho=1.00$, maximum median drift $2.3\%$); aggregation
-reproduces 5/7 PostgreSQL and 7/7 MySQL positions. MySQL insert is less stable: 3/7 positions,
-$\rho=0.82$, the leader changing from Drizzle to Knex, and drift reaching $13.6\%$. We therefore
+the campaign replays the same draws and cannot detect sensitivity to the workload sample. Deep-fetch ranks reproduce exactly on both stacks ($\rho=1.00$); aggregation reproduces 5/7
+PostgreSQL and 7/7 MySQL positions. MySQL insert is less stable: 3/7 positions, $\rho=0.82$, and the
+leader changes from Drizzle to Knex. We therefore
 promote a cross-stack reversal only when it occurs in both campaigns, exceeds the $5\%$ practical
 margin on both stacks, and paired bootstrap intervals exclude equality in opposite directions in
 both. The margin was fixed before these campaigns (Section~\ref{sec:methodology}), but the composite
 rule was specified after both completed: it is a post-hoc screen applied uniformly to all 21 layer
-pairs, and the reversals it promotes are the stable subset of an exploratory comparison, not a
-prespecified confirmatory test.
+pairs on each of the three patterns. No familywise correction is applied; recurrence across both
+campaigns is the screen's error control. The reversals it promotes are the stable subset of an
+exploratory comparison, not a prespecified confirmatory test.
 Four pairs meet all criteria: on deep fetch, Prisma exceeds Objection and Sequelize
 on PostgreSQL but trails both on MySQL; on aggregation, Prisma exceeds Objection on
 PostgreSQL but trails it on MySQL; on insert, Prisma exceeds MikroORM on PostgreSQL
