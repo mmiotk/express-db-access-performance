@@ -33,9 +33,18 @@ function run(base, dur) {
 }
 const med = (a) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
 
-const out = [];
+// TABLE_ONLY=1 rebuilds the table from the archived run without re-measuring, so a
+// caption fix needs no databases and no new campaign. Same convention as sameplan.mjs
+// and altloading.mjs. This also lets release-check regenerate the table and catch drift:
+// the committed caption had been hand-edited away from what this generator emits, and
+// because poolsize had no npm script, nothing noticed.
+const TABLE_ONLY = process.env.TABLE_ONLY === '1';
+const jsonNameEarly = PS_ENGINE === 'postgres' ? 'poolsize.json' : `poolsize.${PS_ENGINE}.json`;
+const out = TABLE_ONLY
+  ? JSON.parse(await readFile(join(here, '..', 'results', jsonNameEarly), 'utf8'))
+  : [];
 let port = 3900;
-for (const adapter of LAYERS) {
+for (const adapter of TABLE_ONLY ? [] : LAYERS) {
   if (adapter === 'prisma') execSync(`npx prisma generate --schema=prisma/schema.${PS_ENGINE}.prisma`, { stdio: 'ignore' });
   for (const pool of POOLS) {
     const p = port++; const base = `http://127.0.0.1:${p}`;
@@ -56,7 +65,7 @@ for (const adapter of LAYERS) {
   }
 }
 const jsonName = PS_ENGINE === 'postgres' ? 'poolsize.json' : `poolsize.${PS_ENGINE}.json`;
-await writeFile(join(here, '..', 'results', jsonName), JSON.stringify(out.map((r) => ({ engine: PS_ENGINE, ...r })), null, 2));
+if (!TABLE_ONLY) await writeFile(join(here, '..', 'results', jsonName), JSON.stringify(out.map((r) => ({ engine: PS_ENGINE, ...r })), null, 2));
 
 // table: rows = layers, cols = pool sizes
 const engLabel = PS_ENGINE === 'mysql' ? 'MySQL' : 'PostgreSQL';

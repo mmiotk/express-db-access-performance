@@ -16,6 +16,19 @@ const resultsDir = path.join(root, "results");
 const paperDir = path.resolve(root, "..", "paper", "tables");
 const repo = path.resolve(root, "..");
 
+// The committed record of what was derived. It exists because the two derivation
+// inputs are not in the distributed artifact: results/environment.txt (the superseded
+// pilot capture) is gitignored, and `git log` needs history that a git-archive or Zenodo
+// extraction does not carry. Without this the table could not be regenerated from the
+// archive at all, which falsified the reproducibility claim.
+const RECORD = path.join(resultsDir, "protocol-chronology.json");
+const committed = fs.existsSync(RECORD)
+  ? JSON.parse(fs.readFileSync(RECORD, "utf8"))
+  : null;
+
+const canDerive = fs.existsSync(path.join(repo, ".git"))
+  && fs.existsSync(path.join(resultsDir, "environment.txt"));
+
 const addedOn = (relPath) => {
   const out = execFileSync("git", [
     "-C", repo, "log", "--diff-filter=A", "--format=%ad", "--date=short", "-1", "--", relPath,
@@ -30,11 +43,22 @@ const campaignDate = (file) => {
   return match[1];
 };
 
-const campaigns = {
-  superseded: campaignDate("environment.txt"),
-  primary: campaignDate("environment-rq2-campaign2.txt"),
-  validation: campaignDate("environment-rq2-validation-campaign.txt"),
-};
+let campaigns;
+if (canDerive) {
+  campaigns = {
+    superseded: campaignDate("environment.txt"),
+    primary: campaignDate("environment-rq2-campaign2.txt"),
+    validation: campaignDate("environment-rq2-validation-campaign.txt"),
+  };
+} else {
+  if (!committed) {
+    throw new Error("no git history or environment.txt to derive from, and no committed "
+      + "protocol-chronology.json to fall back on");
+  }
+  campaigns = committed.campaigns;
+  console.log("archive mode: git history and environment.txt absent, "
+    + "rendering from the committed chronology record");
+}
 
 // stage, what it is, the file whose introduction dates it
 const ELEMENTS = [
@@ -61,10 +85,26 @@ const classify = (date) => {
   return "after";
 };
 
-const rows = ELEMENTS.map(([stage, what, file]) => {
-  const date = addedOn(file);
-  return { stage, what, file, date, phase: classify(date) };
-}).sort((a, b) => a.date.localeCompare(b.date));
+const rows = canDerive
+  ? ELEMENTS.map(([stage, what, file]) => {
+      const date = addedOn(file);
+      return { stage, what, file, date, phase: classify(date) };
+    }).sort((a, b) => a.date.localeCompare(b.date))
+  : committed.elements;
+
+// Derivation stays the source of truth: when the inputs are present, the committed record
+// must agree with what they yield, or the run fails rather than silently publishing a
+// stale date.
+if (canDerive && committed) {
+  const norm = (xs) => JSON.stringify(xs.map(({ stage, what, file, date, phase }) =>
+    ({ stage, what, file, date, phase })));
+  if (norm(rows) !== norm(committed.elements)
+      || JSON.stringify(campaigns) !== JSON.stringify(committed.campaigns)) {
+    throw new Error("derived chronology disagrees with the committed record in "
+      + "results/protocol-chronology.json; re-commit the record deliberately if the "
+      + "history really changed");
+  }
+}
 
 fs.writeFileSync(
   path.join(resultsDir, "protocol-chronology.json"),

@@ -2,10 +2,8 @@
 \begin{table}[htbp]
   \centering
   \caption{Deep-fetch throughput (req/s, PostgreSQL, 50 connections, median of
-    3) as the connection pool varies from 1 to 50, per access layer. The
-    primary campaign fixes the pool at 10; each layer saturates at a pool well below
-    50 and the ordering is preserved at every pool size, so the fixed-pool choice
-    does not appear to drive the ranking.}
+    3) as the connection pool varies from 1 to 50, per access layer. The primary campaign fixes the pool at 10; the displayed frontier shows the
+    sensitivity of each representative implementation to that shared choice.}
   \label{tab:poolsize}
   \begin{tabular}{l r r r r r r}
     \toprule

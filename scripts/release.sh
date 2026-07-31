@@ -237,7 +237,7 @@ if [[ "${1:-}" == "--check" ]]; then
     if [[ "$regen_ok" == "1" ]]; then
       # Derived analysis JSON belongs here too: a number quoted in the manuscript can
       # come from a generator that writes no table, and would otherwise drift unseen.
-      REGEN_PATHS=(paper/tables/ experiments/results/tables/
+      REGEN_PATHS=(paper/tables/ experiments/results/tables/ experiments/results/protocol-chronology.json
                    experiments/results/tost-closest-pair.json)
       changed=$(git diff --name-only "${REGEN_PATHS[@]}" | wc -l)
       if [[ "$changed" != "0" ]]; then

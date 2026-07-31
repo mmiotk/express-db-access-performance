@@ -35,8 +35,7 @@ campaigns, with paired intervals excluding equality in opposite directions
 Every promoted reversal involves Prisma, whose MySQL path uses
 the MariaDB adapter rather than \texttt{mysql2}, so backend-stack sensitivity here is
 inseparable from that driver substitution and describes one treatment, not ORMs as a
-class. Repeating the promotion procedure without that treatment promotes no pair at all
-(Supplement Table~S49). \emph{Observed:} every reversal clearing the promotion bar involves the one
+class. \emph{Observed:} every reversal clearing the promotion bar involves the one
 layer whose MySQL driver differs, and whole-ordering agreement without it rises on deep fetch and
 insert but falls on aggregation, to $\rho=0.54$ and $0.49$. \emph{Interpretation:} at the stated bar only the
 asymmetric treatment reverses durably; agreement of the whole ordering stays imperfect on both stacks
@@ -65,8 +64,7 @@ MySQL until the non-2xx counter flagged it. Because a 2xx alone would miss a \em
 incorrect write, the gate also validates post-write state: field values, identifiers, row-count
 changes, and rollback. None is schema-specific; each extends the database-benchmarking pitfalls of
 Fruth et al.~\cite{fruth2022tail} and Raasveldt et al.~\cite{raasveldt2018fair} to the access-layer
-sub-genre, and at least one plausibly explains part of the gap between some vendor-reported and
-controlled benchmark results.
+sub-genre.
 
 \paragraph{Evidence for the protocol contribution}
 Each stage had a concrete consequence: an independent seed specification caught shared state and
@@ -95,8 +93,9 @@ The synthesis follows from RQ1--RQ3 and describes the benchmarked implementation
 configuration (Section~\ref{sec:threats}), not access-layer categories in general. Because the fan-out sweep varies breadth (0--500 children) but not depth,
 schema, or query mix, the deep-fetch peak locates a difference among five probes on one synthetic
 schema: an observation to re-measure on the target workload, not a law. Where a hot path resembles the tested deep fetch the access layer is
-consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for
-throughput and response-time p99}. Where the tested workload is read-simple, or for the tested MySQL single-row insert where
+consequential and worth benchmarking: the thin paths (native driver, Knex) led here for throughput
+and for p99 at high load; at matched utilization the MySQL native driver falls to seventh of eight
+(Section~\ref{sec:results}). Where the tested workload is read-simple, or for the tested MySQL single-row insert where
 shared commit behavior contributes materially under default durability, the observed layer spread is
 smaller. Adding processes narrowed the tested deep-fetch spread on PostgreSQL, where the native
 driver stopped scaling past two workers and Prisma passed it at four, not on MySQL (Supplement

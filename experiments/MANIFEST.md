@@ -27,6 +27,7 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `tab:prior_art` (Table 1) | inline in `sections/related_work.tex` | authored synthesis | `notes/related-work-search.md` |
 | `fig:protocol` (Figure 1) | `fig_protocol.tex` | authored protocol diagram | `protocol-checklist.yaml` |
 | `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | in-experiment evidence cited in cells |
+| `tab:protocol_chronology` (S48) | `protocol_chronology.tex` | `scripts/gen-protocol-chronology.mjs` | `results/protocol-chronology.json`; derived from git first-add dates and the archived environment captures when both are present, rendered from the committed record otherwise |
 
 ## Supplement tables
 

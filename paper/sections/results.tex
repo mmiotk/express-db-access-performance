@@ -50,8 +50,8 @@ The remaining per-pattern spreads are collected under RQ3 below.
 \subsection{Common-SQL raw-path sensitivity contrast}
 Server-side capture confirms common statement text and database plans across raw paths on both
 engines; API level, wire protocol, preparation, round trips, and mapping can still differ (Supplement
-Table~S42). The deep-fetch native-relative spread is then far smaller, $1.71\times$ (PostgreSQL)
-and $2.03\times$ (MySQL) against the selected-configuration $7.01\times$ and $5.12\times$ (Supplement
+Table~S42). The deep-fetch native-relative spread is then far smaller in a separate ten-run
+campaign, $1.71\times$ (PostgreSQL) and $2.03\times$ (MySQL) against the selected-configuration $7.01\times$ and $5.12\times$ (Supplement
 Table~S14). The selected paths therefore differ more than these common-SQL raw paths, but the
 compound contrast assigns no share to any mechanism. A loading-strategy sensitivity check (Supplement
 Table~S18) argues against a mere selected-strategy artifact: forcing the join-selected ORMs
@@ -93,17 +93,17 @@ backend-stack sensitivity as RQ2 defines it, but it cannot be separated from tha
 substitution, and it is not evidence about ORMs as a group. Other changes in close ranks,
 including the identity of the MySQL insert leader, remain exploratory.
 
-Because all four involve that one treatment, we repeated the promotion procedure unchanged on the
-six remaining portable layers (Supplement Table~S49). No pair is promoted on any of the three patterns:
-the sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection, $0.96\times$
-against $1.05\times$) fails the $5\%$ margin on PostgreSQL, the recurring aggregation reversals fail
-that margin or the interval criterion, and no insert reversal recurs. The promoted-reversal evidence therefore rests entirely on the
-treatment carrying the driver substitution. Whole-ordering agreement is a separate and purely descriptive question, and it moves in both
-directions when that treatment is removed: $\rho$ rises on deep fetch ($0.86$ to $0.94$) and on
-insert ($0.68$ to $0.83$ primary, $0.71$ to $0.94$ validation), and falls on aggregation ($0.68$ to
-$0.54$; $0.64$ to $0.49$). It is imperfect on both stacks either way. We do not read that as a further reversal claim: the promotion rule
-excludes sub-threshold pairs by design, and we do not readmit them to argue a broader conclusion.
-What the leave-one-out contrast licenses, and what it cannot identify, is set out in
+The rule is applied per pair, so the 15 non-Prisma pairs were already screened in the same pass and
+none was promoted: the sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection,
+$0.96\times$ against $1.05\times$) fails the $5\%$ margin on PostgreSQL, the recurring aggregation
+reversals fail that margin or the interval criterion, and no insert reversal recurs. Holding Prisma
+out therefore changes only the whole-ordering correlations (Supplement Table~S49). The promoted-reversal evidence therefore rests entirely on the
+treatment carrying the driver substitution. Whole-ordering agreement is a separate, purely
+descriptive question, and it moves in both directions when that treatment is removed: $\rho$ rises
+on deep fetch ($0.86$ to $0.94$) and on insert ($0.68$ to $0.83$ primary, $0.71$ to $0.94$
+validation), and falls on aggregation ($0.68$ to $0.54$; $0.64$ to $0.49$), imperfect on both stacks
+either way. That is not a further reversal claim: the promotion rule excludes sub-threshold pairs by
+design. What the contrast licenses, and what it cannot identify, is set out in
 Section~\ref{sec:discussion}.
 
 
