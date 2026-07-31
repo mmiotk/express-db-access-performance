@@ -51,6 +51,7 @@
     "table:fanout": "node scripts/gen-fanout-table.mjs",
     "table:altloading": "TABLE_ONLY=1 node scripts/altloading.mjs",
     "table:poolsize": "TABLE_ONLY=1 node scripts/poolsize.mjs",
+    "table:rq2-multiplicity": "node scripts/gen-rq2-multiplicity.mjs",
     "table:durability-equalcpu": "RAW_FILE=current-primary.json RELAXED_FILE=raw-writes-relaxed-corrected.json node scripts/gen-tables.mjs",
     "table:r4": "node scripts/gen-r4-tables.mjs",
     "table:deepfetch": "RAW_FILE=current-primary.json node scripts/gen-deepfetch-table.mjs",

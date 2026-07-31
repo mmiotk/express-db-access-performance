@@ -238,7 +238,7 @@ if [[ "${1:-}" == "--check" ]]; then
       # Derived analysis JSON belongs here too: a number quoted in the manuscript can
       # come from a generator that writes no table, and would otherwise drift unseen.
       REGEN_PATHS=(paper/tables/ experiments/results/tables/ experiments/results/protocol-chronology.json
-                   experiments/results/tost-closest-pair.json)
+                   experiments/results/tost-closest-pair.json experiments/results/rq2-multiplicity.json)
       changed=$(git diff --name-only "${REGEN_PATHS[@]}" | wc -l)
       if [[ "$changed" != "0" ]]; then
         echo "REPRODUCIBILITY: regenerating tables from archived data changed $changed file(s);"

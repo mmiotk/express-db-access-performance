@@ -1,0 +1,977 @@
+{
+  "method": "per-pair cross-stack interaction, two-sided sign-flip permutation on the difference-in-differences of log throughput, Holm-corrected within campaign",
+  "B": 20000,
+  "alpha": 0.05,
+  "seed": "0x5eed",
+  "campaigns": {
+    "primary": {
+      "tests": 63,
+      "survivors": 53,
+      "rows": [
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|drizzle",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0007936507936507937,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008064516129032258,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.000819672131147541,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008333333333333334,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008474576271186442,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008620689655172415,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008771929824561404,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008928571428571429,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0009090909090909091,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.000925925925925926,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0009433962264150943,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0009615384615384616,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.000980392156862745,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "sequelize|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "sequelize|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010204081632653062,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "typeorm|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010416666666666667,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "objection|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010638297872340426,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|drizzle",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010869565217391304,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011111111111111111,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011363636363636365,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011627906976744186,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011904761904761906,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0012195121951219512,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.00125,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001282051282051282,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0013157894736842105,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0013513513513513514,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001388888888888889,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "sequelize|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0014285714285714286,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "typeorm|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0014705882352941176,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "typeorm|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0015151515151515152,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "objection|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0015625,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0016129032258064516,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0016666666666666668,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001724137931034483,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0017857142857142859,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001851851851851852,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0019230769230769232,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0020833333333333333,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002173913043478261,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002272727272727273,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002380952380952381,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0025,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "sequelize|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002631578947368421,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "sequelize|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002777777777777778,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "typeorm|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0029411764705882353,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "objection|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.003125,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|objection",
+          "p": 0.00014999250037498125,
+          "holmThreshold": 0.0033333333333333335,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "sequelize|objection",
+          "p": 0.000199990000499975,
+          "holmThreshold": 0.0035714285714285718,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|typeorm",
+          "p": 0.00039998000099995,
+          "holmThreshold": 0.0038461538461538464,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|drizzle",
+          "p": 0.0009499525023748813,
+          "holmThreshold": 0.004166666666666667,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "typeorm|objection",
+          "p": 0.0010999450027498626,
+          "holmThreshold": 0.004545454545454546,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "sequelize|mikroorm",
+          "p": 0.005249737513124344,
+          "holmThreshold": 0.005,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "sequelize|mikroorm",
+          "p": 0.013399330033498325,
+          "holmThreshold": 0.005555555555555556,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|prisma",
+          "p": 0.01559922003899805,
+          "holmThreshold": 0.00625,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "typeorm|objection",
+          "p": 0.018199090045497725,
+          "holmThreshold": 0.0071428571428571435,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|typeorm",
+          "p": 0.0336483175841208,
+          "holmThreshold": 0.008333333333333333,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|objection",
+          "p": 0.1448427578621069,
+          "holmThreshold": 0.01,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|sequelize",
+          "p": 0.21778911054447278,
+          "holmThreshold": 0.0125,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|mikroorm",
+          "p": 0.3100344982750862,
+          "holmThreshold": 0.016666666666666666,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "sequelize|mikroorm",
+          "p": 0.45237738113094345,
+          "holmThreshold": 0.025,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|objection",
+          "p": 0.8149092545372731,
+          "holmThreshold": 0.05,
+          "survivesHolm": false
+        }
+      ]
+    },
+    "validation": {
+      "tests": 63,
+      "survivors": 54,
+      "rows": [
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|drizzle",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0007936507936507937,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008064516129032258,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.000819672131147541,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008333333333333334,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008474576271186442,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008620689655172415,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008771929824561404,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0008928571428571429,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "drizzle|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0009090909090909091,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.000925925925925926,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0009433962264150943,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0009615384615384616,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "prisma|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.000980392156862745,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "sequelize|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "sequelize|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010204081632653062,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "typeorm|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010416666666666667,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "objection|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010638297872340426,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|drizzle",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0010869565217391304,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011111111111111111,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011363636363636365,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011627906976744186,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0011904761904761906,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0012195121951219512,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.00125,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "drizzle|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001282051282051282,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0013157894736842105,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0013513513513513514,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001388888888888889,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "prisma|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0014285714285714286,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "sequelize|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0014705882352941176,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "sequelize|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0015151515151515152,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "typeorm|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0015625,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "typeorm|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0016129032258064516,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "objection|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0016666666666666668,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001724137931034483,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0017857142857142859,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.001851851851851852,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0019230769230769232,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|prisma",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0020833333333333333,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002173913043478261,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002272727272727273,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|sequelize",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002380952380952381,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0025,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002631578947368421,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "prisma|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.002777777777777778,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "sequelize|typeorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0029411764705882353,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "sequelize|objection",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.003125,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "typeorm|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0033333333333333335,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "objection|mikroorm",
+          "p": 0.00004999750012499375,
+          "holmThreshold": 0.0035714285714285718,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|objection",
+          "p": 0.0000999950002499875,
+          "holmThreshold": 0.0038461538461538464,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "typeorm|objection",
+          "p": 0.0002999850007499625,
+          "holmThreshold": 0.004166666666666667,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|prisma",
+          "p": 0.000999950002499875,
+          "holmThreshold": 0.004545454545454546,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "sequelize|mikroorm",
+          "p": 0.002199890005499725,
+          "holmThreshold": 0.005,
+          "survivesHolm": true
+        },
+        {
+          "endpoint": "write",
+          "pair": "knex|drizzle",
+          "p": 0.013949302534873257,
+          "holmThreshold": 0.005555555555555556,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "write",
+          "pair": "sequelize|mikroorm",
+          "p": 0.018599070046497676,
+          "holmThreshold": 0.00625,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "write",
+          "pair": "drizzle|objection",
+          "p": 0.047497625118744065,
+          "holmThreshold": 0.0071428571428571435,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "sequelize|mikroorm",
+          "p": 0.05619719014049297,
+          "holmThreshold": 0.008333333333333333,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|sequelize",
+          "p": 0.08609569521523924,
+          "holmThreshold": 0.01,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "typeorm|objection",
+          "p": 0.18669066546672666,
+          "holmThreshold": 0.0125,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|typeorm",
+          "p": 0.223938803059847,
+          "holmThreshold": 0.016666666666666666,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "aggregation",
+          "pair": "knex|mikroorm",
+          "p": 0.6343182840857957,
+          "holmThreshold": 0.025,
+          "survivesHolm": false
+        },
+        {
+          "endpoint": "deep_fetch",
+          "pair": "knex|objection",
+          "p": 0.9768011599420029,
+          "holmThreshold": 0.05,
+          "survivesHolm": false
+        }
+      ]
+    }
+  },
+  "promoted": [
+    {
+      "endpoint": "deep_fetch",
+      "pair": "prisma|sequelize",
+      "primary": {
+        "endpoint": "deep_fetch",
+        "pair": "prisma|sequelize",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.000925925925925926,
+        "survivesHolm": true
+      },
+      "validation": {
+        "endpoint": "deep_fetch",
+        "pair": "prisma|sequelize",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.000925925925925926,
+        "survivesHolm": true
+      }
+    },
+    {
+      "endpoint": "deep_fetch",
+      "pair": "prisma|objection",
+      "primary": {
+        "endpoint": "deep_fetch",
+        "pair": "prisma|objection",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.0009615384615384616,
+        "survivesHolm": true
+      },
+      "validation": {
+        "endpoint": "deep_fetch",
+        "pair": "prisma|objection",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.0009615384615384616,
+        "survivesHolm": true
+      }
+    },
+    {
+      "endpoint": "aggregation",
+      "pair": "prisma|objection",
+      "primary": {
+        "endpoint": "aggregation",
+        "pair": "prisma|objection",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.0013513513513513514,
+        "survivesHolm": true
+      },
+      "validation": {
+        "endpoint": "aggregation",
+        "pair": "prisma|objection",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.001388888888888889,
+        "survivesHolm": true
+      }
+    },
+    {
+      "endpoint": "write",
+      "pair": "prisma|mikroorm",
+      "primary": {
+        "endpoint": "write",
+        "pair": "prisma|mikroorm",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.0025,
+        "survivesHolm": true
+      },
+      "validation": {
+        "endpoint": "write",
+        "pair": "prisma|mikroorm",
+        "p": 0.00004999750012499375,
+        "holmThreshold": 0.002777777777777778,
+        "survivesHolm": true
+      }
+    }
+  ],
+  "allPromotedSurviveHolm": true
+}

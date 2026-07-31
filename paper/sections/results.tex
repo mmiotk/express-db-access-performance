@@ -22,7 +22,7 @@ The native implementation leads nine of the ten engine--pattern comparisons:
 \texttt{mysql2} on four of five MySQL patterns. The exception is the MySQL insert,
 where the four fastest treatments span 1{,}766--1{,}816~req/s with broadly overlapping
 intervals and the native driver ranks fourth (Supplement Table~S52); that ordering is
-practically unresolved rather than a defeat, and we do not read a leader from it. The current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier version's headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
+practically unresolved, and we do not read a leader from it. The current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
 
 \texttt{pg-tuned} and \texttt{mysql2-tuned} track their untuned counterparts within about
 $2\%$ on the deep fetch (\texttt{pg-tuned} 3{,}700 vs.\ \texttt{pg} 3{,}638;
@@ -37,13 +37,13 @@ On the \textbf{deep fetch} (a post, its author, and all comments with their auth
 native-relative spread is the widest measured, $7.01\times$ on PostgreSQL (\texttt{pg} 3{,}638,
 95\% CI [3{,}602--3{,}662], down to MikroORM's 519~[512--528]) and $5.12\times$ on MySQL
 (\texttt{mysql2} 2{,}416~[2{,}413--2{,}425] down to MikroORM's 472~[464--475]). The native driver
-leads on both engines, the data-mapper ORMs (especially MikroORM) trailing furthest
+leads on both engines, the data-mapper ORMs trailing furthest
 (Table~\ref{tab:deep_fetch}); the comparison is paired (Section~\ref{sec:methodology}), every
 adjacent MySQL step large relative to its bootstrap interval (Supplement Table~S36). A sensitivity
 equivalence assessment does not establish $\pm5\%$ equivalence for the closest adjacent selected pair
-on either engine (Supplement Table~S55).
+on either engine (Supplement Table~S56).
 Aggregation is
-the least layer-sensitive pattern: every layer forwards a single query for it, and it avoids the
+the least layer-sensitive pattern: every layer forwards a single query and avoids the
 deep fetch's nested-graph materialization, though the design isolates neither feature as the cause.
 The remaining per-pattern spreads are collected under RQ3 below.
 
@@ -70,18 +70,19 @@ but this within-campaign test does not establish durable rank reversals.
 A second same-host campaign re-runs 25 repetitions of the seven portable layers for deep fetch,
 aggregation, and insert under an independently drawn block order (Supplement Table~S46). It
 re-randomizes execution order only: the identifier generator is seeded on endpoint and replicate, so
-the campaign replays the same draws and cannot detect sensitivity to the workload sample. Deep-fetch ranks reproduce exactly on both stacks ($\rho=1.00$); aggregation reproduces 5/7
+it replays the same draws and cannot detect sensitivity to the workload sample. Deep-fetch ranks reproduce exactly on both stacks ($\rho=1.00$); aggregation reproduces 5/7
 PostgreSQL and 7/7 MySQL positions. MySQL insert is less stable: 3/7 positions, $\rho=0.82$, and the
 leader changes from Drizzle to Knex. 
 
 We therefore promote a cross-stack reversal only when it occurs in both campaigns, exceeds the $5\%$ practical
 margin on both stacks, and paired bootstrap intervals exclude equality in opposite directions in
 both. The margin was fixed before these campaigns (Section~\ref{sec:methodology}), but the composite
-rule was specified after both completed: it is a post-hoc screen applied uniformly to all 21 layer
-pairs on each of the three patterns. No familywise correction is applied. Recurrence screens
+rule was specified after both completed: a post-hoc screen applied uniformly to all 21 layer pairs
+on each of the three patterns. The screen applies no familywise correction: recurrence screens
 one-campaign noise, but the campaigns share a host and the same seeded draws, so it does not bound
-familywise error across the 63 comparisons. The reversals it promotes are the stable subset of an
-exploratory comparison, not a prespecified confirmatory test.
+familywise error across the 63 comparisons. Holm correction applied to them afterwards retains all
+four (Supplement Table~S55). They are a stable subset of an exploratory comparison, not a
+prespecified test.
 Four pairs meet all criteria, sized with paired intervals in Supplement Table~S54: on deep fetch, Prisma exceeds Objection and Sequelize
 on PostgreSQL but trails both on MySQL; on aggregation, Prisma exceeds Objection on
 PostgreSQL but trails it on MySQL; on insert, Prisma exceeds MikroORM on PostgreSQL
