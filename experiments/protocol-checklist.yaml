@@ -19,7 +19,7 @@
 protocol:
   name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
   author: "Mateusz Miotk, University of Gdansk"
-  release: "v1.13.6, 2026-07-26"
+  release: "v1.13.7, 2026-07-26"
   doi: "10.5281/zenodo.21313858 (concept DOI, resolves to the release; the Zenodo record also carries a per-version DOI)"
   spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
 
