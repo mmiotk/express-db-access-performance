@@ -91,3 +91,6 @@ experiments/results/*.bak
 
 # Claude Code personal overrides (may contain machine-specific paths)
 .claude/settings.local.json
+
+# Copyrighted reference PDFs: readable locally, never redistributed (CLAUDE.md section 3).
+articles/*.pdf

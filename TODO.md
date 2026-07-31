@@ -78,8 +78,8 @@
 ## 4. Packaging
 
 - [x] `git remote add origin …`, first push. (`origin/master` tracks GitHub.)
-- [x] Zenodo v1.13.0 deposit prepared; its per-version DOI is recorded in the Zenodo record.
-      From v1.13.0 the papers cite the concept DOI, so an archive can identify itself without
+- [x] Zenodo v1.13.1 deposit prepared; its per-version DOI is recorded in the Zenodo record.
+      From v1.13.1 the papers cite the concept DOI, so an archive can identify itself without
       knowing a DOI minted after it was archived.
 
 ## 5. Open before submission
@@ -93,13 +93,13 @@
       Protocol stage R7 is reported as **unsatisfied** until one is returned.
 - [ ] Replicate the reduced RQ2 matrix on a physically independent host
       (ranked below independent human review; not required for submission).
-- [ ] **Archive v1.13.0 on Zenodo, then verify with `scripts/release.sh --check-doi`.**
+- [ ] **Archive v1.13.1 on Zenodo, then verify with `scripts/release.sh --check-doi`.**
       As of 2026-07-30 the concept DOI still resolves to the previous release (26 July) rather than
-      to v1.13.0, so the Data Availability sentence "archived as release v1.13.0, which the concept
-      DOI resolves to" is **currently false**. The GitHub release for v1.13.0 exists but did not
+      to v1.13.1, so the Data Availability sentence "archived as release v1.13.1, which the concept
+      DOI resolves to" is **currently false**. The GitHub release for v1.13.1 exists but did not
       trigger archiving: the two releases before it were tagged with no GitHub release, yet the later
       of them reached Zenodo, so those deposits were made by hand and the webhook is not the
-      mechanism here. Create a new version of the existing record, upload the v1.13.0 archive,
+      mechanism here. Create a new version of the existing record, upload the v1.13.1 archive,
       publish, then run `--check-doi`, which fails loudly while the declaration and the archive
       disagree. `--check` alone cannot see this: it verifies only that the version and DOI strings
       agree across declaration sites. Identifiers of earlier releases are deliberately not quoted
