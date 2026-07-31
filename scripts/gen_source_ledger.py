@@ -115,12 +115,14 @@ MANUAL: dict[str, tuple[str, str]] = {
     # Repository page for owner, name, description and maintainer; the version
     # was taken from the harness lockfile rather than the page.
     "autocannon": ("project-page", "2026-07-31"),
-    # Crossref and OpenAlex were both returning empty for every query when this was
-    # checked, including DOIs recorded here as Crossref-confirmed, so their silence
-    # was not evidence. DBLP confirmed title, all six authors in order, year 2012,
-    # Springer, and the DOI. The `edition = {2}` field is NOT confirmed: DBLP labels
-    # the 2024 Springer printing "Second Edition" and the 2012 one plainly.
-    "wohlin2012experimentation": ("dblp", "2026-07-31"),
+    # The papers MCP server was returning empty for every query when this was checked,
+    # including DOIs recorded here as Crossref-confirmed, so its silence was not
+    # evidence; the Crossref REST API over WebFetch worked and is the fallback.
+    # Crossref, DBLP and Open Library all confirm title, the six authors in order,
+    # Springer Berlin Heidelberg, 2012, and the DOI. None records an edition number,
+    # and DBLP labels the 2024 printing "Second Edition", so the entry's former
+    # `edition = {2}` was unsupported and has been removed rather than replaced.
+    "wohlin2012experimentation": ("crossref+dblp", "2026-07-31"),
 }
 
 

@@ -83,7 +83,7 @@ submission: .
 | `torres2017orm` | 10.1016/j.infsof.2016.09.009 | crossref | 2026-07-31 | |  |  |
 | `turcotte2022asyncjs` | 10.1145/3510003.3510097 | crossref | 2026-07-30 | |  |  |
 | `vanzyl2009optimisations` | 10.1145/1632149.1632169 | crossref | 2026-07-31 | |  |  |
-| `wohlin2012experimentation` | 10.1007/978-3-642-29044-2 | dblp | 2026-07-31 | |  |  |
+| `wohlin2012experimentation` | 10.1007/978-3-642-29044-2 | crossref+dblp | 2026-07-31 | |  |  |
 | `yan2017inefficiencies` | 10.1145/3132847.3132954 | crossref | 2026-07-31 | |  |  |
 | `yang2018dbapps` | 10.1145/3180155.3180194 | crossref | 2026-07-30 | |  |  |
 | `yu2014concurrency` | 10.14778/2735508.2735511 | crossref | 2026-07-30 | |  |  |
