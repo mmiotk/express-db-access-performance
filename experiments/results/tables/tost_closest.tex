@@ -13,12 +13,14 @@
     outside the margin either: both straddle the upper bound. Seed \texttt{0x57a75},
     $B={20000}$ resamples.}
   \label{tab:tost_closest}
-  \begin{tabular}{l l r r l l}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{l l r r l c}
     \toprule
-    Engine & Closest adjacent pair & $n$ & ratio & 90\% CI & equivalent \\
+    Engine & Closest adjacent pair & $n$ & ratio & 90\% CI & equiv. \\
     \midrule
     PostgreSQL & \texttt{typeorm} vs \texttt{prisma} & 25 & 1.0457 & [1.0339, 1.0577] & no \\
     MySQL & \texttt{sequelize} vs \texttt{objection} & 25 & 1.0572 & [1.0450, 1.0699] & no \\
     \bottomrule
   \end{tabular}
+  \end{adjustbox}
 \end{table}
