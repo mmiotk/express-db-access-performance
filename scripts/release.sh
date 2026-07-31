@@ -218,11 +218,15 @@ if [[ "${1:-}" == "--check" ]]; then
     done
     ( cd experiments && npm run sync:tables --silent >/dev/null 2>&1 ) || regen_ok=0
     if [[ "$regen_ok" == "1" ]]; then
-      changed=$(git diff --name-only paper/tables/ experiments/results/tables/ | wc -l)
+      # Derived analysis JSON belongs here too: a number quoted in the manuscript can
+      # come from a generator that writes no table, and would otherwise drift unseen.
+      REGEN_PATHS=(paper/tables/ experiments/results/tables/
+                   experiments/results/tost-closest-pair.json)
+      changed=$(git diff --name-only "${REGEN_PATHS[@]}" | wc -l)
       if [[ "$changed" != "0" ]]; then
         echo "REPRODUCIBILITY: regenerating tables from archived data changed $changed file(s);"
         echo "                 the manuscript does not match its own generators:"
-        git diff --name-only paper/tables/ experiments/results/tables/ | sed 's/^/                   /'
+        git diff --name-only "${REGEN_PATHS[@]}" | sed 's/^/                   /'
         fail=1
       fi
     else

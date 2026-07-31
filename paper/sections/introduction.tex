@@ -34,6 +34,7 @@ optimization ceiling. Every (layer, engine, pattern) reports throughput and the 
 equal closed-loop demand at a fixed 50-connection point over 25 runs. That point sits near
 saturation, where the p99 largely tracks capacity and queueing, so we also report the tail at
 \emph{matched utilization}.
+The study separates two estimands: the \emph{policy-selected documented configuration}
 performance of each layer (RQ1--RQ3), and a \emph{common-SQL raw-path sensitivity} contrast reporting
 the residual under identical SQL, which changes query formulation, protocol, preparation, round trips,
 and mapping together rather than isolating any one. The full harness (adapters, seed data, an

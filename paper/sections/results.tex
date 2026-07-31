@@ -7,10 +7,10 @@ Table~\ref{tab:deep_fetch}; insert, Supplement Table~S52); point read, keyset ra
 aggregation are in Supplement Tables~S12, S13, and~S15. Each native driver has an untuned
 policy-selected row (\texttt{pg}, \texttt{mysql2}) and a tuned one (\texttt{pg-tuned},
 \texttt{mysql2-tuned}) marking a hand-tuned reference point, not one attained without code changes.
-We compare \emph{relative} differences within an engine. Two estimands recur: the performance of the
-selected configured treatment (RQ1--RQ3), which is not library-only overhead, and the common-SQL
-raw-path sensitivity contrast (Supplement Table~S14), the residual spread when every layer runs
-common SQL through its raw facility (Section~\ref{sec:threats}).
+We compare \emph{relative} differences within an engine. Two estimands recur
+(Section~\ref{sec:introduction}): the selected configured treatment's performance, which is not
+library-only overhead, and the common-SQL raw-path sensitivity contrast (Supplement Table~S14,
+Section~\ref{sec:threats}).
 
 % One combined table per access pattern (throughput + p99), per layer and engine.
 % \tabledir is set by each main file so this shared section resolves without TEXINPUTS.
@@ -38,7 +38,9 @@ native-relative spread is the widest measured, $7.01\times$ on PostgreSQL (\text
 (\texttt{mysql2} 2{,}416~[2{,}413--2{,}425] down to MikroORM's 472~[464--475]). The native driver
 leads on both engines, the data-mapper ORMs (especially MikroORM) trailing furthest
 (Table~\ref{tab:deep_fetch}); the comparison is paired (Section~\ref{sec:methodology}), every
-adjacent MySQL step large relative to its bootstrap interval (Supplement Table~S36). Aggregation is
+adjacent MySQL step large relative to its bootstrap interval (Supplement Table~S36). A sensitivity
+equivalence test rejects $\pm5\%$ equivalence for the closest adjacent selected pair on each engine.
+Aggregation is
 the least layer-sensitive pattern: every layer forwards a single query for it, and it avoids the
 deep fetch's nested-graph materialization, though the design isolates neither feature as the cause.
 The remaining per-pattern spreads are collected under RQ3 below.
@@ -60,7 +62,7 @@ Switching the backend changes a bundle that can include the DBMS, supported adap
 lower-level driver, wire protocol, and defaults. RQ2 therefore concerns
 \emph{backend-stack transfer}, not a causal DBMS effect. In the primary campaign,
 the seven portable layers have stack-ratio heterogeneity on every pattern (blocked
-interaction $F=127.1$--$458.5$, permutation $p<5{\times}10^{-5}$, the $1/(B{+}1)$ resolution floor at $B=20{,}000$; Supplement Table~S28),
+interaction $F=127.1$--$458.5$, permutation $p=1/20{,}001$, the resolution floor at $B=20{,}000$; Supplement Table~S28),
 but this within-campaign test does not establish durable rank reversals.
 
 A second same-host campaign re-runs 25 repetitions of the seven portable layers for deep fetch,
@@ -91,8 +93,8 @@ including the identity of the MySQL insert leader, remain exploratory.
 Because all four involve that one treatment, we repeated the promotion procedure unchanged on the
 six remaining portable layers (Supplement Table~S49). No pair is promoted on any of the three patterns:
 the sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection, $0.96\times$
-against $1.05\times$) falls below the $5\%$ margin, and the recurring aggregation and insert
-reversals fail that margin or the interval criterion. The promoted-reversal evidence therefore rests entirely on the
+against $1.05\times$) falls below the $5\%$ margin, the recurring aggregation reversals fail
+that margin or the interval criterion, and no insert reversal recurs. The promoted-reversal evidence therefore rests entirely on the
 treatment carrying the driver substitution. Whole-ordering agreement is a separate and purely descriptive question, and it moves in both
 directions when that treatment is removed: $\rho$ rises on deep fetch ($0.86$ to $0.94$) and on
 insert ($0.68$ to $0.83$ primary, $0.71$ to $0.94$ validation), and falls on aggregation ($0.68$ to

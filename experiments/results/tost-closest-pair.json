@@ -1,0 +1,32 @@
+{
+  "seed": "0x57a75",
+  "margin": 0.05,
+  "B": 20000,
+  "raw_file": "current-primary.json",
+  "engines": {
+    "postgres": {
+      "pair": "typeorm / prisma",
+      "medianRatio": 1.0374,
+      "n": 25,
+      "geomRatio": 1.0457,
+      "ci90": [
+        1.0339,
+        1.0577
+      ],
+      "marginPct": 5,
+      "equivalent": false
+    },
+    "mysql": {
+      "pair": "sequelize / objection",
+      "medianRatio": 1.0526,
+      "n": 25,
+      "geomRatio": 1.0572,
+      "ci90": [
+        1.045,
+        1.0699
+      ],
+      "marginPct": 5,
+      "equivalent": false
+    }
+  }
+}
