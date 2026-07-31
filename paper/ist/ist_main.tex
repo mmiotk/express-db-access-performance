@@ -54,7 +54,8 @@ and two tuned native references across PostgreSQL, MySQL, and five access patter
 randomized-block campaign, with a second same-host campaign testing rank stability over time and a
 single-rater audit of nine external benchmarks.
 \textbf{Results:} The widest spread is the tested deep fetch, $7.01\times$ on PostgreSQL and
-$5.12\times$ on MySQL; forcing common SQL through raw facilities leaves $1.71\times$ and
+$5.12\times$ on MySQL; forcing common SQL through raw facilities in a separate ten-run campaign
+leaves $1.71\times$ and
 $2.03\times$, a compound contrast isolating no single mechanism. High-load and matched-utilization p99 are different
 quantities, not one optimized against the other; the matched-utilization figures rest on five runs
 and are secondary. Four cross-stack rank reversals recur in both campaigns, all
@@ -98,7 +99,7 @@ vendors evaluated in this study.
 \section*{Data availability}
 The public repository is available at
 \url{https://github.com/mmiotk/express-db-access-performance}. The complete revision artifact is
-archived as release v1.13.11, which the concept DOI
+archived as release v1.13.12, which the concept DOI
 \url{https://doi.org/10.5281/zenodo.21313858} resolves to~\cite{miotk2026artifact}; the Zenodo record
 also carries an immutable per-version DOI for that release.
 A reproducibility summary --- versions, requirements, run commands, resources needed, and which

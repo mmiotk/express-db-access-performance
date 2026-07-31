@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.11, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.12, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -405,9 +405,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.13.11: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.13.11} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.11; the Zenodo record also carries an immutable per-version DOI. \\
+    Artifact \& version & Complete revision artifact v1.13.12: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.13.12} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.12; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -797,7 +797,8 @@ exploratory rather than an estimate.
 \label{sup:multiplicity}
 
 \paragraph{Multiplicity across the adjacent-pair families}
-Two test families are reported besides the RQ2 promotion screen: the seven adjacent throughput
+Two further test families are reported besides the RQ2 promotion screen and its correction
+(Section~\ref{sup:rq2-multiplicity}): the seven adjacent throughput
 pairs on MySQL (Table~\ref{tab:significance}) and the fourteen adjacent p99 pairs, seven per
 engine (Table~\ref{tab:significance_p99}). Both follow the \emph{observed} ranking rather than a
 preregistered one, so they are secondary descriptive robustness checks and not a confirmatory
@@ -822,7 +823,7 @@ randomized. The permutation tests permute layer labels within blocks, which is v
 if block position carries no systematic effect. That assumption is checked directly only for the
 write path, where an explicit forward/reverse order-invariance run is reported; for the read
 workloads it is supported by design (randomized order, per-replicate reset, handler drain between
-cells) and by the low within-campaign dispersion (deep-fetch CV $\leq4.5\%$), but no separate
+cells) and by the low within-campaign dispersion (deep-fetch CV $\leq4.6\%$), but no separate
 block-order or time-trend diagnostic is displayed. Database and host state persist across a
 campaign, so a slow drift shared by all layers would cancel in the paired contrasts while a
 layer-specific drift would not. The paired intervals and tests therefore rest on an unchecked
@@ -848,14 +849,21 @@ one software freeze, not cross-host or cross-version transfer.
 The promotion rule is applied to 21 layer pairs on each of three patterns, 63 comparisons per
 campaign, without a familywise correction, and the main text states that recurrence across two
 same-host campaigns does not bound familywise error. Table~\ref{tab:rq2_multiplicity} supplies the
-correction that disclosure leaves open. Each pair is tested for a cross-stack interaction on its own:
-the per-replicate difference-in-differences of log throughput cancels any stack effect common to both
-layers, and the residual is tested against zero by two-sided sign-flip permutation, then
-Holm-corrected across all 63 comparisons within a campaign. Holm retains 53 of 63 in the primary
-campaign and 54 of 63 in the validation campaign, so the correction discriminates rather than passing
-a family in which everything is significant. All four promoted reversals sit at the permutation
-resolution floor in both campaigns and survive. What this does and does not settle is worth stating
-plainly: it removes multiple testing as an explanation for the significance of the four interactions,
+correction that disclosure leaves open. The correction is matched to what the rule
+claims, which is a conjunction: the pair's ratio differs from~1 on both stacks, in opposite
+directions, by more than the margin. Testing the cross-stack interaction instead would certify a
+hypothesis the rule already implies, since two intervals on opposite sides of parity entail a
+non-zero interaction, and so would not cover the selection. Each stack's per-replicate log ratios are
+therefore tested against zero by two-sided sign-flip permutation, the two are combined by
+intersection-union (the larger of the two $p$-values, the correct combination for a conjunction), and
+the result is Holm-corrected across all 63 pair-pattern screens in a campaign. Holm retains 53 of 63
+in the primary campaign and 50 of 63 in the validation campaign; applying the direction and margin
+filters to the survivors leaves exactly the four pairs the screen promoted, and in the validation
+campaign those four plus one that the recurrence requirement excludes. The sign-flip null here is
+symmetry of the per-replicate log ratios about zero, a different and equally unchecked assumption
+from the within-block label exchangeability of Section~\ref{sup:multiplicity}. What this does and
+does not settle is worth stating plainly: it removes multiple testing as an explanation for the four
+promoted pairs,
 and it leaves untouched the two limitations the main text already reports: the $5\%$ margin was
 fixed before both campaigns, but the composite direction-and-margin rule that uses it was specified
 after they completed, and the two campaigns share a host and the same seeded draws. Correction cannot make a post-hoc screen prospective.

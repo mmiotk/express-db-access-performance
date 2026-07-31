@@ -102,7 +102,7 @@ raw data is force-added past `.gitignore`). From the tarball alone:
 ```bash
 tar xzf express-db-access-performance-<version>.tar.gz
 cd express-db-access-performance-<version>/experiments
-sha256sum -c results/checksums.sha256      # verify 60 archived candidate JSON files
+sha256sum -c results/checksums.sha256      # verify 65 archived candidate JSON files
 npm ci
 # regenerate every standalone no-database output mapped in MANIFEST.md:
 npm run analyze:rq2 && npm run analyze:rq2-validation && npm run tables:primary && \

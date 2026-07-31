@@ -97,7 +97,7 @@ including the identity of the MySQL insert leader, remain exploratory.
 The rule is applied per pair, so the 15 non-Prisma pairs were already screened in the same pass and
 none was promoted: the sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection,
 $0.96\times$ against $1.05\times$) fails the $5\%$ margin on PostgreSQL, the recurring aggregation
-reversals fail that margin or the interval criterion, and no insert reversal recurs. Holding Prisma
+reversals fail that margin, and none recurs on insert. Holding Prisma
 out therefore changes only the whole-ordering correlations (Supplement Table~S49). The promoted-reversal evidence therefore rests entirely on the
 treatment carrying the driver substitution. Whole-ordering agreement is a separate, purely
 descriptive question, and it moves in both directions when that treatment is removed: $\rho$ rises
@@ -175,7 +175,7 @@ that the operating-point separation stage changes a conclusion rather than only 
 caveats, and it is why capacity and tail are reported as distinct quantities.
 
 \subsection{Measurement stability and effect sizes}
-Deep-fetch throughput CV reaches $4.5\%$, much smaller than its multi-fold spreads.
+Deep-fetch throughput CV reaches $4.55\%$, much smaller than its multi-fold spreads.
 The largest primary throughput CV is $13.6\%$ on MySQL insert, whose raw replicates
 are shown because a median and interval can hide regime mixtures. All 90 cells
 contain exactly 25 run-level samples and zero timed errors, timeouts, or non-2xx

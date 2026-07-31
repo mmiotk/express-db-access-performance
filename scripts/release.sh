@@ -210,6 +210,18 @@ if [[ "${1:-}" == "--check" ]]; then
   # carried forward rather than re-verified (CLAUDE.md section 9 forbids exactly that).
   # Nothing caught it, because the gate checked tables but never the manifest.
   if [[ -f experiments/results/checksums.sha256 ]]; then
+    # sha256sum -c verifies the entries that are listed and says nothing about the ones
+    # that are not, so a dataset can ship unhashed and the gate stays green. That is how
+    # five tracked results/*.json files, including the one backing Supplement Table S55,
+    # sat outside the manifest while it verified 60/60. Completeness is checked first.
+    missing=$( ( cd experiments \
+      && comm -23 <(git ls-files --cached --others --exclude-standard 'results/*.json' | sort) \
+                  <(cut -c67- results/checksums.sha256 | sort) ) )
+    if [[ -n "$missing" ]]; then
+      echo "ARTIFACT: results/*.json datasets are missing from checksums.sha256:"
+      echo "$missing" | sed 's/^/                   /'
+      fail=1
+    fi
     if ! ( cd experiments && sha256sum -c results/checksums.sha256 >/dev/null 2>&1 ); then
       echo "ARTIFACT: archived checksums do not verify; the Data Availability statement is false:"
       ( cd experiments && sha256sum -c results/checksums.sha256 2>/dev/null | grep -v ': OK$' ) \
