@@ -90,6 +90,37 @@ MANUAL: dict[str, tuple[str, str]] = {
     # 667-682) and SchroederWH06 (NSDI 2006), authors and titles matching.
     "rigger2020sqlancer": ("dblp", "2026-07-30"),
     "schroeder2006open": ("dblp", "2026-07-30"),
+    # The eight entries below carry no DOI or arXiv id, so Crossref and OpenAlex
+    # cannot adjudicate them by construction. Each was retrieved by hand on
+    # 2026-07-31 and matched field by field against the source named here. Two
+    # errors were found and corrected in references.bib as a result: autocannon
+    # was recorded at 7.15.0 while the study ran 8.0.0, and the Tene note claimed
+    # the talk originated the term "coordinated omission", which the page does
+    # not support.
+    # Open Library ISBN record: title, subtitle, publisher, year, both authors.
+    "cook1979quasi": ("openlibrary", "2026-07-31"),
+    # InformIT (Pearson) product pages, matched on ISBN-13: title, subtitle,
+    # authors, publisher, edition. Fowler's year stays 2002 (publication) by the
+    # author's decision although the publisher lists copyright 2003.
+    "sadalage2012nosql": ("publisher", "2026-07-31"),
+    "fowler2002patterns": ("publisher", "2026-07-31"),
+    # InfoQ page: title, speaker, and QCon San Francisco 2015 all matched.
+    "tene2015latency": ("publisher", "2026-07-31"),
+    # Vendor and project pages, matched on title, owner, and the method the note
+    # describes. prisma_benchmarks has since changed content; the entry is
+    # defended by its stated access date, not by the current page.
+    "drizzle_benchmarks": ("vendor-page", "2026-07-31"),
+    "prisma_benchmarks": ("vendor-page", "2026-07-31"),
+    "imdbench": ("project-page", "2026-07-31"),
+    # Repository page for owner, name, description and maintainer; the version
+    # was taken from the harness lockfile rather than the page.
+    "autocannon": ("project-page", "2026-07-31"),
+    # Crossref and OpenAlex were both returning empty for every query when this was
+    # checked, including DOIs recorded here as Crossref-confirmed, so their silence
+    # was not evidence. DBLP confirmed title, all six authors in order, year 2012,
+    # Springer, and the DOI. The `edition = {2}` field is NOT confirmed: DBLP labels
+    # the 2024 Springer printing "Second Edition" and the 2012 one plainly.
+    "wohlin2012experimentation": ("dblp", "2026-07-31"),
 }
 
 
