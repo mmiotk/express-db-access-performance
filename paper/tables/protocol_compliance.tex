@@ -28,7 +28,7 @@
       capacity & Deep fetch $\times$ two engines & Tables~S21--S22, S43 \\
     Resource-accounting extension (R6) & Report compute/memory demand or add an equal-budget sensitivity & Deep fetch on both
       engines; equal-CPU sensitivity is a PostgreSQL subset & Tables~S4, S5, S10 \\
-    Implementation-waste extension (R7) & Recorded evidence that no treatment computes or fetches values it then discards on the timed path; independent human review is a separate, stronger level & Static dead-work check clean on all 13 adapter modules of the measured source; the runtime diagnostic gate is installed for subsequent campaigns and did not gate this one & \texttt{results/dead-work.json}; \texttt{bench/dead-work.test.mjs} \\
+    Implementation-waste extension (R7) & Recorded evidence that no treatment computes or fetches values it then discards on the timed path; independent human review is a separate, stronger level & Static dead-work check clean on all 13 modules of the measured source (11 adapters plus the two shared canonical helpers); the runtime diagnostic gate is installed for subsequent campaigns and did not gate this one & \texttt{results/dead-work.json}; \texttt{bench/dead-work.test.mjs} \\
     \bottomrule
   \end{tabular}
   \end{adjustbox}

@@ -112,8 +112,24 @@ test('pairedPermutation: p is symmetric under swapping a,b (same seed)', () => {
 });
 
 // --- Wilcoxon signed-rank ---------------------------------------------------
+test('wilcoxonSignedRank: ratio scale is the default and differs from raw', () => {
+  // Mixed signs are required: when every difference shares a sign, W+ is the total rank
+  // sum on either scale. Here the large pairs move up by a small proportion and the small
+  // pairs down by a large one, so |a-b| and |log(a/b)| rank them in opposite orders.
+  const a = [100, 10, 200, 20];
+  const b = [90, 12, 180, 25];
+  const ratio = wilcoxonSignedRank(a, b);
+  const raw = wilcoxonSignedRank(a, b, { scale: 'raw' });
+  assert.ok(Number.isFinite(ratio.p) && Number.isFinite(raw.p));
+  assert.notDeepEqual(ratio.W, raw.W);
+});
+
+test('wilcoxonSignedRank: ratio scale rejects non-positive input', () => {
+  assert.throws(() => wilcoxonSignedRank([1, 2], [0, 1]));
+});
+
 test('wilcoxonSignedRank: all-zero differences -> p = 1', () => {
-  const r = wilcoxonSignedRank([4, 4, 4], [4, 4, 4]);
+  const r = wilcoxonSignedRank([4, 4, 4], [4, 4, 4]);  // equal pairs: zero on either scale
   assert.deepEqual(r, { W: 0, z: 0, p: 1 });
 });
 
@@ -122,7 +138,7 @@ test('wilcoxonSignedRank: constant positive shift, hand-computed z and p', () =>
   // z=(15-7.5-0.5)/sigma, p=2*Phi(-z)
   const a = [1, 2, 3, 4, 5];
   const b = [0, 0, 0, 0, 0];
-  const r = wilcoxonSignedRank(a, b);
+  const r = wilcoxonSignedRank(a, b, { scale: 'raw' });
   const sigma = Math.sqrt((5 * 6 * 11) / 24);
   const zExp = (15 - 7.5 - 0.5) / sigma;
   assert.ok(approx(r.W, 15));

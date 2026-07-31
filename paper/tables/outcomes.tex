@@ -15,10 +15,13 @@
     \toprule
     Role & Outcome & Analysis \\
     \midrule
-    Primary   & Throughput (req/s), 5 patterns $\times$ 2 engines,      & Paired permutation, Wilcoxon,      \\
-              & policy-selected documented layers, 50-connection operating point         & bootstrap median CI; spread \& rank \\
-    Primary   & Closed-loop p99 tail latency, same cells                & Paired permutation, Wilcoxon,      \\
-              &                                                         & per-cell bootstrap CI on p99       \\
+    Primary   & Throughput (req/s), 5 patterns $\times$ 2 engines,      & Bootstrap median CI; spread and rank. \\
+              & policy-selected documented layers, 50-connection operating point         & Adjacent-pair paired permutation and \\
+              &                                                          & Wilcoxon are reported for the deep \\
+              &                                                          & fetch only, and are post hoc \\
+    Primary   & Closed-loop p99 tail latency, same cells                & Per-cell bootstrap CI on p99;      \\
+              &                                                         & adjacent-pair paired tests on the  \\
+              &                                                         & deep fetch only, post hoc         \\
     \midrule
     Secondary & Same-SQL (raw-path) contrast                            & Describes the residual (compound)  \\
               &                                                         & same-SQL difference                \\

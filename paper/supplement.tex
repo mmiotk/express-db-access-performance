@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.5, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.6, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -140,7 +140,7 @@ transactional subset.
 \label{sup:cv-pg}
 Table~\ref{tab:cv} gives the full per-layer, per-pattern coefficient of variation
 of throughput on PostgreSQL across the 25 repeated runs (maximum 6.4\%,
-\texttt{knex}/insert), the companion to the MySQL table in Section~S1.
+\texttt{pg}/insert), the companion to the MySQL table in Section~S1.
 
 \input{\tabledir cv_all}
 
@@ -404,9 +404,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.13.5: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.13.5} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.5; the Zenodo record also carries an immutable per-version DOI. \\
+    Artifact \& version & Complete revision artifact v1.13.6: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.13.6} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.6; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -501,7 +501,7 @@ deep fetch), itself a portability caveat. The construct is therefore a reproduci
 
 \section{Results roadmap}
 \label{sup:outcomes}
-Table~\ref{tab:outcomes} classifies every result by analysis role: primary paired inference,
+Table~\ref{tab:outcomes} classifies every result by analysis role: primary measurements,
 secondary controls, or exploratory sensitivity evidence. It is the navigational companion to the
 reproduction map in \texttt{experiments/MANIFEST.md}, which ties each table to its generator and
 input data. The policy-selected documented configuration is the RQ1 estimand; common-SQL,
@@ -712,7 +712,8 @@ otherwise (unordered collections, floats, timestamps, nondeterministic identifie
 comparator (set equality, tolerance, canonicalization). The experiment's outputs are deterministic and
 canonically constructed, so byte-equality is valid here.
 
-\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages license additional interpretations without deciding whether a fixed-load result exists. Capacity characterization locates that result against a throughput knee. The common-SQL extension licenses a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-waste evidence records that no treatment does avoidable work on the timed path. Here M1--M2 cover the full matrix, R4 every pattern, R3/R5/R6 the deep fetch; R7 is met for the measured source by the static dead-work check, its runtime companion covering later campaigns only. Omitting a recommended stage narrows the supported claim without invalidating the reported numbers: Partial coverage of a recommended stage narrows what it licenses without withdrawing the admission evidence that licenses the comparisons.
+\paragraph{Compliance levels} M1 semantic admission and M2 treatment definition form the mandatory core because, without a declared task result and a stable configured treatment, there is no common comparison estimand. The remaining stages license additional interpretations without deciding whether a fixed-load result exists. Capacity characterization locates that result against a throughput knee. The common-SQL extension licenses a compound sensitivity contrast; utilization control licenses comparison at stated fractions of estimated capacity; resource accounting licenses a compute-and-memory reading or a labelled equal-budget sensitivity. Implementation-waste evidence records evidence against one class of avoidable work on the timed
+path, not its absence. Here M1--M2 cover the full matrix, R4 every pattern, R3/R5/R6 the deep fetch; R7 is met for the measured source by the static dead-work check, its runtime companion covering later campaigns only. Omitting a recommended stage narrows the supported claim without invalidating the reported numbers: Partial coverage of a recommended stage narrows what it licenses without withdrawing the admission evidence that licenses the comparisons.
 
 \smallskip
 Supplement Table~S50 records how each control changed this experiment; that establishes consequence here, not universal necessity. Supplement Table~S47 consolidates, per research question, the quantity estimated and the quantity not identified. Supplement Table~S37 separately applies the codebook to nine external benchmark sources. The machine-readable audit preserves 63 source-located judgements, but one author performed the coding, so it demonstrates bounded protocol application, not inter-rater reproducibility. The record is structured for a second rater: additional codings attach alongside the author's, and a committed scorer (\texttt{npm run audit:agreement}) reports pooled percent agreement, Cohen's kappa with a bootstrap interval, and every disagreeing cell. Per-stage slices are $n{=}9$ with chance agreement up to $0.80$, so per-stage kappa is flagged unreliable and the pooled figure is the headline. Result-blind forms for three optional independent exercises ship under \texttt{notes/reviewer-packets}; all remain pending, and the scorer reports agreement as not computable while one rater is recorded, so an unperformed exercise cannot be counted as validation.
@@ -796,14 +797,18 @@ exploratory rather than an estimate.
 
 \paragraph{Multiplicity across the adjacent-pair families}
 Two test families are reported besides the RQ2 promotion screen: the seven adjacent throughput
-pairs (Table~\ref{tab:significance}) and the seven adjacent p99 pairs
-(Table~\ref{tab:significance_p99}). Both follow the \emph{observed} ranking rather than a
+pairs on MySQL (Table~\ref{tab:significance}) and the fourteen adjacent p99 pairs, seven per
+engine (Table~\ref{tab:significance_p99}). Both follow the \emph{observed} ranking rather than a
 preregistered one, so they are secondary descriptive robustness checks and not a confirmatory
-family. As a conservatism check we apply a Bonferroni correction across each family: at
-$\alpha=0.05$ the per-comparison threshold is $0.05/7=7.1\times10^{-3}$, and
-$0.05/14=3.6\times10^{-3}$ if the two families are pooled. Every reported comparison sits at the
-permutation resolution floor $1/(B{+}1)=5.0\times10^{-5}$ with $B=20{,}000$, so the correction
-changes no conclusion at any of these thresholds. We state this rather than omit it because the
+family. As a conservatism check we apply a Bonferroni correction: at $\alpha=0.05$ the
+per-comparison threshold is $0.05/7=7.1\times10^{-3}$ for the throughput family,
+$0.05/14=3.6\times10^{-3}$ for the p99 family, and $0.05/21=2.4\times10^{-3}$ if the two are
+pooled. All seven throughput comparisons and thirteen of the fourteen p99 comparisons sit at the
+permutation resolution floor $1/(B{+}1)=5.0\times10^{-5}$ with $B=20{,}000$ and survive every
+threshold. One does not: the MySQL Sequelize-against-Objection p99 step has $p=0.0223$, which
+clears an uncorrected $\alpha=0.05$ but fails all three corrected thresholds. That adjacent step
+is therefore not resolved once multiplicity is accounted for, and we do not read an ordering from
+it. We state this rather than omit it because the
 absence of a multiplicity policy, not its outcome, is what a reader cannot check. The floor also
 means the tests bound the $p$-value from above and do not resolve differences among the pairs:
 a comparison at the floor is not evidence that one adjacent step is more separated than another,
@@ -845,8 +850,8 @@ TOST: it asks whether the $90\%$ paired bootstrap interval of the geometric-mean
 the equivalence bounds, and reports no separate one-sided test statistics. Second, a negative result
 means equivalence within the margin was \emph{not established}; it does not reject equivalence, and
 here neither interval lies wholly outside the margin either, since both straddle the upper bound.
-Third, the pair is selected from the observed ordering as the smallest adjacent ratio among the nine
-policy-selected layers, so the selection is post hoc and the assessment is a sensitivity analysis
+Third, the pair is selected from the observed ordering as the smallest adjacent ratio among the eight
+policy-selected layers on that engine, so the selection is post hoc and the assessment is a sensitivity analysis
 rather than confirmatory evidence. The margin shares that status: $\pm5\%$ is author-selected and
 application-dependent rather than a universal threshold, and although it was fixed on 2026-07-13,
 before the accepted campaigns, pilot data already existed at that date, so it is not a preregistered

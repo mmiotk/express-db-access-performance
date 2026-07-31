@@ -235,7 +235,7 @@ depending on the cell's throughput, and the reported value is the median of the 
 separately. Inserts were measured under each engine's \emph{default} durability (PostgreSQL
 \texttt{fsync} and \texttt{synchronous\_commit} on; MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1},
 \texttt{sync\_binlog=1}), the regime a deployment runs unless relaxed; a labelled secondary run relaxed
-all of these to isolate the durability mechanism (Supplement Table~S3). To characterize behavior under
+all of these as a compound durability sensitivity (Supplement Table~S3). To characterize behavior under
 load we swept the deep fetch on a separate 1--256-connection ladder for every layer and
 engine~\cite{yu2014concurrency}; and a native \texttt{undici}-based constant-arrival generator drove the
 deep fetch under a fixed offered
@@ -317,8 +317,8 @@ Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fa
 Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI Codex was used
 twice, after the manuscript was otherwise complete, for independent critical pre-submission
 reviews; the author evaluated its comments and is responsible for which were acted on. Assistance is
-recorded per commit: 220 of 228 commits carry a \texttt{Co-Authored-By} trailer naming the model
-(159 Opus 4.8, 27 Fable 5, 34 Opus 5), counted from the trailers themselves rather than message
+recorded per commit: 221 of 229 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 35 Opus 5), counted from the trailers themselves rather than message
 text. The other 8 predate the convention and include two squash-merges of assistant-authored
 branches and the largest revision commit, so the count understates assistance.
 

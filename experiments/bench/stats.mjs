@@ -197,13 +197,28 @@ export function pairedPermutation(a, b, { B = 20000, rand = Math.random } = {}) 
   return { n, geomRatio: Math.exp(mean(d)), meanLogRatio: mean(d), p: (ge + 1) / (B + 1), B };
 }
 
-// Wilcoxon signed-rank test on paired differences a_i - b_i (two-sided, normal
-// approximation with tie and continuity correction) — a distribution-light
-// robustness check alongside the paired permutation test.
-export function wilcoxonSignedRank(a, b) {
+// Wilcoxon signed-rank test on paired differences (two-sided, normal approximation
+// with tie and continuity correction) — a distribution-light robustness check
+// alongside the paired permutation test.
+//
+// scale: 'ratio' (default) ranks |log(a_i/b_i)|, matching the sign-flip permutation
+// test, which works on log ratios, and matching how the manuscript describes the paired
+// analysis. scale: 'raw' ranks |a_i - b_i|. The two are NOT equivalent: the sign pattern
+// is identical but the rank order of magnitudes can differ, so the p values differ (on
+// the closest MySQL p99 pair, 0.0223 raw against 0.0429 on log ratios). The default was
+// 'raw' while the manuscript said ratios; that mismatch is what this option removes.
+export function wilcoxonSignedRank(a, b, { scale = 'ratio' } = {}) {
   const n0 = Math.min(a.length, b.length);
   const diffs = [];
-  for (let i = 0; i < n0; i++) { const dd = a[i] - b[i]; if (dd !== 0) diffs.push(dd); }
+  for (let i = 0; i < n0; i++) {
+    let dd;
+    if (scale === 'raw') dd = a[i] - b[i];
+    else {
+      if (!(a[i] > 0) || !(b[i] > 0)) throw new Error('ratio scale needs positive paired values');
+      dd = Math.log(a[i] / b[i]);
+    }
+    if (dd !== 0) diffs.push(dd);
+  }
   const n = diffs.length;
   if (n === 0) return { W: 0, z: 0, p: 1 };
   const idx = diffs.map((dd, i) => [Math.abs(dd), i]).sort((x, y) => x[0] - y[0]);

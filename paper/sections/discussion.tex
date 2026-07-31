@@ -30,7 +30,7 @@ The second same-host campaign preserves PostgreSQL insert ranks but few MySQL po
 (Section~\ref{sec:results}), so we claim no durable fine ordering for MySQL insert. The recurring, material insert reversal
 is narrower: Prisma exceeds MikroORM on PostgreSQL and trails it on MySQL in both
 campaigns, with paired intervals excluding equality in opposite directions
-(Supplement Table~S46). 
+(Supplement Table~S54).
 
 Every promoted reversal involves Prisma, whose MySQL path uses
 the MariaDB adapter rather than \texttt{mysql2}, so backend-stack sensitivity here is
@@ -98,8 +98,8 @@ schema: an observation to re-measure on the target workload, not a law. Where a 
 consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for
 throughput and response-time p99}. Where the tested workload is read-simple, or for the tested MySQL single-row insert where
 shared commit behavior contributes materially under default durability, the observed layer spread is
-smaller. Adding processes narrowed the tested deep-fetch spread on PostgreSQL, not on MySQL
-(Supplement Table~S24). These are performance findings only: the choice also turns on correctness,
-maintainability, security, type safety, and developer productivity, which this study does not
-measure and may outweigh them; and the common-SQL results are a compound sensitivity contrast on
+smaller. Adding processes narrowed the tested deep-fetch spread on PostgreSQL, where the native
+driver stopped scaling past two workers and Prisma passed it at four, not on MySQL (Supplement
+Table~S24, exploratory). These are performance findings only: the choice also turns on qualities this study does not
+measure (Section~\ref{sec:introduction}), which may outweigh them; and the common-SQL results are a compound sensitivity contrast on
 the selected-configuration cost, not a licence to use raw SQL.

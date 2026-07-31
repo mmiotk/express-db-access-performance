@@ -2,8 +2,9 @@
 \begin{table}[htbp]
   \centering
   \caption{Effect sizes for the 4 promoted cross-stack reversals. Each row gives the
-    paired throughput ratio of the first layer over the second, with its within-campaign
-    95\% paired bootstrap interval, on each stack. A pair is promoted only when the two
+    ratio of campaign median throughputs, first layer over second, with a paired bootstrap
+    95\% interval, on each stack. This estimator differs slightly from the geometric mean of
+    per-replicate ratios used in Tables~S28 and~S36; the promotion decision is unaffected. A pair is promoted only when the two
     stacks place it on opposite sides of parity, both intervals exclude $1.0$, and the
     reversal recurs in the validation campaign. Every promoted pair involves Prisma, whose
     MySQL path uses the MariaDB adapter rather than \texttt{mysql2}, so the design cannot
