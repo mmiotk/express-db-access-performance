@@ -48,6 +48,8 @@
     "table:rq2-leave-prisma-out": "node scripts/gen-rq2-leave-prisma-out.mjs",
     "table:protocol-chronology": "node scripts/gen-protocol-chronology.mjs",
     "table:tost-closest": "node scripts/gen-tost-closest.mjs",
+    "table:fanout": "node scripts/gen-fanout-table.mjs",
+    "table:altloading": "TABLE_ONLY=1 node scripts/altloading.mjs",
     "table:durability-equalcpu": "RAW_FILE=current-primary.json RELAXED_FILE=raw-writes-relaxed-corrected.json node scripts/gen-tables.mjs",
     "table:r4": "node scripts/gen-r4-tables.mjs",
     "table:deepfetch": "RAW_FILE=current-primary.json node scripts/gen-deepfetch-table.mjs",

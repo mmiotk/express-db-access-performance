@@ -3,9 +3,13 @@
   \centering
   \caption{Common-SQL raw-path sensitivity --- the residual same-SQL spread on the deep fetch:
     throughput (req/s) of the policy-selected documented
-    deep fetch versus the \emph{same-SQL} contrast (median of 10 runs), in which every layer executes the
+    deep fetch versus the \emph{same-SQL} contrast, in which every layer executes the
     identical two-statement SQL with identical row mapping through its raw-SQL
-    facility. The ratio (selected $\div$ same-SQL) measures the gap between each
+    facility. The two columns come from different campaigns: the selected column is the
+    median of the 25-run primary campaign, the same-SQL column the median of a
+    separate 10-run campaign. The per-layer ratios are therefore non-contemporaneous
+    descriptive contrasts rather than paired within-campaign estimates, and carry no
+    interval. The ratio (selected $\div$ same-SQL) measures the gap between each
     layer's policy-selected documented relational-fetch path and the common raw-SQL path, a composite
     of query strategy, query count, protocol, the raw versus ORM API, and result
     marshalling and hydration changed together; the residual native-relative same-SQL

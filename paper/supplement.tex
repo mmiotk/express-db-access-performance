@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.3, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.4, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -58,9 +58,9 @@ Table~\ref{tab:cv_mysql} reports run-level throughput dispersion on MySQL. All f
 Table~\ref{tab:query_counts} reports, for each layer, the number of SQL
 statements the policy-selected documented deep fetch issues per request, captured from
 server-side statement logs. The counts motivate the main text's observation
-that round-trip count alone does not determine throughput: the two layers
-issuing four statements (Prisma, Objection) sit at opposite ends of the
-throughput ladder.
+that round-trip count alone does not determine throughput: on the PostgreSQL
+deep fetch single-query MikroORM is slowest, while two-query Drizzle outruns
+four-query Prisma.
 
 \input{\tabledir query_counts}
 
@@ -77,7 +77,8 @@ relaxed-to-default ratio quoted in the main text.
 \label{sup:equalcpu}
 Table~\ref{tab:equalcpu} gives the deep-fetch throughput with the server
 confined to 1, 2, or 4 cores (database and load generator pinned to disjoint
-cores); all nine values are quoted in the main text.
+cores). The main text states the equal-CPU check as an operating condition; the nine values are
+reported here.
 
 \input{\tabledir equalcpu}
 
@@ -147,7 +148,7 @@ of throughput on PostgreSQL across the 25 repeated runs (maximum 6.4\%,
 \label{sup:resources}
 Table~\ref{tab:resources} gives the per-layer application-process CPU (median \%
 of one logical core) and peak resident memory on the deep fetch
-(MySQL), the detail behind the CPU trade-off discussed in the main text
+(MySQL), the resource-accounting detail supporting the main text's operating conditions
 (all layers $\approx100$--$110\%$ of one core; peak RSS 223--356~MB).
 
 \input{\tabledir resources}
@@ -403,9 +404,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.13.3: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.13.3} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.3; the Zenodo record also carries an immutable per-version DOI. \\
+    Artifact \& version & Complete revision artifact v1.13.4: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.13.4} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.4; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -550,7 +551,7 @@ deployment environments.
 \section{Application-tier CPU trade-off}
 \label{sup:cpu-tradeoff}
 Figure~\ref{fig:cpu_tradeoff} plots each layer's application-tier CPU against its throughput on the
-deep fetch (the trade-off discussed in the main text's Resource-footprint paragraph): every layer
+deep fetch, the resource-accounting stage the main text lists among its operating conditions: every layer
 draws about one application core, and the native driver leads on throughput and on requests per CPU-second (application-tier and
 combined), consistent with its leaner SQL; these CPU shares, measured at unequal throughput, do not
 identify where per-request work occurs.
@@ -590,7 +591,7 @@ records precisely which workload cells satisfy each in this experiment. The mand
 and capacity characterization hold across all five patterns on both engines; the three
 extensions --- common-SQL sensitivity, utilization-controlled latency, and resource accounting --- are
 demonstrated on the deep fetch, the widest-spread tested pattern, as a representative-point
-instantiation rather than a claim of full-matrix coverage. The sixth, independent-implementation-review level is not satisfied: packets exist under \texttt{notes/reviewer-packets/}, but no external human review is claimed. Stating the levels and their coverage
+instantiation rather than a claim of full-matrix coverage. The sixth, implementation-waste level is satisfied mechanically for the measured source by the static dead-work check; its stronger independent-human-review form is not: packets exist under \texttt{notes/reviewer-packets/}, but no external human review is claimed. Stating the levels and their coverage
 explicitly is what makes the protocol reusable: a later study can report its own compliance level per
 cell against the same ladder.
 
@@ -777,5 +778,49 @@ engine under each engine's default durability, with within-campaign bootstrap in
 MySQL insert cells are the noisiest in the study, which is why no fine insert ordering is claimed.
 
 \input{\tabledir write}
+
+\section{Result-graph breadth sweep}
+\label{sup:fanout}
+Table~\ref{tab:fanout} varies the deep fetch's result-graph breadth from 0 to 500 child rows and
+reports each layer's throughput multiplier relative to its engine's native driver. The multipliers
+are near-flat on MySQL but not on PostgreSQL, where the native-relative spread widens from
+$6.0\times$ to $11.7\times$: MikroORM and Sequelize fall further behind the native driver as
+breadth grows, while Knex and Drizzle close on it. Breadth is the only dimension varied, so the
+sweep bounds neither graph depth, nor schema, nor query mix, and three runs per cell make it
+exploratory rather than an estimate.
+
+\input{\tabledir fanout}
+
+\section{Multiplicity and exchangeability in the paired analyses}
+\label{sup:multiplicity}
+
+\paragraph{Multiplicity across the adjacent-pair families}
+Two test families are reported besides the RQ2 promotion screen: the seven adjacent throughput
+pairs (Table~\ref{tab:significance}) and the seven adjacent p99 pairs
+(Table~\ref{tab:significance_p99}). Both follow the \emph{observed} ranking rather than a
+preregistered one, so they are secondary descriptive robustness checks and not a confirmatory
+family. As a conservatism check we apply a Bonferroni correction across each family: at
+$\alpha=0.05$ the per-comparison threshold is $0.05/7=7.1\times10^{-3}$, and
+$0.05/14=3.6\times10^{-3}$ if the two families are pooled. Every reported comparison sits at the
+permutation resolution floor $1/(B{+}1)=5.0\times10^{-5}$ with $B=20{,}000$, so the correction
+changes no conclusion at any of these thresholds. We state this rather than omit it because the
+absence of a multiplicity policy, not its outcome, is what a reader cannot check. The floor also
+means the tests bound the $p$-value from above and do not resolve differences among the pairs:
+a comparison at the floor is not evidence that one adjacent step is more separated than another,
+for which the ratio and its interval are the informative quantities.
+
+\paragraph{Exchangeability of the replicate blocks}
+The paired analyses treat the 25 replicates as exchangeable blocks: within each replicate every
+layer is measured once, from the same seeded identifier distribution, and the layer order is
+randomized. The permutation tests permute layer labels within blocks, which is valid under the null
+if block position carries no systematic effect. That assumption is checked directly only for the
+write path, where an explicit forward/reverse order-invariance run is reported; for the read
+workloads it is supported by design (randomized order, per-replicate reset, handler drain between
+cells) and by the low within-campaign dispersion (deep-fetch CV $\leq4.5\%$), but no separate
+block-order or time-trend diagnostic is displayed. Database and host state persist across a
+campaign, so a slow drift shared by all layers would cancel in the paired contrasts while a
+layer-specific drift would not. The paired intervals and tests therefore rest on an unchecked
+exchangeability assumption for the read workloads, which we state as a limitation rather than
+treat as established.
 
 \end{document}

@@ -3,16 +3,18 @@
   \centering
   \caption{Alternative eager-loading sensitivity on the deep fetch:
     policy-selected documented throughput (req/s) versus the alternative loading strategy, both
-    engines, for the layers whose alternative is a byte-identical drop-in. Sequelize
-    and MikroORM switch from their policy-selected documented single join to select-in; in both cases
-    the policy-selected documented path is the \emph{faster} strategy, so their deep-fetch deficit
-    does not appear to be an artifact of a poor selected strategy. \texttt{TypeORM} is omitted, its alternative strategy not a byte-identical drop-in in the pinned versions (its query strategy errors on the ordered deep-fetch \texttt{findOne}, and Objection's \texttt{withGraphJoined} changes row handling), which is itself a portability caveat.}
+    engines, for the layers whose alternative is a byte-identical drop-in. The table reports only byte-identical drop-ins; excluded alternatives remain
+    configuration-portability findings rather than timed treatments. This is a secondary
+    run that predates the accepted primary campaign, so its selected column sits up to
+    about $14\%$ below the corresponding primary median; only the within-table
+    selected-versus-alternative contrast is interpreted, never the absolute
+    values. On both engines the policy-selected documented path is the \emph{faster} strategy for \texttt{sequelize} and \texttt{mikroorm}, so their deep-fetch deficit does not appear to be an artifact of a poor selected strategy. \texttt{typeorm} is omitted: its alternative strategy was not a byte-identical drop-in in the pinned versions (TypeORM's query strategy errors on the ordered deep-fetch \texttt{findOne}; Objection's \texttt{withGraphJoined} changes row handling), which is itself a portability caveat.}
   \label{tab:altloading}
   \begin{tabular}{l l r r r r}
     \toprule
     & & \multicolumn{2}{c}{PostgreSQL} & \multicolumn{2}{c}{MySQL} \\
     \cmidrule(lr){3-4}\cmidrule(lr){5-6}
-    Layer & Switch & default & alt. & default & alt. \\
+    Layer & Switch & selected & alt. & selected & alt. \\
     \midrule
     \texttt{sequelize} & join$\to$select-in & 915 & 690 & 830 & 602 \\
     \texttt{mikroorm} & join$\to$select-in & 447 & 357 & 420 & 324 \\

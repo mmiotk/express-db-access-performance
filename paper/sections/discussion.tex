@@ -81,7 +81,7 @@ to the nine external sources, the codebook yields claim licenses rather than a b
 (Supplement Table~S37).
 
 This demonstrates that the protocol is \emph{executable}: it admits and rejects concrete cells, it
-changed the reported interpretation at every stage exercised here (R7 excepted, being unsatisfied),
+changed the reported interpretation at every stage exercised here (R7 excepted, its check finding nothing),
 and it codes an external corpus to a reproducible per-stage result. It does not demonstrate
 \emph{reusability by another person}. Two limits sharpen this: no source was coded \emph{satisfied}
 on any stage, so the codebook's upper range is untested, and agreement against this rater would
@@ -101,8 +101,9 @@ schema, or query mix, the deep-fetch peak locates a difference among five probes
 schema: an observation to re-measure on the target workload, not a law. Where a hot path resembles the tested deep fetch the access layer is
 consequential and worth benchmarking: the thin paths (native driver, Knex) led here \emph{for
 throughput and response-time p99}. Where the tested workload is read-simple, or for the tested MySQL single-row insert where
-shared commit behavior contributes materially under default durability, the observed layer spread is smaller and may be met by
-adding application processes until another bottleneck (contention, connection limits). These are performance findings only: the choice also turns on correctness,
+shared commit behavior contributes materially under default durability, the observed layer spread is
+smaller. Adding processes narrowed the tested deep-fetch spread on PostgreSQL, not on MySQL
+(Supplement Table~S24). These are performance findings only: the choice also turns on correctness,
 maintainability, security, type safety, and developer productivity, which this study does not
 measure and may outweigh them; and the common-SQL results are a compound sensitivity contrast on
 the selected-configuration cost, not a licence to use raw SQL.

@@ -21,8 +21,8 @@ independently of all adapters (Section~\ref{sec:methodology}), and differential 
 establish finite mutual equivalence; these found, among other defects, a Drizzle timestamp conversion
 that shifted PostgreSQL instants by the host UTC offset, fixed before measurement. A fixed-payload endpoint measures the shared Express-and-serialization floor at 11{,}238 and
 10{,}893~req/s (\texttt{results/sameplan-corrected.json}), at least three times the fastest deep-fetch
-cell, so the framework compresses rather than manufactures between-layer differences, attributable to how
-each layer reaches an identical response, not to what is returned. The reported
+cell, so no cell is framework-bound; the differences arise in how each layer reaches an identical
+response, not in what is returned. The reported
 single-row-insert finding uses each engine's \emph{default} vendor-standard durability
 (Section~\ref{sec:methodology}), not one we relaxed, so those insert spreads
 (Supplement Table~S52) describe the tested default deployment, not a tuning choice; a
@@ -110,7 +110,7 @@ of variation and within-campaign bootstrap 95\% intervals (repeatability, not
 population-general) and, because the design is a randomized block, compares
 adjacently ranked layers with \emph{paired} tests on their
 per-replicate throughput ratios (paired sign-flip permutation, cross-checked with
-Wilcoxon; Supplement Table~S36). Two bounds reinforce the ordering: the widest
+Wilcoxon; Supplement Table~S36, MySQL). Two bounds reinforce the ordering: the widest
 spreads dwarf the deep-fetch run-to-run CV ($\leq4.5\%$); insert CV reaches $6.4\%$ on PostgreSQL and $13.6\%$ on MySQL (Supplement Tables~S1, S9), which is why no fine insert ordering is claimed, and it
 holds across the concurrency sweep at $\geq32$ connections (Supplement
 Figure~S2). Rather than assert a specific statistical power (absent a prespecified

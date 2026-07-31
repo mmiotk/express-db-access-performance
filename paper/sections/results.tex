@@ -114,29 +114,29 @@ or defaults.
 
 The primary MySQL insert medians illustrate why fine ordering is not a headline: Drizzle,
 Objection, Knex, and the native driver lie between 1{,}766 and 1{,}816~req/s, while several replicate
-distributions are visibly multimodal or heavy-tailed and reach $13.6\%$ within-campaign CV
+distributions are multimodal or heavy-tailed and reach $13.6\%$ within-campaign CV
 (Supplement Figure~S1). Prisma is the slowest policy-selected treatment at 894~req/s, giving a
 $1.98\times$ native-relative spread on a broad interval [1.65--2.09]. Under relaxed durability the
 native MySQL and Knex paths gain $2.42\times$ and $2.07\times$, with gains differing by treatment;
 concurrent wait-event sums are consistent with a shared commit-path contribution but are not a causal
 time fraction (Supplement Tables~S3 and S19). PostgreSQL insert spans $3.18\times$ (6{,}018 to
-1{,}894~req/s) and changes by at most $14\%$ under relaxed durability. These compound interventions
-do not decompose backend-stack cost.
+1{,}894~req/s), changes at most $14\%$ under relaxed durability, with p99 12--32~ms against
+MySQL's 105--129~ms. These compound interventions do not decompose backend-stack cost.
 
 \subsection{RQ3: which pattern spreads widest}
 The primary native-relative spreads on PostgreSQL are deep fetch
 ($7.01\times$), keyset range scan ($4.22\times$), insert ($3.18\times$), point
 read ($2.83\times$), and aggregation ($1.82\times$). On MySQL they are deep fetch
 ($5.12\times$), range scan ($3.88\times$), point read ($2.14\times$), insert
-($1.98\times$), and aggregation ($1.87\times$). Thus the tested deep fetch has the
+($1.98\times$; max/min $2.03\times$), and aggregation ($1.87\times$). The tested deep fetch has the
 largest spread and aggregation the smallest on both stacks. A full concurrency
 sweep places the median knee at 8--32 connections and the median utilization at 50
 connections at 98--100\% for every pattern--stack combination; the lowest
 individual values are 87--88\% for two PostgreSQL patterns (Supplement Table~S35).
-The fixed point is therefore a high-utilization comparison throughout, although it
-is not an identical utilization fraction for every layer. An exploratory fan-out
-sweep from 0 to 500 comments finds a roughly fixed multiplier rather than a spread
-that grows with breadth; it does not vary graph depth, schema, or query mix.
+The fixed point is therefore a high-utilization comparison throughout, though not an
+identical fraction for every layer. An exploratory fan-out
+sweep (0--500 comments) leaves multipliers flat on MySQL but widens the PostgreSQL
+spread from $6.0\times$ to $11.7\times$ (Supplement Table~S53).
 
 \subsection{Tail latency}
 At equal closed-loop demand, deep-fetch p99 spans 18--108~ms on PostgreSQL and 28--121~ms among the
@@ -161,11 +161,11 @@ p99 orderings, Spearman $\rho$ is $0.64$ on PostgreSQL and $0.29$ on MySQL
 (Supplement Table~S43). The native driver moves furthest: fastest on the tail at equal
 demand on both engines, it falls to third of eight on PostgreSQL and seventh of eight on
 MySQL once each layer is held at half its own capacity. On MySQL the reversal is
-unambiguous, \texttt{knex} 1.9~ms [1.8--2.2] against \texttt{mysql2} 4.7~ms [4.0--5.6],
-non-overlapping over five runs, while on PostgreSQL the native and leading portable
+large relative to the five-run spread, \texttt{knex} 1.9~ms [1.8--2.2] against
+\texttt{mysql2} 4.7~ms [4.0--5.6], while on PostgreSQL the native and leading portable
 ranges overlap (\texttt{pg} 2.6~[2.2--3.0], \texttt{knex} 2.3~[2.3--2.7]), so only the
 MySQL inversion is claimed. Reporting a tail at one arbitrary load point would have
-recorded the native driver as the tail leader on both engines. This is direct evidence
+recorded the native driver as the tail leader on both engines. This is secondary evidence
 that the operating-point separation stage changes a conclusion rather than only its
 caveats, and it is why capacity and tail are reported as distinct quantities.
 
