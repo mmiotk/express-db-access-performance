@@ -9,7 +9,7 @@ A fixed concurrency imposes equal \emph{demand} on layers of unequal throughput 
 unequal \emph{utilization}. RQ1 is therefore characterized under three operating conditions, not one
 privileged point, the protocol's \emph{operating-point separation}. \emph{Equal external demand} is
 the fixed 50-connection \emph{high-load} point covering the full five-pattern, two-engine matrix; a
-per-pattern concurrency sweep (ladder 1--200, both engines; Supplement Table~S35) places every
+per-pattern concurrency ladder (1--200 connections, both engines; Supplement Table~S35) places every
 pattern's throughput knee at or below 50 connections, so this point sits at high utilization of each
 pattern's own capacity (median 98--100\%), a capacity-and-queueing regime rather than a
 sub-saturation latency comparison. The two utilization-dependent conditions need a per-layer capacity
@@ -236,7 +236,7 @@ separately. Inserts were measured under each engine's \emph{default} durability 
 \texttt{fsync} and \texttt{synchronous\_commit} on; MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1},
 \texttt{sync\_binlog=1}), the regime a deployment runs unless relaxed; a labelled secondary run relaxed
 all of these to isolate the durability mechanism (Supplement Table~S3). To characterize behavior under
-load we swept the deep fetch across 1--256 connections for every layer and
+load we swept the deep fetch on a separate 1--256-connection ladder for every layer and
 engine~\cite{yu2014concurrency}; and a native \texttt{undici}-based constant-arrival generator drove the
 deep fetch under a fixed offered
 rate (250--4{,}000~req/s) rather than fixed concurrency, measuring from intended send time and clipping
@@ -259,10 +259,9 @@ The design is a \emph{randomized block} (within each replicate every layer is me
 against the same seeded identifier distribution) so adjacently ranked layers are compared with \emph{paired} tests on their
 per-replicate throughput ratios (a two-sided sign-flip permutation test cross-checked with Wilcoxon
 signed-rank), reporting the geometric-mean paired ratio, its bootstrap CI, the paired dominance, and a
-TOST against a $\pm5\%$ margin (author-selected and application-dependent, not universal; supplement;
-the margin was fixed on 2026-07-13, before the accepted campaigns but after pilot data existed, so the
-TOST is reported as a sensitivity analysis and not as confirmatory equivalence evidence)
-for the closest pair; we foreground these effect sizes and interval estimates over
+bootstrap-interval equivalence assessment (the CI form of TOST) against an author-selected $\pm5\%$
+margin for the closest pair, reported as a sensitivity analysis (Supplement Table~S55);
+we foreground these effect sizes and interval estimates over
 $p$-values~\cite{arcuri2014hitchhiker,cliff1993dominance}. Because the seven adjacent pairs follow the
 \emph{observed} ranking, their significances are a post-hoc, descriptive robustness check, not a
 confirmatory family.
@@ -318,8 +317,8 @@ Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fa
 Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI Codex was used
 twice, after the manuscript was otherwise complete, for independent critical pre-submission
 reviews; the author evaluated its comments and is responsible for which were acted on. Assistance is
-recorded per commit: 219 of 227 commits carry a \texttt{Co-Authored-By} trailer naming the model
-(159 Opus 4.8, 27 Fable 5, 33 Opus 5), counted from the trailers themselves rather than message
+recorded per commit: 220 of 228 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 34 Opus 5), counted from the trailers themselves rather than message
 text. The other 8 predate the convention and include two squash-merges of assistant-authored
 branches and the largest revision commit, so the count understates assistance.
 

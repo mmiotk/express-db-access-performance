@@ -20,15 +20,11 @@ single-query MikroORM is slowest while two-query Drizzle outruns four-query Pris
 bundled implementation differences are plausible contributors, but the study does not isolate them.
 
 \paragraph{Single-row inserts and backend-stack transfer}
-Single-row insert behavior is both stack- and treatment-specific. In the primary
-campaign PostgreSQL spans $3.18\times$, whereas MySQL spans $1.98\times$ and
-several MySQL replicate distributions are multimodal or heavy-tailed. Relaxing
-durability raises the native MySQL and Knex paths by $2.42\times$ and
-$2.07\times$, but treatment ratios range from $1.02$ to $2.44\times$; aggregate
-concurrent wait-event time can exceed wall time and is not a causal fraction.
-Together these controls are consistent with a shared commit-path contribution,
-not with attributing a performance floor or a fixed share to the DBMS
-(Supplement Tables~S3 and S19).
+Single-row insert behavior is both stack- and treatment-specific
+(Section~\ref{sec:results}). The durability and wait-event controls are consistent
+with a shared commit-path contribution, not with attributing a performance floor or
+a fixed share to the DBMS; aggregate concurrent wait-event time can exceed wall time
+and is not a causal fraction (Supplement Tables~S3 and S19).
 
 The second same-host campaign preserves PostgreSQL insert ranks but few MySQL positions
 (Section~\ref{sec:results}), so we claim no durable fine ordering for MySQL insert. The recurring, material insert reversal

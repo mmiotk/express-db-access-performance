@@ -29,8 +29,9 @@ $2\%$ on the deep fetch (\texttt{pg-tuned} 3{,}700 vs.\ \texttt{pg} 3{,}638;
 \texttt{mysql2-tuned} 2{,}398 vs.\ \texttt{mysql2} 2{,}416). The one material gain is
 PostgreSQL aggregation, where named prepared statements add $11\%$ (7{,}583 vs.\ 6{,}807).
 On MySQL the binary-protocol baseline is \emph{slower} than \texttt{mysql2} on every pattern
-(by $0.4$--$4.7\%$), so \texttt{execute()} buys nothing at this operating point; both tuned
-baselines are therefore disclosed reference points, not optimization ceilings.
+(by $0.4$--$4.7\%$), so \texttt{execute()} brought no material gain here, every difference lying
+inside the $\pm5\%$ margin; both tuned baselines are therefore disclosed reference points, not
+optimization ceilings.
 
 On the \textbf{deep fetch} (a post, its author, and all comments with their authors) the
 native-relative spread is the widest measured, $7.01\times$ on PostgreSQL (\texttt{pg} 3{,}638,
@@ -39,7 +40,8 @@ native-relative spread is the widest measured, $7.01\times$ on PostgreSQL (\text
 leads on both engines, the data-mapper ORMs (especially MikroORM) trailing furthest
 (Table~\ref{tab:deep_fetch}); the comparison is paired (Section~\ref{sec:methodology}), every
 adjacent MySQL step large relative to its bootstrap interval (Supplement Table~S36). A sensitivity
-equivalence test rejects $\pm5\%$ equivalence for the closest adjacent selected pair on each engine.
+equivalence assessment does not establish $\pm5\%$ equivalence for the closest adjacent selected pair
+on either engine (Supplement Table~S55).
 Aggregation is
 the least layer-sensitive pattern: every layer forwards a single query for it, and it avoids the
 deep fetch's nested-graph materialization, though the design isolates neither feature as the cause.
@@ -76,10 +78,11 @@ We therefore promote a cross-stack reversal only when it occurs in both campaign
 margin on both stacks, and paired bootstrap intervals exclude equality in opposite directions in
 both. The margin was fixed before these campaigns (Section~\ref{sec:methodology}), but the composite
 rule was specified after both completed: it is a post-hoc screen applied uniformly to all 21 layer
-pairs on each of the three patterns. No familywise correction is applied; recurrence across both
-campaigns is the screen's error control. The reversals it promotes are the stable subset of an
+pairs on each of the three patterns. No familywise correction is applied. Recurrence screens
+one-campaign noise, but the campaigns share a host and the same seeded draws, so it does not bound
+familywise error across the 63 comparisons. The reversals it promotes are the stable subset of an
 exploratory comparison, not a prespecified confirmatory test.
-Four pairs meet all criteria: on deep fetch, Prisma exceeds Objection and Sequelize
+Four pairs meet all criteria, sized with paired intervals in Supplement Table~S54: on deep fetch, Prisma exceeds Objection and Sequelize
 on PostgreSQL but trails both on MySQL; on aggregation, Prisma exceeds Objection on
 PostgreSQL but trails it on MySQL; on insert, Prisma exceeds MikroORM on PostgreSQL
 but trails it on MySQL. All four therefore involve one treatment, and that treatment is
@@ -93,7 +96,7 @@ including the identity of the MySQL insert leader, remain exploratory.
 Because all four involve that one treatment, we repeated the promotion procedure unchanged on the
 six remaining portable layers (Supplement Table~S49). No pair is promoted on any of the three patterns:
 the sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection, $0.96\times$
-against $1.05\times$) falls below the $5\%$ margin, the recurring aggregation reversals fail
+against $1.05\times$) fails the $5\%$ margin on PostgreSQL, the recurring aggregation reversals fail
 that margin or the interval criterion, and no insert reversal recurs. The promoted-reversal evidence therefore rests entirely on the
 treatment carrying the driver substitution. Whole-ordering agreement is a separate and purely descriptive question, and it moves in both
 directions when that treatment is removed: $\rho$ rises on deep fetch ($0.86$ to $0.94$) and on
@@ -117,7 +120,7 @@ Objection, Knex, and the native driver lie between 1{,}766 and 1{,}816~req/s, wh
 distributions are multimodal or heavy-tailed and reach $13.6\%$ within-campaign CV
 (Supplement Figure~S1). Prisma is the slowest policy-selected treatment at 894~req/s, giving a
 $1.98\times$ native-relative spread on a broad interval [1.65--2.09]. Under relaxed durability the
-native MySQL and Knex paths gain $2.42\times$ and $2.07\times$, with gains differing by treatment;
+native MySQL and Knex paths gain $2.42\times$ and $2.07\times$, ranging $1.02$--$2.44\times$ across treatments;
 concurrent wait-event sums are consistent with a shared commit-path contribution but are not a causal
 time fraction (Supplement Tables~S3 and S19). PostgreSQL insert spans $3.18\times$ (6{,}018 to
 1{,}894~req/s), changes at most $14\%$ under relaxed durability, with p99 12--32~ms against
@@ -149,18 +152,19 @@ Table~S23), which is endpoint-specific evidence, not a general sufficiency claim
 At the stable nominal 50\% capacity target, coordinated-omission-corrected p99 is 2.3--4.9~ms on
 PostgreSQL and 1.9--5.5~ms on MySQL, a different operating point and estimand, not an optimization
 applied to the systems; most 70\% cells remain similarly small (Supplement Tables~S21--S22 and S43).
-Re-expressed against the full-sweep maximum, nominal 50\% falls at
-46.6--51.0\% and nominal 70\% at 65.2--71.5\% (S45). The 85\% and 95\% results are unstable near-saturation observations and do not support a
+Against the full-sweep maximum, nominal 50\% falls at
+46.2--52.2\% and 70\% at 64.6--73.0\% across repeated sweeps (S45). The 85\% and 95\% results are unstable near-saturation observations and do not support a
 convergence claim. The stable 50\% result shows the large equal-demand p99 spread contains a material
 capacity-and-queueing component; it does not identify its share or imply a deployment-general
 sub-saturation bound.
 
 The two operating points also \emph{order the layers differently}, which is the
-sharpest consequence of separating them. Between the equal-demand and 50\%-utilization
+sharpest consequence of separating them, though they differ in load generator and model too
+(closed-loop, 25 runs; open-loop, 5), so the reordering is not the operating point alone. Between the equal-demand and 50\%-utilization
 p99 orderings, Spearman $\rho$ is $0.64$ on PostgreSQL and $0.29$ on MySQL
-(Supplement Table~S43). The native driver moves furthest: fastest on the tail at equal
-demand on both engines, it falls to third of eight on PostgreSQL and seventh of eight on
-MySQL once each layer is held at half its own capacity. On MySQL the reversal is
+(Supplement Table~S43). The native driver moves furthest on MySQL: fastest at equal
+demand on both engines, it falls to third of eight on PostgreSQL and seventh of eight
+there once each layer is held at half its own capacity. On MySQL the reversal is
 large relative to the five-run spread, \texttt{knex} 1.9~ms [1.8--2.2] against
 \texttt{mysql2} 4.7~ms [4.0--5.6], while on PostgreSQL the native and leading portable
 ranges overlap (\texttt{pg} 2.6~[2.2--3.0], \texttt{knex} 2.3~[2.3--2.7]), so only the

@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.4, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.5, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -404,9 +404,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.13.4: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.13.4} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.4; the Zenodo record also carries an immutable per-version DOI. \\
+    Artifact \& version & Complete revision artifact v1.13.5: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.13.5} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.5; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -822,5 +822,38 @@ campaign, so a slow drift shared by all layers would cancel in the paired contra
 layer-specific drift would not. The paired intervals and tests therefore rest on an unchecked
 exchangeability assumption for the read workloads, which we state as a limitation rather than
 treat as established.
+
+\section{Effect sizes for the promoted cross-stack reversals}
+\label{sup:rq2-effects}
+Table~\ref{tab:rq2_promoted_effects} sizes the four promoted reversals that the main text's RQ2
+answer rests on. Each is a paired within-campaign ratio with a 95\% bootstrap interval on each
+stack, so the reversal is visible as the two intervals falling on opposite sides of parity rather
+than as a rank statement alone. The largest is the insert reversal (PostgreSQL $1.423$ against
+MySQL $0.723$) and the smallest the deep-fetch pair against Objection ($1.155$ against $0.754$).
+The MySQL insert interval is the widest in the table, consistent with that cell's $13.6\%$
+within-campaign dispersion, which is why no fine MySQL insert ordering is claimed anywhere.
+These intervals are within-campaign: they cover replicate-to-replicate variation on one host and
+one software freeze, not cross-host or cross-version transfer.
+
+\input{\tabledir rq2_promoted_effects}
+
+\section{Equivalence assessment for the closest adjacent pair}
+\label{sup:equivalence}
+Table~\ref{tab:tost_closest} reports the $\pm5\%$ equivalence assessment the main text refers to.
+Three properties bound how it may be read. First, the assessment is the confidence-interval form of
+TOST: it asks whether the $90\%$ paired bootstrap interval of the geometric-mean ratio lies inside
+the equivalence bounds, and reports no separate one-sided test statistics. Second, a negative result
+means equivalence within the margin was \emph{not established}; it does not reject equivalence, and
+here neither interval lies wholly outside the margin either, since both straddle the upper bound.
+Third, the pair is selected from the observed ordering as the smallest adjacent ratio among the nine
+policy-selected layers, so the selection is post hoc and the assessment is a sensitivity analysis
+rather than confirmatory evidence. The margin shares that status: $\pm5\%$ is author-selected and
+application-dependent rather than a universal threshold, and although it was fixed on 2026-07-13,
+before the accepted campaigns, pilot data already existed at that date, so it is not a preregistered
+bound. The tuned baselines are excluded because the paper defines them as disclosed reference points
+rather than treatments; the closest adjacent pair including them would be
+\texttt{pg-tuned} versus \texttt{pg}, which does satisfy the margin.
+
+\input{\tabledir tost_closest}
 
 \end{document}

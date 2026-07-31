@@ -25,7 +25,13 @@ package: pdf
 	sed -e 's|\.\./sections/|sections_|g' -e 's|\.\./tables/|tables_|g' \
 	    -e 's|\.\./references|references|g' $(MAIN).tex > _package/$(MAIN).tex
 	@for f in ../sections/*.tex; do cp "$$f" "_package/sections_$$(basename $$f)"; done
-	@for f in ../tables/*.tex;   do cp "$$f" "_package/tables_$$(basename $$f)";   done
+	@# Only the tables the submission actually \input. Copying ../tables/*.tex shipped
+	@# two orphans (analysis_roster, deepfetch_regimes) whose \ref targets are not in the
+	@# submitted main text, i.e. dead LaTeX with dangling cross-references.
+	@grep -ho '\\input{\\tabledir *[A-Za-z0-9_]*}' $(MAIN).tex ../sections/*.tex \
+	  | sed -E 's/.*\\tabledir *([A-Za-z0-9_]+)}/\1/' | sort -u \
+	  | while read -r t; do cp "../tables/$$t.tex" "_package/tables_$$t.tex"; done
+	@echo "  packaged $$(ls _package/tables_*.tex | wc -l) of $$(ls ../tables/*.tex | wc -l) tables"
 	cp $(MAIN).pdf _package/
 	cp ../_build/supplement.pdf _package/supplement.pdf
 	@rm -f ist-submission.zip

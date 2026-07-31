@@ -48,6 +48,7 @@ FILES=(
   paper/sections/introduction.tex
   paper/ist/ist_main.tex
   paper/ist/cover-letter.md
+  paper/references.bib
 )
 
 OLD_V=$(current_version)
@@ -203,6 +204,22 @@ if [[ "${1:-}" == "--check" ]]; then
   else
     echo "ARTIFACT: no 'origin' remote configured; cannot verify the revision is public."; fail=1
   fi
+  # The Data Availability statement asserts the archived JSON hashes verify. That was
+  # false at v1.13.4: results/rq2-campaign-comparison.json had been legitimately
+  # regenerated one commit after the manifest was last written, so the recorded hash was
+  # carried forward rather than re-verified (CLAUDE.md section 9 forbids exactly that).
+  # Nothing caught it, because the gate checked tables but never the manifest.
+  if [[ -f experiments/results/checksums.sha256 ]]; then
+    if ! ( cd experiments && sha256sum -c results/checksums.sha256 >/dev/null 2>&1 ); then
+      echo "ARTIFACT: archived checksums do not verify; the Data Availability statement is false:"
+      ( cd experiments && sha256sum -c results/checksums.sha256 2>/dev/null | grep -v ': OK$' ) \
+        | sed 's/^/                   /'
+      fail=1
+    fi
+  else
+    echo "ARTIFACT: experiments/results/checksums.sha256 is missing."; fail=1
+  fi
+
   # The manuscript claims every reported table regenerates byte-for-byte from the
   # archived data. That was false: corrections had been applied to paper/tables/
   # by hand while the generators still emitted the old text, so `npm run
@@ -280,7 +297,9 @@ for f in "${FILES[@]}"; do
   before=$(md5sum "$f" | cut -d' ' -f1)
   # Version: only the exact old version, so the historical v1.12.9 references
   # and unrelated version numbers are left alone.
-  sed -i "s|v${OLD_V}\b|v${NEW_V}|g; s|\"${OLD_V}\"|\"${NEW_V}\"|g; s|^version: ${OLD_V}$|version: ${NEW_V}|" "$f"
+  # The bare form "version 1.13.0" (references.bib) matched none of the first three
+  # patterns, so the artifact citation sat four releases stale until a reviewer caught it.
+  sed -i "s|v${OLD_V}\b|v${NEW_V}|g; s|\"${OLD_V}\"|\"${NEW_V}\"|g; s|^version: ${OLD_V}$|version: ${NEW_V}|; s|version ${OLD_V}|version ${NEW_V}|g" "$f"
   sed -i "s|${OLD_D}|${NEW_D}|g" "$f"
   after=$(md5sum "$f" | cut -d' ' -f1)
   [[ "$before" != "$after" ]] && echo "  updated $f"
