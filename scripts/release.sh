@@ -126,8 +126,13 @@ print((d.get('metadata') or {}).get('version') or '')
   rm -f "$body"
 
   if [[ -z "$resolved" ]]; then
-    echo "DOI-CHECK: SKIPPED - Zenodo returned no version field for ${declared_d}."
-    return 0
+    # A reachable record that declares no version cannot confirm the papers, so
+    # this is a failure, not a skip. Treating it as a skip made the check pass
+    # silently on the v1.13.0 deposit, which was published without a version field.
+    echo "DOI-CHECK FAILED: ${declared_d} resolves to a record that declares no version," >&2
+    echo "                  so it cannot confirm the papers' v${declared_v}. Set the Version" >&2
+    echo "                  field on the Zenodo record and re-run." >&2
+    return 1
   fi
   if [[ "$resolved" == "$declared_v" ]]; then
     echo "OK: ${declared_d} resolves to v${resolved}, matching the declaration."
