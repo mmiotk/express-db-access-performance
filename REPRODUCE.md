@@ -102,7 +102,7 @@ raw data is force-added past `.gitignore`). From the tarball alone:
 ```bash
 tar xzf express-db-access-performance-<version>.tar.gz
 cd express-db-access-performance-<version>/experiments
-sha256sum -c results/checksums.sha256      # verify 65 archived candidate JSON files
+sha256sum -c results/checksums.sha256      # verify 67 archived candidate JSON files
 npm ci
 # regenerate every standalone no-database output mapped in MANIFEST.md:
 npm run analyze:rq2 && npm run analyze:rq2-validation && npm run tables:primary && \
@@ -116,7 +116,11 @@ npm run analyze:rq2 && npm run analyze:rq2-validation && npm run tables:primary 
   node scripts/gen-openloop-mysql.mjs && node scripts/gen-postreboot.mjs && \
   node scripts/gen-canonicalization-table.mjs && node scripts/gen-capacity-sensitivity.mjs && \
   node scripts/gen-txn-write-table.mjs && node scripts/gen-protocol-retro-table.mjs && \
-  node scripts/gen-spec-oracle-table.mjs && node scripts/gen-rq2-validation-table.mjs
+  node scripts/gen-spec-oracle-table.mjs && node scripts/gen-rq2-validation-table.mjs && \
+  node scripts/gen-rq2-leave-prisma-out.mjs && node scripts/gen-rq2-multiplicity.mjs && \
+  node scripts/gen-tost-closest.mjs && node scripts/gen-fanout-table.mjs && \
+  node scripts/gen-protocol-chronology.mjs && TABLE_ONLY=1 node scripts/altloading.mjs && \
+  TABLE_ONLY=1 node scripts/poolsize.mjs
 npm run sync:tables && (cd ../paper && make)
 ```
 
@@ -143,7 +147,7 @@ generated PostgreSQL-last --- run `ENGINE=mysql` then `ENGINE=postgres` to repro
 view); `ranks.tex` carries a hand-added third panel; `interaction.tex` and `txn_write.tex` carry
 hand-refined captions the generators do not emit; and `tail_regimes.tex` differs only in line-wrapping.
 
-**Current revision-candidate check (26 July 2026).** The author copied the exact candidate file set to a fresh temporary directory, excluding Git metadata, installed dependencies, rejected campaigns, and build products. The installed dependency tree was then copied separately; no database server was started and no file from the development checkout was used as a data or source input. All **65/65** candidate JSON hashes verified. The complete no-database chain above regenerated **58 manuscript tables** and four derived analysis JSON files; recursive and direct byte comparisons against the frozen candidate were empty. The command log and scope are recorded in `notes/current-candidate-reconstruction.md`. This is an author-run, same-host computational reconstruction from archived measurements, not an independent reproduction and not a re-execution of the benchmark.
+**Current revision-candidate check (1 August 2026).** The author copied the exact candidate file set to a fresh temporary directory, excluding Git metadata, installed dependencies, rejected campaigns, and build products. The installed dependency tree was then copied separately; no database server was started and no file from the development checkout was used as a data or source input. All **67/67** candidate JSON hashes verified. The complete no-database chain above regenerated **46 machine-generated tables byte-for-byte, with the 12 authored tables byte-compared unchanged** and four derived analysis JSON files; recursive and direct byte comparisons against the frozen candidate were empty. The command log and scope are recorded in `notes/reconstruction-2026-08-01.md`, which supersedes the 26 July log in `notes/current-candidate-reconstruction.md`. This is an author-run, same-host computational reconstruction from archived measurements, not an independent reproduction and not a re-execution of the benchmark.
 
 ## 5. Expected outputs
 

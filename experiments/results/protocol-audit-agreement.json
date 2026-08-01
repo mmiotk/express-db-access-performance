@@ -1,0 +1,32 @@
+{
+  "audit_id": "external-benchmark-protocol-audit-2026-07-23",
+  "generated_from": "external-protocol-audit.json",
+  "codebook": "notes/protocol-audit-codebook.md",
+  "allowed_codes": [
+    "satisfied",
+    "partial",
+    "not_reported",
+    "not_applicable",
+    "unclear"
+  ],
+  "code_distribution": {
+    "satisfied": 0,
+    "partial": 28,
+    "not_reported": 30,
+    "not_applicable": 5,
+    "unclear": 0
+  },
+  "codes_never_awarded": [
+    "satisfied",
+    "unclear"
+  ],
+  "code_distribution_note": "Codes never awarded by the primary rater: satisfied, unclear. Agreement statistics cannot speak to categories no rater used, and the codebook's discriminative range is untested at that end of the scale.",
+  "raters_with_codings": [
+    {
+      "id": "author-1",
+      "judgements": 63
+    }
+  ],
+  "pairwise": [],
+  "status": "not_computable: fewer than two raters have recorded judgements. A blank coding form for the 63 judgements is at notes/reviewer-packets/protocol-audit-blind.md."
+}

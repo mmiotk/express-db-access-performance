@@ -28,6 +28,11 @@ npm run sync:tables                   # copy results/tables/*.tex -> ../paper/ta
 | `fig:protocol` (Figure 1) | `fig_protocol.tex` | authored protocol diagram | `protocol-checklist.yaml` |
 | `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | in-experiment evidence cited in cells |
 | `tab:protocol_chronology` (S48) | `protocol_chronology.tex` | `scripts/gen-protocol-chronology.mjs` | `results/protocol-chronology.json`; derived from git first-add dates and the archived environment captures when both are present, rendered from the committed record otherwise |
+| `tab:rq2_leave_prisma_out` (S49) | `rq2_leave_prisma_out.tex` | `scripts/gen-rq2-leave-prisma-out.mjs` | `results/rq2-leave-prisma-out.json`, from `current-primary.json` and `rq2-validation-campaign.json` |
+| `tab:fanout` (S53) | `fanout.tex` | `scripts/gen-fanout-table.mjs` | `results/fanout.json` |
+| `tab:rq2_promoted_effects` (S54) | `rq2_promoted_effects.tex` | `scripts/gen-rq2-leave-prisma-out.mjs` | `results/rq2-leave-prisma-out.json` |
+| `tab:rq2_multiplicity` (S55) | `rq2_multiplicity.tex` | `scripts/gen-rq2-multiplicity.mjs` | `results/rq2-multiplicity.json`, from `current-primary.json` and `rq2-validation-campaign.json` |
+| `tab:tost_closest` (S56) | `tost_closest.tex` | `scripts/gen-tost-closest.mjs` | `results/tost-closest-pair.json`, from `current-primary.json` |
 
 ## Supplement tables
 

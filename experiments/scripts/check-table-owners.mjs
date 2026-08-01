@@ -90,8 +90,27 @@ for (const [table, scripts] of [...writers].sort()) {
   problems.push({ table, scripts: list, currentOwner: header, scopeOf });
 }
 
+// Traceability: the manuscript states that every measured table cell traces through a
+// committed generator to an archived record, and that MANIFEST.md marks the authored
+// analytical items that lie outside that guarantee. A table in paper/tables with no
+// MANIFEST row is therefore covered by neither claim. Five of them had no row, and they
+// were the tables carrying the RQ2 promotion decision, the leave-one-out sensitivity, the
+// familywise correction and the equivalence assessment.
+const manifest = fs.readFileSync(path.join(root, "MANIFEST.md"), "utf8");
+const uncovered = fs.readdirSync(paperTables)
+  .filter((f) => f.endsWith(".tex"))
+  .filter((f) => !manifest.includes(f));
+if (uncovered.length) {
+  console.error("table-owners: paper/tables entries with no MANIFEST.md row:");
+  for (const f of uncovered) console.error(`  ${f}`);
+  console.error("\nAdd a row naming the generator and its archived input, or, for an authored\n"
+    + "analytical table, the row that records it reports no measurement.");
+  process.exit(1);
+}
+
 if (problems.length === 0) {
-  console.log(`table-owners: OK (${writers.size} generated tables, no contested owners)`);
+  console.log(`table-owners: OK (${writers.size} generated tables, no contested owners; `
+    + `${fs.readdirSync(paperTables).filter((f) => f.endsWith(".tex")).length} manuscript tables all in MANIFEST.md)`);
   process.exit(0);
 }
 console.error(`table-owners: ${problems.length} table(s) written by more than one script.\n`);

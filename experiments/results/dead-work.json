@@ -1,0 +1,7 @@
+{
+  "purpose": "Static evidence against correct-but-needlessly-slow adapter code (protocol stage R7).",
+  "scope": "Single-identifier const/let bindings never read in their enclosing block, and void-discard suppressions. Destructuring and shadowing are not modelled; a clean result is evidence for this class of waste, not for all of it.",
+  "validated_against": "bench/fixtures/mikroorm-asa02-before-fix.mjs — the real pre-fix source of finding ASA-02, which this check reports (bench/dead-work.test.mjs).",
+  "adapters_scanned": 13,
+  "findings": []
+}

@@ -78,8 +78,8 @@
 ## 4. Packaging
 
 - [x] `git remote add origin …`, first push. (`origin/master` tracks GitHub.)
-- [x] Zenodo v1.13.14 deposit prepared; its per-version DOI is recorded in the Zenodo record.
-      From v1.13.14 the papers cite the concept DOI, so an archive can identify itself without
+- [x] Zenodo v1.13.15 deposit prepared; its per-version DOI is recorded in the Zenodo record.
+      From v1.13.15 the papers cite the concept DOI, so an archive can identify itself without
       knowing a DOI minted after it was archived.
 
 ## 5. Open before submission
@@ -93,13 +93,13 @@
       Protocol stage R7 is reported as **unsatisfied** until one is returned.
 - [ ] Replicate the reduced RQ2 matrix on a physically independent host
       (ranked below independent human review; not required for submission).
-- [ ] **Archive v1.13.14 on Zenodo, then verify with `scripts/release.sh --check-doi`.**
+- [ ] **Archive v1.13.15 on Zenodo, then verify with `scripts/release.sh --check-doi`.**
       As of 2026-07-30 the concept DOI still resolves to the previous release (26 July) rather than
-      to v1.13.14, so the Data Availability sentence "archived as release v1.13.14, which the concept
-      DOI resolves to" is **currently false**. The GitHub release for v1.13.14 exists but did not
+      to v1.13.15, so the Data Availability sentence "archived as release v1.13.15, which the concept
+      DOI resolves to" is **currently false**. The GitHub release for v1.13.15 exists but did not
       trigger archiving: the two releases before it were tagged with no GitHub release, yet the later
       of them reached Zenodo, so those deposits were made by hand and the webhook is not the
-      mechanism here. Create a new version of the existing record, upload the v1.13.14 archive,
+      mechanism here. Create a new version of the existing record, upload the v1.13.15 archive,
       publish, then run `--check-doi`, which fails loudly while the declaration and the archive
       disagree. `--check` alone cannot see this: it verifies only that the version and DOI strings
       agree across declaration sites. Identifiers of earlier releases are deliberately not quoted
