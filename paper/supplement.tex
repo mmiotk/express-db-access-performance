@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.13, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.14, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -405,9 +405,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.13.13: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.13.13} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.13; the Zenodo record also carries an immutable per-version DOI. \\
+    Artifact \& version & Complete revision artifact v1.13.14: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.13.14} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.14; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -421,7 +421,7 @@ the single runnable entry point.
     Regenerate from raw & $\approx$minutes, \emph{no database}: the standalone no-database renderers rebuild their mapped tables and figures from \texttt{results/*.json}, then
       \texttt{npm run sync:tables} and \texttt{make}; \texttt{MANIFEST.md} explicitly marks
       authored tables, the one pre-generated statement-log table, and seven run-coupled renderers. \\
-    Verification status & On 26 July 2026, the current-candidate author-run isolated reconstruction verified 60/60 JSON hashes and regenerated 35 table outputs and four derived JSON files byte-for-byte without starting either DBMS. The earlier author-run archive-isolated v1.12.9 check verified 35/35 inputs and 45/50 then-committed tables; its five presentation-only differences are named in \texttt{notes/clean-room-reproduction.md}. Neither check is independent reproduction or a re-execution of the current measurements. \\
+    Verification status & On 1 August 2026, an author-run isolated reconstruction from a clean export of the tagged commit verified 65/65 archived JSON hashes and regenerated all 58 manuscript tables byte-for-byte without starting either DBMS. The earlier 26 July run covered the 60 datasets listed at that date; five were added to the manifest afterwards. The earlier author-run archive-isolated v1.12.9 check verified 35/35 inputs and 45/50 then-committed tables; its five presentation-only differences are named in \texttt{notes/clean-room-reproduction.md}. Neither check is independent reproduction or a re-execution of the current measurements. \\
     Entry point & \texttt{REPRODUCE.md} (smoke test, full matrix, archive-isolated author reconstruction from the tarball); the per-table data-and-generator map is in \texttt{MANIFEST.md}. \\
     \bottomrule
   \end{longtable}
@@ -608,7 +608,7 @@ independently of the ranking, and reports for each layer on the deep fetch the g
 ratio of native-to-layer throughput, a within-campaign 95\% paired-bootstrap interval, and the paired
 dominance. Every portable layer trails the native driver in all 25 replicates on both engines
 (dominance $1.00$), and the ratios range from $1.49\times$ (\texttt{knex}, PostgreSQL) to $7.04\times$
-(\texttt{mikroorm}, PostgreSQL) --- the same spread the main text reports, now as predeclared contrasts
+(\texttt{mikroorm}, PostgreSQL) --- essentially the same spread (7.04 against the main text's 7.01, a different estimator), now as predeclared contrasts
 rather than post-hoc pairwise tests. The contrasts are within-campaign, not deployment-general.
 
 \input{\tabledir native_contrasts}
@@ -855,7 +855,8 @@ directions, by more than the margin. Testing the cross-stack interaction instead
 hypothesis the rule already implies, since two intervals on opposite sides of parity entail a
 non-zero interaction, and so would not cover the selection. Each stack's per-replicate log ratios are
 therefore tested against zero by two-sided sign-flip permutation, the two are combined by
-intersection-union (the larger of the two $p$-values, the correct combination for a conjunction), and
+intersection-union (the larger of the two $p$-values, the correct combination for a conjunction;
+using two-sided components for a directional claim is conservative), and
 the result is Holm-corrected across all 63 pair-pattern screens in a campaign. Holm retains 53 of 63
 in the primary campaign and 50 of 63 in the validation campaign; applying the direction and margin
 filters to the survivors leaves exactly the four pairs the screen promoted, and in the validation

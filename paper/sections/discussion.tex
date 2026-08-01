@@ -35,16 +35,15 @@ campaigns, with paired intervals excluding equality in opposite directions
 Every promoted reversal involves Prisma, whose MySQL path uses
 the MariaDB adapter rather than \texttt{mysql2}, so backend-stack sensitivity here is
 inseparable from that driver substitution and describes one treatment, not ORMs as a
-class. \emph{Observed:} every reversal clearing the promotion bar involves the one
-layer whose MySQL driver differs, and whole-ordering agreement without it rises on deep fetch and
-insert but falls on aggregation, to $\rho=0.54$ and $0.49$. \emph{Interpretation:} at the stated bar only the
-asymmetric treatment reverses durably; agreement of the whole ordering stays imperfect on both stacks
-with or without that treatment, which we report descriptively rather than as a further reversal
-claim. \emph{Not identified:} the design cannot attribute the promoted reversals to the DBMS rather
-than to the adapter, the driver, or Prisma's own implementation, because holding out the treatment
-holds out the substitution with it. The hold-out followed observing that all four promoted reversals
-involved one treatment; its criterion is nevertheless a design fact, the sole asymmetric driver,
-fixed independently of the outcomes.
+class. \emph{Observed:} every reversal clearing the bar involves the one layer
+whose MySQL driver differs, and agreement without it rises on deep fetch and insert but falls on
+aggregation, to $\rho=0.54$ and $0.49$. \emph{Interpretation:} at the stated bar only the
+asymmetric treatment reverses durably; whole-ordering agreement stays imperfect either way, which we
+report descriptively rather than as a further reversal claim. \emph{Not identified:} the design cannot attribute the reversals to the DBMS rather than the
+adapter, the driver, or Prisma's implementation, because holding out the treatment holds out the
+substitution. The hold-out followed observing that all four
+involved one treatment; its criterion is a design fact, the sole asymmetric driver, fixed
+independently of the outcomes.
 This supports backend-stack sensitivity in the tested
 implementations while leaving cross-host transfer unresolved. A five-replicate,
 one-layer-per-tier six-statement transaction remains exploratory and does not
@@ -75,7 +74,8 @@ to the nine external sources, the codebook yields claim licenses rather than a b
 (Supplement Table~S37).
 
 This demonstrates that the protocol is \emph{executable}: it admits and rejects concrete cells, it
-changed the reported interpretation at every stage exercised here (R7 excepted, its check finding nothing),
+changed the reported interpretation at every stage exercised here (R7's mechanized checks report
+nothing; its manual precursor forced a restart, Section~\ref{sec:threats}),
 and it codes an external corpus to a reproducible per-stage result. It does not demonstrate
 \emph{reusability by another person}. Two limits sharpen this: no source was coded \emph{satisfied}
 on any stage, so the codebook's upper range is untested, and agreement against this rater would

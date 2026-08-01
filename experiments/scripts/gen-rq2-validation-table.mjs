@@ -97,7 +97,11 @@ function pairedMedianRatioCI(a, b, seed, iterations = 5000) {
     estimates.push(median(sampledA) / median(sampledB));
   }
   estimates.sort((x, y) => x - y);
-  return [estimates[Math.floor(0.025 * iterations)], estimates[Math.floor(0.975 * iterations)]];
+  // Percentiles index into B-1, matching gen-rq2-leave-prisma-out.mjs. The two generators
+  // are documented as reproducing one another's intervals exactly, which they did not while
+  // one indexed into B and the other into B-1.
+  const at = (q) => estimates[Math.floor(q * (iterations - 1))];
+  return [at(0.025), at(0.975)];
 }
 function crossStackReversals(source, endpoint, campaignLabel) {
   const out = [];

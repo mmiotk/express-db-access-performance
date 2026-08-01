@@ -22,7 +22,7 @@ The native implementation leads nine of the ten engine--pattern comparisons:
 \texttt{mysql2} on four of five MySQL patterns. The exception is the MySQL insert,
 where the four fastest treatments span 1{,}766--1{,}816~req/s with broadly overlapping
 intervals and the native driver ranks fourth (Supplement Table~S52); that ordering is
-practically unresolved, and we do not read a leader from it. The current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
+practically unresolved and we read no leader from it. Current-generation ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
 
 \texttt{pg-tuned} and \texttt{mysql2-tuned} track their untuned counterparts within about
 $2\%$ on the deep fetch (\texttt{pg-tuned} 3{,}700 vs.\ \texttt{pg} 3{,}638;
@@ -80,8 +80,9 @@ both. The margin was fixed before these campaigns (Section~\ref{sec:methodology}
 rule was specified after both completed: a post-hoc screen applied uniformly to all 21 layer pairs
 on each of the three patterns. The screen applies no familywise correction: recurrence screens
 one-campaign noise, but the campaigns share a host and the same seeded draws, so it does not bound
-familywise error across the 63 comparisons. Holm correction applied to them afterwards retains all
-four (Supplement Table~S55). They are a stable subset of an exploratory comparison, not a
+familywise error across the 63 comparisons. Applying Holm afterwards to an intersection-union test
+retains all four (Supplement Table~S55); it corrects the per-stack evidence, not the direction and
+margin filters. They are a stable subset of an exploratory comparison, not a
 prespecified test.
 Four pairs meet all criteria, sized with paired intervals in Supplement Table~S54: on deep fetch, Prisma exceeds Objection and Sequelize
 on PostgreSQL but trails both on MySQL; on aggregation, Prisma exceeds Objection on

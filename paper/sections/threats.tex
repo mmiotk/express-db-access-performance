@@ -92,8 +92,8 @@ host, a pool fixed at ten, and specific engine and library versions
 15 July 2026 freeze, Supplement
 Table~S11). The fixed pool does not appear to drive the ranking: the pool-size frontier (Supplement
 Tables~S7, S25) preserves the ordering from 2 to 50 connections, and a mixed read/write workload
-(S26) preserves the read ordering; both exploratory, four layers each. At a pool of one Prisma (870)
-overtakes Knex (741) on PostgreSQL, where every layer queues on acquisition. Two choices are
+(S26) preserves the read ordering; both exploratory, four layers each. At a pool of one, where every layer queues on
+acquisition, Prisma overtakes Knex on PostgreSQL. Two choices are
 disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is
 prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no
 \texttt{mysql2} adapter, an implementation$\times$engine asymmetry. The
@@ -110,7 +110,7 @@ population-general) and, because the design is a randomized block, compares
 adjacently ranked layers with \emph{paired} tests on their
 per-replicate throughput ratios (paired sign-flip permutation, cross-checked with
 Wilcoxon; Supplement Table~S36, MySQL). Two bounds reinforce the ordering: the widest
-spreads dwarf the deep-fetch run-to-run CV ($\leq4.6\%$); insert CV reaches $6.4\%$ on PostgreSQL and $13.6\%$ on MySQL (Supplement Tables~S1, S9), which is why no fine insert ordering is claimed, and it
+spreads dwarf the deep-fetch run-to-run CV ($\leq4.6\%$); insert CV reaches $6.4\%$ on PostgreSQL among the compared layers ($8.9\%$ with the tuned baseline) and $13.6\%$ on MySQL (Supplement Tables~S1, S9), which is why no fine insert ordering is claimed, and it
 holds across the concurrency sweep at $\geq32$ connections (Supplement
 Figure~S2). Rather than assert a specific statistical power (absent a prespecified
 effect-size model), we rest the conclusions on effect sizes and interval

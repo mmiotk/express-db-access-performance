@@ -245,12 +245,17 @@ if [[ "${1:-}" == "--check" ]]; then
     for t in $(node -e "const s=require('./experiments/package.json').scripts;console.log(Object.keys(s).filter(k=>k.startsWith('table:')).join(' '))" 2>/dev/null); do
       ( cd experiments && npm run "$t" --silent >/dev/null 2>&1 ) || regen_ok=0
     done
+    # analysis2.json carries prose numbers (the MySQL insert interval among them) and is
+    # deterministic, but had no npm script and so no drift protection, contrary to this
+    # gate's own rationale.
+    ( cd experiments && npm run analyze:stats2 --silent >/dev/null 2>&1 ) || regen_ok=0
     ( cd experiments && npm run sync:tables --silent >/dev/null 2>&1 ) || regen_ok=0
     if [[ "$regen_ok" == "1" ]]; then
       # Derived analysis JSON belongs here too: a number quoted in the manuscript can
       # come from a generator that writes no table, and would otherwise drift unseen.
       REGEN_PATHS=(paper/tables/ experiments/results/tables/ experiments/results/protocol-chronology.json
-                   experiments/results/tost-closest-pair.json experiments/results/rq2-multiplicity.json)
+                   experiments/results/tost-closest-pair.json experiments/results/rq2-multiplicity.json
+                   experiments/results/analysis2.json)
       changed=$(git diff --name-only "${REGEN_PATHS[@]}" | wc -l)
       if [[ "$changed" != "0" ]]; then
         echo "REPRODUCIBILITY: regenerating tables from archived data changed $changed file(s);"

@@ -37,6 +37,7 @@
     "campaign:rq2-validation": "scripts/rq2-validation-campaign.sh",
     "analyze:rq2": "node scripts/gen-rq2-corrected-tables.mjs",
     "analyze:rq2-validation": "node scripts/gen-rq2-validation-table.mjs",
+    "analyze:stats2": "RAW_FILE=current-primary.json node scripts/stats2.mjs",
     "tables:primary": "RAW_FILE=current-primary.json node scripts/ci-tables.mjs && RAW_FILE=current-primary.json node scripts/gen-analysis-tables.mjs && RAW_FILE=current-primary.json node scripts/gen-p99-significance.mjs && RAW_FILE=current-primary.json node scripts/gen-native-contrasts.mjs && node scripts/gen-rq2-insert-figure.mjs && npm run sync:tables",
     "tables:current": "npm run tables:primary && RAW_FILE=current-primary.json RELAXED_FILE=raw-writes-relaxed-corrected.json node scripts/gen-tables.mjs && npm run sync:tables",
     "figure:rq2-insert": "node scripts/gen-rq2-insert-figure.mjs",

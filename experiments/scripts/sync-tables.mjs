@@ -27,11 +27,29 @@ if (!fs.existsSync(src)) {
   process.exit(1);
 }
 
+// Archive-only tables: produced and kept under results/tables because the run is part of
+// the record, but deliberately NOT part of the manuscript, so they must not be copied into
+// paper/tables. Both were deleted from paper/tables once and silently restored by the next
+// sync, because this loop copied everything it found.
+//   deepfetch_regimes - legacy exploratory sensitivity the manuscript excludes from its estimands
+//   analysis_roster   - superseded by the outcomes table; still says "confirmatory", which the
+//                       outcomes table dropped because it overstated the analyses' status
+const ARCHIVE_ONLY = new Set(["deepfetch_regimes.tex", "analysis_roster.tex"]);
+
 const copied = [];
 const refused = [];
+const skipped = [];
 let identical = 0;
 
 for (const name of fs.readdirSync(src).filter((f) => f.endsWith(".tex")).sort()) {
+  if (ARCHIVE_ONLY.has(name)) {
+    skipped.push(name);
+    // If a previous sync already planted it, take it back out: leaving it would ship dead
+    // LaTeX and would re-enter the regeneration gate's blind spot for untracked files.
+    const stale = path.join(dst, name);
+    if (fs.existsSync(stale)) fs.unlinkSync(stale);
+    continue;
+  }
   const from = path.join(src, name);
   const to = path.join(dst, name);
   if (fs.existsSync(to)) {

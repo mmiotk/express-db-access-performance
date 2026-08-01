@@ -30,6 +30,11 @@ const ALLOWED_SHARED = {
     "scripts/canonicalization-cost.mjs",
     "scripts/gen-canonicalization-table.mjs",
   ],
+  // Not a contention: sync-tables.mjs names these only to EXCLUDE them, because they are
+  // archive-only outputs that must never be copied into paper/tables. The detector is
+  // deliberately broad and cannot tell an exclusion list from a write.
+  "deepfetch_regimes.tex": ["scripts/gen-deepfetch-table.mjs", "scripts/sync-tables.mjs"],
+  "analysis_roster.tex": ["scripts/sync-tables.mjs"],
   "cv_mysql.tex": ["bench/analyze.mjs", "scripts/gen-analysis-tables.mjs"],
   "resources_main.tex": ["bench/analyze.mjs", "scripts/gen-analysis-tables.mjs"],
 };

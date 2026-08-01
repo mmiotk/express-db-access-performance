@@ -19,7 +19,7 @@
 protocol:
   name: "Comparability Protocol for Benchmarking Relational Database Access Layers in Express.js"
   author: "Mateusz Miotk, University of Gdansk"
-  release: "v1.13.13, 2026-07-26"
+  release: "v1.13.14, 2026-07-26"
   doi: "10.5281/zenodo.21313858 (concept DOI, resolves to the release; the Zenodo record also carries a per-version DOI)"
   spec_location: "manuscript Study Design (sec:protocol); Figure 1; Table 2 (protocol mapping)"
 
@@ -62,7 +62,7 @@ stages:
     - id: R4
       name: capacity_characterization
       requirement: "Locate estimated saturating throughput per treatment by a concurrency sweep, so the fixed operating point can be read against capacity."
-      this_study: "Per-pattern concurrency sweep (Supplement Table S35); knees at or below 50 connections, 97-100% median utilization at the operating point."
+      this_study: "Per-pattern concurrency sweep (Supplement Table S35); knees at or below 50 connections, 98-100% median utilization (minimum 87%) at the operating point."
     - id: R5
       name: operating_point_separation
       requirement: "Measure the tail at equal external demand AND at matched fractions of each treatment's estimated capacity, with denominator uncertainty disclosed; report them as distinct quantities."

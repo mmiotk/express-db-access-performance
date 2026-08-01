@@ -67,8 +67,10 @@ const CAMPAIGNS = [
   ["validation", load("rq2-validation-campaign.json")],
 ];
 
-const out = { method: "per-pair cross-stack interaction, two-sided sign-flip permutation on the "
-  + "difference-in-differences of log throughput, Holm-corrected within campaign",
+const out = { method: "per-stack two-sided sign-flip permutation on per-replicate log ratios, "
+  + "combined across stacks by intersection-union (larger p), Holm-corrected across all 63 "
+  + "pair-pattern screens within a campaign; the direction and margin filters are applied to the "
+  + "survivors and are NOT part of the corrected family",
   B, alpha: ALPHA, seed: "per-test, FNV-1a of campaign|pattern|pair|engine", campaigns: {} };
 
 for (const [label, src] of CAMPAIGNS) {

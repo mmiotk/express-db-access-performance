@@ -51,7 +51,7 @@ empirical instantiation rather than validating it independently.
 post-write state validation, a predeclared configuration-selection policy, and separate capacity and
 latency operating points. An open-source Express.js experiment compares nine policy-selected configurations
 and two tuned native references across PostgreSQL, MySQL, and five access patterns in a 25-run
-randomized-block campaign, with a second same-host campaign testing rank stability over time and a
+randomized-block campaign, with a reduced second same-host campaign testing rank stability and a
 single-rater audit of nine external benchmarks.
 \textbf{Results:} The widest spread is the tested deep fetch, $7.01\times$ on PostgreSQL and
 $5.12\times$ on MySQL; forcing common SQL through raw facilities in a separate ten-run campaign
@@ -60,7 +60,7 @@ $2.03\times$, a compound contrast isolating no single mechanism. High-load and m
 quantities, not one optimized against the other; the matched-utilization figures rest on five runs
 and are secondary. Four cross-stack rank reversals recur in both campaigns, all
 involving the one treatment whose MySQL driver differs, and no other pair clears the same bar,
-while whole-ordering agreement stays imperfect either way. Only that treatment reverses durably at the
+while whole-ordering agreement stays imperfect. Only that treatment reverses durably at the
 stated bar, and the experiment does not identify the DBMS as the cause.
 \textbf{Conclusion:} The protocol is a candidate: a structured, auditable proposal with one worked
 instantiation rather than a validated methodology, and supports no universal ranking or library-intrinsic overhead estimate.
@@ -99,7 +99,7 @@ vendors evaluated in this study.
 \section*{Data availability}
 The public repository is available at
 \url{https://github.com/mmiotk/express-db-access-performance}. The complete revision artifact is
-archived as release v1.13.13, which the concept DOI
+archived as release v1.13.14, which the concept DOI
 \url{https://doi.org/10.5281/zenodo.21313858} resolves to~\cite{miotk2026artifact}; the Zenodo record
 also carries an immutable per-version DOI for that release.
 A reproducibility summary --- versions, requirements, run commands, resources needed, and which
