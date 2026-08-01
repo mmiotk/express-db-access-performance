@@ -3,7 +3,7 @@
 Manuscript: *A Comparability Protocol for Benchmarking Relational Database Access
 Layers in Express.js* (submission build `ist_main.tex`).
 
-The official IST journal policy confirms a **15,000-word maximum for research papers**. The current author guidance supplied with this revision additionally assigns **200 words to each figure or table** and counts references and manuscript appendices. This declaration uses a deliberately conservative implementation of that rule.
+The journal's Guide for Authors states a **15,000-word maximum for research papers**, that **references and appendixes count against the total**, and that **figures and tables count 200 words each**. This declaration uses a deliberately conservative implementation of that rule.
 
 | Component | Count |
 |---|---:|
@@ -18,7 +18,7 @@ The controlling total is therefore **14,992 words**, leaving **8 words of headro
 
 The decomposition is reproducible in four commands, so a reader need not take the total on trust: `texcount -1 -sum -q paper/sections/*.tex` gives the body; `texcount -1 -sum -q paper/ist/ist_main.tex` gives the front matter, abstract and declarations together, from which the abstract is subtracted to avoid counting it twice; the float allowance is 2 x 200; and the reference list is counted from the built PDF with `pdftotext ... | tr -d '\f' | awk '/^References$/{f=1;next} f' | wc -w`.
 
-The body grew by 521 words against the previous declaration. The additions are the new Study Design subsection documenting AI-assisted research tooling, which current publisher policy requires in the Methods section; a stated matched-utilization rank-inversion result; the driver-substitution caveat on the RQ2 reversals; and explicit limits on the external-audit codebook. Two offsetting reductions were made. First, prose was condensed and one redundancy removed: the residual left open by the unsatisfied implementation-review stage is now argued once, in Threats, with cross-references elsewhere. Second, two main-text floats moved to the online supplement --- the estimand table, which the body had never cited and now cites as S47, and the insert-dispersion figure, which the supplement already carried --- reducing the float allowance from seven to five and removing a duplicated figure.
+The body grew by 521 words against the previous declaration. The additions are the new Study Design subsection documenting AI-assisted research tooling, which current publisher policy requires in the Methods section; a stated matched-utilization rank-inversion result; the driver-substitution caveat on the RQ2 reversals; and explicit limits on the external-audit codebook. Two offsetting reductions were made. First, prose was condensed and one redundancy removed: the residual left open by the unsatisfied implementation-review stage is now argued once, in Threats, with cross-references elsewhere. Second, two main-text floats moved to the online supplement --- the estimand table, which the body had never cited and now cites as S47, and the insert-dispersion figure, which the supplement already carried --- and removing a duplicated figure. The main text now carries two floats, Figure~1 and Table~1, so the float allowance is 400 words.
 
 Every `tabular` in the body now sits inside a numbered, captioned float, so the float allowance cannot be disputed: an earlier unnumbered tier schematic was folded into prose for exactly that reason.
 
@@ -39,4 +39,4 @@ rg -F "\\@writefile{lof}" ist_main.aux
 pdftotext ist_main.pdf - | sed -n "/^References$/,$p" | wc -w
 ```
 
-Count date: 1 August 2026, at the v1.13.16 release commit. Any later prose or float change requires this declaration to be regenerated.
+Count date: 1 August 2026, at the v1.13.18 release commit. Any later prose or float change requires this declaration to be regenerated.
