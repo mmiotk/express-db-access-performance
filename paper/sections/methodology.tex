@@ -186,9 +186,10 @@ state, and observer) so the \emph{configured access-layer implementation bundle}
 SQL, query count, protocol, loading strategy, and hydration are the treatment, not confounds to
 remove (Supplement Table~S42). \emph{(i)~Pool size} is fixed at ten connections for every adapter, so
 the comparison reflects the access-layer choice, not pool
-tuning~\cite{gupta2017pooling,laigner2021microservices}. Because the generator opens 50 concurrent
-connections against that pool, roughly forty in-flight requests always wait in each library's
-acquisition queue; that queueing is deliberately measured and held identical across layers.
+tuning~\cite{gupta2017pooling,laigner2021microservices}. Because the generator opens 50 connections
+against that pool, requests queue throughout: instrumented layers report mean pending depth
+29--38 (median 31). Pool size is identical; Prisma and MikroORM expose no
+pool metric, so the realized depth is unobserved there.
 \emph{(ii)~Common task semantics}: each endpoint implements the same declared input--output task,
 while SQL text, query count, plan, protocol, loading strategy, and hydration remain measured
 properties of the treatment. Aggregation is the exception, with a common correlated-subquery
@@ -318,8 +319,8 @@ Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fa
 Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI Codex was used
 twice, after the manuscript was otherwise complete, for independent critical pre-submission
 reviews; the author evaluated its comments and is responsible for which were acted on. Assistance is
-recorded per commit: 232 of 240 commits carry a \texttt{Co-Authored-By} trailer naming the model
-(159 Opus 4.8, 27 Fable 5, 46 Opus 5), counted from the trailers themselves rather than message
+recorded per commit: 233 of 241 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 47 Opus 5), counted from the trailers themselves rather than message
 text. The other 8 predate the convention and include two squash-merges of assistant-authored
 branches and the largest revision commit, so the count understates assistance.
 
@@ -367,4 +368,4 @@ regenerable, and it can be repeated by a reader without a database. \emph{Indepe
 would require another team re-executing the measurements on its own hardware, and none has been
 performed. No reconstruction reported here re-executes a measurement, and none is offered as
 evidence that the measurements would recur elsewhere; the dates and counts of the reconstructions
-run are in the Data availability statement.
+run are in Supplement Table~S31.

@@ -92,7 +92,7 @@ host, a pool fixed at ten, and specific engine and library versions
 15 July 2026 freeze, Supplement
 Table~S11). The fixed pool does not appear to drive the ranking: the pool-size frontier (Supplement
 Tables~S7, S25) preserves the ordering from 2 to 50 connections, and a mixed read/write workload
-(S26) preserves the read ordering; both exploratory, four layers each. At a pool of one, where every layer queues on
+(S26) preserves the read ordering; both exploratory, four layers. At a pool of one, where every layer queues on
 acquisition, Prisma overtakes Knex on PostgreSQL. Two choices are
 disclosed rather than resolved: Sequelize on its stable 6.x line (7.x is
 prerelease), and Prisma's MySQL path on the MariaDB adapter, as Prisma ships no

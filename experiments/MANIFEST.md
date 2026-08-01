@@ -19,14 +19,14 @@ node scripts/waitevents.mjs           # MySQL insert commit-path wait sensitivit
 npm run sync:tables                   # copy results/tables/*.tex -> ../paper/tables/
 ```
 
-## Main-text tables and figures
+## Main-text and cross-referenced tables
 
 | Paper label | File | Generator | Input data |
 |---|---|---|---|
 | `tab:deep_fetch`, `tab:write` | `deep_fetch.tex`, `write.tex` | `scripts/ci-tables.mjs` (`RAW_FILE=current-primary.json`) | `results/current-primary.json` |
-| `tab:prior_art` (Table 1) | inline in `sections/related_work.tex` | authored synthesis | `notes/related-work-search.md` |
+| `tab:prior_art` (S51) | inline in `sections/related_work.tex` | authored synthesis | `notes/related-work-search.md` |
 | `fig:protocol` (Figure 1) | `fig_protocol.tex` | authored protocol diagram | `protocol-checklist.yaml` |
-| `tab:protocol_mapping` (Table 2) | `protocol_mapping.tex` | authored analytical mapping | in-experiment evidence cited in cells |
+| `tab:protocol_mapping` (S50) | `protocol_mapping.tex` | authored analytical mapping | in-experiment evidence cited in cells |
 | `tab:protocol_chronology` (S48) | `protocol_chronology.tex` | `scripts/gen-protocol-chronology.mjs` | `results/protocol-chronology.json`; derived from git first-add dates and the archived environment captures when both are present, rendered from the committed record otherwise |
 | `tab:rq2_leave_prisma_out` (S49) | `rq2_leave_prisma_out.tex` | `scripts/gen-rq2-leave-prisma-out.mjs` | `results/rq2-leave-prisma-out.json`, from `current-primary.json` and `rq2-validation-campaign.json` |
 | `tab:fanout` (S53) | `fanout.tex` | `scripts/gen-fanout-table.mjs` | `results/fanout.json` |
@@ -116,7 +116,7 @@ read/write), and the parameterized `poolsize.mjs`/`fanout.mjs`.
 | `../notes/protocol-audit-codebook.md` | Code definitions and the seven stage definitions the coding applies. | — (authored) |
 | `../notes/reviewer-packets/` | Blank result-blind forms for the three pending independent reviews, plus `review-register.csv` and `completed/`. | — (authored; see `REPRODUCE.md` §6) |
 
-R7 is recorded as **unsatisfied**: all four register rows are `pending` and
+Independent review is recorded as **not obtained**: all four register rows are `pending` and
 `completed/` is empty. No agreement statistic is claimed anywhere in the
 manuscript.
 
