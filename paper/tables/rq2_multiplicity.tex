@@ -5,7 +5,7 @@
     \emph{conjunction}: the pair's throughput ratio differs from~1 on PostgreSQL and on MySQL, in
     opposite directions, by more than the margin. A conjunction is tested by intersection-union, so
     each stack's per-replicate log ratios are tested against zero by two-sided sign-flip permutation
-    ($B={20000}$, seed \texttt{0x5eed}), the two combined by taking the larger $p$, and the
+    ($B={20000}$, per-test seeds derived from campaign, pattern, pair and engine), the two combined by taking the larger $p$, and the
     result Holm-corrected across all 63 pair-pattern screens in a
     campaign. Correcting the cross-stack interaction instead would certify a hypothesis the rule
     already implies, and so would not cover the selection. Holm retains

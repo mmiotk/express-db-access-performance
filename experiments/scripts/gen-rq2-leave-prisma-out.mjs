@@ -92,7 +92,11 @@ function pairedMedianRatioCI(a, b, seed, iterations = 5000) {
     estimates.push(median(sampledA) / median(sampledB));
   }
   estimates.sort((x, y) => x - y);
-  return [estimates[Math.floor(0.025 * iterations)], estimates[Math.floor(0.975 * iterations)]];
+  // Percentiles of a sorted sample index into B-1, not B: with B=5000 the 2.5th and 97.5th
+  // order statistics are at 124 and 4874, not 125 and 4875. The shift is below the printed
+  // precision here, but the convention should be right.
+  const at = (q) => estimates[Math.floor(q * (iterations - 1))];
+  return [at(0.025), at(0.975)];
 }
 function crossStackReversals(source, endpoint, campaignLabel, layers) {
   const out = [];

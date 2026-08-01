@@ -4,7 +4,7 @@
 // documented loading strategies, admitted only where byte-identical). The native drivers expose a
 // single hand-authored join (no documented alternative) and appear as a same-harness reference row
 // (records tagged role:'native-baseline', appended by scripts/deepfetch-native.mjs). Writes
-// results/tables/deepfetch_regimes.tex and paper/tables/deepfetch_regimes.tex.
+// results/tables/deepfetch_regimes.tex (archive only; see the note at the write below).
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -53,7 +53,10 @@ ${natRow}${rows}
 \\end{table}
 `;
 await writeFile(join(here, '..', 'results', 'tables', 'deepfetch_regimes.tex'), tex);
-await writeFile(join(here, '..', '..', 'paper', 'tables', 'deepfetch_regimes.tex'), tex);
+// Not written into paper/tables: this table is legacy exploratory sensitivity that the
+// manuscript deliberately excludes from its estimands, so a paper-side copy is dead
+// output that the regeneration gate would keep maintaining. The archived copy under
+// results/tables/ remains, because the run itself is part of the record.
 
 console.log('ORM cells (identical alt):');
 for (const x of data.filter((r) => r.identical)) console.log(`  ${x.adapter}/${x.engine}: doc=${x.doc_primary_rps} alt=${x.alt_rps} perf=${x.perf_conscious_rps} (x${x.perf_over_doc})`);
@@ -62,4 +65,4 @@ console.log('excluded: ' + (excluded.join('; ') || 'none'));
 const gains = data.filter((x) => x.identical && x.perf_conscious_rps > x.doc_primary_rps);
 console.log('post-hoc best > policy: ' + (gains.map((x) => `${x.adapter}/${x.engine} +${((x.perf_conscious_rps / x.doc_primary_rps - 1) * 100).toFixed(1)}% (best=${x.perf_conscious_rps})`).join(', ') || 'none'));
 if (native.length && gains.length) for (const g of gains) { const n = nat(g.engine); if (n) console.log(`  ${g.adapter}/${g.engine} perf ${g.perf_conscious_rps} vs native ${n.doc_primary_rps} -> ${(g.perf_conscious_rps / n.doc_primary_rps).toFixed(2)}x native (${g.perf_conscious_rps < n.doc_primary_rps ? 'below' : 'ABOVE'} native)`); }
-console.log('wrote results/tables/deepfetch_regimes.tex + paper/tables/deepfetch_regimes.tex');
+console.log('wrote results/tables/deepfetch_regimes.tex');
