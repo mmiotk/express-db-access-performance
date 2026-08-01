@@ -44,10 +44,10 @@
 \textbf{Context:} Benchmarks of relational database access layers inform technology-selection
 decisions, yet can time implementations that returned different results, or report latency at unequal
 proximity to saturation. Whether the compared configurations are comparable is rarely established.
-\textbf{Objectives:} We propose an executable protocol for deciding when configured implementations
+\textbf{Objective:} We propose an executable protocol for deciding when configured implementations
 are comparable for a stated estimand, and what their measurements support, then exercise it in one
 empirical instantiation rather than validating it independently.
-\textbf{Methods:} The protocol requires task-derived read checks, cross-implementation equivalence,
+\textbf{Method:} The protocol requires task-derived read checks, cross-implementation equivalence,
 post-write state validation, a predeclared configuration-selection policy, and separate capacity and
 latency operating points. An open-source Express.js experiment compares nine policy-selected configurations
 and two tuned native references across PostgreSQL, MySQL, and five access patterns in a 25-run
@@ -99,7 +99,7 @@ vendors evaluated in this study.
 \section*{Data availability}
 The public repository is available at
 \url{https://github.com/mmiotk/express-db-access-performance}. The complete revision artifact is
-archived as release v1.13.16, which the concept DOI
+archived as release v1.13.17, which the concept DOI
 \url{https://doi.org/10.5281/zenodo.21313858} resolves to~\cite{miotk2026artifact}; the Zenodo record
 also carries an immutable per-version DOI for that release.
 A reproducibility summary --- versions, requirements, run commands, resources needed, and which
