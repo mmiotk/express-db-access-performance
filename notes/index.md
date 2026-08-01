@@ -5,6 +5,7 @@ Working vault for the Express DB access-layer benchmark paper.
 - [[prior-art]] — deep-research survey of existing work + the research gap.
 - [[benchmark-design]] — factors, endpoints, adapter contract, decisions log.
 - [[venue]] — journal candidates, MEiN 2024 points, submission strategy.
+- [[methodsx-cosubmission]] — MethodsX draft status, why it waits for the IST decision, open items.
 
 ## One-line thesis
 
