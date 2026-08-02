@@ -33,7 +33,7 @@
 \begin{document}
 \maketitle
 
-\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.13.19, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
+\noindent This supplement carries measurement detail referenced from the main text. The complete revision artifact is archived as release v1.14.0, which the concept DOI \url{https://doi.org/10.5281/zenodo.21313858} resolves to; the Zenodo record also carries an immutable per-version DOI for that release. This release adds the specification-derived oracle, campaign-state preflight, a replacement corrected-state primary campaign, a second same-host RQ2 validation campaign, fresh secondary measurements, the external-audit dataset, and blind review packets. The revised primary tables are generated from the corrected-state campaign rather than inherited from the earlier baseline.
 
 \smallskip
 \noindent\emph{AI-assisted research tooling.} The harness, table generators, and statistical
@@ -405,9 +405,9 @@ the single runnable entry point.
     \toprule
     Item & Detail \\
     \midrule
-    Artifact \& version & Complete revision artifact v1.13.19: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
-    Code provenance & Git tag \texttt{v1.13.19} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
-    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.13.19; the Zenodo record also carries an immutable per-version DOI. \\
+    Artifact \& version & Complete revision artifact v1.14.0: seed-specification oracle, corrected-state 90-cell primary campaign, 42-cell same-host validation campaign, fresh secondary measurements, external-audit dataset, and blind review packets. \\
+    Code provenance & Git tag \texttt{v1.14.0} identifies the exact release commit, also recorded in the GitHub and Zenodo metadata. The package-lock SHA-256 and aggregate/per-file SHA-256 cover 42 measurement, admission, setup, state-control, schema, and adapter files. Exact 42-file source archives are preserved for both accepted campaigns and verify member-by-member against their embedded manifests. The accepted primary aggregate is \texttt{532d9c7ffe94\ldots d06cf228}; the independently ordered same-host validation aggregate is \texttt{d32a32b5b68a\ldots 134d3789a}. Full values are retained in the source manifests. \\
+    Persistent identifier & Concept DOI \texttt{10.5281/zenodo.21313858}, resolving to release v1.14.0; the Zenodo record also carries an immutable per-version DOI. \\
     Software & Node.js 24.18.0, PostgreSQL 18.4, MySQL 9.7.1, \texttt{npm}. Reference path:
       conda user-space (\texttt{conda-forge}); the Docker path pins the same versions by digest but starts relaxed durability in a containerized topology, so it reproduces the workflow rather than the headline default-durability insert numbers. \\
     Hardware \& disk & Single Linux host (full host and version capture in
@@ -894,5 +894,179 @@ rather than treatments; the closest adjacent pair including them would be
 \texttt{pg-tuned} versus \texttt{pg}, which does satisfy the margin.
 
 \input{\tabledir tost_closest}
+
+\section{AI-assisted research tooling: provenance and validation}
+\label{sup:ai-tooling}
+This section carries the detail behind the Study Design's disclosure of AI assistance in the
+research itself. The publisher's separate manuscript-preparation declaration appears in the
+article before the references.
+
+\paragraph{Tools, models, and provenance} The sole assistant was Claude (Anthropic), via the
+Claude Code command-line interface, in three model versions: Claude Opus 4.8, Claude Fable 5, and
+Claude Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI
+Codex was used twice, after the manuscript was otherwise complete, for independent critical
+pre-submission reviews; the author evaluated its comments and is responsible for which were acted
+on. Assistance is recorded per commit: 236 of 244 commits carry a \texttt{Co-Authored-By} trailer
+naming the model (159 Opus 4.8, 27 Fable 5, 50 Opus 5), counted from the trailers themselves rather
+than message text. The other 8 predate the convention and include two squash-merges of
+assistant-authored branches and the largest revision commit, so the count understates assistance.
+
+\paragraph{Affected components} Assistance covered the eleven adapters and harness scaffolding, the
+table and figure generators, the statistical estimators (\texttt{bench/stats.mjs}), and manuscript
+prose. Only the estimators carry analytical rather than scaffolding logic: the generators
+deterministically transform archived records into table cells, and the adapters satisfy a fixed
+contract.
+
+\paragraph{Review and independent validation} Author review is not the safeguard; each category
+carries a check independent of the generated code. The estimators are unit-tested against
+hand-computed values and closed-form properties: Wilcoxon signed-rank against a hand-computed $z$,
+bootstrap ratio intervals on known-answer inputs, and permutation $p$-values checked for symmetry
+and the $1/(B+1)$ floor (\texttt{bench/stats.test.mjs}). Every \emph{measured} table cell traces
+through a committed generator to an archived per-cell record; \texttt{MANIFEST.md} marks the
+authored analytical items, which report no measurement and lie outside that guarantee. The adapters
+are gated by the specification-derived oracle, which replays the deterministic seed without
+importing an adapter or reading timed native output, and by differential and write-state checks
+(Table~\ref{tab:protocol_chronology}).
+
+\paragraph{Extent of assistance in analysis} The candidate procedures, the paired sign-flip
+permutation test and its Wilcoxon cross-check, the geometric-mean paired ratio and its bootstrap
+interval, Cliff's delta, the equivalence test and its $\pm5\%$ margin, and the blocked interaction
+test, were proposed with assistant support, as was prose describing what they compute. Each is a
+named, published method, none generated or bespoke. The author chose among the candidates against
+performance-evaluation guidance, verified each against the blocked design, wrote every interpretive
+claim, and checked every reference against its source, taking full responsibility for all of them.
+
+Author independence therefore does not secure this analysis; the mechanical checks do, and a reader
+who discounts our review can still run them. Their limit is exact: they establish that the
+estimators compute what they claim and that each measured number came from an archived measurement.
+\emph{No} check bears on whether the chosen procedures suit the question, or whether the claims
+drawn from them are sound; those rest on author judgement alone.
+
+\section{Adapter contract: documentation record, canonical constructors, and write admission}
+\label{sup:adapter-detail}
+\paragraph{Documentation conflict and tie-break} If official pages conflict, the version-matched
+relations or eager-loading page controls over a quick-start or marketing page. Remaining equal
+prominence invokes the declared documented-base-layer tie-break, and an unresolved tie must be
+reported as ambiguous rather than resolved by the analyst's preference. \texttt{METHODOLOGY.md}
+carries the per-layer record alongside Table~\ref{tab:adapter_choices}.
+
+\paragraph{Canonical constructors} Shared canonical constructors fix fields, key order, and scalar
+types, copying already materialized rows without joining, regrouping, sorting, or caching. Their
+standalone cost is bounded in the article's Threats to Validity. Fixed probes and a randomized
+edge-input sweep compare serialized outputs across implementations, with no divergence observed.
+
+\paragraph{Write admission} An out-of-band native-driver connection confirms, for every adapter on
+both engines, that the primary single-row insert wrote exactly the requested values and identifier.
+For the adapters implementing the exploratory transactional method (five on PostgreSQL, four on
+MySQL) it confirms that the post and five comments commit atomically while an invalid final comment
+rolls back to no partial state. All declared methods pass. Per-adapter scope, the fan-out and
+timestamp conventions, and the fixture details are in \texttt{experiments/METHODOLOGY.md} and
+\texttt{write-admission.json}.
+
+\section{Exchangeability, pairing, and the durability regime}
+\label{sup:analysis-detail}
+\paragraph{What blocking does and does not buy} Replicates share a schedule and an environment, and
+randomized order within a replicate protects against drift and position effects. Pairing by
+replicate therefore controls the temporal and environmental block and the seeded workload design,
+not the individual request stream. Because the treatments are pre-existing implementations rather
+than interventions assigned to units, randomization supports temporal balance only, and no reported
+difference is a causal effect of a library on throughput.
+
+\paragraph{Default durability} Inserts were measured with PostgreSQL \texttt{fsync} and
+\texttt{synchronous\_commit} on, and MySQL \texttt{innodb\_flush\_log\_at\_trx\_commit=1} with
+\texttt{sync\_binlog=1}. The relaxed-durability sensitivity in Table~\ref{tab:durability} changes
+all of these together and is therefore a compound intervention, not a decomposition of which
+setting drives the change.
+
+\section{Non-promoted pairs and whole-ordering agreement}
+\label{sup:rq2-detail}
+The promotion rule is applied per pair, so the 15 non-Prisma pairs were screened in the same pass.
+The sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection, $0.96\times$ against
+$1.06\times$) fails the $5\%$ margin on PostgreSQL; the recurring aggregation reversals fail that
+margin; none recurs on insert.
+
+Whole-ordering agreement is a separate, purely descriptive question from the promotion rule, which
+excludes sub-threshold pairs by design, so nothing here is a further reversal claim. Removing Prisma
+raises Spearman $\rho$ on deep fetch ($0.86$ to $0.94$) and on insert ($0.68$ to $0.83$ in the
+primary campaign, $0.71$ to $0.94$ in the validation campaign), and lowers it on aggregation ($0.68$
+to $0.54$; $0.64$ to $0.49$). Agreement is imperfect on both stacks with or without that treatment.
+
+\section{Write-isolation reset and the corrected fixture}
+\label{sup:reset}
+The declared reset rebuilds PostgreSQL from its seed template and uses a disclosed in-place
+delete, \texttt{OPTIMIZE TABLE}, and allocator reset on MySQL.
+
+A post-review state oracle found that the historical MySQL rebuild could restore
+\texttt{AUTO\_INCREMENT} below the cleanup floor, so generated rows could persist into a later
+cell. A cross-engine gate exposed a second, independent shared-fixture defect: an advancing PRNG
+gave different comment-author assignments across the two engines despite identical comment counts,
+so the two engines were not serving the same graph. The corrected harness pins the allocator with a
+sentinel value, verifies exact base and fan-out counts by idempotent preflight, and materializes the
+fixture once so the joined representation is byte-identical across engines. Reset mechanics,
+sentinel values, and fixture hashes are in \texttt{experiments/METHODOLOGY.md}.
+
+\section{Threats to validity: supporting measurements}
+\label{sup:threats-detail}
+Each item below supports a limitation stated in the article's Threats to Validity. Nothing here
+qualifies the article's claims further; it supplies the measurements behind the qualifications
+already made.
+
+\paragraph{Shared-path cost (construct validity of the measures)} The canonical constructors copy and
+type-normalize already-grouped rows or entity graphs without querying, joining, regrouping, sorting,
+or caching, under \texttt{TZ=UTC} with a fixed field set, key order, and typing. Their standalone
+median peaks at 17.6~\(\mu\)s, 0.146\% of the fastest p50 in the same pattern. The
+specification-derived oracle passes 73{,}080 expected-result checks independently of all adapters,
+and the differential checks found, among other defects, a Drizzle timestamp conversion that shifted
+PostgreSQL instants by the host UTC offset, fixed before measurement. A fixed-payload endpoint
+measures the shared Express-and-serialization floor at 11{,}238 and 10{,}893~req/s
+(\texttt{results/sameplan-corrected.json}), at least three times the fastest deep-fetch cell.
+
+\paragraph{The three treatment sensitivity checks (construct validity of the treatment)} First, every
+selected path and alternative is preserved with the source-page hash (Table~\ref{tab:adapter_choices} and \texttt{METHODOLOGY.md}). Second, the common-SQL raw-path sensitivity contrast runs common SQL
+through every layer's raw facility, so the raw-path spread is far smaller. Third, where the
+documented alternative is a byte-identical drop-in, the loading-strategy check
+(Table~\ref{tab:altloading}) shows the selected path is the faster strategy for the join-selected
+ORMs; the lone exception is Objection's slower selected select-in path on MySQL.
+
+\paragraph{The result-blind self-audit (internal validity)} It found that Knex passed its
+PostgreSQL-style \texttt{returning} option on MySQL, producing 44{,}907 console warnings within two
+pilot repetitions, and that MikroORM's aggregation obtained and discarded an unused Knex handle per
+request. Both were removed, the admission chain passed again, and measurement restarted from
+repetition~1 (\texttt{notes/adapter-self-audit.md}). The static dead-work check is clean on all 13
+modules of the measured source.
+
+\paragraph{Environment and version disclosures (external validity)} The post-restart rerun of six
+representative cells moved absolute throughput by up to 16\% against the campaign prevailing when it
+ran. Sequelize is used on its stable 6.x line because the version-7 line is a prerelease. Prisma's
+MySQL path uses the MariaDB adapter because Prisma ships no \texttt{mysql2} adapter.
+
+\paragraph{Dispersion and cross-checks (conclusion validity)} The deep-fetch run-to-run coefficient
+of variation is $\leq4.6\%$. Insert CV reaches $6.4\%$ on PostgreSQL among the compared layers
+($8.9\%$ with the tuned baseline) and $13.6\%$ on MySQL. The paired sign-flip permutation test is
+cross-checked with Wilcoxon signed-rank on the same 25 paired values
+(Table~\ref{tab:significance}), which is a robustness check rather than independent
+confirmation. The common-SQL contrast rests on ten replicates and the matched-utilization tails on
+five.
+
+\section{Analysis: estimand construction and window support}
+\label{sup:analysis-construction}
+\paragraph{Exchangeability} The sign-flip test is valid under the assumption that, when the null of
+no paired difference holds, the per-replicate log ratios are symmetric about zero and their signs are
+exchangeable across replicates. Blocking makes this credible rather than guaranteed: within each
+replicate every layer is measured once against the same seeded identifier distribution, replicates
+share a schedule and an environment, and randomized order within a replicate protects against drift
+and position effects. Pairing by replicate controls the temporal and environmental block and the
+seeded workload design, not the individual request stream.
+
+\paragraph{Window support} Each run-level p99 is the generator's histogram percentile over one
+12-second window, supported by between about 5{,}700 and 91{,}000 requests depending on the cell's
+throughput, and the reported value is the median of the 25 such estimates. In the 60-second
+sensitivity check the largest cell-median shifts were 5.6\% on PostgreSQL and 3.8\% on MySQL.
+
+\paragraph{Equivalence assessment} The assessment is the confidence-interval form of TOST against an
+author-selected $\pm5\%$ margin, reported as a sensitivity analysis for the closest adjacent pair,
+with the limits on how it may be read given with Table~\ref{tab:tost_closest}. The full construction,
+including procedure and seed, tie handling, the layer$\times$engine interaction test, and the rank
+correlations, is in \texttt{notes/supplement-methods}.
 
 \end{document}

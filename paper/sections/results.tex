@@ -2,35 +2,31 @@
 \label{sec:results}
 
 Tables report throughput (req/s, higher better) and tail latency (p99~ms, lower better) per access
-layer and engine. The deep fetch is in the main text (Table~\ref{tab:deep_fetch}); the other four patterns are in
-Supplement Tables~S52, S12, S13, and~S15. Each native driver has an untuned
-policy-selected row (\texttt{pg}, \texttt{mysql2}) and a tuned one (\texttt{pg-tuned},
-\texttt{mysql2-tuned}) marking a hand-tuned reference point, not one attained without code changes.
-We compare \emph{relative} differences within an engine. Two estimands recur
+layer and engine; the deep fetch is in the main text (Table~\ref{tab:deep_fetch}) and the other four
+patterns in Supplement Tables~S52, S12, S13, and~S15. Each native driver has an untuned
+policy-selected row and a tuned one marking a hand-tuned reference point, not one attained without
+code changes. We compare \emph{relative} differences within an engine, and two estimands recur
 (Section~\ref{sec:introduction}): the selected configured treatment's performance, which is not
-library-only overhead, and the common-SQL raw-path sensitivity contrast (Supplement Table~S14,
-Section~\ref{sec:threats}).
+library-only overhead, and the common-SQL raw-path sensitivity contrast (Supplement Table~S14).
 
 % One combined table per access pattern (throughput + p99), per layer and engine.
 % \tabledir is set by each main file so this shared section resolves without TEXINPUTS.
 \input{\tabledir deep_fetch}
 
 \subsection{RQ1: performance difference relative to the native baseline}
-The native implementation leads nine of the ten engine--pattern comparisons:
-\texttt{pg} or \texttt{pg-tuned} is fastest on all five PostgreSQL patterns, and
-\texttt{mysql2} on four of five MySQL patterns. The exception is the MySQL insert,
-where the four fastest treatments span 1{,}766--1{,}816~req/s with broadly overlapping
-intervals and the native driver ranks fourth (Supplement Table~S52); that ordering is
-practically unresolved; we read no leader from it. Current ORMs sit mid-to-low on the read patterns; Prisma is near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch}; Supplement Tables~S12 and~S15), retiring an earlier headline of Prisma tying the native driver at a large CPU premium (Section~\ref{sec:discussion}).
+The native implementation leads nine of the ten engine--pattern comparisons. The exception is the
+MySQL insert, where the four fastest treatments span 1{,}766--1{,}816~req/s with broadly overlapping
+intervals and the native driver ranks fourth (Supplement Table~S52); that ordering is practically
+unresolved and we read no leader from it. Current ORMs sit mid-to-low on the read patterns, Prisma
+near the bottom of point reads and aggregation on both engines (Table~\ref{tab:deep_fetch};
+Supplement Tables~S12 and~S15), retiring an earlier headline of Prisma tying the native driver at a
+large CPU premium (Section~\ref{sec:discussion}).
 
-\texttt{pg-tuned} and \texttt{mysql2-tuned} track their untuned counterparts within about
-$2\%$ on the deep fetch (\texttt{pg-tuned} 3{,}700 vs.\ \texttt{pg} 3{,}638;
-\texttt{mysql2-tuned} 2{,}398 vs.\ \texttt{mysql2} 2{,}416). The one material gain is
-PostgreSQL aggregation, where named prepared statements add $11\%$ (7{,}583 vs.\ 6{,}807).
-On MySQL the binary-protocol baseline is \emph{slower} than \texttt{mysql2} on every pattern
-(by $0.4$--$4.7\%$), so \texttt{execute()} brought no material gain here, every difference lying
-inside the $\pm5\%$ margin; both tuned baselines are therefore disclosed reference points, not
-optimization ceilings.
+The tuned baselines track their untuned counterparts within about $2\%$ on the deep fetch. The one
+material gain is PostgreSQL aggregation, where named prepared statements add $11\%$ (7{,}583 vs.\
+6{,}807); on MySQL the binary-protocol baseline is \emph{slower} than \texttt{mysql2} on every
+pattern, every difference lying inside the $\pm5\%$ margin. Both are therefore disclosed reference
+points, not optimization ceilings.
 
 On the \textbf{deep fetch} (a post, its author, and all comments with their authors) the
 native-relative spread is the widest measured, $7.01\times$ on PostgreSQL (\texttt{pg} 3{,}638,
@@ -47,16 +43,14 @@ deep fetch's nested-graph materialization, though the design isolates neither fe
 The remaining per-pattern spreads are collected under RQ3 below.
 
 \subsection{Common-SQL raw-path sensitivity contrast}
-Server-side capture confirms common statement text and database plans across raw paths on both
-engines; API level, wire protocol, preparation, round trips, and mapping can still differ (Supplement
-Table~S42). The deep-fetch native-relative spread is then far smaller in a separate ten-run
-campaign, $1.71\times$ (PostgreSQL) and $2.03\times$ (MySQL) against the selected-configuration $7.01\times$ and $5.12\times$ (Supplement
-Table~S14). The selected paths therefore differ more than these common-SQL raw paths, but the
-compound contrast assigns no share to any mechanism. A loading-strategy sensitivity check (Supplement
-Table~S18) argues against a mere selected-strategy artifact: forcing the join-selected ORMs
-(Sequelize, MikroORM) to select-in makes them slower, while Objection's batched select-in runs about
-$1.6\times$ slower than a single join on MySQL. Objection's result is thus sensitive to the documented
-loading option; this comparison does not isolate a library-only cost.
+With statement text and database plans held common across raw paths, though API level, wire protocol,
+preparation, round trips, and mapping still differ, the deep-fetch native-relative spread is far
+smaller in a separate ten-run campaign, $1.71\times$ (PostgreSQL) and $2.03\times$ (MySQL) against
+the selected-configuration $7.01\times$ and $5.12\times$ (Supplement Tables~S42 and S14). The
+selected paths therefore differ more than these common-SQL raw paths, but the compound contrast
+assigns no share to any mechanism. A loading-strategy check argues against a mere selected-strategy
+artifact, forcing the join-selected ORMs to select-in making them slower (Supplement Table~S18).
+Neither comparison isolates a library-only cost.
 
 \subsection{RQ2: backend-stack transfer of the ranking}
 Switching the backend changes a bundle that can include the DBMS, supported adapter,
@@ -73,41 +67,33 @@ it replays the same draws and cannot detect sensitivity to the workload sample. 
 PostgreSQL and 7/7 MySQL positions. MySQL insert is less stable: 3/7 positions, $\rho=0.82$, and the
 leader changes from Drizzle to Knex. 
 
-We therefore promote a cross-stack reversal only when it occurs in both campaigns, exceeds the $5\%$ practical
-margin on both stacks, and paired bootstrap intervals exclude equality in opposite directions in
-both. The margin was fixed before these campaigns (Section~\ref{sec:methodology}), but the composite
-rule was specified after both completed: a post-hoc screen applied uniformly to all 21 layer pairs
-on each of the three patterns. The screen applies no familywise correction: recurrence screens
-one-campaign noise, but the campaigns share a host and the same seeded draws, so it does not bound
-familywise error across the 63 comparisons. Applying Holm afterwards to an intersection-union test
-retains all four (Supplement Table~S55); it corrects the per-stack evidence, not the direction and
-margin filters. They are a stable subset of an exploratory comparison, not a
-prespecified test.
-Four pairs meet all criteria, sized with paired intervals in Supplement Table~S54: on deep fetch, Prisma exceeds Objection and Sequelize
-on PostgreSQL but trails both on MySQL; on aggregation, Prisma exceeds Objection on
-PostgreSQL but trails it on MySQL; on insert, Prisma exceeds MikroORM on PostgreSQL
-but trails it on MySQL. All four therefore involve one treatment, and that treatment is
-the one whose lower-level driver differs between the stacks: Prisma runs the MariaDB
-adapter on MySQL because it ships no \texttt{mysql2} adapter, while every other layer
-uses \texttt{mysql2} (Section~\ref{sec:threats}). The recurrence is consistent with
-backend-stack sensitivity as RQ2 defines it, but it cannot be separated from that driver
-substitution, and it is not evidence about ORMs as a group. Other changes in close ranks,
-including the identity of the MySQL insert leader, remain exploratory.
+We therefore promote a cross-stack reversal only when it occurs in both campaigns, exceeds the $5\%$
+practical margin on both stacks, and paired bootstrap intervals exclude equality in opposite
+directions in both. The margin was fixed before these campaigns
+(Section~\ref{sec:methodology}), but the composite rule was specified after both completed, a
+post-hoc screen applied uniformly to all 21 layer pairs on each of three patterns. It applies no
+familywise correction: recurrence screens one-campaign noise, but the campaigns share a host and the
+same seeded draws, so it does not bound familywise error across the 63 comparisons. Applying Holm
+afterwards to an intersection-union test retains all four (Supplement Table~S55), correcting the
+per-stack evidence but not the direction and margin filters; they are a stable subset of an
+exploratory comparison, not a prespecified test.
+Four pairs meet all criteria, sized with paired intervals in Supplement Table~S54: Prisma exceeds
+Objection and Sequelize on PostgreSQL deep fetch but trails both on MySQL, exceeds Objection on
+aggregation but trails it on MySQL, and exceeds MikroORM on insert but trails it on MySQL. All four
+therefore involve one treatment, and it is the one whose lower-level driver differs between the
+stacks: Prisma runs the MariaDB adapter on MySQL because it ships no \texttt{mysql2} adapter, while
+every other layer uses \texttt{mysql2} (Section~\ref{sec:threats}). The recurrence is consistent
+with backend-stack sensitivity as RQ2 defines it, but it cannot be separated from that driver
+substitution, and it is not evidence about ORMs as a group. Other changes in close ranks, including
+the identity of the MySQL insert leader, remain exploratory.
 
-The rule is applied per pair, so the 15 non-Prisma pairs were already screened in the same pass and
-none was promoted: the sole recurring non-Prisma deep-fetch reversal (Sequelize versus Objection,
-$0.96\times$ against $1.06\times$) fails the $5\%$ margin on PostgreSQL, the recurring aggregation
-reversals fail that margin, and none recurs on insert. Holding Prisma out
-promotes no other pair and otherwise changes only the whole-ordering correlations
-(Supplement Table~S49). The promoted-reversal evidence therefore rests entirely on the
-treatment carrying the driver substitution. Whole-ordering agreement is a separate, purely
-descriptive question, and it moves in both directions when that treatment is removed: $\rho$ rises
-on deep fetch ($0.86$ to $0.94$) and on insert ($0.68$ to $0.83$ primary, $0.71$ to $0.94$
-validation), and falls on aggregation ($0.68$ to $0.54$; $0.64$ to $0.49$), imperfect on both stacks
-either way. That is not a further reversal claim: the promotion rule excludes sub-threshold pairs by
-design. What the contrast licenses, and what it cannot identify, is set out in
+The rule is applied per pair, so the 15 non-Prisma pairs were screened in the same pass and none was
+promoted, each failing the $5\%$ margin or the recurrence requirement. Holding Prisma out promotes
+no other pair and otherwise changes only the whole-ordering correlations, which move in both
+directions and stay imperfect on both stacks either way (Supplement Table~S49). The
+promoted-reversal evidence therefore rests entirely on the treatment carrying the driver
+substitution. What the contrast licenses, and what it cannot identify, is set out in
 Section~\ref{sec:discussion}.
-
 
 The magnitude of stack transfer is also treatment-specific. Primary-campaign
 PostgreSQL$\div$MySQL ratios range from $1.10$ to $1.84\times$ on deep fetch,
@@ -122,11 +108,11 @@ Objection, Knex, and the native driver lie between 1{,}766 and 1{,}816~req/s, wh
 distributions are multimodal or heavy-tailed and reach $13.6\%$ within-campaign CV
 (Supplement Figure~S1). Prisma is the slowest policy-selected treatment at 894~req/s, giving a
 $1.98\times$ native-relative spread on a broad interval [1.65--2.09]. Under relaxed durability the
-native MySQL and Knex paths gain $2.42\times$ and $2.07\times$, ranging $1.02$--$2.44\times$ across treatments;
-concurrent wait-event sums are consistent with a shared commit-path contribution but are not a causal
-time fraction (Supplement Tables~S3 and S19). PostgreSQL insert spans $3.18\times$ (6{,}018 to
-1{,}894~req/s), changes at most $14\%$ under relaxed durability, with p99 12--32~ms against
-MySQL's 105--129~ms. These compound interventions do not decompose backend-stack cost.
+native MySQL and Knex paths gain $2.42\times$ and $2.07\times$, ranging $1.02$--$2.44\times$ across
+treatments; concurrent wait-event sums are consistent with a shared commit-path contribution but are
+not a causal time fraction (Supplement Tables~S3 and S19). PostgreSQL insert spans $3.18\times$
+(6{,}018 to 1{,}894~req/s), changes at most $14\%$ under relaxed durability, with p99 12--32~ms
+against MySQL's 105--129~ms. These compound interventions do not decompose backend-stack cost.
 
 \subsection{RQ3: which pattern spreads widest}
 The primary native-relative spreads on PostgreSQL are deep fetch
@@ -145,47 +131,37 @@ spread from $6.0\times$ to $11.7\times$ (Supplement Table~S53).
 
 \subsection{Tail latency}
 At equal closed-loop demand, deep-fetch p99 spans 18--108~ms on PostgreSQL and 28--121~ms among the
-policy-selected layers on MySQL (Table~\ref{tab:deep_fetch}). The run is the analysis unit; a 12~s
-slow-layer run supplies only about 60 observations to its top percentile, so we use the median of 25
-run-level p99 values and show their raw spread. Ten 60-second repetitions preserve the ordering
-(rank correlation $1.00$ on both engines; largest median shift $5.6\%$ and $3.8\%$; Supplement
-Table~S23), which is endpoint-specific evidence, not a general sufficiency claim.
+policy-selected layers on MySQL (Table~\ref{tab:deep_fetch}). The run is the analysis unit, so we
+use the median of 25 run-level p99 values and show their raw spread. Ten 60-second repetitions
+preserve the ordering (Supplement Table~S23), which is endpoint-specific evidence, not a general
+sufficiency claim.
 
 At the stable nominal 50\% capacity target, coordinated-omission-corrected p99 is 2.3--4.9~ms on
 PostgreSQL and 1.9--5.5~ms on MySQL, a different operating point and estimand, not an optimization
-applied to the systems; most 70\% cells remain similarly small (Supplement Tables~S21--S22 and S43).
-Against the full-sweep maximum, nominal 50\% falls at
-46.2--52.2\% and 70\% at 64.6--73.0\% across repeated sweeps (S45). The 85\% and 95\% results are unstable near-saturation observations and do not support a
-convergence claim. The stable 50\% result shows the large equal-demand p99 spread contains a material
+applied to the systems; most 70\% cells remain similarly small, while the 85\% and 95\% results are
+unstable near-saturation observations supporting no convergence claim (Supplement Tables~S21--S22,
+S43 and S45). The stable 50\% result shows the large equal-demand p99 spread contains a material
 capacity-and-queueing component; it does not identify its share or imply a deployment-general
 sub-saturation bound.
 
-The two operating points also \emph{order the layers differently}, which is the
-sharpest consequence of separating them, though they differ in load generator and model too
-(closed-loop, 25 runs; open-loop, 5), so the reordering is not the operating point alone. Between the equal-demand and 50\%-utilization
-p99 orderings, Spearman $\rho$ is $0.64$ on PostgreSQL and $0.29$ on MySQL
-(Supplement Table~S43). The native driver moves furthest on MySQL: fastest at equal
-demand on both engines, it falls to third of eight on PostgreSQL and seventh of eight
-on MySQL once each layer is held at half its own capacity. On MySQL the reversal is
-large relative to the five-run spread, \texttt{knex} 1.9~ms [1.8--2.2] against
-\texttt{mysql2} 4.7~ms [4.0--5.6], while on PostgreSQL the native and leading portable
-ranges overlap (\texttt{pg} 2.6~[2.2--3.0], \texttt{knex} 2.3~[2.3--2.7]), so only the
-MySQL inversion is claimed. Reporting a tail at one arbitrary load point would have
-recorded the native driver as the tail leader on both engines. This is secondary evidence
-that the operating-point separation stage changes a conclusion rather than only its
-caveats, and it is why capacity and tail are reported as distinct quantities.
+The two operating points also \emph{order the layers differently}, the sharpest consequence of
+separating them, though they differ in load generator and model too (closed-loop, 25 runs;
+open-loop, 5), so the reordering is not the operating point alone. Between the equal-demand and
+50\%-utilization p99 orderings, Spearman $\rho$ is $0.64$ on PostgreSQL and $0.29$ on MySQL
+(Supplement Table~S43). The native driver moves furthest on MySQL: fastest at equal demand on both
+engines, it falls to third of eight on PostgreSQL and seventh of eight on MySQL once each layer is
+held at half its own capacity, a reversal large relative to the five-run spread (\texttt{knex}
+1.9~ms [1.8--2.2] against \texttt{mysql2} 4.7~ms [4.0--5.6]). On PostgreSQL the native and leading
+portable ranges overlap, so only the MySQL inversion is claimed. Reporting a tail at one arbitrary
+load point would have recorded the native driver as the tail leader on both engines: secondary
+evidence that operating-point separation changes a conclusion rather than only its caveats.
 
 \subsection{Measurement stability and effect sizes}
-Deep-fetch throughput CV reaches $4.55\%$, much smaller than its multi-fold spreads.
-The largest primary throughput CV is $13.6\%$ on MySQL insert, whose raw replicates
-are shown because a median and interval can hide regime mixtures. All 90 cells
-contain exactly 25 run-level samples and zero timed errors, timeouts, or non-2xx
-responses. One pre-warm-up startup failure was retried once and recorded; no timed
-sample preceded that retry. The fail-closed roster validation requires 90$\times$25
-observations before accepting the file.
-
-Predeclared native-driver contrasts are foregrounded; ranking-selected adjacent
-comparisons remain descriptive. Paired bootstrap intervals characterize only
-within-campaign variation, while the same-host validation campaign is reported
-separately. Differences of about 1~ms in p99 and throughput ratios inside the
-predeclared $\pm5\%$ practical margin are not promoted as substantive ordering.
+Deep-fetch throughput CV reaches $4.55\%$, much smaller than its multi-fold spreads, and the
+largest primary throughput CV is $13.6\%$ on MySQL insert, whose raw replicates are shown because a
+median and interval can hide regime mixtures. All 90 cells contain exactly 25 run-level samples and
+zero timed errors, timeouts, or non-2xx responses, enforced by a fail-closed roster validation.
+Predeclared native-driver contrasts are foregrounded and ranking-selected adjacent comparisons
+remain descriptive; paired bootstrap intervals characterize only within-campaign variation.
+Differences of about 1~ms in p99 and throughput ratios inside the predeclared $\pm5\%$ practical
+margin are not promoted as substantive ordering.

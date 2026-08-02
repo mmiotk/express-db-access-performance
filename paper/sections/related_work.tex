@@ -1,12 +1,13 @@
 \section{Related Work}
 \label{sec:related}
 
-We survey prior work along four \emph{coverage} axes (taxonomy, engine, joint throughput/tail
-reporting, and vendor involvement) spanned by this experiment (Supplement Table~S51). We separately audit which comparability controls each source reports. A structured
-scoping search (not a systematic review) of the ACM Digital Library, IEEE Xplore, Scopus, and Google
-Scholar (2006--July~2026) retained empirical comparisons of relational access layers or engines, with
-search details archived in the replication package (\texttt{notes/related-work-search.md}); being
-scoping rather than exhaustive, we scope every gap claim to the sources searched.
+We survey prior work along four \emph{coverage} axes (taxonomy, engine, joint throughput and tail
+reporting, and vendor involvement) spanned by this experiment (Supplement Table~S51), and separately
+audit which comparability controls each source reports. A structured scoping search, not a systematic
+review, of the ACM Digital Library, IEEE Xplore, Scopus, and Google Scholar (2006--July~2026)
+retained empirical comparisons of relational access layers or engines, with details archived in the
+replication package; being scoping rather than exhaustive, we scope every gap claim to the sources
+searched.
 
 \subsection{Object-relational mapping and the access-layer spectrum}
 Access layers bridge the object-relational impedance mismatch between the relational model and an
@@ -14,8 +15,7 @@ application's object graphs~\cite{ireland2009impedance}, spanning native drivers
 ORMs following Data Mapper / Active Record patterns~\cite{fowler2002patterns}
 (Section~\ref{sec:introduction}). Torres et al.~\cite{torres2017orm} survey two decades of ORM
 patterns; their trade-off (productivity against a hard-to-predict runtime cost) motivates what
-we measure while holding the store family (relational rather than
-non-relational~\cite{sadalage2012nosql}) fixed. The treatment is the configured
+we measure while holding the store family (relational rather than non-relational) fixed. The treatment is the configured
 access-layer implementation bundle, including its selected API, SQL, protocol, and mapping path;
 the study does not isolate a library binary from those choices.
 
@@ -23,10 +23,9 @@ the study does not isolate a library binary from those choices.
 A parallel line studies ORM performance in reverse, repairing the inefficient SQL frameworks emit.
 The costliest is the N+1 query problem (Section~\ref{sec:introduction}); it and related
 redundant-query anti-patterns pervade real-world web
-applications~\cite{yang2018dbapps,yan2017inefficiencies,shao2020antipatterns}, their impact quantified
-in ORM-backed systems~\cite{chen2016redundant,chen2014orm} and often \emph{removable} by query
-synthesis, batching, or caching~\cite{cheung2013querysynthesis,cheung2014sloth,chen2016cacheoptimizer}
-(with a JavaScript \texttt{async}/\texttt{await} analogue~\cite{turcotte2022asyncjs}). Closest to our
+applications~\cite{yang2018dbapps}, their impact quantified in ORM-backed
+systems~\cite{chen2016redundant,chen2014orm} and often \emph{removable} by query synthesis,
+batching, or caching. Closest to our
 design, Lorenz et al.~\cite{lorenz2017orm} show the best mapping strategy depends on database
 technology, van Zyl et al.~\cite{vanzyl2009optimisations} that it is tuning-sensitive, and a recent
 study adds an energy dimension~\cite{bonvoisin2024orm}. Overhead is thus configurable, not fixed, 
@@ -44,22 +43,23 @@ matched-utilization latency. Our claim is restricted to using specification evid
 cross-implementation equivalence as benchmark admission, joined with predeclared treatment selection
 and operating-point separation.
 
-\subsection{Peer-reviewed access-layer comparisons}
-Peer-reviewed head-to-head access-layer measurement is scarce. Colley et al.~\cite{colley2018orm} demonstrate selected Entity Framework-generated and hand-written SQL in a Contoso application; it is an ORM/non-ORM illustration, not the eight-ORM cross-language benchmark attributed to it in an earlier draft. Three recent studies partially address this: one in
-\emph{Procedia Computer Science} compares Prisma against optimized raw SQL over eight query patterns on
-PostgreSQL~\cite{prisma_rawsql_2025} (differing versions, hardware, and workload, so we neither build on
-nor dispute its figures); a second compares Prisma, TypeORM, and Sequelize across four relation types,
-also on PostgreSQL, by response time, memory, and CPU~\cite{orm_compare_jcct_2025}. Pratama and Raharja~\cite{pratama2023nodebench} cross Node-Bench results for five access products with eleven Node.js frameworks and three virtualization/container environments. That study directly varies access products, but framework, access path, and environment also change across cells, so it does not isolate an access-layer estimand. The most recent study times internal query stages of three ORMs rather than client-observed requests~\cite{zhadko2025orm} and reports its own concurrency-dependent ordering. A further Express study optimizes one stack rather than comparing access layers~\cite{imamsakti2025async}.
+\subsection{Peer-reviewed access-layer comparisons and adjacent lines}
+Peer-reviewed head-to-head access-layer measurement is scarce, and each study leaves part of the
+space uncovered. Colley et al.~\cite{colley2018orm} illustrate Entity Framework-generated against
+hand-written SQL rather than comparing layers; two recent studies compare Prisma with optimized raw
+SQL, and Prisma with TypeORM and Sequelize, both only on
+PostgreSQL~\cite{prisma_rawsql_2025,orm_compare_jcct_2025}; and a third times internal query stages
+of three ORMs rather than client-observed requests~\cite{zhadko2025orm}. Pratama and
+Raharja~\cite{pratama2023nodebench} do vary five access products, but framework, access path, and
+environment change across cells too, so no access-layer estimand is isolated. A further Express
+study optimizes one stack rather than comparing layers~\cite{imamsakti2025async}.
 
-\subsection{Database-engine, SQL/NoSQL, and Node.js performance}
 A second, disjoint line benchmarks the layers below and above the access layer without varying it.
-Salunke and Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL under standard OLTP workloads
-(the only dual-engine precedent found), but benchmark the \emph{engines themselves}; SQL/NoSQL
-comparisons~\cite{li2013sqlnosql} likewise measure the store, not the layer. On the Node.js side, work
-establishes Node's web viability~\cite{chaniotis2015nodejs}, tracks back-end drift under sustained
-load~\cite{kuffel2025nodejs}, and compares frameworks broadly~\cite{carmo2024backend}. The Node-Bench
-comparison above shows why a product count alone is insufficient: its framework--library--environment
-cells do not hold a common access-layer task fixed.
+Salunke and Ouda~\cite{salunke2024pgmysql} compare PostgreSQL and MySQL under standard OLTP
+workloads, the only dual-engine precedent found, but benchmark the \emph{engines themselves}. On the
+Node.js side, work establishes Node's web viability~\cite{chaniotis2015nodejs}, tracks back-end drift
+under sustained load~\cite{kuffel2025nodejs}, and compares frameworks
+broadly~\cite{carmo2024backend}, in each case holding the access layer fixed.
 
 \subsection{Standard benchmarks and benchmarking methodology}
 Standard benchmarks define how systems are measured: YCSB~\cite{cooper2010ycsb} for cloud-serving
@@ -68,39 +68,39 @@ this study varies, but set the bar for controlled, repeatable load. A methodolog
 explains why single-metric reporting fails: Fruth et al.~\cite{fruth2022tail} and Raasveldt et
 al.~\cite{raasveldt2018fair} catalog benchmarking pitfalls, Dean and Barroso~\cite{dean2013tail} show
 the tail drives user-perceived latency under fan-out, and Li et al.~\cite{li2014tales} trace its
-sources. Such measurement is often ad hoc~\cite{jiang2015load,leitner2017exploratory} and hard to
-reproduce~\cite{collberg2016repeatability}, motivating a harness built for relevance, repeatability,
-and fairness~\cite{huppler2009benchmark,sim2003benchmark}. Following that guidance, we report
+sources. Such measurement is often ad hoc~\cite{leitner2017exploratory} and hard to reproduce, motivating a harness built for relevance, repeatability, and fairness. Following that guidance, we report
 throughput \emph{and} p99 for the same run: a pairing the general literature recommends, which we did
 not find in the access-layer benchmarks surveyed here.
 
 \subsection{Practitioner and vendor benchmarks}
-A larger body comes from practitioners and vendors, each authored by a party with a stake in a compared
-product. Drizzle publishes a Northwind micro-suite (nine targets) and a k6 load test reporting req/s,
-average latency, P95, and CPU~\cite{drizzle_benchmarks}. Prisma's site
-compares Prisma, Drizzle, and TypeORM by median query latency over 500 iterations, reporting neither
-throughput nor any percentile~\cite{prisma_benchmarks}. IMDBench adds Sequelize and node-postgres,
-reporting throughput and latency on three CRUD operations~\cite{imdbench}. Together these span more products than the peer-reviewed literature, but none of these three combines dual-backend-stack coverage, response-time p99, capacity characterization, and frozen source-located treatment provenance.
+A larger body comes from practitioners and vendors, each authored by a party with a stake in a
+compared product: Drizzle's Northwind micro-suite and k6 load test~\cite{drizzle_benchmarks},
+Prisma's median-latency comparison reporting neither throughput nor any
+percentile~\cite{prisma_benchmarks}, and IMDBench over three CRUD operations~\cite{imdbench}.
+Together these span more products than the peer-reviewed literature, but none combines
+dual-backend-stack coverage, response-time p99, capacity characterization, and frozen
+source-located treatment provenance.
 
 \subsection{Positioning}
 \paragraph{Audit corpus.} The nine audited sources are those retained by the same scoping search,
-under stated criteria rather than convenience. Eligible were empirical performance comparisons of
-relational access layers, or direct PostgreSQL-versus-MySQL comparisons, bearing on the four
-positioning properties; peer-reviewed studies, vendor suites, and practitioner benchmarks were all
-eligible, since the audit concerns what a benchmark reports, not who published it. Excluded were
-non-empirical ORM papers, non-relational-only studies, framework benchmarks holding the access layer
-fixed, and pages with unverifiable versions and no reproducible method. CYNTHIA is retained for
-methodological positioning but is not among the nine, being a differential-testing tool rather than a
-performance benchmark. Coding was performed once, by the author, from a stable locator for every
-judgement; \texttt{not\_reported} records what the inspected source does not state, never a finding
-that the authors omitted the practice. The corpus is not exhaustive, so every gap statement below is
-scoped to it: we do not claim that no other benchmark implements these controls. Full criteria,
-codebook, screening record, and per-judgement evidence are in the online supplement and the
-replication package.
+under stated criteria rather than convenience: empirical performance comparisons of relational
+access layers, or direct PostgreSQL-versus-MySQL comparisons, bearing on the four positioning
+properties. Peer-reviewed studies, vendor suites, and practitioner benchmarks were all eligible,
+since the audit concerns what a benchmark reports, not who published it. Coding was performed once,
+by the author, from a stable locator for every judgement; \texttt{not\_reported} records what the
+inspected source does not state, never a finding that the authors omitted the practice. The corpus
+is not exhaustive, so every gap statement below is scoped to it: we do not claim that no other
+benchmark implements these controls. Eligibility and exclusion criteria, the codebook, the
+screening record, and per-judgement evidence are in the online supplement and the replication
+package.
 
-In the sources searched, no access-layer benchmark reports all seven protocol dimensions, unsurprisingly, since the seven are this paper's own construction: the audit measures distance from a new standard, not failure to meet a known one. The source-located audit in Supplement Table~S37 records partial controls rather than treating non-reporting as proof of absence, and we found no study combining broad product coverage, both engines, joint throughput/tail
-reporting, and non-vendor authorship, each covers at most two or three
-(Supplement Table~S51), the strongest claim the scoping search supports, not one of priority. 
+In the sources searched, no access-layer benchmark reports all seven protocol dimensions,
+unsurprisingly, since the seven are this paper's own construction: the audit measures distance from a
+new standard, not failure to meet a known one. The source-located audit records partial controls
+rather than treating non-reporting as proof of absence (Supplement Table~S37), and we found no study
+combining broad product coverage, both engines, joint throughput and tail reporting, and non-vendor
+authorship, each covering at most two or three (Supplement Table~S51): the strongest claim the
+scoping search supports, not one of priority. 
 
 But coverage is not the contribution: the protocol operationalizes established experimental principles for
 this genre, not a new one. Kounev et al.'s systems-benchmarking
@@ -109,5 +109,5 @@ standard~\cite{hasselbring2021benchmarking}, and Raasveldt and M\"uhleisen's fai
 guidance~\cite{raasveldt2018fair} supply its principles at a deliberately general level. They leave an
 access-layer study to operationalize \emph{what code represents a library}, how competing
 implementations are checked for semantic equivalence, and how strategy-sensitive results are
-contrasted. Our protocol supplies one concrete operationalization: an arbitrary but predeclared treatment policy; a common-SQL raw-path sensitivity contrast; and a per-cell gate requiring specification-conformant, mutually equivalent responses and verified write state \emph{before} a timing is admitted. Correctness-before-timing has precedents (SPEC validation, TPC ACID, and SQLancer~\cite{rigger2020sqlancer}); cross-implementation equivalence has the direct precedent discussed above. Our narrower contribution is stated in Section~\ref{sec:introduction}. Together these constructs provide a concrete discipline for establishing and reporting comparability among competing implementations of one task. Its evidence is the in-experiment ablation and a single-rater retrospective audit of nine external benchmarks (Supplement Table~S37); this demonstrates utility and applicability, not independent inter-rater validation or invention of the underlying principles.
+contrasted. Our protocol supplies one concrete operationalization: an arbitrary but predeclared treatment policy; a common-SQL raw-path sensitivity contrast; and a per-cell gate requiring specification-conformant, mutually equivalent responses and verified write state \emph{before} a timing is admitted. Neither element is new in itself, correctness-before-timing having precedents in SPEC validation, TPC ACID, and SQLancer~\cite{rigger2020sqlancer}, and equivalence checking in CYNTHIA above; the contribution is their composition into a discipline for establishing and reporting comparability among competing implementations of one task, stated in Section~\ref{sec:introduction}. Its evidence is the in-experiment ablation and a single-rater retrospective audit of nine external benchmarks (Supplement Table~S37); this demonstrates utility and applicability, not independent inter-rater validation or invention of the underlying principles.
 
