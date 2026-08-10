@@ -50,7 +50,7 @@
 Benchmarks of relational database access layers can time implementations returning different
 results, or report latency at unequal proximity to saturation; comparability is rarely established.
 We propose an executable protocol for deciding when configured implementations are comparable for a
-stated estimand and what their measurements support, and exercise it once.
+stated estimand and what their measurements support, exercised once.
 It requires task-derived read checks, cross-implementation equivalence, post-write state validation,
 a predeclared configuration-selection policy, and separate capacity and latency operating points.
 An Express.js experiment compares nine policy-selected configurations and two tuned native references
@@ -59,11 +59,11 @@ same-host campaign retests rank stability; a single-rater audit covers nine exte
 The widest spread is deep fetch: $7.01\times$ (PostgreSQL), $5.12\times$ (MySQL); forcing common SQL
 through raw facilities in a separate ten-run campaign leaves $1.71\times$ and $2.03\times$, a
 compound contrast isolating no single mechanism.
-High-load and matched-utilization p99 are different quantities, not one optimized against the other;
+High-load and matched-utilization tail latency (p99) are different quantities, not one optimized against the other;
 the matched-utilization figures rest on five runs and are secondary.
 Four cross-stack rank reversals recur in both campaigns, all involving the one treatment whose MySQL
 driver differs; no other pair reverses durably at the stated bar, whole-ordering agreement stays
-imperfect, and the experiment does not identify the DBMS as the cause.
+imperfect, and the experiment does not identify the engine as the cause.
 The protocol is a candidate: an auditable proposal with one worked instantiation, not a validated
 methodology, supporting no universal ranking or library-intrinsic overhead estimate.
 Its audit has one rater, the adapters lack independent review, and both campaigns share one host, so
@@ -123,7 +123,7 @@ public, commercial, or not-for-profit sectors.
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During the preparation of this work the author used Claude (Anthropic) to draft and edit
 manuscript text and improve its readability and language, and OpenAI Codex twice to obtain
-independent critical reviews of the complete manuscript. After using this tool, the author
+independent critical reviews of the complete manuscript. After using these tools, the author
 reviewed and edited the content as needed and takes full responsibility for the content of
 the published article. AI assistance that formed part of the research itself is separate from the preparation
 use declared here and is documented in Section~\ref{sec:ai-tooling}: it covered implementation of the
