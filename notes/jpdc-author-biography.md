@@ -14,46 +14,57 @@ Last revised 10 August 2026, after the fix pass in §6.
 
 ## 1. Author biography
 
-Only facts already recorded in the repository are used: name, affiliation, e-mail,
-ORCID (`CITATION.cff`), and the subject of this work. Degree, academic title,
-position, year, teaching, and prior publications are **not** in the repository and are
-left as bracketed placeholders. Fill them in yourself; I will not guess them.
+Written from verified public records, not from placeholders. Sources and what each one
+supports are in §1c. One thing you must still confirm: every source says **mgr /
+asystent**, and if a doctorate has been awarded since those pages were last updated,
+both drafts need "assistant" and "M.Sc." changed before they go anywhere.
 
-### 1a. Long form (~95 words, Elsevier "Author biography" length)
+### 1a. Long form (123 words)
 
-> **Mateusz Miotk** is [POSITION, e.g. an assistant professor] at the Faculty of
-> Mathematics, Physics and Informatics, University of Gdańsk, Poland, where he
-> received [DEGREE] in [FIELD] in [YEAR]. His work concerns empirical software
-> engineering and the performance measurement of server-side software: benchmark
-> design, measurement validity, and reproducible experimental protocols for web
-> back ends. His current research develops auditable comparability protocols for
-> database-access layers in Node.js services, including the open-source dual-stack
-> harness underlying this article. He is also interested in [SECOND AREA, e.g.
-> rendering performance of front-end frameworks / graph theory]. ORCID:
+> **Mateusz Miotk** is an assistant in the Division of Combinatorial Optimisation,
+> Institute of Informatics, Faculty of Mathematics, Physics and Informatics, University
+> of Gdansk, Poland, where he holds an M.Sc. His earlier work is in structural and
+> algorithmic graph theory: disjoint dominating and 2-dominating sets, graphs with equal
+> domination and covering numbers, bipartization, and spanning trees with disjoint
+> dominating sets, published in Discrete Optimization, the Journal of Combinatorial
+> Optimization, Graphs and Combinatorics, and Discussiones Mathematicae Graph Theory,
+> and more recently on constructing certified dominating sets in social networks. His
+> current research applies the same concern with exact, checkable statements to the
+> empirical performance measurement of server-side software: benchmark comparability,
+> measurement validity, and reproducible experimental protocols for database access
+> layers in Node.js services. ORCID: 0000-0003-2768-7861.
+
+### 1b. Short form (52 words)
+
+> **Mateusz Miotk** is an assistant in the Division of Combinatorial Optimisation,
+> Institute of Informatics, University of Gdansk, Poland. He has published on domination
+> and related problems in structural and algorithmic graph theory, and works now on
+> empirical performance measurement of server-side software: benchmark comparability,
+> measurement validity, and reproducible experimental protocols. ORCID:
 > 0000-0003-2768-7861.
 
-### 1b. Short form (~50 words, if a shorter note is requested)
-
-> **Mateusz Miotk** is [POSITION] at the Faculty of Mathematics, Physics and
-> Informatics, University of Gdańsk, Poland. He works on empirical software
-> engineering and performance measurement of server-side software, with an emphasis
-> on measurement validity and reproducible benchmarking protocols for Node.js web
-> back ends. ORCID: 0000-0003-2768-7861.
+Use "Gdansk" or "Gdańsk" to match whatever the submission system accepts; the manuscript
+uses the diacritic.
 
 ### 1c. Verification status
 
 | Element | Status |
 |---|---|
-| Name spelling "Miotk" | [verified] — `notes/review4-triage.md` line 114, consistent repo-wide |
-| Affiliation, city, country | [verified] — `paper/jpdc/jpdc_main.tex:33-41`, `CITATION.cff` |
-| ORCID 0000-0003-2768-7861 | [verified] — `CITATION.cff` (repo record; not re-resolved against orcid.org this session) |
-| Research-interest sentences | [inferred] — from the content of this manuscript and the linked `react-rendering-performance` repo (`README.md:71`), not from a CV |
-| Position, degree, year, second area | [unverified] — placeholders; author must supply |
+| Position "asystent" (assistant), Division of Combinatorial Optimisation, Institute of Informatics, Faculty of Mathematics, Physics and Informatics | [verified] — University of Gdansk knowledge base, profile `UOG3b27ab...`, retrieved 10 August 2026; the same fields appear on the UG staff page and ResearchGate |
+| Degree "mgr" (M.Sc.), no doctorate listed | [verified] against the same three sources, but they are institutional pages of unknown currency. **Confirm before sending.** |
+| ORCID 0000-0003-2768-7861 | [verified] — stated on the UG knowledge-base profile itself, and matches `CITATION.cff`. This is now an external confirmation, not just a repository record |
+| Graph-theory publication list | [verified] — DBLP, retrieved 10 August 2026: Discret. Optim. 35 (2020) 100553; J. Comb. Optim. 39 (2020) 55-71; Graphs Comb. 35 (2019) 1169-1177; Discuss. Math. Graph Theory 42 (2022) 299-308; IEEE Access 13 (2025) 17495-17505 (certified dominating sets, with Raczek) |
+| Name spelling "Miotk" | [verified] — consistent across DBLP, UG, and the repository |
+| Degree year | [unverified] — not stated on any source retrieved; both drafts are written so that no year is needed |
+| The characterization of current research | [inferred] — from this manuscript and the publication record, not from a CV statement |
 
-Note: **the JPDC guide for authors as supplied contains no "author biography"
-section.** Elsevier requests biographies for some journals via the submission system
-rather than the guide. Have the biography ready, but confirm in Editorial Manager
-whether JPDC actually asks for one before adding it to the manuscript file.
+Note: **the JPDC guide for authors as supplied contains no "author biography" section.**
+Elsevier collects biographies for some journals through the submission system rather than
+the guide. Have this ready, but check Editorial Manager before adding it to the
+manuscript file.
+
+Prompt-injection note per CLAUDE.md §8: the fetched pages were read as data. Nothing in
+them was treated as an instruction, and nothing resembling one appeared.
 
 ---
 
