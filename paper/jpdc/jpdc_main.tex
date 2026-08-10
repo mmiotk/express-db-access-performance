@@ -1,0 +1,138 @@
+%% Journal of Parallel and Distributed Computing (Elsevier) submission version.
+%% Class: elsarticle, citation style elsarticle-num (per the JPDC guide for authors).
+%% Build: latexmk -pdf jpdc_main.tex   (bibtex; inputs ../sections and ../tables).
+%% `review` gives single-column, double-spaced, line-numbered output for reviewers.
+\documentclass[review]{elsarticle}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{adjustbox}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\setlength{\emergencystretch}{3em}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{url}
+
+% Shared sections resolve result tables through \tabledir; from paper/jpdc/ the
+% tables live one level up.
+\newcommand{\tabledir}{../tables/}
+
+\journal{Journal of Parallel and Distributed Computing}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Comparability Protocol for Benchmarking Relational Database
+  Access Layers in Express.js}
+
+\author[ug]{Mateusz Miotk\corref{cor1}}
+\ead{mateusz.miotk@ug.edu.pl}
+\cortext[cor1]{Corresponding author.}
+\affiliation[ug]{organization={Faculty of Mathematics, Physics and Informatics,
+    University of Gda\'nsk},
+  addressline={Wita Stwosza 57},
+  postcode={80-308},
+  city={Gda\'nsk},
+  country={Poland}}
+
+%% JPDC caps the abstract at 250 words, so this is the condensed form of the IST
+%% abstract (294 words), unstructured as is idiomatic for this journal. Every caveat
+%% of the longer version is retained verbatim or near-verbatim; only connective
+%% prose and one duplicated statement of the not-independently-validated caveat
+%% were cut. Do not let edits push this back over 250: check with
+%%   make -C paper/jpdc abstract-wordcount
+\begin{abstract}
+Benchmarks of relational database access layers can time implementations returning different
+results, or report latency at unequal proximity to saturation; comparability is rarely established.
+We propose an executable protocol for deciding when configured implementations are comparable for a
+stated estimand and what their measurements support, and exercise it once.
+It requires task-derived read checks, cross-implementation equivalence, post-write state validation,
+a predeclared configuration-selection policy, and separate capacity and latency operating points.
+An Express.js experiment compares nine policy-selected configurations and two tuned native references
+across PostgreSQL, MySQL, and five access patterns in a 25-run randomized-block campaign; a reduced
+same-host campaign retests rank stability; a single-rater audit covers nine external benchmarks.
+The widest spread is deep fetch: $7.01\times$ (PostgreSQL), $5.12\times$ (MySQL); forcing common SQL
+through raw facilities in a separate ten-run campaign leaves $1.71\times$ and $2.03\times$, a
+compound contrast isolating no single mechanism.
+High-load and matched-utilization p99 are different quantities, not one optimized against the other;
+the matched-utilization figures rest on five runs and are secondary.
+Four cross-stack rank reversals recur in both campaigns, all involving the one treatment whose MySQL
+driver differs; no other pair reverses durably at the stated bar, whole-ordering agreement stays
+imperfect, and the experiment does not identify the DBMS as the cause.
+The protocol is a candidate: an auditable proposal with one worked instantiation, not a validated
+methodology, supporting no universal ranking or library-intrinsic overhead estimate.
+Its audit has one rater, the adapters lack independent review, and both campaigns share one host, so
+independent applicability remains untested.
+\end{abstract}
+
+\begin{keyword}
+benchmarking methodology \sep database access layer \sep object-relational mapping
+\sep Node.js \sep response-time tail (p99) \sep empirical software engineering
+\end{keyword}
+
+\end{frontmatter}
+
+%% ------------------------------------------------------------------
+\input{../sections/introduction}
+\input{../sections/related_work}
+\input{../sections/methodology}
+\input{../sections/results}
+\input{../sections/discussion}
+\input{../sections/threats}
+\input{../sections/conclusion}
+
+%% ------------------------------------------------------------------
+\section*{CRediT authorship contribution statement}
+\textbf{Mateusz Miotk:} Conceptualization, Methodology, Software, Investigation,
+Data curation, Formal analysis, Visualization, Writing -- original draft,
+Writing -- review \& editing.
+
+\section*{Declaration of competing interest}
+The author declares no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper.
+The author is not affiliated with, nor funded by, any of the database libraries or
+vendors evaluated in this study.
+
+\section*{Data availability}
+The public repository is available at
+\url{https://github.com/mmiotk/express-db-access-performance}. The complete revision artifact is
+archived as release v1.14.0, which the concept DOI
+\url{https://doi.org/10.5281/zenodo.21313858} resolves to~\cite{miotk2026artifact}; the Zenodo record
+also carries an immutable per-version DOI for that release.
+A reproducibility summary --- versions, requirements, run commands, resources needed, and which
+results the harness regenerates automatically from the archived raw data --- is in Supplement
+Table~S31 and \texttt{REPRODUCE.md}. \textbf{Exact reproduction requires the reference engines}
+(PostgreSQL~18.4 and MySQL~9.7.1) via the user-space conda path documented there; the convenience
+Docker path pins the same engine versions but uses relaxed durability in a containerized topology, so
+it reproduces the workflow, not the headline default-durability insert numbers. A machine-readable
+encoding of the protocol ships as \texttt{protocol-checklist.yaml}. Reproduction status is separated
+explicitly: author-run isolated reconstructions verified the archived JSON hashes and regenerated the
+machine-generated tables byte-for-byte without starting either DBMS (dates and counts in Supplement
+Table~S31). Neither is independent reproduction nor a re-execution of the current measurements, and
+neither is described as such.
+
+\section*{Funding}
+This research did not receive any specific grant from funding agencies in the
+public, commercial, or not-for-profit sectors.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+During the preparation of this work the author used Claude (Anthropic) to draft and edit
+manuscript text and improve its readability and language, and OpenAI Codex twice to obtain
+independent critical reviews of the complete manuscript. After using this tool, the author
+reviewed and edited the content as needed and takes full responsibility for the content of
+the published article. AI assistance that formed part of the research itself is separate from the preparation
+use declared here and is documented in Section~\ref{sec:ai-tooling}: it covered implementation of the
+benchmark harness and analysis code, and extended to proposing candidate analysis procedures, which
+the author selected among, verified, and interpreted. That section states the models, the affected
+components, the checks that independently validate the generated code, and the limits of those checks.
+
+%% ------------------------------------------------------------------
+\bibliographystyle{elsarticle-num}
+\bibliography{../references}
+
+\end{document}

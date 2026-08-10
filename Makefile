@@ -3,7 +3,7 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help pdf supplement view setup bench tables results clean distclean \
-        ist ist-package release-check
+        ist ist-package jpdc jpdc-pagecheck release-check
 
 help: ## Show this help
 	@echo "Targets:"
@@ -29,6 +29,24 @@ ist-package: ## Assemble the self-contained IST submission folder + zip
 	  [ -n "$(FORCE)" ] || exit 1; \
 	  echo "FORCE=1 set — continuing anyway. Do NOT submit this package."; }
 	$(MAKE) -C paper/ist package
+
+jpdc: ## Build the JPDC/Elsevier submission PDF (paper/jpdc/jpdc_main.pdf)
+	$(MAKE) -C paper/jpdc
+
+jpdc-pagecheck: ## Report the JPDC two-column page count against the 16-page limit
+	$(MAKE) -C paper/jpdc pagecheck
+
+jpdc-package: ## Assemble the self-contained JPDC submission folder + zip
+	@./scripts/release.sh --check || { \
+	  echo ""; \
+	  echo "REFUSING to build a submission package: the manuscript's Data Availability"; \
+	  echo "statement would be false. Cut and push a release first (scripts/release.sh),"; \
+	  echo "or re-run with FORCE=1 for a non-submission build."; \
+	  [ -n "$(FORCE)" ] || exit 1; \
+	  echo "FORCE=1 set — continuing anyway. Do NOT submit this package."; }
+	@$(MAKE) -C paper/jpdc abstract-wordcount
+	@$(MAKE) -C paper/jpdc pagecheck
+	$(MAKE) -C paper/jpdc package
 
 release-check: ## Verify the release version and DOI agree across every declaration site
 	./scripts/release.sh --check

@@ -13,6 +13,21 @@ paper/*.run.xml
 paper/*.synctex.gz
 paper/express_db_access.pdf
 
+# --- JPDC (Elsevier) submission build (paper/jpdc/, built in place) ---
+paper/jpdc/*.aux
+paper/jpdc/*.bbl
+paper/jpdc/*.blg
+paper/jpdc/*.log
+paper/jpdc/*.out
+paper/jpdc/*.fls
+paper/jpdc/*.fdb_latexmk
+paper/jpdc/*.spl
+paper/jpdc/*.synctex.gz
+paper/jpdc/_package/
+paper/jpdc/jpdc-submission.zip
+# generated page-limit probe: derived from jpdc_main.tex, never edited by hand
+paper/jpdc/jpdc_pagecheck.*
+
 # --- IST (Elsevier) submission build (paper/ist/, built in place) ---
 paper/ist/*.aux
 paper/ist/*.bbl

@@ -348,7 +348,8 @@
       "source": {
         "type": "vendor",
         "url": "https://orm.drizzle.team/benchmarks",
-        "inspected_copy": "https://orm.drizzle.team/benchmarks"
+        "inspected_copy": "https://web.archive.org/web/20260724112047/https://orm.drizzle.team/benchmarks",
+        "inspected_copy_caveat": "Snapshot saved 2026-07-24, one day after the audit, so it evidences the recorded judgements as coded."
       },
       "scope": "HTTP load benchmark of Drizzle and selected alternatives on PostgreSQL, with throughput, latency and CPU.",
       "licensed_interpretation": "Describes public target implementations at the dashboard load; it does not support utilization-matched or library-intrinsic attribution.",
@@ -397,7 +398,8 @@
       "source": {
         "type": "vendor",
         "url": "https://benchmarks.prisma.io/",
-        "inspected_copy": "https://benchmarks.prisma.io/"
+        "inspected_copy": "https://web.archive.org/web/20260731125630/https://benchmarks.prisma.io/",
+        "inspected_copy_caveat": "Snapshot saved 2026-07-31, eight days after the 2026-07-23 audit, because no capture exists near the audit date (the previous one is 2025-10-10). The page had already changed by then: it now compares Prisma Next / Prisma 7 / raw pg and reports throughput, p95 and p99, so this copy does not evidence the recorded scope or the R5 judgement. It fixes the locator against further drift; it does not make the coding re-checkable. Re-code against a dated capture before relying on this row."
       },
       "scope": "Prisma, Drizzle and TypeORM median query latency over 500 iterations.",
       "licensed_interpretation": "Describes median latency for the visible query implementations; it does not establish throughput, tail, or capacity behavior.",
@@ -446,7 +448,7 @@
       "source": {
         "type": "vendor",
         "url": "https://github.com/geldata/imdbench",
-        "inspected_copy": "https://github.com/edgedb/imdbench"
+        "inspected_copy": "https://github.com/geldata/imdbench"
       },
       "scope": "Realistic CRUD throughput and latency benchmark for several ORMs, drivers and Gel/EdgeDB.",
       "licensed_interpretation": "Describes the public implementations and workload point; it does not separate strategy from layer or generalize across utilization.",

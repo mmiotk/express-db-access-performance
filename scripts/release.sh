@@ -48,6 +48,11 @@ FILES=(
   paper/sections/introduction.tex
   paper/ist/ist_main.tex
   paper/ist/cover-letter.md
+  # JPDC submission build (target venue since 2026-08-10). Both state the release
+  # version or the DOI, so omitting them would ship a package whose manuscript and
+  # artifact disagree, which is the exact failure this script exists to prevent.
+  paper/jpdc/jpdc_main.tex
+  paper/jpdc/cover-letter.md
   paper/references.bib
 )
 
@@ -60,7 +65,13 @@ OLD_D=$(current_doi)
 # Counts come from the trailers, not message text, because commit messages that
 # merely discuss the trailers would otherwise inflate them.
 refresh_counts() {
-  local M=paper/sections/methodology.tex o48 f5 o5 total trailed untrailed
+  # The sentence moved from methodology.tex to supplement.tex, and this function was
+  # never repointed, so it silently refreshed nothing and the manuscript went stale at
+  # 236/244 while the tree was at 239/247. Same silent-no-op class as the v1.12.17 bug
+  # the comment below describes. Both files are now scanned, and a substitution that
+  # matches nowhere is a hard error rather than a clean exit.
+  local FILES=(paper/sections/methodology.tex paper/supplement.tex)
+  local M o48 f5 o5 total trailed untrailed hits=0
   o48=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 4.8' || true)
   f5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Fable 5' || true)
   o5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 5' || true)
@@ -70,8 +81,18 @@ refresh_counts() {
   # exactly after "commits", so any reflow of that sentence made this a silent
   # no-op that still printed git-derived numbers. It bit v1.12.17, which shipped
   # a count one commit stale.
-  perl -0pi -e "s/\d+ of \d+ commits\s+carry a \\\\texttt\{Co-Authored-By\} trailer naming the model\s*\(\d+ Opus 4\.8, \d+ Fable 5, \d+ Opus 5\)/${trailed} of ${total} commits carry a \\\\texttt{Co-Authored-By} trailer naming the model\n(${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5)/s" "$M"
-  perl -0pi -e "s/The other \\S+ predate the convention/The other ${untrailed} predate the convention/" "$M"
+  for M in "${FILES[@]}"; do
+    [[ -f "$M" ]] || continue
+    grep -qE '[0-9]+ of [0-9]+ commits' "$M" || continue
+    hits=$((hits + 1))
+    perl -0pi -e "s/\d+ of \d+ commits\s+carry a \\\\texttt\{Co-Authored-By\} trailer\s+naming the model\s*\(\d+ Opus 4\.8, \d+ Fable 5, \d+ Opus 5\)/${trailed} of ${total} commits carry a \\\\texttt{Co-Authored-By} trailer naming the model\n(${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5)/s" "$M"
+    perl -0pi -e "s/The other \\S+ predate the convention/The other ${untrailed} predate the convention/" "$M"
+  done
+  if [[ "$hits" == "0" ]]; then
+    echo "  AI-provenance counts: FAILED, the sentence was not found in ${FILES[*]}." >&2
+    echo "  It moved again; repoint refresh_counts rather than letting it no-op." >&2
+    return 1
+  fi
   echo "  AI-provenance counts: ${trailed}/${total} trailed (${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5), ${untrailed} untrailed"
 }
 
@@ -367,7 +388,9 @@ make pdf >/dev/null && make supplement >/dev/null && make ist >/dev/null
 make -C paper/ist docs >/dev/null 2>&1 || true
 git add -A && git commit -q --amend --no-edit
 
-git tag -a "v${NEW_V}" -m "v${NEW_V}: IST revision artifact (DOI ${NEW_D})"
+# Venue-neutral since the 2026-08-10 retarget to JPDC: the tag names the artifact,
+# not the journal it happens to be submitted to that week.
+git tag -a "v${NEW_V}" -m "v${NEW_V}: submission artifact (DOI ${NEW_D})"
 echo "  tagged v${NEW_V} at $(git rev-parse --short HEAD)"
 
 if [[ "${3:-}" == "--publish" ]]; then

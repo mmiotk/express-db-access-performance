@@ -52,7 +52,19 @@ Free + open + continuity: e-Informatica or Computer Science AGH (40).
 - **Procedia CS** 2025 — Prisma vs raw SQL (10.1016/j.procs.2025.09.061).
 - Conferences: ACM SBSI 2024 (back-end frameworks), ISD/LNISO 2025 (Node.js backends).
 
-## Decision
+## Decision (superseded 2026-08-10)
+
+**Current target: Journal of Parallel and Distributed Computing (JPDC), Elsevier.**
+Changed by the author on 10 August 2026. JPDC is not in the table below because it was
+not among the candidates screened in July: it is not an empirical-SE venue, and the
+scope question that raises is recorded in `notes/jpdc-author-biography.md` section 2.0
+rather than resolved here. MEiN points, IF, and APC for JPDC have **not** been verified
+against the official list, so do not quote a figure for it from this file.
+
+The analysis below is the July screening and is kept as the record of what was
+considered then.
+
+## Decision (July 2026 screening)
 
 **Two outputs from one body of work (maximises MEiN points):**
 1. Harness → **SoftwareX** (200 pts, ~$1,560) — Original Software Publication; artifact

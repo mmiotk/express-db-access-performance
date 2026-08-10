@@ -326,11 +326,35 @@ Format: one entry per decision, newest last. Never rewrite history; supersede in
 
 ---
 
+## 2026-08-10 --- venue changed to JPDC
+
+- **Decision:** retarget the manuscript from IST to the Journal of Parallel and Distributed
+  Computing. Author's call; recorded here because it changes the length budget, the abstract
+  limit, and the submission materials.
+- **Consequences that are now facts, not plans:** `paper/jpdc/` holds the submission source
+  (`jpdc_main.tex`), a JPDC cover letter, highlights, and `make jpdc / jpdc-pagecheck /
+  jpdc-package`. `paper/ist/` is untouched.
+- **Abstract shortened to the JPDC limit.** The IST abstract was 294 words against a 250-word
+  cap. The JPDC version is 250 words and unstructured, which is idiomatic for the journal.
+  **No caveat was removed:** all fourteen were checked individually and are retained verbatim
+  or near-verbatim. What was cut is connective prose plus one duplicated statement of the
+  not-independently-validated caveat, which the Conclusion sentence still carries. The IST
+  abstract is unchanged in `paper/ist/ist_main.tex` and remains available for comparison.
+- **Length:** the two-column layout is exactly 16 pages against a 16-page limit. Any future
+  addition has to be paid for literally. `make jpdc-pagecheck` and
+  `make -C paper/jpdc abstract-wordcount` both fail loudly rather than warn.
+- **Open and not decided here:** whether the framing sections should be re-angled toward
+  concurrency and saturation to fit the journal's scope, or the venue reconsidered again. The
+  cover letter states the single-host limitation to the editors rather than obscuring it.
+  See `notes/jpdc-author-biography.md` section 2.0.
+
+---
+
 ## Standing editorial decisions
 
 | Item | Choice |
 |---|---|
-| English variant | **American** (Elsevier/IST) |
+| English variant | **American** (Elsevier) |
 | Citation style | Elsevier `cas-model2` / `references.bib` |
-| Target venue | Information and Software Technology (IST), Elsevier |
+| Target venue | **Journal of Parallel and Distributed Computing (JPDC), Elsevier** (changed 2026-08-10 from Information and Software Technology; `paper/ist/` kept intact and still builds) |
 | Voice | first-person plural "we" |

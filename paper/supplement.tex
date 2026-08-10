@@ -561,7 +561,10 @@ identify where per-request work occurs.
 
 \section{Retrospective application of the protocol to prior benchmarks}
 \label{sup:protocol-retro}
-Table~\ref{tab:protocol_retro} reports a structured audit of the nine benchmark sources retained by the scoping search. The codebook fixes five judgement codes and seven stage definitions. The machine-readable audit preserves all 63 judgements with source locators and paraphrased evidence, and its validator checks completeness. No benchmark was rerun, and \emph{not reported} is not treated as proof that a procedure never occurred. The author performed the coding, so the exercise demonstrates a bounded application of the protocol and the narrower conclusions it produces, not inter-rater reproducibility or independent validation. Result-blind forms for additional raters are shipped in the artifact reviewer packet.
+Table~\ref{tab:protocol_retro} reports a structured audit of the nine benchmark sources retained by the scoping search. The codebook fixes five judgement codes and seven stage definitions. All nine sources were coded on 23 July 2026, and every judgement is stated as of that date.
+The machine-readable audit preserves all 63 judgements with source locators and paraphrased evidence, and its validator checks completeness.
+Seven locators are stable (published PDFs, DOIs, or a tagged repository) and one vendor page is archived one day after the audit, so those codings can be re-checked as recorded.
+The ninth, the Prisma vendor page, is the exception: it is archived only from 31 July 2026, by which date its content had changed, so that copy fixes the locator against further drift but does not evidence the recorded coding, and the row should be re-coded against a dated capture before it is relied on. No benchmark was rerun, and \emph{not reported} is not treated as proof that a procedure never occurred. The author performed the coding, so the exercise demonstrates a bounded application of the protocol and the narrower conclusions it produces, not inter-rater reproducibility or independent validation. Result-blind forms for additional raters are shipped in the artifact reviewer packet.
 
 \input{\tabledir protocol_retro}
 
@@ -906,8 +909,8 @@ Claude Code command-line interface, in three model versions: Claude Opus 4.8, Cl
 Claude Opus 5. No other vendor's assistant contributed software, analysis, or measurements. OpenAI
 Codex was used twice, after the manuscript was otherwise complete, for independent critical
 pre-submission reviews; the author evaluated its comments and is responsible for which were acted
-on. Assistance is recorded per commit: 236 of 244 commits carry a \texttt{Co-Authored-By} trailer
-naming the model (159 Opus 4.8, 27 Fable 5, 50 Opus 5), counted from the trailers themselves rather
+on. Assistance is recorded per commit: 240 of 248 commits carry a \texttt{Co-Authored-By} trailer naming the model
+(159 Opus 4.8, 27 Fable 5, 54 Opus 5), counted from the trailers themselves rather
 than message text. The other 8 predate the convention and include two squash-merges of
 assistant-authored branches and the largest revision commit, so the count understates assistance.
 
