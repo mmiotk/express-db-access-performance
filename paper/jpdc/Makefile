@@ -46,7 +46,7 @@ package: pdf
 	@cd _package && zip -qr ../jpdc-submission.zip . -x '*.DS_Store'
 	@echo "Self-contained sources: paper/jpdc/_package/  ->  jpdc-submission.zip"
 
-DOCS := cover-letter
+DOCS := cover-letter author-biography
 docs:
 	@for d in $(DOCS); do python3 ../ist/md2tex.py $$d.md $$d.tex && latexmk -pdf -interaction=nonstopmode $$d.tex >/dev/null; done
 	latexmk -pdf -interaction=nonstopmode highlights.tex >/dev/null
