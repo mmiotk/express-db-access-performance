@@ -15,9 +15,9 @@ Last revised 10 August 2026, after the fix pass in §6.
 ## 1. Author biography
 
 Written from verified public records, not from placeholders. Sources and what each one
-supports are in §1c. One thing you must still confirm: every source says **mgr /
-asystent**, and if a doctorate has been awarded since those pages were last updated,
-both drafts need "assistant" and "M.Sc." changed before they go anywhere.
+supports are in §1c. The degree was the one open item and it is now closed: the author
+confirmed on 10 August 2026 that he holds a master's degree, which is what both drafts
+say.
 
 ### 1a. Long form (123 words)
 
@@ -51,7 +51,7 @@ uses the diacritic.
 | Element | Status |
 |---|---|
 | Position "asystent" (assistant), Division of Combinatorial Optimisation, Institute of Informatics, Faculty of Mathematics, Physics and Informatics | [verified] — University of Gdansk knowledge base, profile `UOG3b27ab...`, retrieved 10 August 2026; the same fields appear on the UG staff page and ResearchGate |
-| Degree "mgr" (M.Sc.), no doctorate listed | [verified] against the same three sources, but they are institutional pages of unknown currency. **Confirm before sending.** |
+| Degree "mgr" (M.Sc.), no doctorate | [verified] — confirmed by the author on 10 August 2026, and independently consistent with the UG knowledge base, the UG staff page, and ResearchGate |
 | ORCID 0000-0003-2768-7861 | [verified] — stated on the UG knowledge-base profile itself, and matches `CITATION.cff`. This is now an external confirmation, not just a repository record |
 | Graph-theory publication list | [verified] — DBLP, retrieved 10 August 2026: Discret. Optim. 35 (2020) 100553; J. Comb. Optim. 39 (2020) 55-71; Graphs Comb. 35 (2019) 1169-1177; Discuss. Math. Graph Theory 42 (2022) 299-308; IEEE Access 13 (2025) 17495-17505 (certified dominating sets, with Raczek) |
 | Name spelling "Miotk" | [verified] — consistent across DBLP, UG, and the repository |
