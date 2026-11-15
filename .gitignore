@@ -28,6 +28,21 @@ paper/jpdc/jpdc-submission.zip
 # generated page-limit probe: derived from jpdc_main.tex, never edited by hand
 paper/jpdc/jpdc_pagecheck.*
 
+# --- JSS (Elsevier) submission build (paper/jss/, built in place) ---
+paper/jss/*.aux
+paper/jss/*.bbl
+paper/jss/*.blg
+paper/jss/*.log
+paper/jss/*.out
+paper/jss/*.fls
+paper/jss/*.fdb_latexmk
+paper/jss/*.spl
+paper/jss/*.synctex.gz
+paper/jss/_package/
+paper/jss/jss-submission.zip
+# generated page-limit probe: derived from jss_main.tex, never edited by hand
+paper/jss/jss_pagecheck.*
+
 # --- IST (Elsevier) submission build (paper/ist/, built in place) ---
 paper/ist/*.aux
 paper/ist/*.bbl

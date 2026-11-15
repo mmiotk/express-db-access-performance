@@ -3,7 +3,7 @@
 
 .DEFAULT_GOAL := help
 .PHONY: help pdf supplement view setup bench tables results clean distclean \
-        ist ist-package jpdc jpdc-pagecheck release-check
+        ist ist-package jpdc jpdc-pagecheck jss jss-pagecheck release-check
 
 help: ## Show this help
 	@echo "Targets:"
@@ -29,6 +29,12 @@ ist-package: ## Assemble the self-contained IST submission folder + zip
 	  [ -n "$(FORCE)" ] || exit 1; \
 	  echo "FORCE=1 set — continuing anyway. Do NOT submit this package."; }
 	$(MAKE) -C paper/ist package
+
+jss: ## Build the JSS/Elsevier submission PDF (paper/jss/jss_main.pdf)
+	$(MAKE) -C paper/jss
+
+jss-pagecheck: ## Report the JSS two-column page count (limit not yet verified)
+	$(MAKE) -C paper/jss pagecheck
 
 jpdc: ## Build the JPDC/Elsevier submission PDF (paper/jpdc/jpdc_main.pdf)
 	$(MAKE) -C paper/jpdc

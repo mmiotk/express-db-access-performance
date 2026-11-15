@@ -350,11 +350,48 @@ Format: one entry per decision, newest last. Never rewrite history; supersede in
 
 ---
 
+## 2026-09-04 — Venue: JSS, after rejections at IST and JPDC
+
+- **Reported by the author on 4 September 2026:** the manuscript was rejected at
+  Information and Software Technology, and subsequently rejected at the Journal of
+  Parallel and Distributed Computing. JPDC offered an editorial transfer to *Array*
+  (Elsevier). The author declined it: Array is gold OA with an APC of about $2,250,
+  which the University of Gdansk does not cover.
+- **Decision:** target the **Journal of Systems and Software** (Elsevier). Hybrid, so
+  the subscription route costs the author nothing; the journal explicitly solicits
+  replication and benchmark studies, which is the scope this manuscript was written for.
+  MEiN 2024: 100.
+- **Build:** `paper/jss/` was branched from `paper/jpdc/` (same Elsevier `elsarticle`
+  class); `make jss`, `make jss-pagecheck`, and `make -C paper/jss package / docs` exist.
+  `paper/ist/` and `paper/jpdc/` are untouched. The manuscript body was **not** edited:
+  JSS's scope covers the paper as written, so no re-angling was needed. 16 double-column
+  pages against an 18-page guidance, 250-word abstract against a 250-word cap, 6 keywords
+  against 1-7, 98-word author biography against a 100-word cap, 5 highlights within 85
+  characters each. The limit table and its provenance caveat are in `notes/venue.md`.
+- **Open Science:** opt in to the JSS Open Science Initiative at submission. The post-acceptance
+  Open Science Board review covers availability and usability only and does not affect
+  acceptance, and the Zenodo artifact already holds the protocol, raw data, scripts, source,
+  and codebook. Recorded as a decision because it commits the artifact to external scrutiny.
+- **Article type:** regular paper. *In Practice* is excluded (four-page cap and an industry
+  first author for Practitioner Insights; an industrial setting for Applied Research Reports),
+  and a New Ideas and Trends Paper is for work that need not be fully validated, which is the
+  opposite of this manuscript's claim.
+- **Cover letter rewritten** for JSS: the scope paragraph now argues empirical-SE fit
+  instead of JPDC's concurrency fit, and the pre-send bracket records both prior
+  rejections so the "not under consideration elsewhere" declaration is checked, not
+  assumed. It also answers JSS's domain-independence requirement head-on: the protocol is the
+  contribution and the Express.js campaign is its instantiation. That is the one scope risk at
+  this venue and it is argued in the letter rather than papered over.
+- **Open [unverified]:** whether JSS falls inside the 2026 WBN/MNiSW Elsevier open-access
+  pool for a UG affiliation. Question for the UG library administrator.
+
+---
+
 ## Standing editorial decisions
 
 | Item | Choice |
 |---|---|
 | English variant | **American** (Elsevier) |
 | Citation style | Elsevier `cas-model2` / `references.bib` |
-| Target venue | **Journal of Parallel and Distributed Computing (JPDC), Elsevier** (changed 2026-08-10 from Information and Software Technology; `paper/ist/` kept intact and still builds) |
+| Target venue | **Journal of Systems and Software (JSS), Elsevier** (changed 2026-09-04 after rejections at IST and at JPDC; the JPDC transfer offer to Array was declined over an uncovered ~$2,250 APC. `paper/ist/` and `paper/jpdc/` are kept intact and still build; see `notes/venue.md`) |
 | Voice | first-person plural "we" |
