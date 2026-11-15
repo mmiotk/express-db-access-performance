@@ -53,6 +53,8 @@ FILES=(
   # artifact disagree, which is the exact failure this script exists to prevent.
   paper/jpdc/jpdc_main.tex
   paper/jpdc/cover-letter.md
+  # JSS submission build (target venue since 2026-09-04): states the release version.
+  paper/jss/jss_main.tex
   paper/references.bib
 )
 
@@ -359,13 +361,16 @@ echo "Rebuilding documents..."
 # and citations are legitimately unresolved until a second pass. Checking after
 # one pass would abort on a healthy build.
 build_all() {
-  make pdf >/dev/null 2>&1 && make supplement >/dev/null 2>&1 && make ist >/dev/null 2>&1
+  make pdf >/dev/null 2>&1 && make supplement >/dev/null 2>&1 && make ist >/dev/null 2>&1 \
+    && make jss >/dev/null 2>&1
 }
 build_all || true
 build_all || { echo "ABORT: build failed."; exit 1; }
 make -C paper/ist docs >/dev/null 2>&1 || true
+make -C paper/jss docs >/dev/null 2>&1 || true
 
-for log in paper/_build/express_db_access.log paper/_build/supplement.log paper/ist/ist_main.log; do
+for log in paper/_build/express_db_access.log paper/_build/supplement.log paper/ist/ist_main.log \
+           paper/jss/jss_main.log; do
   [[ -f "$log" ]] || { echo "ABORT: $log not produced."; exit 1; }
   n=$(grep -c undefined "$log" || true)
   [[ "$n" == "0" ]] || {
@@ -380,12 +385,13 @@ git commit -q -m "Prepare v${NEW_V} release
 
 Artifact v${NEW_V}, version DOI ${NEW_D}.
 
-Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 # The release commit itself changes the counts Section 3.9 quotes.
 refresh_counts
-make pdf >/dev/null && make supplement >/dev/null && make ist >/dev/null
+make pdf >/dev/null && make supplement >/dev/null && make ist >/dev/null && make jss >/dev/null
 make -C paper/ist docs >/dev/null 2>&1 || true
+make -C paper/jss docs >/dev/null 2>&1 || true
 git add -A && git commit -q --amend --no-edit
 
 # Venue-neutral since the 2026-08-10 retarget to JPDC: the tag names the artifact,
