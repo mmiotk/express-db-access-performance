@@ -73,21 +73,37 @@ refresh_counts() {
   # the comment below describes. Both files are now scanned, and a substitution that
   # matches nowhere is a hard error rather than a clean exit.
   local FILES=(paper/sections/methodology.tex paper/supplement.tex)
-  local M o48 f5 o5 total trailed untrailed hits=0
+  local M o48 f5 o5 o55 total trailed untrailed hits=0 split versions
   o48=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 4.8' || true)
   f5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Fable 5' || true)
-  o5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -c '^Claude Opus 5' || true)
+  # '^Claude Opus 5' alone also matched Opus 5.5 trailers, so 5.5 commits were reported
+  # as Opus 5. Match the version as a whole word and count 5.5 separately.
+  o5=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -cE '^Claude Opus 5( |$)' || true)
+  o55=$(git log --format='%(trailers:key=Co-Authored-By,valueonly)' | grep -cE '^Claude Opus 5\.5( |$)' || true)
   total=$(git log --oneline | wc -l | tr -d ' ')
-  trailed=$((o48 + f5 + o5)); untrailed=$((total - trailed))
+  trailed=$((o48 + f5 + o5 + o55)); untrailed=$((total - trailed))
+  split="${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5"
+  nver=three
+  versions='three model versions: Claude Opus 4.8, Claude Fable 5, and\nClaude Opus 5.'
+  if [[ "$o55" != "0" ]]; then
+    split="${split}, ${o55} Opus 5.5"
+    nver=four
+    versions='four model versions: Claude Opus 4.8, Claude Fable 5,\nClaude Opus 5, and Claude Opus 5.5.'
+  fi
   # Whitespace-tolerant. The previous pattern required the line break to fall
   # exactly after "commits", so any reflow of that sentence made this a silent
   # no-op that still printed git-derived numbers. It bit v1.12.17, which shipped
   # a count one commit stale.
   for M in "${FILES[@]}"; do
     [[ -f "$M" ]] || continue
+    # methodology.tex states only the number of versions, not their names, and has no
+    # count sentence, so this runs before the skip below.
+    perl -0pi -e "s/in (?:three|four) model versions;/in ${nver} model versions;/" "$M"
     grep -qE '[0-9]+ of [0-9]+ commits' "$M" || continue
     hits=$((hits + 1))
-    perl -0pi -e "s/\d+ of \d+ commits\s+carry a \\\\texttt\{Co-Authored-By\} trailer\s+naming the model\s*\(\d+ Opus 4\.8, \d+ Fable 5, \d+ Opus 5\)/${trailed} of ${total} commits carry a \\\\texttt{Co-Authored-By} trailer naming the model\n(${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5)/s" "$M"
+    perl -0pi -e "s/\d+ of \d+ commits\s+carry a \\\\texttt\{Co-Authored-By\} trailer\s+naming the model\s*\(\d+ Opus 4\.8, \d+ Fable 5, \d+ Opus 5(?:, \d+ Opus 5\.5)?\)/${trailed} of ${total} commits carry a \\\\texttt{Co-Authored-By} trailer naming the model\n(${split})/s" "$M"
+    # The sentence that names the model versions must agree with the split above.
+    perl -0pi -e "s/(?:three|four) model versions:\s+Claude Opus 4\.8,\s+Claude Fable 5,\s+(?:and\s+)?Claude Opus 5(?:,\s+and\s+Claude Opus 5\.5)?\./${versions}/s" "$M"
     perl -0pi -e "s/The other \\S+ predate the convention/The other ${untrailed} predate the convention/" "$M"
   done
   if [[ "$hits" == "0" ]]; then
@@ -95,7 +111,7 @@ refresh_counts() {
     echo "  It moved again; repoint refresh_counts rather than letting it no-op." >&2
     return 1
   fi
-  echo "  AI-provenance counts: ${trailed}/${total} trailed (${o48} Opus 4.8, ${f5} Fable 5, ${o5} Opus 5), ${untrailed} untrailed"
+  echo "  AI-provenance counts: ${trailed}/${total} trailed (${split}), ${untrailed} untrailed"
 }
 
 if [[ "${1:-}" == "--refresh-counts" ]]; then
