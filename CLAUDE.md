@@ -1,7 +1,8 @@
 # CLAUDE.md — operational instructions for this repository
 
 Empirical software-engineering paper (Comparability Protocol for Express database-access
-layers) plus the benchmark harness that produces its numbers. Target venue: IST (Elsevier).
+layers) plus the benchmark harness that produces its numbers. Target venue: JSS (Elsevier),
+after rejections at IST and JPDC (`DECISIONS.md`, 2026-09-04).
 
 `AGENTS.md` is a symlink to this file so that other CLI agents read the same rules.
 
@@ -22,8 +23,9 @@ text, tables, figures, and results. You do not decide what the findings mean —
 | Path | Contents | Rules |
 |---|---|---|
 | `paper/` | generic manuscript, `references.bib` | edit here |
-| `paper/ist/` | IST/Elsevier submission build, cover letter, highlights | template files unmodified |
-| `paper/_build/`, `paper/ist/*.aux|bbl|fls|fdb_latexmk` | build output | generated; never hand-edit |
+| `paper/jss/` | JSS/Elsevier submission build (current target), cover letter, highlights, author biography | template files unmodified |
+| `paper/ist/`, `paper/jpdc/` | earlier IST and JPDC builds (both rejected), kept and still building | do not retarget; template files unmodified |
+| `paper/_build/`, `paper/{jss,ist,jpdc}/*.aux|bbl|fls|fdb_latexmk`, `paper/jss/_package/` | build output | generated; never hand-edit |
 | `experiments/` | benchmark harness (Node/Express, PG + MySQL) | |
 | `scripts/` | release checks, results → tables/figures | |
 | `articles/` | downloaded reference PDFs | **read-only**, copyrighted, do not redistribute |
@@ -31,14 +33,16 @@ text, tables, figures, and results. You do not decide what the findings mean —
 | `METHODOLOGY.md`, `REPRODUCE.md` | the authoritative method and reproduction docs | keep in sync with the paper |
 | `SOURCE_LEDGER.md`, `CLAIMS_EVIDENCE.md`, `DECISIONS.md`, `REVIEW_CHECKLIST.md` | agent-maintained control files | see each file's header |
 
-**Build only through the Makefile** (`make pdf`, `make supplement`, `make ist`,
-`make ist-package`, `make release-check`). Never hand-run pdflatex/biber. In particular
+**Build only through the Makefile** (`make pdf`, `make supplement`, `make jss`,
+`make jss-pagecheck`, `make -C paper/jss package`, `make release-check`; the older `make ist`
+and `make ist-package` still work). Never hand-run pdflatex/biber. In particular
 `make ist-package` refuses to build when the Data Availability statement would be false —
-that refusal is a feature. Never pass `FORCE=1` on your own initiative.
+that refusal is a feature. Never pass `FORCE=1` on your own initiative. The JSS `package`
+target has no such guard, so run `make release-check` before building the JSS package.
 
 ## 4. Language and style
 
-- Manuscript: **American English** (Elsevier/IST convention), consistent `-ize` endings.
+- Manuscript: **American English** (Elsevier/JSS convention), consistent `-ize` endings.
   Discussion with the author may be in Polish.
 - Formal, impersonal register. Forbidden without immediate quantification or citation:
   "obviously", "clearly", "significantly" (unless statistical), "novel", "state-of-the-art".
